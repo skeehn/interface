@@ -1,148 +1,298 @@
 /**
  * skeehn — ASCII Dither CSS Engine
  *
- * CSS custom properties for ASCII dither rendering.
- * 8 dither patterns as SVG data URIs using ASCII characters.
+ * Real 4×4 Bayer ordered-dither patterns at 7 density levels,
+ * gradient mask utilities, animations, and supporting texture patterns.
  *
  * Usage:
  *   @import 'dither.css'
- *   .my-element { --sk-dither-pattern: var(--sk-dither-floyd); }
+ *   .my-element { --sk-dither-pattern: var(--sk-dither-b8); }
  */
 
 /* ═══════════════════════════════════════════════════════════
-   ASCII CHARACTER PATTERNS (SVG Data URIs)
-   Each pattern renders ASCII characters as a repeating background
+   1. BAYER 4×4 ORDERED DITHER PATTERNS
+   16×16 px tile — 4×4 px cells — true Bayer matrix
+   Threshold matrix M[row][col]:
+     Row 0:  0  8  2 10
+     Row 1: 12  4 14  6
+     Row 2:  3 11  1  9
+     Row 3: 15  7 13  5
+   Level bN fills cells where M[row][col] < N
    ═══════════════════════════════════════════════════════════ */
 
 :root {
-  /* Block shade patterns — ░▒▓█ */
-  --sk-dither-blocks-25: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Ctext x='0' y='13' font-family='monospace' font-size='14' fill='%23000'%3E░%3C/text%3E%3C/svg%3E");
-  --sk-dither-blocks-50: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Ctext x='0' y='13' font-family='monospace' font-size='14' fill='%23000'%3E▒%3C/text%3E%3C/svg%3E");
-  --sk-dither-blocks-75: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Ctext x='0' y='13' font-family='monospace' font-size='14' fill='%23000'%3E▓%3C/text%3E%3C/svg%3E");
+  /* b1 — 6.25% — 1 cell: value 0 → (row0,col0) x=0,y=0 */
+  --sk-dither-b1: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect x='0' y='0' width='4' height='4' fill='%23000'/%3E%3C/svg%3E");
+
+  /* b2 — 12.5% — 2 cells: values 0,1 → (row0,col0),(row2,col2) x=0,y=0 and x=8,y=8 */
+  --sk-dither-b2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect x='0' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='8' y='8' width='4' height='4' fill='%23000'/%3E%3C/svg%3E");
+
+  /* b4 — 25% — 4 cells: values 0–3 → (0,0),(2,2),(2,0),(0,2) */
+  --sk-dither-b4: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect x='0' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='8' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='0' y='8' width='4' height='4' fill='%23000'/%3E%3Crect x='8' y='8' width='4' height='4' fill='%23000'/%3E%3C/svg%3E");
+
+  /* b6 — 37.5% — 6 cells: adds values 4,5 → (1,1),(3,3) */
+  --sk-dither-b6: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect x='0' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='8' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='4' y='4' width='4' height='4' fill='%23000'/%3E%3Crect x='0' y='8' width='4' height='4' fill='%23000'/%3E%3Crect x='8' y='8' width='4' height='4' fill='%23000'/%3E%3Crect x='12' y='12' width='4' height='4' fill='%23000'/%3E%3C/svg%3E");
+
+  /* b8 — 50% — 8 cells: adds values 6,7 → (1,3),(3,1) */
+  --sk-dither-b8: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect x='0' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='8' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='4' y='4' width='4' height='4' fill='%23000'/%3E%3Crect x='12' y='4' width='4' height='4' fill='%23000'/%3E%3Crect x='0' y='8' width='4' height='4' fill='%23000'/%3E%3Crect x='8' y='8' width='4' height='4' fill='%23000'/%3E%3Crect x='4' y='12' width='4' height='4' fill='%23000'/%3E%3Crect x='12' y='12' width='4' height='4' fill='%23000'/%3E%3C/svg%3E");
+
+  /* b10 — 62.5% — 10 cells: adds values 8,9 → (0,1),(2,3) */
+  --sk-dither-b10: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect x='0' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='4' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='8' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='4' y='4' width='4' height='4' fill='%23000'/%3E%3Crect x='12' y='4' width='4' height='4' fill='%23000'/%3E%3Crect x='0' y='8' width='4' height='4' fill='%23000'/%3E%3Crect x='8' y='8' width='4' height='4' fill='%23000'/%3E%3Crect x='12' y='8' width='4' height='4' fill='%23000'/%3E%3Crect x='4' y='12' width='4' height='4' fill='%23000'/%3E%3Crect x='12' y='12' width='4' height='4' fill='%23000'/%3E%3C/svg%3E");
+
+  /* b12 — 75% — 12 cells: adds values 10,11 → (0,3),(2,1) */
+  --sk-dither-b12: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect x='0' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='4' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='8' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='12' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='4' y='4' width='4' height='4' fill='%23000'/%3E%3Crect x='12' y='4' width='4' height='4' fill='%23000'/%3E%3Crect x='0' y='8' width='4' height='4' fill='%23000'/%3E%3Crect x='4' y='8' width='4' height='4' fill='%23000'/%3E%3Crect x='8' y='8' width='4' height='4' fill='%23000'/%3E%3Crect x='12' y='8' width='4' height='4' fill='%23000'/%3E%3Crect x='4' y='12' width='4' height='4' fill='%23000'/%3E%3Crect x='12' y='12' width='4' height='4' fill='%23000'/%3E%3C/svg%3E");
+
+  /* b14 — 87.5% — 14 cells: adds values 12,13 → (1,0),(3,2) */
+  --sk-dither-b14: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect x='0' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='4' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='8' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='12' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='0' y='4' width='4' height='4' fill='%23000'/%3E%3Crect x='4' y='4' width='4' height='4' fill='%23000'/%3E%3Crect x='12' y='4' width='4' height='4' fill='%23000'/%3E%3Crect x='0' y='8' width='4' height='4' fill='%23000'/%3E%3Crect x='4' y='8' width='4' height='4' fill='%23000'/%3E%3Crect x='8' y='8' width='4' height='4' fill='%23000'/%3E%3Crect x='12' y='8' width='4' height='4' fill='%23000'/%3E%3Crect x='4' y='12' width='4' height='4' fill='%23000'/%3E%3Crect x='8' y='12' width='4' height='4' fill='%23000'/%3E%3Crect x='12' y='12' width='4' height='4' fill='%23000'/%3E%3C/svg%3E");
+}
+
+/* ═══════════════════════════════════════════════════════════
+   2. NAMED ALIASES
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  --sk-dither-bayer:  var(--sk-dither-b8);   /* default 50% */
+  --sk-dither-light:  var(--sk-dither-b2);   /* 12.5% */
+  --sk-dither-medium: var(--sk-dither-b6);   /* 37.5% */
+  --sk-dither-heavy:  var(--sk-dither-b12);  /* 75% */
+  --sk-dither-ultra:  var(--sk-dither-b14);  /* 87.5% */
+}
+
+/* ═══════════════════════════════════════════════════════════
+   3. SUPPLEMENTARY TEXTURE PATTERNS
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  /* Block shade characters — ░▒▓█ */
+  --sk-dither-blocks-25:  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Ctext x='0' y='13' font-family='monospace' font-size='14' fill='%23000'%3E░%3C/text%3E%3C/svg%3E");
+  --sk-dither-blocks-50:  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Ctext x='0' y='13' font-family='monospace' font-size='14' fill='%23000'%3E▒%3C/text%3E%3C/svg%3E");
+  --sk-dither-blocks-75:  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Ctext x='0' y='13' font-family='monospace' font-size='14' fill='%23000'%3E▓%3C/text%3E%3C/svg%3E");
   --sk-dither-blocks-100: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Ctext x='0' y='13' font-family='monospace' font-size='14' fill='%23000'%3E█%3C/text%3E%3C/svg%3E");
 
-  /* Bayer ordered dither — 4×4 matrix pattern */
-  --sk-dither-bayer: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Cdefs%3E%3Cpattern id='b' width='8' height='8' patternUnits='userSpaceOnUse'%3E%3Crect x='0' y='0' width='4' height='4' fill='%23000' opacity='0.1'/%3E%3Crect x='4' y='0' width='4' height='4' fill='%23000' opacity='0.6'/%3E%3Crect x='0' y='4' width='4' height='4' fill='%23000' opacity='0.3'/%3E%3Crect x='4' y='4' width='4' height='4' fill='%23000' opacity='0.8'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='32' height='32' fill='url(%23b)'/%3E%3C/svg%3E");
-
-  /* Floyd-Steinberg — organic noise pattern */
-  --sk-dither-floyd: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='fs'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23fs)' opacity='0.2'/%3E%3C/svg%3E");
-
-  /* Crosshatch — intersecting diagonals */
+  /* Crosshatch — intersecting 45° diagonals */
   --sk-dither-crosshatch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath d='M-1,2 l3,-3 M0,6 l6,-6 M4,10 l10,-10 M8,12 l12,-12 M2,-1 l-2,2 M6,0 l-6,6 M10,4 l-4,4 M12,8 l-8,8' stroke='%23000' stroke-width='1' fill='none'/%3E%3C/svg%3E");
 
   /* Diagonal — parallel lines at 45° */
   --sk-dither-diagonal: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath d='M-1,2 l3,-3 M0,6 l6,-6 M4,10 l10,-10 M8,12 l12,-12' stroke='%23000' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
 
-  /* Dots — clean circle grid */
-  --sk-dither-dots: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Ccircle cx='2' cy='2' r='1' fill='%23000'/%3E%3C/svg%3E");
+  /* Dots — 3px circles for more presence */
+  --sk-dither-dots: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Ccircle cx='4' cy='4' r='1.5' fill='%23000'/%3E%3C/svg%3E");
 
-  /* Noise — organic grain via feTurbulence */
-  --sk-dither-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E");
+  /* Scanlines — 1px line every 3px */
+  --sk-dither-scanlines: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='3' height='3'%3E%3Crect x='0' y='0' width='3' height='1' fill='%23000'/%3E%3C/svg%3E");
 
-  /* Scanlines — CRT horizontal lines */
-  --sk-dither-scanlines: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect x='0' y='0' width='4' height='1' fill='%23000' opacity='0.15'/%3E%3C/svg%3E");
+  /* Checker — 8×8 px tile, 4×4 px cells */
+  --sk-dither-checker: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Crect x='0' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='4' y='4' width='4' height='4' fill='%23000'/%3E%3C/svg%3E");
 
-  /* Checker — alternating squares */
-  --sk-dither-checker: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Crect width='4' height='4' fill='%23000' opacity='0.15'/%3E%3Crect x='4' y='4' width='4' height='4' fill='%23000' opacity='0.15'/%3E%3C/svg%3E");
+  /* Noise — improved feTurbulence with contrast boost */
+  --sk-dither-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75 0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='discrete' tableValues='0 0 0 1'/%3E%3CfeFuncG type='discrete' tableValues='0 0 0 1'/%3E%3CfeFuncB type='discrete' tableValues='0 0 0 1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+  /* Grain — ultra-fine surface texture overlay */
+  --sk-dither-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5 1.6' numOctaves='1' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='discrete' tableValues='0 1'/%3E%3CfeFuncG type='discrete' tableValues='0 1'/%3E%3CfeFuncB type='discrete' tableValues='0 1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+
+  /* Organic — noise-based dither (formerly floyd/floyd-steinberg) */
+  --sk-dither-organic: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='o' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65 0.7' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='discrete' tableValues='0 0 1'/%3E%3CfeFuncG type='discrete' tableValues='0 0 1'/%3E%3CfeFuncB type='discrete' tableValues='0 0 1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23o)'/%3E%3C/svg%3E");
+
+  /* Legacy alias */
+  --sk-dither-floyd: var(--sk-dither-organic);
 }
 
 /* ═══════════════════════════════════════════════════════════
-   ASCII BORDER CHARACTERS
-   Box-drawing characters for component borders
+   4. DITHER GRADIENT UTILITIES
+   Uses ::after with mask-image to create blocky pixelated fade edges
+   Requires position: relative on parent (added by the class itself)
    ═══════════════════════════════════════════════════════════ */
 
-:root {
-  --sk-border-h: "─";
-  --sk-border-v: "│";
-  --sk-border-tl: "┌";
-  --sk-border-tr: "┐";
-  --sk-border-bl: "└";
-  --sk-border-br: "┘";
-  --sk-border-cross: "┼";
-  --sk-border-tj: "┬";
-  --sk-border-bj: "┴";
-  --sk-border-lj: "├";
-  --sk-border-rj: "┤";
+.sk-dither-fade-r,
+.sk-dither-fade-l,
+.sk-dither-fade-b,
+.sk-dither-fade-t {
+  position: relative;
+}
+
+/* Shared pseudo-element base */
+.sk-dither-fade-r::after,
+.sk-dither-fade-l::after,
+.sk-dither-fade-b::after,
+.sk-dither-fade-t::after {
+  content: '';
+  position: absolute;
+  background: inherit;
+  background-image: none;
+  -webkit-mask-image: var(--sk-dither-b8);
+          mask-image: var(--sk-dither-b8);
+  -webkit-mask-size: 16px 16px;
+          mask-size: 16px 16px;
+  -webkit-mask-repeat: repeat;
+          mask-repeat: repeat;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Fades to the right */
+.sk-dither-fade-r::after {
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: min(50%, 120px);
+}
+
+/* Fades to the left */
+.sk-dither-fade-l::after {
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: min(50%, 120px);
+}
+
+/* Fades to the bottom */
+.sk-dither-fade-b::after {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: min(50%, 120px);
+}
+
+/* Fades to the top */
+.sk-dither-fade-t::after {
+  left: 0;
+  right: 0;
+  top: 0;
+  height: min(50%, 120px);
+}
+
+/* ASCII block gradient — use on a <pre> element filled by SkDither.gradientPre() */
+.sk-dither-gradient-pre {
+  font-family: var(--sk-font-mono, monospace);
+  font-size: 8px;
+  line-height: 1.05;
+  letter-spacing: 0;
+  white-space: pre;
+  user-select: none;
+  color: hsl(var(--sk-foreground));
 }
 
 /* ═══════════════════════════════════════════════════════════
-   ASCII DENSITY PALETTE
-   ░▒▓█ characters as CSS content
-   ═══════════════════════════════════════════════════════════ */
-
-:root {
-  --sk-block-empty: " ";
-  --sk-block-light: "░";
-  --sk-block-medium: "▒";
-  --sk-block-dark: "▓";
-  --sk-block-full: "█";
-  --sk-block-half-up: "▀";
-  --sk-block-half-down: "▄";
-}
-
-/* ═══════════════════════════════════════════════════════════
-   DENSITY SYSTEM
+   5. DENSITY SYSTEM
    ═══════════════════════════════════════════════════════════ */
 
 :root {
   --sk-density: 50%;
-  --sk-dither-pattern: var(--sk-dither-floyd);
-  --sk-dither-opacity: 0.15;
-  --sk-dither-size: auto;
+  --sk-dither-pattern: var(--sk-dither-b6);
+  --sk-dither-opacity: 0.12;
+  --sk-dither-size: 16px 16px;
   --sk-char-palette: 'blocks';
 }
 
-:root[data-density="sparse"]   { --sk-density: 25%; --sk-dither-opacity: 0.06; }
-:root[data-density="normal"]   { --sk-density: 50%; --sk-dither-opacity: 0.15; }
-:root[data-density="dense"]    { --sk-density: 75%; --sk-dither-opacity: 0.3; }
-:root[data-density="solid"]    { --sk-density: 100%; --sk-dither-opacity: 0.5; }
+:root[data-density="sparse"] {
+  --sk-dither-pattern: var(--sk-dither-b2);
+  --sk-dither-opacity: 0.05;
+}
+
+:root[data-density="normal"] {
+  --sk-dither-pattern: var(--sk-dither-b6);
+  --sk-dither-opacity: 0.12;
+}
+
+:root[data-density="dense"] {
+  --sk-dither-pattern: var(--sk-dither-b10);
+  --sk-dither-opacity: 0.22;
+}
+
+:root[data-density="solid"] {
+  --sk-dither-pattern: var(--sk-dither-b14);
+  --sk-dither-opacity: 0.4;
+}
 
 /* ═══════════════════════════════════════════════════════════
-   UTILITY CLASSES
+   6. UTILITY FILL CLASSES
    ═══════════════════════════════════════════════════════════ */
 
-.sk-fill-25   { background-image: var(--sk-dither-blocks-25); background-size: 16px 16px; background-repeat: repeat; }
-.sk-fill-50   { background-image: var(--sk-dither-blocks-50); background-size: 16px 16px; background-repeat: repeat; }
-.sk-fill-75   { background-image: var(--sk-dither-blocks-75); background-size: 16px 16px; background-repeat: repeat; }
-.sk-fill-100  { background-image: var(--sk-dither-blocks-100); background-size: 16px 16px; background-repeat: repeat; }
+/* Bayer density fills */
+.sk-fill-b1  { background-image: var(--sk-dither-b1);  background-size: 16px 16px; background-repeat: repeat; }
+.sk-fill-b2  { background-image: var(--sk-dither-b2);  background-size: 16px 16px; background-repeat: repeat; }
+.sk-fill-b4  { background-image: var(--sk-dither-b4);  background-size: 16px 16px; background-repeat: repeat; }
+.sk-fill-b6  { background-image: var(--sk-dither-b6);  background-size: 16px 16px; background-repeat: repeat; }
+.sk-fill-b8  { background-image: var(--sk-dither-b8);  background-size: 16px 16px; background-repeat: repeat; }
+.sk-fill-b10 { background-image: var(--sk-dither-b10); background-size: 16px 16px; background-repeat: repeat; }
+.sk-fill-b12 { background-image: var(--sk-dither-b12); background-size: 16px 16px; background-repeat: repeat; }
+.sk-fill-b14 { background-image: var(--sk-dither-b14); background-size: 16px 16px; background-repeat: repeat; }
 
-.sk-fill-bayer      { background-image: var(--sk-dither-bayer); background-size: 32px 32px; background-repeat: repeat; }
-.sk-fill-floyd      { background-image: var(--sk-dither-floyd); background-repeat: repeat; }
+/* Legacy block shade fills */
+.sk-fill-25  { background-image: var(--sk-dither-blocks-25);  background-size: 16px 16px; background-repeat: repeat; }
+.sk-fill-50  { background-image: var(--sk-dither-blocks-50);  background-size: 16px 16px; background-repeat: repeat; }
+.sk-fill-75  { background-image: var(--sk-dither-blocks-75);  background-size: 16px 16px; background-repeat: repeat; }
+.sk-fill-100 { background-image: var(--sk-dither-blocks-100); background-size: 16px 16px; background-repeat: repeat; }
+
+/* Texture fills */
 .sk-fill-crosshatch { background-image: var(--sk-dither-crosshatch); background-size: 12px 12px; background-repeat: repeat; }
-.sk-fill-diagonal   { background-image: var(--sk-dither-diagonal); background-size: 12px 12px; background-repeat: repeat; }
-.sk-fill-dots       { background-image: var(--sk-dither-dots); background-size: 8px 8px; background-repeat: repeat; }
-.sk-fill-noise      { background-image: var(--sk-dither-noise); background-repeat: repeat; }
-.sk-fill-scanlines  { background-image: var(--sk-dither-scanlines); background-size: 4px 4px; background-repeat: repeat; }
-.sk-fill-checker    { background-image: var(--sk-dither-checker); background-size: 8px 8px; background-repeat: repeat; }
+.sk-fill-diagonal   { background-image: var(--sk-dither-diagonal);   background-size: 12px 12px; background-repeat: repeat; }
+.sk-fill-dots       { background-image: var(--sk-dither-dots);       background-size: 8px 8px;   background-repeat: repeat; }
+.sk-fill-scanlines  { background-image: var(--sk-dither-scanlines);  background-size: 3px 3px;   background-repeat: repeat; }
+.sk-fill-checker    { background-image: var(--sk-dither-checker);    background-size: 8px 8px;   background-repeat: repeat; }
+.sk-fill-noise      { background-image: var(--sk-dither-noise);      background-repeat: repeat; }
+.sk-fill-grain      { background-image: var(--sk-dither-grain);      background-repeat: repeat; }
+.sk-fill-organic    { background-image: var(--sk-dither-organic);    background-repeat: repeat; }
+.sk-fill-floyd      { background-image: var(--sk-dither-floyd);      background-repeat: repeat; }
 
 /* ═══════════════════════════════════════════════════════════
-   ASCII DITHER OVERLAY
+   7. DITHER OVERLAY CLASS
    ═══════════════════════════════════════════════════════════ */
 
-.sk-dither { position: relative; }
+.sk-dither {
+  position: relative;
+  isolation: isolate;
+}
 
 .sk-dither::before {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: var(--sk-dither-pattern);
+  background-image: var(--sk-dither-pattern, var(--sk-dither-b6));
   background-repeat: repeat;
-  background-size: var(--sk-dither-size, auto);
-  opacity: var(--sk-dither-opacity, 0.15);
+  background-size: 16px 16px;
+  opacity: var(--sk-dither-opacity, 0.12);
   pointer-events: none;
   border-radius: inherit;
+  z-index: 0;
 }
 
 /* ═══════════════════════════════════════════════════════════
-   ASCII BORDER RENDERING (using pseudo-elements)
+   8. ASCII BORDER CHARACTERS
+   Box-drawing characters for component borders
    ═══════════════════════════════════════════════════════════ */
 
+:root {
+  --sk-border-h:     "─";
+  --sk-border-v:     "│";
+  --sk-border-tl:    "┌";
+  --sk-border-tr:    "┐";
+  --sk-border-bl:    "└";
+  --sk-border-br:    "┘";
+  --sk-border-cross: "┼";
+  --sk-border-tj:    "┬";
+  --sk-border-bj:    "┴";
+  --sk-border-lj:    "├";
+  --sk-border-rj:    "┤";
+}
+
+/* ASCII density palette — ░▒▓█ */
+:root {
+  --sk-block-empty:     " ";
+  --sk-block-light:     "░";
+  --sk-block-medium:    "▒";
+  --sk-block-dark:      "▓";
+  --sk-block-full:      "█";
+  --sk-block-half-up:   "▀";
+  --sk-block-half-down: "▄";
+}
+
+/* ASCII border rendering via pseudo-elements */
 .sk-border-ascii {
   position: relative;
   font-family: var(--sk-font-mono, monospace);
 }
 
-/* Top border */
 .sk-border-ascii::before {
   content: "┌────────────────────┐";
   display: block;
@@ -152,7 +302,6 @@
   letter-spacing: 0;
 }
 
-/* Bottom border */
 .sk-border-ascii::after {
   content: "└────────────────────┘";
   display: block;
@@ -163,42 +312,43 @@
 }
 
 /* ═══════════════════════════════════════════════════════════
-   ANIMATIONS
+   9. ANIMATIONS
    ═══════════════════════════════════════════════════════════ */
 
-@keyframes sk-dither-pulse {
-  0%, 100% { opacity: 0.08; }
-  50%      { opacity: 0.25; }
+@keyframes sk-pulse-dither {
+  0%, 100% { opacity: var(--sk-dither-opacity, 0.12); }
+  50%       { opacity: calc(var(--sk-dither-opacity, 0.12) * 2.5); }
 }
 
-@keyframes sk-dither-morph {
-  0%   { background-image: var(--sk-dither-blocks-25); }
-  33%  { background-image: var(--sk-dither-blocks-50); }
-  66%  { background-image: var(--sk-dither-blocks-75); }
-  100% { background-image: var(--sk-dither-blocks-100); }
+@keyframes sk-morph-dither {
+  0%   { background-image: var(--sk-dither-b2); }
+  25%  { background-image: var(--sk-dither-b6); }
+  50%  { background-image: var(--sk-dither-b8); }
+  75%  { background-image: var(--sk-dither-b10); }
+  100% { background-image: var(--sk-dither-b2); }
 }
 
-@keyframes sk-dither-scan {
+@keyframes sk-scan-down {
   0%   { background-position: 0 0; }
-  100% { background-position: 0 4px; }
+  100% { background-position: 0 16px; }
 }
 
-@keyframes sk-ascii-blink {
-  0%, 49% { opacity: 1; }
+@keyframes sk-blink-block {
+  0%, 49%   { opacity: 1; }
   50%, 100% { opacity: 0; }
 }
 
-.sk-animate-pulse  { animation: sk-dither-pulse 2s ease-in-out infinite; }
-.sk-animate-morph  { animation: sk-dither-morph 1.5s steps(4) infinite; }
-.sk-animate-scan   { animation: sk-dither-scan 0.1s linear infinite; }
-.sk-animate-blink  { animation: sk-ascii-blink 1s steps(2) infinite; }
+.sk-animate-pulse { animation: sk-pulse-dither 2s ease-in-out infinite; }
+.sk-animate-morph { animation: sk-morph-dither 2s steps(4) infinite; }
+.sk-animate-scan  { animation: sk-scan-down 0.4s linear infinite; }
+.sk-animate-blink { animation: sk-blink-block 1s steps(2) infinite; }
 
 /* ═══════════════════════════════════════════════════════════
-   ACCESSIBILITY
+   10. ACCESSIBILITY
    ═══════════════════════════════════════════════════════════ */
 
 @media (prefers-contrast: more) {
-  .sk-dither::before { background-image: none !important; content: "" !important; }
+  .sk-dither::before { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

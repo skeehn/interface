@@ -4,6 +4,7 @@
 @import url('../../../engine/reset.css');
 @import url('../../../engine/tokens.css');
 @import url('../../../engine/dither.css');
+@import url('../../../engine/animation.css');
 
 /* Components used in this demo */
 @import url('../../../components/button/button.css');

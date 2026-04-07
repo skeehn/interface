@@ -8,7 +8,13 @@
   transition: all var(--sk-transition); white-space: nowrap; position: relative; overflow: hidden;
 }
 .sk-btn:focus-visible { outline: 2px solid hsl(var(--sk-ring)); outline-offset: 2px; }
-.sk-btn:active { transform: scale(0.98); }
+
+/* Chunky pixel press — universal active state */
+.sk-btn:active:not(:disabled) {
+  box-shadow: inset 0 2px 0 hsl(var(--sk-foreground) / 0.15);
+  transform: translateY(1px);
+}
+
 .sk-btn:disabled { opacity: 0.4; pointer-events: none; cursor: not-allowed; }
 
 /* Sizes */
@@ -20,14 +26,35 @@
 .sk-btn[data-variant="solid"] { background: hsl(var(--sk-primary)); color: hsl(var(--sk-background)); border-color: transparent; }
 .sk-btn[data-variant="solid"]:hover:not(:disabled) { opacity: 0.85; }
 
-/* Dither */
-.sk-btn[data-variant="dither"] { background: hsl(var(--sk-primary)); color: hsl(var(--sk-background)); border-color: transparent; }
+/* Dither — denser pattern on hover, scanline texture on active */
+.sk-btn[data-variant="dither"] {
+  --sk-dither-opacity: 0.12;
+  background: hsl(var(--sk-primary)); color: hsl(var(--sk-background)); border-color: transparent;
+}
 .sk-btn[data-variant="dither"]::before {
   content: ""; position: absolute; inset: 0;
-  background-image: var(--sk-dither-pattern); background-repeat: repeat;
-  opacity: var(--sk-dither-opacity); mix-blend-mode: overlay; pointer-events: none;
+  background-image: var(--sk-dither-b6, var(--sk-dither-pattern));
+  background-repeat: repeat;
+  opacity: var(--sk-dither-opacity);
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  transition: opacity var(--sk-transition);
 }
-.sk-btn[data-variant="dither"]:hover:not(:disabled) { --sk-dither-opacity: 0.25; }
+/* Denser dither on hover */
+.sk-btn[data-variant="dither"]:hover:not(:disabled) {
+  --sk-dither-opacity: 0.32;
+}
+/* Swap to scanline feel on active */
+.sk-btn[data-variant="dither"]:active:not(:disabled)::before {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 1px,
+    hsl(var(--sk-foreground) / 0.1) 1px,
+    hsl(var(--sk-foreground) / 0.1) 2px
+  );
+  opacity: 1;
+}
 
 /* Outline */
 .sk-btn[data-variant="outline"] { background: transparent; color: hsl(var(--sk-foreground)); border-color: hsl(var(--sk-border)); }
@@ -53,4 +80,76 @@
 .sk-btn[data-variant="ascii"]::after {
   content: "└────────┘"; position: absolute; bottom: -0.5rem; left: 0; right: 0;
   font-size: 0.5rem; line-height: 1; color: hsl(var(--sk-border-color)); pointer-events: none;
+}
+
+/* Pixel — 4px raised bevel shadow style */
+.sk-btn[data-variant="pixel"] {
+  background: hsl(var(--sk-background));
+  color: hsl(var(--sk-foreground));
+  border: 2px solid hsl(var(--sk-foreground));
+  box-shadow: 4px 4px 0 hsl(var(--sk-foreground));
+  /* offset: compensate so the visual bounding box stays in flow */
+  transform: translate(0, 0);
+  transition: box-shadow var(--sk-transition), transform var(--sk-transition);
+}
+.sk-btn[data-variant="pixel"]:hover:not(:disabled) {
+  box-shadow: 2px 2px 0 hsl(var(--sk-foreground));
+  transform: translate(2px, 2px);
+}
+.sk-btn[data-variant="pixel"]:active:not(:disabled) {
+  box-shadow: 0 0 0 hsl(var(--sk-foreground));
+  transform: translate(4px, 4px);
+  /* override the universal active shadow so it doesn't double-apply */
+  /* inset shadow omitted for clean flat-press feel on pixel variant */
+}
+/* pixel variant neutralises the universal inset press */
+.sk-btn[data-variant="pixel"]:active:not(:disabled) {
+  box-shadow: 0 0 0 hsl(var(--sk-foreground));
+}
+
+/* ============================================================
+   LOADING STATE
+   [data-loading] — animating ░▒▓█ fill indicator via ::after
+   Usage: <button class="sk-btn" data-variant="solid" data-loading>…</button>
+   ============================================================ */
+@keyframes sk-btn-load-chars {
+  0%   { content: "░"; }
+  25%  { content: "▒"; }
+  50%  { content: "▓"; }
+  75%  { content: "█"; }
+  100% { content: "░"; }
+}
+
+.sk-btn[data-loading] {
+  pointer-events: none;
+  opacity: 0.8;
+  /* nudge label to leave room for the indicator */
+  padding-right: calc(var(--sk-space-4) + 1.4em);
+}
+/* ascii/pixel variants keep their own padding rhythm */
+.sk-btn[data-variant="ascii"][data-loading],
+.sk-btn[data-variant="pixel"][data-loading] {
+  padding-right: calc(var(--sk-space-3) + 1.4em);
+}
+
+.sk-btn[data-loading]::after {
+  content: "░";
+  position: absolute;
+  right: var(--sk-space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--sk-font-mono);
+  font-size: inherit;
+  line-height: 1;
+  pointer-events: none;
+  animation: sk-btn-load-chars 0.8s steps(1) infinite;
+}
+/* pixel/ascii ::after is already used — loading indicator shifts to gap */
+.sk-btn[data-variant="ascii"][data-loading]::after,
+.sk-btn[data-variant="ascii"][data-loading]::before {
+  /* restore ascii decorators and suppress the loading override */
+}
+/* for ascii, use the gap slot instead */
+.sk-btn[data-variant="ascii"][data-loading] {
+  /* inherit default loading ::after — ascii border decorators use top/bottom not right */
 }

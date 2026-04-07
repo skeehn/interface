@@ -1,0 +1,243 @@
+/* skeehn — Animation Engine: Retro/pixel/CRT animation system */
+
+/* ============================================================
+   ANIMATION TOKENS
+   ============================================================ */
+:root {
+  /* Speed scale */
+  --sk-anim-instant:  50ms;
+  --sk-anim-fast:     150ms;
+  --sk-anim-normal:   300ms;
+  --sk-anim-slow:     600ms;
+  --sk-anim-crawl:    1200ms;
+  --sk-anim-glacial:  2400ms;
+
+  /* Easing presets — all pixel-appropriate */
+  --sk-ease-snap:   steps(1);                          /* instant state change */
+  --sk-ease-step2:  steps(2);                          /* 2-step blink */
+  --sk-ease-step4:  steps(4);                          /* 4-step animation */
+  --sk-ease-step8:  steps(8);                          /* 8-step for smooth retro */
+  --sk-ease-step16: steps(16);                         /* 16-step pixel motion */
+  --sk-ease-pixel:  cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --sk-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --sk-ease-sharp:  cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================
+   KEYFRAMES
+   ============================================================ */
+
+/* 1. Blink — cursor/indicator */
+@keyframes sk-blink {
+  0%,  49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+@keyframes sk-blink-slow {
+  0%,  79% { opacity: 1; }
+  80%, 100% { opacity: 0; }
+}
+
+/* 2. Flicker — CRT monitor effect */
+@keyframes sk-flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 76%, 78%, 100% { opacity: 1; }
+  20%, 24%, 55%  { opacity: 0.7; }
+  77%            { opacity: 0.85; }
+}
+@keyframes sk-flicker-mild {
+  0%, 98%  { opacity: 1; }
+  99%      { opacity: 0.92; }
+  99.5%    { opacity: 1; }
+}
+
+/* 3. Glitch — digital corruption */
+@keyframes sk-glitch {
+  0%, 90%, 100% { transform: translate(0); clip-path: none; }
+  91%            { transform: translate(-3px, 1px); }
+  92%            { transform: translate(3px, -1px);  clip-path: inset(20% 0 60% 0); }
+  93%            { transform: translate(-1px, 2px);  clip-path: inset(60% 0 20% 0); }
+  94%            { transform: translate(0);           clip-path: none; }
+}
+@keyframes sk-glitch-text {
+  0%, 85%, 100% { text-shadow: none; }
+  86% { text-shadow:  2px 0 hsl(0 100% 50% / 0.8), -2px 0 hsl(200 100% 50% / 0.8); letter-spacing:  0.02em; }
+  88% { text-shadow: -2px 0 hsl(0 100% 50% / 0.8),  2px 0 hsl(200 100% 50% / 0.8); letter-spacing: -0.01em; }
+  90% { text-shadow: none; }
+}
+
+/* 4. Scan — moving CRT scanline */
+@keyframes sk-scanroll {
+  0%   { background-position: 0 0; }
+  100% { background-position: 0 100px; }
+}
+@keyframes sk-scanflash {
+  0%, 100% { opacity: 0; }
+  50%       { opacity: 0.08; }
+}
+
+/* 5. Typewriter — text appearing */
+@keyframes sk-type {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+@keyframes sk-type-cursor {
+  0%, 100% { border-right-color: currentColor; }
+  50%       { border-right-color: transparent; }
+}
+
+/* 6. Pixel slide animations (stepped) */
+@keyframes sk-slide-in-r {
+  from { transform: translateX(32px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+@keyframes sk-slide-in-l {
+  from { transform: translateX(-32px); opacity: 0; }
+  to   { transform: translateX(0);     opacity: 1; }
+}
+@keyframes sk-slide-in-b {
+  from { transform: translateY(16px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+@keyframes sk-slide-in-t {
+  from { transform: translateY(-16px); opacity: 0; }
+  to   { transform: translateY(0);     opacity: 1; }
+}
+
+/* 7. Pixel bounce */
+@keyframes sk-bounce-pixel {
+  0%   { transform: translateY(0); }
+  25%  { transform: translateY(-8px); }
+  50%  { transform: translateY(0); }
+  75%  { transform: translateY(-4px); }
+  100% { transform: translateY(0); }
+}
+
+/* 8. Pulse — pulsing element */
+@keyframes sk-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.7; transform: scale(0.97); }
+}
+@keyframes sk-pulse-dot {
+  0%, 100% { transform: scale(1);   opacity: 1; }
+  50%       { transform: scale(1.4); opacity: 0.6; }
+}
+
+/* 9. Fade */
+@keyframes sk-fade-in  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sk-fade-out { from { opacity: 1; } to { opacity: 0; } }
+
+/* 10. Spin — stepped pixel spin */
+@keyframes sk-spin-pixel {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* 11. Progress — loading bar fill */
+@keyframes sk-progress-fill {
+  from { width: 0%; }
+  to   { width: var(--sk-progress-value, 100%); }
+}
+@keyframes sk-progress-stripe {
+  0%   { background-position: 0 0; }
+  100% { background-position: 32px 0; }
+}
+@keyframes sk-progress-indeterminate {
+  0%   { left: -40%; width: 40%; }
+  60%  { left: 100%; width: 40%; }
+  100% { left: 100%; width: 40%; }
+}
+
+/* 12. Shake — error state */
+@keyframes sk-shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-4px); }
+  40%       { transform: translateX(4px); }
+  60%       { transform: translateX(-4px); }
+  80%       { transform: translateX(2px); }
+}
+
+/* ============================================================
+   UTILITY CLASSES
+   ============================================================ */
+
+/* Blink */
+.sk-blink      { animation: sk-blink      var(--sk-anim-crawl) steps(2) infinite; }
+.sk-blink-slow { animation: sk-blink-slow 2s               steps(2) infinite; }
+.sk-blink-fast { animation: sk-blink      var(--sk-anim-slow)  steps(2) infinite; }
+
+/* Flicker */
+.sk-flicker      { animation: sk-flicker      3s linear infinite; }
+.sk-flicker-mild { animation: sk-flicker-mild 4s linear infinite; }
+
+/* Glitch */
+.sk-glitch      { animation: sk-glitch      4s steps(4) infinite; }
+.sk-glitch-text { animation: sk-glitch-text 5s linear   infinite; }
+
+/* Pulse */
+.sk-pulse     { animation: sk-pulse     2s   ease-in-out infinite; }
+.sk-pulse-dot { animation: sk-pulse-dot 1.4s ease-in-out infinite; }
+
+/* Slide in */
+.sk-slide-r { animation: sk-slide-in-r var(--sk-anim-normal) steps(8) both; }
+.sk-slide-l { animation: sk-slide-in-l var(--sk-anim-normal) steps(8) both; }
+.sk-slide-b { animation: sk-slide-in-b var(--sk-anim-normal) steps(8) both; }
+.sk-slide-t { animation: sk-slide-in-t var(--sk-anim-normal) steps(8) both; }
+
+/* Bounce */
+.sk-bounce { animation: sk-bounce-pixel var(--sk-anim-slow) steps(8) infinite; }
+
+/* Fade */
+.sk-fade-in  { animation: sk-fade-in  var(--sk-anim-normal) var(--sk-ease-sharp) both; }
+.sk-fade-out { animation: sk-fade-out var(--sk-anim-normal) var(--sk-ease-sharp) both; }
+
+/* Spin */
+.sk-spin      { animation: sk-spin-pixel 1s steps(16) linear infinite; }
+.sk-spin-slow { animation: sk-spin-pixel 3s steps(16) linear infinite; }
+
+/* Shake */
+.sk-shake { animation: sk-shake var(--sk-anim-fast) steps(8) both; }
+
+/* Scanroll */
+.sk-scanroll { animation: sk-scanroll 2s linear infinite; }
+
+/* ============================================================
+   TYPEWRITER COMPONENT
+   Usage: <span class="sk-typewriter" style="--sk-type-chars: 20">Hello world</span>
+   ============================================================ */
+.sk-typewriter {
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid currentColor;
+  width: 0;
+  display: inline-block;
+  animation:
+    sk-type        calc(var(--sk-type-chars, 10) * 80ms) steps(var(--sk-type-chars, 10)) forwards,
+    sk-type-cursor 0.8s                                   steps(2)                        infinite;
+}
+
+/* ============================================================
+   DELAY UTILITIES
+   ============================================================ */
+.sk-delay-1 { animation-delay: 100ms; }
+.sk-delay-2 { animation-delay: 200ms; }
+.sk-delay-3 { animation-delay: 300ms; }
+.sk-delay-4 { animation-delay: 400ms; }
+.sk-delay-5 { animation-delay: 500ms; }
+.sk-delay-6 { animation-delay: 600ms; }
+.sk-delay-8 { animation-delay: 800ms; }
+
+/* Duration overrides */
+.sk-duration-fast   { animation-duration: var(--sk-anim-fast); }
+.sk-duration-normal { animation-duration: var(--sk-anim-normal); }
+.sk-duration-slow   { animation-duration: var(--sk-anim-slow); }
+.sk-duration-crawl  { animation-duration: var(--sk-anim-crawl); }
+
+/* ============================================================
+   MOTION REDUCTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration:        0.01ms !important;
+    animation-iteration-count: 1      !important;
+    transition-duration:       0.01ms !important;
+  }
+}

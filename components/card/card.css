@@ -1,17 +1,125 @@
-.sk-card { border: var(--sk-border); border-radius: var(--sk-radius); overflow: hidden; transition: box-shadow var(--sk-transition); }
-.sk-card:hover { box-shadow: var(--sk-shadow-md); }
-.sk-card__header { padding: var(--sk-space-3) var(--sk-space-4); border-bottom: var(--sk-border); display: flex; align-items: center; justify-content: space-between; }
-.sk-card__title { margin: 0; font-family: var(--sk-font-mono); font-size: var(--sk-font-size-sm); font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; }
+/* skeehn — Card */
+
+/* Base */
+.sk-card {
+  border: var(--sk-border);
+  border-radius: var(--sk-radius);
+  overflow: hidden;
+  transition: box-shadow var(--sk-transition), transform var(--sk-transition);
+}
+
+/* Default hover — lift with more prominent shadow */
+.sk-card:not([data-variant]):hover {
+  box-shadow: var(--sk-shadow-md);
+  transform: translateY(-1px);
+}
+
+/* Header — with subtle CRT scanline texture */
+.sk-card__header {
+  padding: var(--sk-space-3) var(--sk-space-4);
+  border-bottom: var(--sk-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    hsl(var(--sk-foreground) / 0.03) 3px,
+    hsl(var(--sk-foreground) / 0.03) 4px
+  );
+}
+
+.sk-card__title {
+  margin: 0;
+  font-family: var(--sk-font-mono);
+  font-size: var(--sk-font-size-sm);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
 .sk-card__body { padding: var(--sk-space-4); }
-.sk-card__body p { margin: 0; font-size: var(--sk-font-size-sm); color: hsl(var(--sk-muted-foreground)); line-height: var(--sk-line-height); }
-.sk-card__footer { padding: var(--sk-space-2) var(--sk-space-4); border-top: var(--sk-border); background: hsl(var(--sk-muted) / 0.3); display: flex; align-items: center; justify-content: space-between; }
-.sk-card__footer-text { font-family: var(--sk-font-mono); font-size: var(--sk-font-size-xs); color: hsl(var(--sk-muted-foreground)); letter-spacing: 0.02em; }
+.sk-card__body p {
+  margin: 0;
+  font-size: var(--sk-font-size-sm);
+  color: hsl(var(--sk-muted-foreground));
+  line-height: var(--sk-line-height);
+}
+.sk-card__footer {
+  padding: var(--sk-space-2) var(--sk-space-4);
+  border-top: var(--sk-border);
+  background: hsl(var(--sk-muted) / 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sk-card__footer-text {
+  font-family: var(--sk-font-mono);
+  font-size: var(--sk-font-size-xs);
+  color: hsl(var(--sk-muted-foreground));
+  letter-spacing: 0.02em;
+}
+
+/* Solid */
 .sk-card[data-variant="solid"] { background: hsl(var(--sk-background)); }
-.sk-card[data-variant="dither"] { background: hsl(var(--sk-background)); position: relative; }
-.sk-card[data-variant="dither"]::before { content: ""; position: absolute; inset: 0; background-image: var(--sk-dither-pattern); background-repeat: repeat; opacity: calc(var(--sk-dither-opacity, 0.15) * 0.5); pointer-events: none; }
+
+/* Dither — grain texture with depth shadow */
+.sk-card[data-variant="dither"] {
+  background: hsl(var(--sk-background));
+  position: relative;
+}
+/* Grain overlay */
+.sk-card[data-variant="dither"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* fine grain: SVG noise via data URI */
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='128' height='128' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E"),
+    var(--sk-dither-grain, var(--sk-dither-pattern));
+  background-repeat: repeat;
+  background-size: 128px 128px, auto;
+  opacity: 0.06;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: inherit;
+}
+/* Depth shadow — absolute positioned bottom-right decorative accent */
+.sk-card[data-variant="dither"]::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  right: -3px;
+  width: 100%;
+  height: 100%;
+  background: hsl(var(--sk-foreground) / 0.06);
+  border-radius: inherit;
+  z-index: -1;
+  pointer-events: none;
+}
 .sk-card[data-variant="dither"] > * { position: relative; z-index: 1; }
+
+/* Outline */
 .sk-card[data-variant="outline"] { background: transparent; border: 2px solid hsl(var(--sk-border)); }
+
+/* Ghost */
 .sk-card[data-variant="ghost"] { background: hsl(var(--sk-accent)); border-color: transparent; }
+
+/* Inverted */
 .sk-card[data-variant="inverted"] { background: hsl(var(--sk-foreground)); color: hsl(var(--sk-background)); border-color: transparent; }
 .sk-card[data-variant="inverted"] .sk-card__title { color: hsl(var(--sk-background)); }
 .sk-card[data-variant="inverted"] .sk-card__body p { color: hsl(var(--sk-background) / 0.7); }
+
+/* Pixel — flat bevel with 4px offset hard shadow */
+.sk-card[data-variant="pixel"] {
+  background: hsl(var(--sk-background));
+  border: 2px solid hsl(var(--sk-foreground));
+  box-shadow: 4px 4px 0 hsl(var(--sk-foreground));
+  transition: box-shadow var(--sk-transition), transform var(--sk-transition);
+}
+.sk-card[data-variant="pixel"]:hover {
+  box-shadow: 6px 6px 0 hsl(var(--sk-foreground));
+  transform: translate(-1px, -1px);
+}

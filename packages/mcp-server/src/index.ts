@@ -31,6 +31,7 @@ function assertSafeTheme(theme: string): void {
   if (!VALID_THEME.has(theme)) throw new Error(`Invalid theme: ${JSON.stringify(theme)}`);
 }
 function assertSafePath(p: string): void {
+  if (p.includes("..")) throw new Error(`Path traversal not allowed: ${JSON.stringify(p)}`);
   if (!VALID_PATH.test(p)) throw new Error(`Invalid path: ${JSON.stringify(p)}`);
 }
 
@@ -310,7 +311,7 @@ server.tool(
       await execFile("npx", ["skeehn", "init", "-p", path, "-t", theme]);
       for (const comp of components) {
         assertSafeComponentName(comp);
-        assertSafePath(path);
+        // path already validated before loop
         await execFile("npx", ["skeehn", "add", comp, "-p", path]);
       }
       return {

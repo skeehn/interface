@@ -2,10 +2,15 @@
   "name": "skeehn-monorepo",
   "private": true,
   "workspaces": ["packages/*", "apps/*"],
+  "bin": {
+    "skeehn": "./cli/index.ts"
+  },
   "scripts": {
+    "dev": "bun run demo/server.ts",
+    "demo": "bun run demo/server.ts",
+    "registry": "cd apps/registry-api && bun run index.ts",
     "test": "bun test",
-    "demo": "cd demo && bun run ../demo/server.ts",
-    "registry": "cd apps/registry-api && bun run index.ts"
+    "build": "bun run packages/api/package.json#build && bun run packages/mcp-server/package.json#build"
   },
   "devDependencies": {
     "@types/bun": "latest"

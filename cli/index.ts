@@ -9,8 +9,9 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const ENGINE = join(ROOT, "engine");
 const THEMES = join(ROOT, "themes");
 const COMPONENTS = join(ROOT, "components");
-const VALID_THEMES = ["default", "brutal", "terminal", "print", "grain"];
+const VALID_THEMES = ["default", "dark", "brutal", "terminal", "print", "grain"];
 const VALID_DENSITIES = ["sparse", "normal", "dense", "solid"];
+const VALID_TEMPLATES = ["hello-world", "dashboard", "gradient"];
 
 const log = (m: string) => console.log(`\n  ${m}`);
 const ok = (m: string) => console.log(`  ✓ ${m}`);
@@ -21,9 +22,24 @@ function parseFlags(args: string[]): Record<string, string> {
   for (let i = 0; i < args.length; i++) {
     if ((args[i] === "-p" || args[i] === "--path") && args[i+1]) f.path = args[++i];
     if ((args[i] === "-t" || args[i] === "--theme") && args[i+1]) f.theme = args[++i];
+    if (args[i] === "--template" && args[i+1]) f.template = args[++i];
     if (args[i] === "--json") f.json = "true";
   }
   return f;
+}
+
+function detectFramework(target: string): 'next' | 'react' | 'vue' | 'svelte' | 'html' {
+  const pkgPath = join(target, 'package.json');
+  if (!existsSync(pkgPath)) return 'html';
+  try {
+    const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
+    const deps = { ...pkg.dependencies, ...pkg.devDependencies };
+    if (deps['next']) return 'next';
+    if (deps['react']) return 'react';
+    if (deps['vue']) return 'vue';
+    if (deps['svelte']) return 'svelte';
+  } catch {}
+  return 'html';
 }
 
 async function init(args: string[]) {
@@ -47,12 +63,39 @@ async function init(args: string[]) {
   const tSrc = join(THEMES, `${theme}.css`);
   if (existsSync(tSrc)) { copyFileSync(tSrc, join(target, "styles", "theme.css")); ok(`styles/theme.css (${theme})`); }
 
+  // Template support
+  const template = f.template || "hello-world";
+  if (f.template && !VALID_TEMPLATES.includes(template)) {
+    err(`Template "${template}" not found. Choose: ${VALID_TEMPLATES.join(", ")}`);
+  }
+
   const idx = join(target, "index.html");
   if (!existsSync(idx)) {
-    writeFileSync(idx, `<!DOCTYPE html><html lang="en" data-theme="${theme}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>skeehn</title><link rel="stylesheet" href="styles/reset.css"><link rel="stylesheet" href="styles/tokens.css"><link rel="stylesheet" href="styles/dither.css"><link rel="stylesheet" href="styles/theme.css"></head><body><h1>skeehn</h1><p>Run <code>npx skeehn add button</code></p></body></html>`);
-    ok("index.html");
+    const tplSrc = join(ROOT, "templates", template, "index.html");
+    if (existsSync(tplSrc)) {
+      let html = readFileSync(tplSrc, "utf-8");
+      // Rewrite relative paths for target location
+      html = html.replace(/\.\.\/\.\.\/engine\//g, "styles/");
+      html = html.replace(/\.\.\/\.\.\/themes\//g, "styles/themes/");
+      html = html.replace(/\.\.\/\.\.\/components\//g, "components/");
+      writeFileSync(idx, html);
+    } else {
+      writeFileSync(idx, `<!DOCTYPE html><html lang="en" data-theme="${theme}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>skeehn</title><link rel="stylesheet" href="styles/reset.css"><link rel="stylesheet" href="styles/tokens.css"><link rel="stylesheet" href="styles/dither.css"><link rel="stylesheet" href="styles/theme.css"></head><body><h1>skeehn</h1><p>Run <code>npx skeehn add button</code></p></body></html>`);
+    }
+    ok(`index.html (template: ${template})`);
   }
-  log(`Done in ${target}\nTheme: ${theme}\nNext: npx skeehn add button\n      npx skeehn theme brutal\n`);
+
+  // Framework detection
+  const framework = detectFramework(target);
+  const nextSteps: Record<string, string> = {
+    next:   'Import CSS in app/globals.css. Use @skeehn/react for typed wrappers.',
+    react:  'Import CSS in your entry file. Use @skeehn/react for typed wrappers.',
+    vue:    'Import CSS in main.ts. skeehn custom elements work natively in Vue.',
+    svelte: 'Import CSS in +layout.svelte. skeehn custom elements work natively in Svelte.',
+    html:   'Link CSS files in <head>. Load component JS via <script type="module">.',
+  };
+
+  log(`Done in ${target}\nTheme: ${theme} · Template: ${template}\nFramework: ${framework} → ${nextSteps[framework]}\nNext: npx skeehn add button\n      npx skeehn theme brutal\n`);
 }
 
 async function add(args: string[]) {
@@ -245,22 +288,25 @@ switch (cmd) {
   case "--version": case "-v": console.log("0.3.0"); break;
   case "--help": case "-h": case undefined:
     console.log(`
-  skeehn — ASCII as native rendering
+  skeehn — ASCII native AI component library
 
   Usage:
-    npx skeehn@latest init              Set up in project
-    npx skeehn@latest add <component>   Add component
-    npx skeehn@latest add all           Add all 28 components
-    npx skeehn@latest theme <name>      Swap theme
-    npx skeehn@latest density <level>   Change density
-    npx skeehn@latest mcp               Set up MCP server for AI agents
-    npx skeehn@latest generate <type>   Generate ASCII art (image|text)
-    npx skeehn@latest schema            Generate machine-readable schemas
+    npx skeehn@latest init                          Set up in current directory
+    npx skeehn@latest init --template dashboard     Use dashboard template
+    npx skeehn@latest init --template gradient      Use gradient/hero template
+    npx skeehn@latest add <component>               Add component
+    npx skeehn@latest add all                       Add all 29 components
+    npx skeehn@latest theme <name>                  Swap theme
+    npx skeehn@latest density <level>               Change density
+    npx skeehn@latest mcp                           Set up MCP server for AI agents
+    npx skeehn@latest generate <type>               Generate ASCII art (image|text)
+    npx skeehn@latest schema                        Generate machine-readable schemas
 
-  Themes: default, brutal, terminal, print, grain
+  Templates: hello-world, dashboard, gradient
+  Themes: default, dark, brutal, terminal, print, grain
   Density: sparse, normal, dense, solid
 
-  Components: 28 total (14 core + 11 AI + layout + dataviz + motion)
+  Components: 29 total (14 core + 11 AI + layout + dataviz + motion)
 `); break;
   default: err(`Unknown: ${cmd}. Run: npx skeehn --help`);
 }

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="default">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>skeehn Dashboard</title>
+  <link rel="stylesheet" href="../../engine/reset.css">
+  <link rel="stylesheet" href="../../engine/tokens.css">
+  <link rel="stylesheet" href="../../engine/dither.css">
+  <link rel="stylesheet" href="../../components/button/button.css">
+  <link rel="stylesheet" href="../../components/badge/badge.css">
+  <link rel="stylesheet" href="../../components/agent-status/agent-status.css">
+  <link rel="stylesheet" href="../../components/chat-bubble/chat-bubble.css">
+  <link rel="stylesheet" href="../../components/chat-input/chat-input.css">
+  <link rel="stylesheet" href="../../components/reasoning-step/reasoning-step.css">
+  <link id="theme-link" rel="stylesheet" href="../../themes/default.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      height: 100dvh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      font-family: var(--sk-font-sans);
+      background: hsl(var(--sk-background));
+      color: hsl(var(--sk-foreground));
+      overflow: hidden;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      gap: var(--sk-space-4);
+      padding: var(--sk-space-3) var(--sk-space-4);
+      border-bottom: var(--sk-border);
+      font-size: var(--sk-font-size-sm);
+    }
+    header strong {
+      font-weight: var(--sk-font-weight-medium);
+      margin-right: auto;
+    }
+    .shell {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      min-height: 0;
+    }
+    .sidebar {
+      border-right: var(--sk-border);
+      padding: var(--sk-space-4);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sk-space-2);
+      overflow-y: auto;
+    }
+    .sidebar-label {
+      font-family: var(--sk-font-mono);
+      font-size: var(--sk-font-size-xs);
+      letter-spacing: var(--sk-letter-spacing-wide);
+      text-transform: uppercase;
+      color: hsl(var(--sk-muted-foreground));
+      margin-bottom: var(--sk-space-1);
+    }
+    .main {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .thread {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--sk-space-6);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sk-space-4);
+    }
+    .footer {
+      padding: var(--sk-space-4);
+      border-top: var(--sk-border);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <strong>skeehn dashboard</strong>
+    <button class="sk-btn" data-variant="ghost" data-size="sm" id="theme-toggle" aria-label="Toggle theme">☀</button>
+  </header>
+
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="sidebar-label">Agent</div>
+      <div class="sk-agent-status" data-status="idle">
+        <span class="sk-agent-status__dot"></span>
+        <span class="sk-agent-status__label">idle</span>
+      </div>
+      <div class="sidebar-label" style="margin-top: var(--sk-space-4)">Session</div>
+      <button class="sk-btn" data-variant="dither" data-size="sm" style="width:100%">New chat</button>
+    </aside>
+
+    <main class="main">
+      <div class="thread" id="thread">
+        <div class="sk-chat-bubble" data-role="assistant">
+          <div class="sk-chat-bubble__content">Dashboard ready. Ask me anything.</div>
+        </div>
+      </div>
+      <div class="footer">
+        <sk-chat-input class="sk-chat-input" data-state="idle">
+          <div class="sk-chat-input__wrapper">
+            <textarea class="sk-chat-input__field" placeholder="Ask anything..." rows="1" aria-label="Chat input"></textarea>
+            <div class="sk-chat-input__actions">
+              <button class="sk-chat-input__mic sk-btn" data-variant="ghost" data-size="sm" data-mic-state="idle">
+                <span class="sk-chat-input__mic-icon">◎</span>
+              </button>
+              <button class="sk-chat-input__send sk-btn" data-variant="dither" data-size="sm">↑</button>
+            </div>
+          </div>
+          <div class="sk-chat-input__hint">Enter to send · Shift+Enter for newline</div>
+        </sk-chat-input>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="../../components/chat-input/chat-input.js"></script>
+  <script type="module" src="../../components/reasoning-step/reasoning-step.js"></script>
+  <script>
+    let dark = false;
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      dark = !dark;
+      const t = dark ? 'dark' : 'default';
+      document.documentElement.setAttribute('data-theme', t);
+      document.getElementById('theme-link').href = `../../themes/${t}.css`;
+      document.getElementById('theme-toggle').textContent = dark ? '☾' : '☀';
+    });
+
+    document.addEventListener('sk:submit', e => {
+      const thread = document.getElementById('thread');
+      const bubble = document.createElement('div');
+      bubble.className = 'sk-chat-bubble';
+      bubble.setAttribute('data-role', 'user');
+      bubble.innerHTML = `<div class="sk-chat-bubble__content">${e.detail.value.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div>`;
+      thread.appendChild(bubble);
+      thread.scrollTop = thread.scrollHeight;
+    });
+  </script>
+</body>
+</html>

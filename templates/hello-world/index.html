@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="default">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>skeehn — Hello World</title>
+  <link rel="stylesheet" href="../../engine/reset.css">
+  <link rel="stylesheet" href="../../engine/tokens.css">
+  <link rel="stylesheet" href="../../engine/dither.css">
+  <link rel="stylesheet" href="../../components/button/button.css">
+  <link rel="stylesheet" href="../../components/chat-bubble/chat-bubble.css">
+  <link rel="stylesheet" href="../../components/chat-input/chat-input.css">
+  <link id="theme-link" rel="stylesheet" href="../../themes/default.css">
+  <style>
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--sk-space-6);
+      padding: var(--sk-space-8);
+      font-family: var(--sk-font-sans);
+      background: hsl(var(--sk-background));
+      color: hsl(var(--sk-foreground));
+    }
+    .container {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--sk-space-4);
+    }
+    h1 {
+      font-weight: var(--sk-font-weight-thin);
+      font-size: var(--sk-font-size-3xl);
+      letter-spacing: var(--sk-letter-spacing-tight);
+      margin: 0;
+    }
+    .theme-controls {
+      display: flex;
+      gap: var(--sk-space-2);
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>skeehn</h1>
+    <div class="theme-controls">
+      <button class="sk-btn" data-variant="dither" onclick="applyTheme('default')">light</button>
+      <button class="sk-btn" data-variant="outline" onclick="applyTheme('dark')">dark</button>
+      <button class="sk-btn" data-variant="ghost" onclick="applyTheme('terminal')">terminal</button>
+    </div>
+    <div class="sk-chat-bubble" data-role="assistant">
+      <div class="sk-chat-bubble__content">Hello from skeehn. ASCII-native AI components.</div>
+    </div>
+    <div id="messages"></div>
+    <sk-chat-input class="sk-chat-input" data-state="idle">
+      <div class="sk-chat-input__wrapper">
+        <textarea class="sk-chat-input__field" placeholder="Say something..." rows="1" aria-label="Chat input"></textarea>
+        <div class="sk-chat-input__actions">
+          <button class="sk-chat-input__send sk-btn" data-variant="dither" data-size="sm">↑</button>
+        </div>
+      </div>
+      <div class="sk-chat-input__hint">Enter to send · Shift+Enter for new line</div>
+    </sk-chat-input>
+  </div>
+
+  <script type="module" src="../../components/chat-input/chat-input.js"></script>
+  <script>
+    function applyTheme(t) {
+      document.documentElement.setAttribute('data-theme', t);
+      document.getElementById('theme-link').href = `../../themes/${t}.css`;
+    }
+    document.addEventListener('sk:submit', e => {
+      const messages = document.getElementById('messages');
+      const bubble = document.createElement('div');
+      bubble.className = 'sk-chat-bubble';
+      bubble.setAttribute('data-role', 'user');
+      bubble.innerHTML = `<div class="sk-chat-bubble__content">${e.detail.value.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div>`;
+      messages.appendChild(bubble);
+    });
+  </script>
+</body>
+</html>

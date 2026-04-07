@@ -1,0 +1,223 @@
+# skeehn — ASCII Native AI Component Library
+
+## What is skeehn?
+skeehn is a zero-dependency CSS component library for AI interfaces.
+29 components. 5 themes. 8 dither patterns. Works with any stack.
+Swiss technical minimal aesthetic. Light + dark mode baseline. Dither as texture, not the whole aesthetic.
+
+## Installation
+
+```bash
+# Via CLI
+npx skeehn init                           # copy engine + hello-world template
+npx skeehn init --template dashboard     # 3-panel AI app shell
+npx skeehn init --template gradient      # gradient hero landing page
+npx skeehn add button                    # add individual component
+npx skeehn add all                       # add all 29 components
+npx skeehn theme dark                    # switch active theme
+```
+
+## File Structure
+
+```
+engine/reset.css        CSS reset
+engine/tokens.css       Design tokens (CSS custom properties, light+dark)
+engine/dither.css       8 SVG dither patterns, ASCII border characters
+themes/default.css      Light theme (default)
+themes/dark.css         Dark theme
+themes/terminal.css     Green phosphor CRT
+themes/brutal.css       Heavy ASCII block aesthetic
+themes/print.css        Newsprint halftone
+themes/grain.css        Warm film grain
+components/             29 component directories, each with .html/.css/.js
+templates/              Starter templates (hello-world, dashboard, gradient)
+packages/react/         Typed React wrappers (@skeehn/react)
+```
+
+## Components (29 total)
+
+### Core (14)
+button, card, input, badge, alert, dialog, tabs, toggle, progress, avatar, tooltip, dropdown, table, accordion
+
+### AI-Native (11)
+chat-bubble, chat-input, reasoning-step, tool-card, citation-card, streaming-text, terminal-panel, agent-status, code-block, typing-indicator, voice-session
+
+### Bundles (4)
+markdown, layout, dataviz, motion
+
+## Usage Example (Plain HTML)
+
+```html
+<!DOCTYPE html>
+<html lang="en" data-theme="default">
+<head>
+  <link rel="stylesheet" href="engine/reset.css">
+  <link rel="stylesheet" href="engine/tokens.css">
+  <link rel="stylesheet" href="engine/dither.css">
+  <link rel="stylesheet" href="components/button/button.css">
+  <link rel="stylesheet" href="components/chat-bubble/chat-bubble.css">
+  <link rel="stylesheet" href="themes/default.css">
+</head>
+<body>
+  <div class="sk-chat-bubble" data-role="assistant">
+    <div class="sk-chat-bubble__content">Hello from skeehn</div>
+  </div>
+  <button class="sk-btn" data-variant="dither">Send</button>
+</body>
+</html>
+```
+
+## Usage Example (React)
+
+```tsx
+// Import CSS in your entry file or globals.css:
+// import 'path/to/engine/tokens.css'
+// import 'path/to/engine/dither.css'
+// import 'path/to/components/chat-bubble/chat-bubble.css'
+
+import { ChatBubble, AgentStatus, ReasoningStep } from '@skeehn/react';
+
+export function Demo() {
+  return (
+    <>
+      <AgentStatus status="thinking" />
+      <ChatBubble role="assistant">Hello from skeehn</ChatBubble>
+      <ReasoningStep status="completed" title="Checked registry">
+        Found 29 components
+      </ReasoningStep>
+    </>
+  );
+}
+```
+
+## Design Tokens (CSS custom properties)
+
+All color tokens are HSL tuples — use inside hsl():
+
+```css
+/* Colors */
+hsl(var(--sk-background))
+hsl(var(--sk-foreground))
+hsl(var(--sk-surface))
+hsl(var(--sk-primary))
+hsl(var(--sk-primary-fg))
+hsl(var(--sk-muted))
+hsl(var(--sk-muted-foreground))
+hsl(var(--sk-border-color))
+hsl(var(--sk-destructive))
+
+/* Borders */
+var(--sk-border)           /* full shorthand: 1px solid hsl(...) */
+var(--sk-border-color)     /* HSL tuple only */
+
+/* Typography */
+var(--sk-font-sans)        /* Geist, -apple-system, ... */
+var(--sk-font-mono)        /* Geist Mono, SF Mono, ... */
+var(--sk-font-weight-thin)   /* 200 */
+var(--sk-font-weight-light)  /* 300 */
+var(--sk-font-weight-normal) /* 400 */
+var(--sk-font-weight-medium) /* 500 */
+var(--sk-letter-spacing-tight) /* -0.025em */
+var(--sk-letter-spacing-wide)  /* 0.06em */
+
+/* Spacing (8px grid) */
+var(--sk-space-1)   /* 4px  */
+var(--sk-space-2)   /* 8px  */
+var(--sk-space-4)   /* 16px */
+var(--sk-space-6)   /* 24px */
+var(--sk-space-8)   /* 32px */
+var(--sk-space-16)  /* 64px */
+var(--sk-space-24)  /* 96px */
+
+/* Dither patterns (CSS background-image values) */
+var(--sk-dither-bayer)
+var(--sk-dither-noise)
+var(--sk-dither-scanlines)
+var(--sk-dither-dots)
+var(--sk-dither-crosshatch)
+var(--sk-dither-checker)
+var(--sk-dither-diagonal)
+var(--sk-dither-block)
+```
+
+## Theme Switching
+
+```javascript
+// Set theme via data attribute
+document.documentElement.setAttribute('data-theme', 'dark');
+
+// Load theme CSS dynamically
+document.getElementById('theme-link').href = 'themes/dark.css';
+
+// Available themes: default | dark | terminal | brutal | print | grain
+```
+
+## Component HTML Patterns
+
+### Chat bubble
+```html
+<div class="sk-chat-bubble" data-role="user|assistant|tool|system">
+  <div class="sk-chat-bubble__content">Message text</div>
+</div>
+```
+
+### Agent status
+```html
+<div class="sk-agent-status" data-status="idle|thinking|acting|done|error">
+  <span class="sk-agent-status__dot"></span>
+  <span class="sk-agent-status__label">thinking</span>
+</div>
+```
+
+### Button
+```html
+<button class="sk-btn" data-variant="dither|solid|outline|ghost|inverted" data-size="sm|md|lg">
+  Label
+</button>
+```
+
+### Chat input (requires chat-input.js)
+```html
+<sk-chat-input class="sk-chat-input" data-state="idle">
+  <div class="sk-chat-input__wrapper">
+    <textarea class="sk-chat-input__field" placeholder="Ask..." rows="1"></textarea>
+    <div class="sk-chat-input__actions">
+      <button class="sk-chat-input__send sk-btn" data-variant="dither" data-size="sm">↑</button>
+    </div>
+  </div>
+</sk-chat-input>
+<script type="module" src="components/chat-input/chat-input.js"></script>
+```
+Listen for user input: `document.addEventListener('sk:submit', e => console.log(e.detail.value))`
+
+### Reasoning step (requires reasoning-step.js)
+```html
+<div class="sk-reasoning-step" data-status="pending|active|completed|error" data-expanded="false">
+  <button class="sk-reasoning-step__header">
+    <span class="sk-reasoning-step__indicator">○</span>
+    <span class="sk-reasoning-step__title">Step title</span>
+    <span class="sk-reasoning-step__chevron">▸</span>
+  </button>
+  <div class="sk-reasoning-step__content">Step details</div>
+</div>
+```
+
+## MCP Server
+
+```bash
+# Start MCP server
+bun run packages/mcp-server/src/index.ts
+
+# Available tools: add_component, set_theme, init_project, list_components
+```
+
+## Registry API
+
+```bash
+# Start registry server (port 3001)
+bun run registry
+
+GET /api/components         # list all 29 components
+GET /api/components/:name   # get component by slug
+GET /api/health             # {"status":"ok","version":"0.3.0"}
+```

@@ -1,0 +1,12 @@
+{
+  "name": "@skeehn/react",
+  "version": "0.3.0",
+  "description": "React wrappers for skeehn components",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "keywords": ["skeehn", "react", "ai", "components", "dither"]
+}

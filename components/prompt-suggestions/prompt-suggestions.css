@@ -1,0 +1,94 @@
+/*
+ * skeehn — PromptSuggestions
+ * Starter prompts for empty AI chat state.
+ */
+
+.sk-prompt-suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-space-3);
+  padding: var(--sk-space-6) 0;
+}
+
+.sk-prompt-suggestions__label {
+  font-family: var(--sk-font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: hsl(var(--sk-muted-foreground));
+}
+
+.sk-prompt-suggestions__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--sk-space-2);
+}
+
+.sk-prompt-suggestion {
+  border: 1px solid hsl(var(--sk-border-color));
+  padding: var(--sk-space-3) var(--sk-space-4);
+  font-family: var(--sk-font-sans);
+  font-size: var(--sk-font-size-sm);
+  color: hsl(var(--sk-muted-foreground));
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color var(--sk-transition), color var(--sk-transition), background var(--sk-transition);
+  position: relative;
+  overflow: hidden;
+  line-height: 1.4;
+}
+
+.sk-prompt-suggestion::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--sk-dither-bayer);
+  background-size: 8px 8px;
+  opacity: 0;
+  transition: opacity var(--sk-transition);
+  pointer-events: none;
+}
+
+.sk-prompt-suggestion:hover {
+  border-color: hsl(var(--sk-foreground));
+  color: hsl(var(--sk-foreground));
+  background: hsl(var(--sk-accent));
+}
+.sk-prompt-suggestion:hover::before { opacity: 0.05; }
+
+.sk-prompt-suggestion:focus-visible {
+  outline: 2px solid hsl(var(--sk-ring));
+  outline-offset: 2px;
+}
+
+.sk-prompt-suggestion__icon {
+  display: block;
+  font-family: var(--sk-font-mono);
+  font-size: 1rem;
+  margin-bottom: var(--sk-space-2);
+  opacity: 0.5;
+}
+
+.sk-prompt-suggestion__text { display: block; }
+
+/* Chips variant — compact inline pills */
+.sk-prompt-suggestions[data-variant="chips"] .sk-prompt-suggestions__grid {
+  grid-template-columns: none;
+  display: flex;
+  flex-wrap: wrap;
+}
+.sk-prompt-suggestions[data-variant="chips"] .sk-prompt-suggestion {
+  padding: var(--sk-space-1) var(--sk-space-3);
+  font-size: var(--sk-font-size-xs);
+  font-family: var(--sk-font-mono);
+}
+.sk-prompt-suggestions[data-variant="chips"] .sk-prompt-suggestion__icon {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-prompt-suggestion { transition: none; }
+  .sk-prompt-suggestion::before { transition: none; }
+}

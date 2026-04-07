@@ -1,0 +1,99 @@
+/*
+ * skeehn — FileAttachment
+ * File pill for chat input with upload progress and remove button.
+ */
+
+.sk-file-attachment {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sk-space-2);
+  padding: var(--sk-space-1) var(--sk-space-2) var(--sk-space-1) var(--sk-space-3);
+  border: 1px solid hsl(var(--sk-border-color));
+  font-family: var(--sk-font-mono);
+  font-size: var(--sk-font-size-xs);
+  color: hsl(var(--sk-foreground));
+  background: hsl(var(--sk-surface));
+  max-width: 300px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Progress bar (CSS var driven) */
+.sk-file-attachment__progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: hsl(var(--sk-primary));
+  width: var(--_progress, 0%);
+  transition: width 0.2s ease;
+}
+.sk-file-attachment[data-state="uploading"] .sk-file-attachment__progress {
+  animation: sk-progress-indeterminate 1.2s ease infinite;
+}
+@keyframes sk-progress-indeterminate {
+  0%   { left: 0%;   width: 30%; }
+  50%  { left: 35%;  width: 60%; }
+  100% { left: 100%; width: 0%;  }
+}
+
+/* State variants */
+.sk-file-attachment[data-state="uploading"] {
+  border-color: hsl(var(--sk-muted-foreground) / 0.4);
+  opacity: 0.8;
+}
+.sk-file-attachment[data-state="error"] {
+  border-color: hsl(var(--sk-destructive));
+  color: hsl(var(--sk-destructive));
+}
+.sk-file-attachment[data-state="done"] {
+  border-color: hsl(var(--sk-success) / 0.5);
+}
+
+.sk-file-attachment__icon {
+  flex-shrink: 0;
+  font-size: 0.875rem;
+  opacity: 0.6;
+}
+.sk-file-attachment__name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.sk-file-attachment__size {
+  flex-shrink: 0;
+  opacity: 0.4;
+  font-size: 9px;
+}
+.sk-file-attachment__remove {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 2px 4px;
+  cursor: pointer;
+  color: hsl(var(--sk-muted-foreground));
+  font-family: var(--sk-font-mono);
+  font-size: var(--sk-font-size-xs);
+  line-height: 1;
+  transition: color var(--sk-transition);
+}
+.sk-file-attachment__remove:hover  { color: hsl(var(--sk-destructive)); }
+.sk-file-attachment__remove:focus-visible {
+  outline: 2px solid hsl(var(--sk-ring));
+  outline-offset: 2px;
+}
+
+/* List wrapper for multiple files */
+.sk-file-attachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sk-space-2);
+  padding: var(--sk-space-2) 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-file-attachment__progress { animation: none; }
+  .sk-file-attachment__remove   { transition: none; }
+}

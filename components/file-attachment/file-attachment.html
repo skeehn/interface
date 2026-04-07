@@ -1,0 +1,29 @@
+<!-- skeehn — FileAttachment: file pill for AI chat input -->
+
+<!-- Default state -->
+<div class="sk-file-attachments">
+  <div class="sk-file-attachment" data-state="default">
+    <span class="sk-file-attachment__icon">◫</span>
+    <span class="sk-file-attachment__name">design-brief.pdf</span>
+    <span class="sk-file-attachment__size">2.4 MB</span>
+    <div class="sk-file-attachment__progress"></div>
+    <button class="sk-file-attachment__remove" aria-label="Remove file" data-name="design-brief.pdf">✕</button>
+  </div>
+
+  <!-- Uploading state -->
+  <div class="sk-file-attachment" data-state="uploading">
+    <span class="sk-file-attachment__icon">◫</span>
+    <span class="sk-file-attachment__name">screenshot.png</span>
+    <span class="sk-file-attachment__size">847 KB</span>
+    <div class="sk-file-attachment__progress"></div>
+    <button class="sk-file-attachment__remove" aria-label="Remove file" data-name="screenshot.png">✕</button>
+  </div>
+
+  <!-- Error state -->
+  <div class="sk-file-attachment" data-state="error">
+    <span class="sk-file-attachment__icon">✗</span>
+    <span class="sk-file-attachment__name">huge-file.zip</span>
+    <span class="sk-file-attachment__size">too large</span>
+    <button class="sk-file-attachment__remove" aria-label="Remove file" data-name="huge-file.zip">✕</button>
+  </div>
+</div>

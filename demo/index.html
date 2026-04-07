@@ -1,19 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="default" data-density="normal">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>skeehn — ASCII Native Rendering</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>░</text></svg>">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>skeehn — ASCII Native AI Components</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>▓</text></svg>">
+
+  <!-- Engine -->
   <link rel="stylesheet" href="../engine/reset.css">
   <link rel="stylesheet" href="../engine/tokens.css">
   <link rel="stylesheet" href="../engine/dither.css">
+
+  <!-- Themes -->
   <link rel="stylesheet" href="../themes/default.css" id="theme-css">
+
+  <!-- All components -->
   <link rel="stylesheet" href="../components/button/button.css">
+  <link rel="stylesheet" href="../components/badge/badge.css">
   <link rel="stylesheet" href="../components/card/card.css">
   <link rel="stylesheet" href="../components/input/input.css">
-  <link rel="stylesheet" href="../components/badge/badge.css">
   <link rel="stylesheet" href="../components/alert/alert.css">
-  <link rel="stylesheet" href="../components/dialog/dialog.css">
   <link rel="stylesheet" href="../components/tabs/tabs.css">
   <link rel="stylesheet" href="../components/toggle/toggle.css">
   <link rel="stylesheet" href="../components/progress/progress.css">
@@ -22,6 +28,8 @@
   <link rel="stylesheet" href="../components/dropdown/dropdown.css">
   <link rel="stylesheet" href="../components/table/table.css">
   <link rel="stylesheet" href="../components/accordion/accordion.css">
+  <link rel="stylesheet" href="../components/dialog/dialog.css">
+  <link rel="stylesheet" href="../components/agent-status/agent-status.css">
   <link rel="stylesheet" href="../components/chat-bubble/chat-bubble.css">
   <link rel="stylesheet" href="../components/chat-input/chat-input.css">
   <link rel="stylesheet" href="../components/reasoning-step/reasoning-step.css">
@@ -29,306 +37,1643 @@
   <link rel="stylesheet" href="../components/citation-card/citation-card.css">
   <link rel="stylesheet" href="../components/streaming-text/streaming-text.css">
   <link rel="stylesheet" href="../components/terminal-panel/terminal-panel.css">
-  <link rel="stylesheet" href="../components/agent-status/agent-status.css">
+  <link rel="stylesheet" href="../components/typing-indicator/typing-indicator.css">
+  <link rel="stylesheet" href="../components/code-block/code-block.css">
+  <link rel="stylesheet" href="../components/markdown/markdown.css">
+  <link rel="stylesheet" href="../components/layout/layout.css">
+
   <style>
-    body { max-width: 60rem; margin: 0 auto; padding: 2rem 1rem; background: hsl(var(--sk-background)); color: hsl(var(--sk-foreground)); }
-    .hdr { text-align: center; margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 2px solid hsl(var(--sk-border)); }
-    .hdr h1 { font-size: 3rem; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 0.25rem; font-family: var(--sk-font-mono); }
-    .hdr p { color: hsl(var(--sk-muted-foreground)); font-size: var(--sk-font-size-sm); font-family: var(--sk-font-mono); }
-    .ctrl { position: sticky; top: 0; z-index: 100; background: hsl(var(--sk-background)); border: 2px solid hsl(var(--sk-foreground)); padding: 0.75rem; margin-bottom: 2rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: center; font-family: var(--sk-font-mono); }
-    .ctrl label { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: hsl(var(--sk-muted-foreground)); }
-    .pill { display: inline-flex; gap: 1px; padding: 2px; background: hsl(var(--sk-muted)); border-radius: var(--sk-radius); }
-    .pill button { padding: 4px 8px; font-size: 0.6rem; font-weight: 600; font-family: var(--sk-font-mono); border: none; background: transparent; cursor: pointer; color: hsl(var(--sk-muted-foreground)); transition: all 60ms; letter-spacing: 0.03em; text-transform: uppercase; }
-    .pill button:hover { color: hsl(var(--sk-foreground)); }
-    .pill button.active { background: hsl(var(--sk-background)); color: hsl(var(--sk-foreground)); }
-    .sec { margin-bottom: 3rem; }
-    .sec h2 { font-size: var(--sk-font-size-lg); font-weight: 700; margin-bottom: 0.25rem; letter-spacing: 0.02em; text-transform: uppercase; font-family: var(--sk-font-mono); }
-    .sec > p { color: hsl(var(--sk-muted-foreground)); margin-bottom: 1rem; font-size: var(--sk-font-size-sm); font-family: var(--sk-font-mono); }
-    .row { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: 0.75rem; }
-    .block { max-width: 28rem; }
-    .ascii { font-family: var(--sk-font-mono); font-size: 0.45rem; line-height: 1.1; color: hsl(var(--sk-muted-foreground)); background: hsl(var(--sk-muted) / 0.3); padding: 0.5rem; border: var(--sk-border); border-radius: var(--sk-radius); margin-top: 0.5rem; white-space: pre; overflow-x: auto; }
-    .ft { text-align: center; padding-top: 2rem; border-top: 2px solid hsl(var(--sk-border)); color: hsl(var(--sk-muted-foreground)); font-size: var(--sk-font-size-sm); font-family: var(--sk-font-mono); }
-    .ft a { color: hsl(var(--sk-primary)); font-weight: 600; }
-    code { font-family: var(--sk-font-mono); font-size: 0.8em; padding: 1px 4px; background: hsl(var(--sk-muted)); border-radius: 2px; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* AI Chat Demo */
-    .chat-demo { border: 2px solid hsl(var(--sk-border)); border-radius: var(--sk-radius); overflow: hidden; }
-    .chat-demo__header { padding: var(--sk-space-3) var(--sk-space-4); background: hsl(var(--sk-muted) / 0.5); border-bottom: var(--sk-border); display: flex; align-items: center; gap: var(--sk-space-2); }
-    .chat-demo__header h3 { font-family: var(--sk-font-mono); font-size: var(--sk-font-size-sm); font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; margin: 0; }
-    .chat-demo__messages { padding: var(--sk-space-4); max-height: 24rem; overflow-y: auto; background: hsl(var(--sk-background)); }
-    .chat-demo__input { padding: var(--sk-space-3) var(--sk-space-4); border-top: var(--sk-border); background: hsl(var(--sk-muted) / 0.3); }
+    /* ── SHELL ── */
+    html, body {
+      height: 100%; width: 100%;
+      overflow: hidden;
+      background: hsl(var(--sk-background));
+      color: hsl(var(--sk-foreground));
+      font-family: var(--sk-font-sans);
+      font-size: 13px;
+    }
 
-    /* ASCII Art Preview */
-    .ascii-art-large { font-family: var(--sk-font-mono); font-size: 0.55rem; line-height: 1.15; color: hsl(var(--sk-foreground)); white-space: pre; overflow-x: auto; padding: 1rem; background: hsl(var(--sk-muted) / 0.2); border: var(--sk-border); border-radius: var(--sk-radius); }
+    .app {
+      display: grid;
+      grid-template-rows: 36px 1fr;
+      grid-template-columns: 220px 1fr 260px;
+      height: 100vh;
+    }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 12px;
+      border-bottom: 1px solid hsl(var(--sk-border-color));
+      background: hsl(var(--sk-background));
+      position: relative;
+      overflow: hidden;
+    }
+    .topbar::after {
+      content: "";
+      position: absolute; inset: 0;
+      background-image: var(--sk-dither-scanlines);
+      background-size: 4px 4px;
+      opacity: 0.08;
+      pointer-events: none;
+    }
+    .topbar__logo {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: hsl(var(--sk-foreground));
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .topbar__logo::before {
+      content: "▓░";
+      font-size: 11px;
+      opacity: 0.6;
+      animation: logo-morph 2s steps(3) infinite;
+    }
+    @keyframes logo-morph {
+      0%   { content: "▓░"; }
+      33%  { content: "▒▓"; }
+      66%  { content: "░▒"; }
+      100% { content: "▓░"; }
+    }
+    .topbar__sep { opacity: 0.2; }
+    .topbar__nav { display: flex; gap: 2px; }
+    .topbar__nav-btn {
+      padding: 3px 10px;
+      font-family: var(--sk-font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border: none;
+      background: transparent;
+      color: hsl(var(--sk-muted-foreground));
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 80ms;
+    }
+    .topbar__nav-btn:hover { color: hsl(var(--sk-foreground)); }
+    .topbar__nav-btn[data-active="true"] {
+      color: hsl(var(--sk-foreground));
+      border-bottom-color: hsl(var(--sk-foreground));
+    }
+    .topbar__controls {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .topbar__select {
+      font-family: var(--sk-font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: transparent;
+      color: hsl(var(--sk-muted-foreground));
+      border: 1px solid hsl(var(--sk-border-color));
+      padding: 2px 6px;
+      cursor: pointer;
+    }
+    .topbar__select:hover { color: hsl(var(--sk-foreground)); }
+    .topbar__badge {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 2px 6px;
+      border: 1px solid hsl(var(--sk-border-color));
+      color: hsl(var(--sk-muted-foreground));
+      background-image: var(--sk-dither-bayer);
+      background-size: 32px 32px;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      border-right: 1px solid hsl(var(--sk-border-color));
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: hsl(var(--sk-background));
+    }
+    .sidebar__section {
+      padding: 12px 0;
+      border-bottom: 1px solid hsl(var(--sk-border-color) / 0.5);
+    }
+    .sidebar__label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0.35;
+      padding: 0 12px 6px;
+      display: block;
+    }
+    .sidebar__item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      padding: 5px 12px;
+      font-family: var(--sk-font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      border: none;
+      background: transparent;
+      color: hsl(var(--sk-muted-foreground));
+      cursor: pointer;
+      text-align: left;
+      transition: all 60ms;
+      border-left: 2px solid transparent;
+    }
+    .sidebar__item:hover { color: hsl(var(--sk-foreground)); background: hsl(var(--sk-accent)); }
+    .sidebar__item[data-active="true"] {
+      color: hsl(var(--sk-foreground));
+      background: hsl(var(--sk-accent));
+      border-left-color: hsl(var(--sk-foreground));
+    }
+    .sidebar__item .icon { width: 14px; text-align: center; font-size: 11px; }
+    .sidebar__item .count {
+      margin-left: auto;
+      font-size: 9px;
+      opacity: 0.4;
+      letter-spacing: 0.05em;
+    }
+    .sidebar__stats {
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .sidebar__stat {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      opacity: 0.5;
+    }
+    .sidebar__stat span:last-child { opacity: 0.7; }
+
+    /* ── MAIN ── */
+    .main {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Views */
+    .view { display: none !important; flex-direction: column; height: 100%; overflow: hidden; }
+    .view[data-active="true"] { display: flex !important; }
+    #view-components[data-active="true"] { display: grid !important; }
+
+    /* ── CHAT VIEW ── */
+    .chat-thread {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      scroll-behavior: smooth;
+    }
+    .chat-thread::-webkit-scrollbar { width: 4px; }
+    .chat-thread::-webkit-scrollbar-track { background: transparent; }
+    .chat-thread::-webkit-scrollbar-thumb { background: hsl(var(--sk-border-color)); }
+
+    /* Override chat bubble for our theme */
+    .sk-chat-bubble[data-role="user"] {
+      align-self: flex-end;
+      max-width: 70%;
+    }
+    .sk-chat-bubble[data-role="assistant"],
+    .sk-chat-bubble[data-role="tool"] {
+      align-self: flex-start;
+      max-width: 80%;
+    }
+
+    .chat-footer {
+      padding: 12px 16px;
+      border-top: 1px solid hsl(var(--sk-border-color));
+      background: hsl(var(--sk-background));
+      position: relative;
+    }
+    .chat-footer::before {
+      content: "";
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: hsl(var(--sk-foreground));
+      opacity: 0.1;
+    }
+
+    /* Custom chat input */
+    .chat-input-wrap {
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+      border: 1px solid hsl(var(--sk-border-color));
+      padding: 8px 10px;
+      background: hsl(var(--sk-background));
+      position: relative;
+      overflow: hidden;
+    }
+    .chat-input-wrap::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image: var(--sk-dither-bayer);
+      background-size: 32px 32px;
+      opacity: 0.04;
+      pointer-events: none;
+    }
+    .chat-input-wrap:focus-within {
+      border-color: hsl(var(--sk-foreground));
+    }
+    .chat-input-wrap:focus-within::before { opacity: 0.08; }
+    #chat-textarea {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: var(--sk-font-mono);
+      font-size: 13px;
+      color: hsl(var(--sk-foreground));
+      resize: none;
+      min-height: 20px;
+      max-height: 120px;
+      overflow-y: auto;
+      line-height: 1.5;
+      field-sizing: content;
+    }
+    #chat-textarea::placeholder { color: hsl(var(--sk-muted-foreground)); opacity: 0.5; }
+    .chat-input-actions { display: flex; gap: 4px; }
+    .chat-act-btn {
+      width: 26px; height: 26px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+      background: transparent;
+      border: 1px solid hsl(var(--sk-border-color));
+      color: hsl(var(--sk-muted-foreground));
+      cursor: pointer;
+      transition: all 60ms;
+      font-family: var(--sk-font-mono);
+    }
+    .chat-act-btn:hover { color: hsl(var(--sk-foreground)); border-color: hsl(var(--sk-foreground)); }
+    .chat-act-btn.send {
+      background: hsl(var(--sk-foreground));
+      color: hsl(var(--sk-background));
+      border-color: hsl(var(--sk-foreground));
+      position: relative; overflow: hidden;
+    }
+    .chat-act-btn.send::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image: var(--sk-dither-bayer);
+      background-size: 32px 32px;
+      opacity: 0.2; mix-blend-mode: overlay;
+    }
+    .chat-act-btn.send:hover { opacity: 0.85; }
+    .chat-hint {
+      font-size: 9px;
+      letter-spacing: 0.05em;
+      opacity: 0.3;
+      margin-top: 5px;
+      text-transform: uppercase;
+    }
+
+    /* ── HERO ── */
+    #view-hero {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: var(--sk-space-8);
+      padding: var(--sk-space-16) var(--sk-space-12);
+      position: relative;
+      overflow: hidden;
+    }
+    #view-hero::before {
+      content: "";
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 15% 50%, hsl(var(--sk-foreground) / 0.025) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 40% at 85% 25%, hsl(var(--sk-info) / 0.03) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    #view-hero::after {
+      content: "";
+      position: absolute; inset: 0;
+      background-image: var(--sk-dither-bayer);
+      background-size: 32px 32px;
+      opacity: 0.03;
+      pointer-events: none;
+    }
+    .hero-badge {
+      font-family: var(--sk-font-mono);
+      font-size: var(--sk-font-size-xs);
+      letter-spacing: var(--sk-letter-spacing-wide);
+      text-transform: uppercase;
+      color: hsl(var(--sk-muted-foreground));
+      display: flex;
+      align-items: center;
+      gap: var(--sk-space-2);
+      position: relative;
+    }
+    .hero-title {
+      font-family: var(--sk-font-sans);
+      font-size: clamp(2rem, 4vw, var(--sk-font-size-5xl));
+      font-weight: var(--sk-font-weight-thin);
+      letter-spacing: var(--sk-letter-spacing-tight);
+      line-height: var(--sk-line-height-tight);
+      color: hsl(var(--sk-foreground));
+      margin: 0;
+      position: relative;
+    }
+    .hero-title .brand {
+      background: linear-gradient(135deg, hsl(var(--sk-foreground)) 0%, hsl(var(--sk-foreground) / 0.5) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      font-family: var(--sk-font-sans);
+      font-size: var(--sk-font-size-base);
+      font-weight: var(--sk-font-weight-light);
+      color: hsl(var(--sk-muted-foreground));
+      max-width: 46ch;
+      line-height: 1.65;
+      position: relative;
+    }
+    .hero-grid {
+      display: flex;
+      gap: var(--sk-space-3);
+      flex-wrap: wrap;
+      position: relative;
+    }
+    .hero-tile {
+      padding: var(--sk-space-3) var(--sk-space-4);
+      border: var(--sk-border);
+      position: relative;
+      overflow: hidden;
+      min-width: 80px;
+    }
+    .hero-tile::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image: var(--sk-dither-bayer);
+      background-size: 8px 8px;
+      opacity: 0.06;
+      pointer-events: none;
+    }
+    .hero-tile__num {
+      font-family: var(--sk-font-mono);
+      font-size: var(--sk-font-size-2xl);
+      font-weight: var(--sk-font-weight-semi);
+      line-height: 1;
+      color: hsl(var(--sk-foreground));
+    }
+    .hero-tile__label {
+      font-family: var(--sk-font-mono);
+      font-size: var(--sk-font-size-xs);
+      color: hsl(var(--sk-muted-foreground));
+      margin-top: var(--sk-space-1);
+    }
+    .hero-cta {
+      display: flex;
+      gap: var(--sk-space-3);
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    /* ── COMPONENTS VIEW ── */
+    #view-components[data-active="true"] {
+      overflow-y: auto;
+      padding: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-auto-rows: minmax(120px, auto);
+      gap: 1px;
+      align-content: start;
+    }
+    .comp-tile {
+      border: 1px solid hsl(var(--sk-border-color));
+      padding: 14px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 80ms;
+    }
+    .comp-tile::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image: var(--sk-dither-bayer);
+      background-size: 32px 32px;
+      opacity: 0;
+      transition: opacity 120ms;
+      pointer-events: none;
+    }
+    .comp-tile:hover::before { opacity: 0.18; }
+    .comp-tile:hover { border-color: hsl(var(--sk-foreground)); background: hsl(var(--sk-foreground) / 0.04); }
+    .comp-tile[data-active="true"] { border-color: hsl(var(--sk-foreground)); background: hsl(var(--sk-foreground) / 0.06); }
+    .comp-tile[data-active="true"]::before { opacity: 0.22; }
+    .comp-tile__header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .comp-tile__name {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .comp-tile__cat {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.35;
+    }
+    .comp-tile__preview {
+      padding: 10px 10px;
+      margin: 8px -2px 6px;
+      background: hsl(var(--sk-foreground) / 0.04);
+      border: 1px solid hsl(var(--sk-border-color));
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+    .comp-tile__preview::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image: var(--sk-dither-noise);
+      opacity: 0.06;
+      pointer-events: none;
+    }
+    .comp-tile__variants {
+      margin-top: 8px;
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+    .comp-tile__var {
+      font-size: 9px;
+      padding: 2px 6px;
+      border: 1px solid hsl(var(--sk-border-color));
+      opacity: 0.5;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── ENGINE VIEW ── */
+    #view-engine {
+      flex-direction: column;
+      gap: 0;
+    }
+    .engine-toolbar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 16px;
+      border-bottom: 1px solid hsl(var(--sk-border-color));
+      flex-shrink: 0;
+    }
+    .engine-toolbar label { font-size: 10px; opacity: 0.5; letter-spacing: 0.1em; text-transform: uppercase; }
+    .engine-toolbar input[type="file"] { font-size: 11px; font-family: var(--sk-font-mono); color: hsl(var(--sk-muted-foreground)); }
+    .engine-toolbar input[type="range"] { width: 80px; accent-color: hsl(var(--sk-foreground)); }
+    .engine-output {
+      flex: 1;
+      overflow: auto;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .engine-panel {
+      border: 1px solid hsl(var(--sk-border-color));
+      display: flex;
+      flex-direction: column;
+    }
+    .engine-panel__title {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0.4;
+      padding: 8px 10px 6px;
+      border-bottom: 1px solid hsl(var(--sk-border-color));
+    }
+    .engine-panel__content {
+      flex: 1;
+      padding: 10px;
+      font-size: 8px;
+      line-height: 1.1;
+      white-space: pre;
+      overflow: auto;
+      font-family: var(--sk-font-mono);
+      color: hsl(var(--sk-foreground));
+    }
+
+    /* ── INSPECTOR ── */
+    .inspector {
+      border-left: 1px solid hsl(var(--sk-border-color));
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .inspector__header {
+      padding: 8px 12px;
+      border-bottom: 1px solid hsl(var(--sk-border-color));
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0.4;
+      flex-shrink: 0;
+    }
+    .inspector__tabs {
+      display: flex;
+      border-bottom: 1px solid hsl(var(--sk-border-color));
+      flex-shrink: 0;
+    }
+    .inspector__tab {
+      flex: 1;
+      padding: 7px 8px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: none;
+      background: transparent;
+      color: hsl(var(--sk-muted-foreground));
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 60ms;
+      font-family: var(--sk-font-mono);
+    }
+    .inspector__tab:hover { color: hsl(var(--sk-foreground)); }
+    .inspector__tab[data-active="true"] {
+      color: hsl(var(--sk-foreground));
+      border-bottom-color: hsl(var(--sk-foreground));
+    }
+    .inspector__panel { display: none; flex: 1; overflow-y: auto; flex-direction: column; }
+    .inspector__panel[data-active="true"] { display: flex; }
+
+    /* Props panel */
+    .props-list { padding: 8px; display: flex; flex-direction: column; gap: 1px; }
+    .prop-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      padding: 5px 6px;
+      font-size: 11px;
+      border: 1px solid transparent;
+      transition: border-color 60ms;
+      cursor: default;
+    }
+    .prop-row:hover { border-color: hsl(var(--sk-border-color)); }
+    .prop-name { font-weight: 700; opacity: 0.7; min-width: 80px; }
+    .prop-type { opacity: 0.35; font-size: 10px; }
+    .prop-default { margin-left: auto; opacity: 0.5; font-size: 10px; }
+
+    /* Code panel */
+    .code-block {
+      margin: 8px;
+      padding: 10px;
+      font-size: 10px;
+      line-height: 1.5;
+      background: hsl(var(--sk-accent));
+      border: 1px solid hsl(var(--sk-border-color));
+      white-space: pre;
+      overflow-x: auto;
+      font-family: var(--sk-font-mono);
+      position: relative;
+    }
+    .code-block::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image: var(--sk-dither-crosshatch);
+      background-size: 12px 12px;
+      opacity: 0.04;
+      pointer-events: none;
+    }
+
+    /* Dither panel */
+    .dither-grid {
+      padding: 8px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+    }
+    .dither-swatch {
+      height: 48px;
+      border: 1px solid hsl(var(--sk-border-color));
+      position: relative;
+      cursor: pointer;
+      transition: border-color 60ms;
+    }
+    .dither-swatch:hover { border-color: hsl(var(--sk-foreground)); }
+    .dither-swatch::before {
+      content: attr(data-label);
+      position: absolute; bottom: 4px; right: 6px;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.4;
+      font-family: var(--sk-font-mono);
+    }
+
+    /* ── COMPONENT STYLES ── */
+
+    /* Agent status */
+    .sk-agent-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border: 1px solid hsl(var(--sk-border-color));
+      position: relative;
+      overflow: hidden;
+    }
+    .sk-agent-status::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image: var(--sk-dither-bayer);
+      background-size: 32px 32px;
+      opacity: 0.04;
+      pointer-events: none;
+    }
+    .sk-agent-status__indicator {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: hsl(var(--sk-foreground));
+    }
+    .sk-agent-status[data-status="thinking"] .sk-agent-status__indicator {
+      animation: pulse-dot 1s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    /* Chat bubbles - terminal style */
+    .sk-chat-bubble {
+      padding: 10px 12px;
+      border: 1px solid hsl(var(--sk-border-color));
+      font-size: 12px;
+      line-height: 1.6;
+      position: relative;
+      overflow: hidden;
+      max-width: 80%;
+    }
+    .sk-chat-bubble::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image: var(--sk-dither-bayer);
+      background-size: 32px 32px;
+      opacity: 0.04;
+      pointer-events: none;
+    }
+    .sk-chat-bubble[data-role="user"] {
+      border-color: hsl(var(--sk-foreground) / 0.4);
+      background: hsl(var(--sk-foreground) / 0.06);
+      align-self: flex-end;
+    }
+    .sk-chat-bubble[data-role="user"]::before { opacity: 0.08; }
+    .sk-chat-bubble[data-role="assistant"] { align-self: flex-start; }
+    .sk-chat-bubble[data-role="tool"] {
+      align-self: flex-start;
+      font-size: 11px;
+      opacity: 0.75;
+      background: hsl(var(--sk-accent));
+    }
+    .sk-chat-bubble__cursor {
+      display: inline-block;
+      width: 7px; height: 12px;
+      background: hsl(var(--sk-foreground));
+      margin-left: 2px;
+      animation: blink-cur 0.9s steps(2) infinite;
+      vertical-align: text-bottom;
+    }
+    @keyframes blink-cur {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+    .sk-chat-bubble__tool-header {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 4px;
+    }
+    .sk-chat-bubble__tool-name { font-weight: 700; opacity: 0.6; font-size: 10px; letter-spacing: 0.08em; }
+    .sk-chat-bubble__tool-output { font-size: 10px; opacity: 0.6; font-family: var(--sk-font-mono); }
+
+    /* Reasoning step */
+    .sk-reasoning-step {
+      border: 1px solid hsl(var(--sk-border-color));
+      font-size: 11px;
+      max-width: 80%;
+      align-self: flex-start;
+    }
+    .sk-reasoning-step__header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 60ms;
+    }
+    .sk-reasoning-step__header:hover { background: hsl(var(--sk-accent)); }
+    .sk-reasoning-step__indicator {
+      width: 10px; height: 10px; flex-shrink: 0;
+      border: 1px solid hsl(var(--sk-border-color));
+      font-size: 8px; display: flex; align-items: center; justify-content: center;
+    }
+    .sk-reasoning-step[data-status="completed"] .sk-reasoning-step__indicator::after { content: "✓"; }
+    .sk-reasoning-step[data-status="active"] .sk-reasoning-step__indicator {
+      border-color: hsl(var(--sk-foreground));
+      animation: pulse-dot 1s ease-in-out infinite;
+    }
+    .sk-reasoning-step__title { flex: 1; font-weight: 600; }
+    .sk-reasoning-step__chevron {
+      font-size: 10px; opacity: 0.4;
+      transition: transform 150ms;
+    }
+    .sk-reasoning-step[data-expanded="true"] .sk-reasoning-step__chevron { transform: rotate(90deg); }
+    .sk-reasoning-step__content {
+      display: none;
+      padding: 8px 10px;
+      border-top: 1px solid hsl(var(--sk-border-color));
+      opacity: 0.7;
+      background: hsl(var(--sk-accent));
+      position: relative;
+      overflow: hidden;
+    }
+    .sk-reasoning-step__content::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image: var(--sk-dither-diagonal);
+      background-size: 12px 12px;
+      opacity: 0.05;
+      pointer-events: none;
+    }
+    .sk-reasoning-step[data-expanded="true"] .sk-reasoning-step__content { display: block; }
+
+    /* Citation card */
+    .sk-citation-card {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 8px 10px;
+      border: 1px solid hsl(var(--sk-border-color));
+      font-size: 11px;
+      max-width: 80%;
+      align-self: flex-start;
+      position: relative;
+      overflow: hidden;
+    }
+    .sk-citation-card::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image: var(--sk-dither-dots);
+      background-size: 8px 8px;
+      opacity: 0.04;
+      pointer-events: none;
+    }
+    .sk-citation-card__icon {
+      width: 18px; height: 18px;
+      border: 1px solid hsl(var(--sk-border-color));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; font-weight: 800; flex-shrink: 0;
+      background-image: var(--sk-dither-bayer);
+      background-size: 32px 32px;
+    }
+    .sk-citation-card__source { font-weight: 700; opacity: 0.7; }
+    .sk-citation-card__snippet { opacity: 0.55; margin-top: 2px; line-height: 1.4; }
+
+    /* Typing indicator */
+    .sk-typing-indicator {
+      display: flex;
+      gap: 4px;
+      padding: 10px 12px;
+      border: 1px solid hsl(var(--sk-border-color));
+      align-self: flex-start;
+      font-size: 14px;
+      letter-spacing: 2px;
+    }
+
+    /* Badge */
+    .sk-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 1px 6px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: 1px solid hsl(var(--sk-border-color));
+      position: relative;
+      overflow: hidden;
+    }
+    .sk-badge::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image: var(--sk-dither-bayer);
+      background-size: 32px 32px;
+      opacity: 0.08;
+      pointer-events: none;
+    }
+    .sk-badge[data-color="success"] { border-color: hsl(var(--sk-success) / 0.5); color: hsl(var(--sk-success)); }
+    .sk-badge[data-color="warning"] { border-color: hsl(var(--sk-warning) / 0.5); color: hsl(var(--sk-warning)); }
+    .sk-badge[data-color="info"]    { border-color: hsl(var(--sk-info) / 0.5); color: hsl(var(--sk-info)); }
+
+    /* Button override for terminal */
+    .sk-btn {
+      position: relative;
+      overflow: hidden;
+    }
+    .sk-btn[data-variant="solid"],
+    .sk-btn[data-variant="dither"] {
+      background: hsl(var(--sk-foreground));
+      color: hsl(var(--sk-background));
+      border-color: hsl(var(--sk-foreground));
+    }
+    .sk-btn[data-variant="solid"]::before,
+    .sk-btn[data-variant="dither"]::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image: var(--sk-dither-bayer);
+      background-size: 32px 32px;
+      opacity: 0.15;
+      mix-blend-mode: overlay;
+      pointer-events: none;
+    }
+    .sk-btn[data-variant="outline"] {
+      background: transparent;
+      border: 1px solid hsl(var(--sk-foreground));
+      color: hsl(var(--sk-foreground));
+    }
+    .sk-btn[data-variant="ghost"] {
+      background: transparent;
+      border-color: transparent;
+      color: hsl(var(--sk-muted-foreground));
+    }
+    .sk-btn[data-variant="ghost"]:hover { color: hsl(var(--sk-foreground)); }
+
+    /* Progress bar with dither */
+    .progress-wrap {
+      border: 1px solid hsl(var(--sk-border-color));
+      height: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: hsl(var(--sk-foreground));
+      position: relative;
+      overflow: hidden;
+      transition: width 600ms ease;
+    }
+    .progress-fill::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image: var(--sk-dither-diagonal);
+      background-size: 12px 12px;
+      opacity: 0.2;
+    }
+
+    /* Density controls */
+    .density-bar {
+      display: flex;
+      gap: 2px;
+      padding: 8px;
+    }
+    .density-swatch {
+      flex: 1;
+      height: 32px;
+      border: 1px solid hsl(var(--sk-border-color));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+      transition: border-color 60ms;
+    }
+    .density-swatch:hover { border-color: hsl(var(--sk-foreground)); }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: hsl(var(--sk-border-color)); }
   </style>
 </head>
 <body>
+<div class="app">
 
-<header class="hdr">
-  <h1>skeehn</h1>
-  <p>ASCII as native rendering. The dither UI system.</p>
-</header>
+  <!-- ══════════ TOPBAR ══════════ -->
+  <header class="topbar">
+    <div class="topbar__logo">skeehn</div>
+    <span class="topbar__sep">—</span>
+    <nav class="topbar__nav">
+      <button class="topbar__nav-btn" data-view="hero" data-active="true">Overview</button>
+      <button class="topbar__nav-btn" data-view="chat">AI Chat</button>
+      <button class="topbar__nav-btn" data-view="components">Components</button>
+      <button class="topbar__nav-btn" data-view="engine">Engine</button>
+    </nav>
+    <div class="topbar__controls">
+      <select class="topbar__select" id="theme-sel">
+        <option value="default" selected>Default</option>
+        <option value="dark">Dark</option>
+        <option value="terminal">Terminal</option>
+        <option value="brutal">Brutal</option>
+        <option value="print">Print</option>
+        <option value="grain">Grain</option>
+      </select>
+      <select class="topbar__select" id="density-sel">
+        <option value="sparse">Sparse</option>
+        <option value="normal" selected>Normal</option>
+        <option value="dense">Dense</option>
+        <option value="solid">Solid</option>
+      </select>
+      <button id="dark-toggle" class="topbar__select" style="cursor:pointer;border:1px solid hsl(var(--sk-border-color));padding:2px 8px;font-size:12px" aria-label="Toggle dark mode" title="Toggle dark/light">☀</button>
+      <span class="topbar__badge">v0.3.0</span>
+    </div>
+  </header>
 
-<div class="ctrl">
-  <div><label>Theme</label><br><div class="pill" id="tp">
-    <button data-t="default" class="active">Default</button>
-    <button data-t="brutal">Brutal</button>
-    <button data-t="terminal">Terminal</button>
-    <button data-t="print">Print</button>
-    <button data-t="grain">Grain</button>
-  </div></div>
-  <div><label>Pattern</label><br><div class="pill" id="pp">
-    <button data-p="bayer" class="active">Bayer</button>
-    <button data-p="floyd">Floyd</button>
-    <button data-p="cross">Cross</button>
-    <button data-p="diag">Diag</button>
-    <button data-p="dots">Dots</button>
-    <button data-p="noise">Noise</button>
-    <button data-p="scan">Scan</button>
-    <button data-p="checker">Checker</button>
-  </div></div>
-  <div><label>Density</label><br><div class="pill" id="dp">
-    <button data-d="sparse">Sparse</button>
-    <button data-d="normal" class="active">Normal</button>
-    <button data-d="dense">Dense</button>
-    <button data-d="solid">Solid</button>
-  </div></div>
-</div>
-
-<!-- CORE UI -->
-<section class="sec"><h2>Core UI</h2><p>14 components with ASCII dither variants.</p>
-  <div class="row">
-    <button class="sk-btn" data-variant="solid">Solid</button>
-    <button class="sk-btn" data-variant="dither">Dither</button>
-    <button class="sk-btn" data-variant="outline">Outline</button>
-    <button class="sk-btn" data-variant="ghost">Ghost</button>
-    <button class="sk-btn" data-variant="inverted">Inverted</button>
-    <button class="sk-btn" data-variant="dither" disabled>Disabled</button>
-  </div>
-  <div class="row">
-    <span class="sk-badge" data-variant="dither">Default</span>
-    <span class="sk-badge" data-variant="dither" data-color="success">Success</span>
-    <span class="sk-badge" data-variant="dither" data-color="warning">Warning</span>
-    <span class="sk-badge" data-variant="dither" data-color="destructive">Error</span>
-  </div>
-  <div class="block"><div class="sk-card" data-variant="dither">
-    <div class="sk-card__header"><h3 class="sk-card__title">Dither Card</h3></div>
-    <div class="sk-card__body"><p>Texture is the second dimension of visual identity.</p></div>
-    <div class="sk-card__footer"><span class="sk-card__footer-text">SKEEHN 0.3.0</span></div>
-  </div></div>
-  <div class="block">
-    <div class="sk-input-group"><label class="sk-input-label">Dither Focus</label><input class="sk-input" placeholder="Focus for dither..." data-dither></div>
-    <div class="sk-input-group"><label class="sk-input-label">Error</label><input class="sk-input" value="Invalid" data-state="error"><span class="sk-input-hint">Required</span></div>
-  </div>
-  <div class="block">
-    <div class="sk-alert" data-type="info"><div class="sk-alert__icon">ℹ</div><div class="sk-alert__content"><p class="sk-alert__title">Info</p><p class="sk-alert__description">Dither alert overlay.</p></div></div>
-    <div class="sk-alert" data-type="success" style="margin-top:0.5rem"><div class="sk-alert__icon">✓</div><div class="sk-alert__content"><p class="sk-alert__title">Success</p><p class="sk-alert__description">Saved.</p></div></div>
-  </div>
-</section>
-
-<!-- AI CHAT DEMO -->
-<section class="sec"><h2>AI Chat Interface</h2><p>Full AI chat with streaming, tool cards, and reasoning — all skeehn-styled.</p>
-  <div class="chat-demo">
-    <div class="chat-demo__header">
-      <div class="sk-agent-status" data-status="thinking" data-pulse="true">
-        <span class="sk-agent-status__indicator"></span>
-        <span class="sk-agent-status__text">Thinking...</span>
+  <!-- ══════════ SIDEBAR ══════════ -->
+  <aside class="sidebar">
+    <div class="sidebar__section">
+      <span class="sidebar__label">Views</span>
+      <button class="sidebar__item" data-view="hero" data-active="true">
+        <span class="icon">▦</span> Overview
+      </button>
+      <button class="sidebar__item" data-view="chat">
+        <span class="icon">◈</span> AI Chat
+        <span class="count">Live</span>
+      </button>
+      <button class="sidebar__item" data-view="components">
+        <span class="icon">▤</span> Components
+        <span class="count">29</span>
+      </button>
+      <button class="sidebar__item" data-view="engine">
+        <span class="icon">░</span> ASCII Engine
+      </button>
+    </div>
+    <div class="sidebar__section">
+      <span class="sidebar__label">Themes</span>
+      <button class="sidebar__item" data-theme-btn="default" data-active="true">
+        <span class="icon">○</span> Default
+      </button>
+      <button class="sidebar__item" data-theme-btn="dark">
+        <span class="icon">●</span> Dark
+      </button>
+      <button class="sidebar__item" data-theme-btn="terminal">
+        <span class="icon">▌</span> Terminal
+      </button>
+      <button class="sidebar__item" data-theme-btn="brutal">
+        <span class="icon">■</span> Brutal
+      </button>
+      <button class="sidebar__item" data-theme-btn="print">
+        <span class="icon">□</span> Print
+      </button>
+      <button class="sidebar__item" data-theme-btn="grain">
+        <span class="icon">▒</span> Grain
+      </button>
+    </div>
+    <div class="sidebar__section">
+      <span class="sidebar__label">Dither</span>
+      <div class="density-bar">
+        <div class="density-swatch sk-animate-pulse" title="25%">░</div>
+        <div class="density-swatch" title="50%">▒</div>
+        <div class="density-swatch" title="75%">▓</div>
+        <div class="density-swatch" title="100%">█</div>
       </div>
     </div>
-    <div class="chat-demo__messages">
-      <div class="sk-chat-bubble" data-role="user"><p>What is skeehn?</p></div>
-      <div class="sk-chat-bubble" data-role="assistant" data-streaming>
-        <p>skeehn is the ASCII-native UI framework where texture is a first-class primitive</p>
-        <span class="sk-chat-bubble__cursor"></span>
-      </div>
-      <div class="sk-chat-bubble" data-role="tool">
-        <div class="sk-chat-bubble__tool-header">
-          <span class="sk-chat-bubble__tool-name">search_docs</span>
-          <span class="sk-badge" data-variant="dither" data-color="success">Done</span>
-        </div>
-        <pre class="sk-chat-bubble__tool-output">Query: "skeehn framework"</pre>
-      </div>
-      <div class="sk-reasoning-step" data-status="completed" data-expanded="true">
-        <div class="sk-reasoning-step__header">
-          <span class="sk-reasoning-step__indicator"></span>
-          <span class="sk-reasoning-step__title">Analyzing request</span>
-          <span class="sk-reasoning-step__chevron">▸</span>
-        </div>
-        <div class="sk-reasoning-step__content"><p>Understanding the user's question about skeehn's purpose and architecture.</p></div>
-      </div>
-      <div class="sk-citation-card">
-        <span class="sk-citation-card__icon">1</span>
-        <div class="sk-citation-card__content">
-          <span class="sk-citation-card__source">skeehn.dev/docs</span>
-          <p class="sk-citation-card__snippet">ASCII as native rendering — texture is the second dimension of visual identity.</p>
-          <div class="sk-citation-card__meta"><span>skeehn.dev</span><span>Confidence: 0.95</span></div>
-        </div>
+    <div class="sidebar__section" style="margin-top:auto;border-top:1px solid hsl(var(--sk-border-color));border-bottom:none">
+      <div class="sidebar__stats">
+        <div class="sidebar__stat"><span>Components</span><span>29</span></div>
+        <div class="sidebar__stat"><span>Themes</span><span>5</span></div>
+        <div class="sidebar__stat"><span>Patterns</span><span>8</span></div>
+        <div class="sidebar__stat"><span>Tests</span><span>328</span></div>
+        <div class="sidebar__stat"><span>Dependencies</span><span>0</span></div>
       </div>
     </div>
-    <div class="chat-demo__input">
-      <div class="sk-chat-input">
-        <div class="sk-chat-input__wrapper">
-          <input class="sk-chat-input__field sk-input" placeholder="Ask anything..." data-dither>
-          <div class="sk-chat-input__actions">
-            <button class="sk-chat-input__attach sk-btn" data-variant="ghost" data-size="sm">+</button>
-            <button class="sk-chat-input__send sk-btn" data-variant="dither" data-size="sm">Send</button>
+  </aside>
+
+  <!-- ══════════ MAIN ══════════ -->
+  <main class="main">
+
+    <!-- OVERVIEW / HERO -->
+    <div class="view" id="view-hero" data-active="true">
+      <div class="hero-badge">
+        <span>▦</span> ASCII Native Component Library
+      </div>
+      <h1 class="hero-title">
+        <span class="brand">skeehn</span><br>
+        Build AI interfaces<br>that mean it.
+      </h1>
+      <p class="hero-sub">
+        29 components. 5 themes. 8 dither patterns.<br>
+        Zero dependencies. Every surface a canvas for ASCII.
+      </p>
+      <div class="hero-grid">
+        <div class="hero-tile">
+          <div class="hero-tile__num">29</div>
+          <div class="hero-tile__label">Components</div>
+        </div>
+        <div class="hero-tile">
+          <div class="hero-tile__num">5</div>
+          <div class="hero-tile__label">Themes</div>
+        </div>
+        <div class="hero-tile">
+          <div class="hero-tile__num">8</div>
+          <div class="hero-tile__label">Dither Patterns</div>
+        </div>
+        <div class="hero-tile">
+          <div class="hero-tile__num">0</div>
+          <div class="hero-tile__label">Dependencies</div>
+        </div>
+        <div class="hero-tile">
+          <div class="hero-tile__num">MCP</div>
+          <div class="hero-tile__label">AI Agent Native</div>
+        </div>
+      </div>
+      <div class="hero-cta">
+        <button class="sk-btn" data-variant="dither" onclick="switchView('chat')">Try AI Chat →</button>
+        <button class="sk-btn" data-variant="outline" onclick="switchView('components')">Browse Components</button>
+      </div>
+    </div>
+
+    <!-- CHAT VIEW -->
+    <div class="view" id="view-chat">
+      <div class="chat-thread" id="chat-thread">
+        <div class="sk-agent-status" data-status="thinking">
+          <span class="sk-agent-status__indicator"></span>
+          <span class="sk-agent-status__text">Thinking…</span>
+        </div>
+
+        <div class="sk-chat-bubble" data-role="user" style="align-self:flex-end">
+          <p>What makes skeehn different from shadcn?</p>
+        </div>
+
+        <div class="sk-reasoning-step" data-status="completed" data-expanded="false">
+          <button class="sk-reasoning-step__header" onclick="toggleReasoning(this)">
+            <span class="sk-reasoning-step__indicator"></span>
+            <span class="sk-reasoning-step__title">Analyzing the design philosophy question</span>
+            <span class="sk-reasoning-step__chevron">▸</span>
+          </button>
+          <div class="sk-reasoning-step__content">
+            <p>shadcn provides copy-paste React components. skeehn provides a zero-dependency ASCII dither rendering system — texture as a first-class design primitive alongside color and spacing. Fundamentally different layers of abstraction.</p>
+          </div>
+        </div>
+
+        <div class="sk-chat-bubble" data-role="tool" style="align-self:flex-start">
+          <div class="sk-chat-bubble__tool-header">
+            <span class="sk-chat-bubble__tool-name">search_components</span>
+            <span class="sk-badge" data-variant="dither" data-color="success">done</span>
+          </div>
+          <pre class="sk-chat-bubble__tool-output">→ 29 components, 0 JS dependencies</pre>
+        </div>
+
+        <div class="sk-chat-bubble" data-role="assistant" style="align-self:flex-start">
+          <p>shadcn gives you React components. skeehn gives you a rendering primitive — ASCII dither texture — as a first-class design element. Every component uses <code style="font-size:10px;opacity:0.7">░▒▓█</code> patterns as texture, not decoration. It runs on zero JS dependencies, ships pure CSS+HTML, and has native MCP support so AI agents can install and compose it directly.</p>
+          <br>
+          <p>The dither pattern you see in this interface right now? That's skeehn running live.</p>
+        </div>
+
+        <div class="sk-citation-card">
+          <div class="sk-citation-card__icon">1</div>
+          <div>
+            <div class="sk-citation-card__source">skeehn docs</div>
+            <div class="sk-citation-card__snippet">ASCII characters as native rendering — texture is the second dimension of visual identity.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-footer">
+        <div class="chat-input-wrap">
+          <textarea id="chat-textarea" placeholder="Ask anything… (Enter to send, Shift+Enter for newline)" rows="1"></textarea>
+          <div class="chat-input-actions">
+            <button class="chat-act-btn" title="Attach" onclick="">+</button>
+            <button class="chat-act-btn" title="Voice" id="mic-btn" onclick="toggleMic()">◎</button>
+            <button class="chat-act-btn send" title="Send" onclick="sendMessage()">↑</button>
+          </div>
+        </div>
+        <div class="chat-hint">Enter to send · Shift+Enter for newline · ◎ for voice</div>
+      </div>
+    </div>
+
+    <!-- COMPONENTS VIEW -->
+    <div class="view" id="view-components">
+      <!-- populated by JS -->
+    </div>
+
+    <!-- ENGINE VIEW -->
+    <div class="view" id="view-engine">
+      <div class="engine-toolbar">
+        <label>Image: <input type="file" id="img-upload" accept="image/*" style="margin-left:6px"></label>
+        <label>Algo:
+          <select id="algo-sel" style="margin-left:4px;font-family:var(--sk-font-mono);font-size:11px;background:transparent;color:hsl(var(--sk-foreground));border:1px solid hsl(var(--sk-border-color));padding:2px 4px">
+            <option value="floyd">Floyd-Steinberg</option>
+            <option value="bayer">Bayer</option>
+            <option value="threshold">Threshold</option>
+          </select>
+        </label>
+        <label>Width: <input type="range" id="res-slider" min="40" max="160" value="90" style="margin-left:4px"> <span id="res-val">90</span></label>
+      </div>
+      <div class="engine-output">
+        <div class="engine-panel">
+          <div class="engine-panel__title">ASCII Output</div>
+          <div class="engine-panel__content" id="ascii-out">Upload an image above to see live ASCII dither rendering…</div>
+        </div>
+        <div class="engine-panel">
+          <div class="engine-panel__title">Block Letter Generator</div>
+          <div style="padding:10px;border-bottom:1px solid hsl(var(--sk-border-color))">
+            <input id="text-input" value="skeehn" placeholder="Type text…" style="width:100%;background:transparent;border:1px solid hsl(var(--sk-border-color));padding:5px 8px;font-family:var(--sk-font-mono);font-size:12px;color:hsl(var(--sk-foreground));outline:none">
+          </div>
+          <div class="engine-panel__content" id="text-out" style="font-size:7px;line-height:1.05"></div>
+        </div>
+        <div class="engine-panel">
+          <div class="engine-panel__title">Dither Patterns</div>
+          <div style="padding:8px;display:grid;grid-template-columns:1fr 1fr;gap:4px">
+            <div style="height:52px;border:1px solid hsl(var(--sk-border-color));background-image:var(--sk-dither-bayer);background-size:32px 32px;background-color:hsl(var(--sk-foreground)/0.15);position:relative"><span style="position:absolute;bottom:3px;right:5px;font-size:8px;opacity:0.4">BAYER</span></div>
+            <div style="height:52px;border:1px solid hsl(var(--sk-border-color));background-image:var(--sk-dither-crosshatch);background-size:12px 12px;background-color:hsl(var(--sk-foreground)/0.08);position:relative"><span style="position:absolute;bottom:3px;right:5px;font-size:8px;opacity:0.4">CROSS</span></div>
+            <div style="height:52px;border:1px solid hsl(var(--sk-border-color));background-image:var(--sk-dither-diagonal);background-size:12px 12px;background-color:hsl(var(--sk-foreground)/0.08);position:relative"><span style="position:absolute;bottom:3px;right:5px;font-size:8px;opacity:0.4">DIAG</span></div>
+            <div style="height:52px;border:1px solid hsl(var(--sk-border-color));background-image:var(--sk-dither-dots);background-size:8px 8px;background-color:hsl(var(--sk-foreground)/0.08);position:relative"><span style="position:absolute;bottom:3px;right:5px;font-size:8px;opacity:0.4">DOTS</span></div>
+            <div style="height:52px;border:1px solid hsl(var(--sk-border-color));background-image:var(--sk-dither-scanlines);background-size:4px 4px;background-color:hsl(var(--sk-foreground)/0.08);position:relative"><span style="position:absolute;bottom:3px;right:5px;font-size:8px;opacity:0.4">SCAN</span></div>
+            <div style="height:52px;border:1px solid hsl(var(--sk-border-color));background-image:var(--sk-dither-checker);background-size:8px 8px;background-color:hsl(var(--sk-foreground)/0.08);position:relative"><span style="position:absolute;bottom:3px;right:5px;font-size:8px;opacity:0.4">CHECK</span></div>
+          </div>
+        </div>
+        <div class="engine-panel">
+          <div class="engine-panel__title">Block Density</div>
+          <div style="padding:12px;display:flex;flex-direction:column;gap:10px">
+            <div>
+              <div style="font-size:9px;opacity:0.4;margin-bottom:4px;letter-spacing:0.1em">SPARSE 25%</div>
+              <div style="height:18px;background-image:var(--sk-dither-blocks-25);background-size:16px 16px;background-color:hsl(var(--sk-foreground)/0.1)"></div>
+            </div>
+            <div>
+              <div style="font-size:9px;opacity:0.4;margin-bottom:4px;letter-spacing:0.1em">MEDIUM 50%</div>
+              <div style="height:18px;background-image:var(--sk-dither-blocks-50);background-size:16px 16px;background-color:hsl(var(--sk-foreground)/0.1)"></div>
+            </div>
+            <div>
+              <div style="font-size:9px;opacity:0.4;margin-bottom:4px;letter-spacing:0.1em">DARK 75%</div>
+              <div style="height:18px;background-image:var(--sk-dither-blocks-75);background-size:16px 16px;background-color:hsl(var(--sk-foreground)/0.1)"></div>
+            </div>
+            <div>
+              <div style="font-size:9px;opacity:0.4;margin-bottom:4px;letter-spacing:0.1em">SOLID 100%</div>
+              <div style="height:18px;background-image:var(--sk-dither-blocks-100);background-size:16px 16px;background-color:hsl(var(--sk-foreground)/0.1)"></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- ASCII ART ENGINE -->
-<section class="sec"><h2>ASCII Art Engine</h2><p>Upload an image → real-time ASCII conversion with 4 dither algorithms.</p>
-  <div class="block">
-    <input type="file" id="img-upload" accept="image/*" style="margin-bottom:0.5rem">
-    <div class="ascii" id="ascii-out">Upload an image to see ASCII art...</div>
-    <div style="margin-top:0.5rem;display:flex;gap:0.5rem;flex-wrap:wrap">
-      <label style="font-size:var(--sk-font-size-xs);display:flex;align-items:center;gap:0.25rem"><input type="radio" name="algo" value="floyd" checked> Floyd-Steinberg</label>
-      <label style="font-size:var(--sk-font-size-xs);display:flex;align-items:center;gap:0.25rem"><input type="radio" name="algo" value="threshold"> Threshold</label>
-      <label style="font-size:var(--sk-font-size-xs);display:flex;align-items:center;gap:0.25rem"><input type="radio" name="algo" value="bayer"> Bayer</label>
+  </main>
+
+  <!-- ══════════ INSPECTOR ══════════ -->
+  <aside class="inspector">
+    <div class="inspector__header">Inspector</div>
+    <div class="inspector__tabs">
+      <button class="inspector__tab" data-panel="props" data-active="true">Props</button>
+      <button class="inspector__tab" data-panel="code">Code</button>
+      <button class="inspector__tab" data-panel="dither">Dither</button>
     </div>
-    <div style="margin-top:0.25rem">
-      <label style="font-size:var(--sk-font-size-xs)">Resolution: <span id="res-val">80</span> chars</label>
-      <input type="range" id="res-slider" min="40" max="200" value="80" style="width:100%;margin-top:0.25rem">
+
+    <!-- Props panel -->
+    <div class="inspector__panel" data-panel="props" data-active="true">
+      <div class="props-list" id="props-list">
+        <div style="padding:16px;opacity:0.3;font-size:11px;text-align:center">
+          Click a component<br>to inspect its props
+        </div>
+      </div>
     </div>
-  </div>
-</section>
 
-<!-- TEXT-TO-ASCII -->
-<section class="sec"><h2>Text-to-ASCII</h2><p>Type text → large block-letter ASCII art.</p>
-  <div class="block">
-    <input class="sk-input" id="text-input" placeholder="Type text..." value="HELLO" style="margin-bottom:0.5rem">
-    <div class="ascii-art-large" id="text-out"></div>
-  </div>
-</section>
+    <!-- Code panel -->
+    <div class="inspector__panel" data-panel="code">
+      <pre class="code-block" id="code-block" style="margin:8px;font-size:10px;line-height:1.5"><!-- Click a component
+to see its markup --></pre>
+    </div>
 
-<!-- COMPONENT GALLERY -->
-<section class="sec"><h2>All Components</h2><p>29 components across 5 categories.</p>
-  <div class="block">
-    <table class="sk-table">
-      <thead><tr><th>Component</th><th>Category</th><th>Variants</th></tr></thead>
-      <tbody>
-        <tr><td>Button</td><td><span class="sk-badge" data-variant="dither" data-color="info">Core</span></td><td>6</td></tr>
-        <tr><td>ChatBubble</td><td><span class="sk-badge" data-variant="dither" data-color="success">AI</span></td><td>4</td></tr>
-        <tr><td>TerminalPanel</td><td><span class="sk-badge" data-variant="dither" data-color="success">AI</span></td><td>3</td></tr>
-        <tr><td>AgentStatus</td><td><span class="sk-badge" data-variant="dither" data-color="success">AI</span></td><td>5</td></tr>
-        <tr><td>StreamingText</td><td><span class="sk-badge" data-variant="dither" data-color="success">AI</span></td><td>4</td></tr>
-      </tbody>
-    </table>
-  </div>
-</section>
+    <!-- Dither panel -->
+    <div class="inspector__panel" data-panel="dither">
+      <div style="padding:8px;display:flex;flex-direction:column;gap:6px">
+        <div style="font-size:9px;opacity:0.35;letter-spacing:0.1em;text-transform:uppercase;padding:4px 4px 2px">Pattern</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px" id="pattern-grid">
+          <!-- filled by JS -->
+        </div>
+        <div style="font-size:9px;opacity:0.35;letter-spacing:0.1em;text-transform:uppercase;padding:8px 4px 2px">Opacity</div>
+        <input type="range" min="0" max="50" value="30" id="dither-opacity-slider"
+          style="width:100%;accent-color:hsl(var(--sk-foreground));margin:0 4px">
+        <div style="font-size:9px;opacity:0.35;letter-spacing:0.1em;text-transform:uppercase;padding:8px 4px 2px">Preview</div>
+        <div id="dither-preview" style="height:80px;border:1px solid hsl(var(--sk-border-color));position:relative;overflow:hidden">
+          <div id="dither-preview-fill" style="position:absolute;inset:0;background-image:var(--sk-dither-bayer);background-size:32px 32px;opacity:0.3"></div>
+          <span style="position:absolute;bottom:4px;right:6px;font-size:8px;opacity:0.35;font-family:var(--sk-font-mono)">BAYER 30%</span>
+        </div>
+      </div>
+    </div>
 
-<footer class="ft">
-  <p>Built with zero dependencies. <a href="https://github.com/skeehn/skeehn">GitHub</a></p>
-  <p style="margin-top:0.5rem;font-size:var(--sk-font-size-xs)"><code>npx skeehn@latest init</code> — <code>npx skeehn@latest add all</code></p>
-</footer>
+  </aside>
 
+</div>
+
+<!-- Scripts -->
 <script src="../components/tabs/tabs.js" type="module"></script>
 <script src="../components/toggle/toggle.js" type="module"></script>
-<script src="../components/dialog/dialog.js" type="module"></script>
 <script src="../components/accordion/accordion.js" type="module"></script>
-<script src="../components/dropdown/dropdown.js" type="module"></script>
 
 <script type="module">
-  const html = document.documentElement;
 
-  // Theme
-  document.querySelectorAll('#tp button').forEach(b => b.addEventListener('click', () => {
-    document.querySelectorAll('#tp button').forEach(x => x.classList.remove('active'));
-    b.classList.add('active');
-    html.setAttribute('data-theme', b.dataset.t);
-    document.getElementById('theme-css').href = `../themes/${b.dataset.t}.css`;
-  }));
+// ── COMPONENTS DATA ──
+const COMPONENTS = [
+  { slug:"button", name:"Button", cat:"core", desc:"6 variants including dither-fill", variants:["solid","dither","outline","ghost","inverted","ascii"],
+    preview:`<div style="display:flex;gap:6px;flex-wrap:wrap"><button class="sk-btn" data-variant="solid" data-size="sm">Solid</button><button class="sk-btn" data-variant="dither" data-size="sm">Dither</button><button class="sk-btn" data-variant="outline" data-size="sm">Outline</button></div>` },
+  { slug:"card", name:"Card", cat:"core", desc:"Container with header, body, footer", variants:["default","dither","elevated"],
+    preview:`<div class="sk-card" style="padding:8px 10px;font-size:11px"><div style="opacity:.5;font-size:9px;letter-spacing:.1em;margin-bottom:4px">CARD HEADER</div>Content goes here</div>` },
+  { slug:"input", name:"Input", cat:"core", desc:"Text input with dither focus states", variants:["default","error","disabled"],
+    preview:`<input class="sk-input" placeholder="Type here…" style="width:100%;font-size:11px">` },
+  { slug:"badge", name:"Badge", cat:"core", desc:"Status tags with dither textures", variants:["default","success","warning","error","info"],
+    preview:`<div style="display:flex;gap:4px"><span class="sk-badge" data-variant="success">done</span><span class="sk-badge" data-variant="warning">pending</span><span class="sk-badge" data-variant="error">failed</span></div>` },
+  { slug:"alert", name:"Alert", cat:"core", desc:"Info/warning/error alerts", variants:["info","success","warning","error"],
+    preview:`<div class="sk-alert" data-variant="info" style="font-size:10px;padding:6px 10px">System operational</div>` },
+  { slug:"dialog", name:"Dialog", cat:"core", desc:"Modal with dither backdrop", variants:["default","fullscreen"],
+    preview:`<div style="border:1px solid hsl(var(--sk-border-color));padding:8px 10px;font-size:10px"><div style="font-weight:700;margin-bottom:4px">Dialog Title</div><div style="opacity:.5;font-size:9px">Are you sure?</div></div>` },
+  { slug:"tabs", name:"Tabs", cat:"core", desc:"Tabbed interface", variants:["default","underline"],
+    preview:`<div class="sk-tabs"><div class="sk-tabs__list"><button class="sk-tabs__trigger" data-active="true">Tab 1</button><button class="sk-tabs__trigger">Tab 2</button></div></div>` },
+  { slug:"toggle", name:"Toggle", cat:"core", desc:"Switch with ASCII track", variants:["default","sm","lg"],
+    preview:`<div style="display:flex;gap:10px;align-items:center"><div style="width:36px;height:18px;border:1px solid hsl(var(--sk-foreground)/.8);background:hsl(var(--sk-foreground)/.15);position:relative;font-size:8px;font-family:monospace;display:flex;align-items:center;padding:0 3px"><span style="position:absolute;right:3px;width:12px;height:12px;background:hsl(var(--sk-foreground));display:block"></span>│──▐█▌</div><div style="width:36px;height:18px;border:1px solid hsl(var(--sk-border-color));position:relative;font-size:8px;font-family:monospace;display:flex;align-items:center;padding:0 3px"><span style="position:absolute;left:3px;width:12px;height:12px;background:hsl(var(--sk-foreground)/.3);display:block"></span>▐█▌──│</div></div>` },
+  { slug:"progress", name:"Progress", cat:"core", desc:"Dither-filled progress bar", variants:["bar","circular","steps","streaming"],
+    preview:`<div style="border:1px solid hsl(var(--sk-border-color));height:12px;width:100%;position:relative;overflow:hidden"><div style="position:absolute;inset:0;width:62%;background:hsl(var(--sk-foreground)/.8);background-image:var(--sk-dither-diagonal);background-size:12px 12px"></div></div>` },
+  { slug:"avatar", name:"Avatar", cat:"core", desc:"User avatar with dither fallback", variants:["default","sm","lg"],
+    preview:`<div style="display:flex;gap:6px;align-items:center"><div class="sk-avatar" style="width:28px;height:28px;font-size:11px">JD</div><div class="sk-avatar" data-size="sm" style="width:20px;height:20px;font-size:9px">AL</div></div>` },
+  { slug:"tooltip", name:"Tooltip", cat:"core", desc:"Hover tooltip", variants:["default","dark"],
+    preview:`<span style="font-size:10px;opacity:.5">Hover targets show tooltips</span>` },
+  { slug:"dropdown", name:"Dropdown", cat:"core", desc:"Dropdown menu", variants:["default"],
+    preview:`<div style="border:1px solid hsl(var(--sk-border-color));padding:2px 0;font-size:10px"><div style="padding:4px 10px">Item one</div><div style="padding:4px 10px;opacity:.4">Item two</div></div>` },
+  { slug:"table", name:"Table", cat:"core", desc:"Data table with dither rows", variants:["default","striped"],
+    preview:`<table class="sk-table" style="font-size:10px;width:100%"><tr><th>Key</th><th>Value</th></tr><tr><td>name</td><td>skeehn</td></tr></table>` },
+  { slug:"accordion", name:"Accordion", cat:"core", desc:"Expandable panels", variants:["default","flush"],
+    preview:`<div style="border:1px solid hsl(var(--sk-border-color));font-size:10px"><div style="padding:6px 10px;display:flex;justify-content:space-between"><span>Section</span><span style="opacity:.4">▸</span></div></div>` },
+  { slug:"chat-bubble", name:"ChatBubble", cat:"ai", desc:"Message bubbles with streaming cursor", variants:["user","assistant","tool","system"],
+    preview:`<div style="display:flex;flex-direction:column;gap:5px"><div class="sk-chat-bubble" data-role="user" style="align-self:flex-end;font-size:10px;padding:5px 9px">Hello!</div><div class="sk-chat-bubble" data-role="assistant" style="font-size:10px;padding:5px 9px">Hi there▌</div></div>` },
+  { slug:"chat-input", name:"ChatInput", cat:"ai", desc:"Prompt input with voice + attach", variants:["idle","streaming","recording"],
+    preview:`<div style="border:1px solid hsl(var(--sk-border-color));padding:5px 8px;display:flex;align-items:center;gap:6px;font-size:10px"><span style="flex:1;opacity:.4">Ask anything…</span><span style="opacity:.6">↑</span></div>` },
+  { slug:"reasoning-step", name:"ReasoningStep", cat:"ai", desc:"Expandable reasoning traces", variants:["pending","active","completed","error"],
+    preview:`<div class="sk-reasoning-step" data-status="completed" style="font-size:10px"><div style="display:flex;gap:6px;align-items:center;padding:4px 8px"><span style="opacity:.5">✓</span><span>Verified data sources</span><span style="margin-left:auto;opacity:.4">▸</span></div></div>` },
+  { slug:"tool-card", name:"ToolCard", cat:"ai", desc:"Tool invocation with status", variants:["pending","running","completed","error"],
+    preview:`<div class="sk-tool-card" data-status="completed" style="font-size:10px;padding:6px 10px"><div style="display:flex;justify-content:space-between"><code>search_web</code><span class="sk-badge" data-variant="success" style="font-size:8px">done</span></div></div>` },
+  { slug:"citation-card", name:"CitationCard", cat:"ai", desc:"Source citations", variants:["default"],
+    preview:`<div class="sk-citation-card" style="font-size:10px;padding:6px 10px"><div style="opacity:.5;font-size:9px">docs.skeehn.dev</div><div style="margin-top:2px">ASCII as a rendering medium</div></div>` },
+  { slug:"streaming-text", name:"StreamingText", cat:"ai", desc:"Character-by-character reveal", variants:["typewriter","scanline","wave","fade"],
+    preview:`<div style="font-size:11px">The answer is<span class="sk-animate-blink">▌</span></div>` },
+  { slug:"terminal-panel", name:"TerminalPanel", cat:"ai", desc:"Terminal output UI", variants:["default","compact"],
+    preview:`<div style="background:hsl(var(--sk-background));border:1px solid hsl(var(--sk-border-color));padding:6px 8px;font-size:9px"><span style="opacity:.4">$ </span>npx skeehn add button<br><span style="opacity:.6">✓ installed</span></div>` },
+  { slug:"agent-status", name:"AgentStatus", cat:"ai", desc:"Agent state indicator", variants:["idle","thinking","acting","done","error"],
+    preview:`<div style="display:flex;gap:8px"><div class="sk-agent-status" data-status="thinking" style="font-size:9px"><span class="sk-agent-status__indicator"></span><span class="sk-agent-status__text">thinking</span></div><div class="sk-agent-status" data-status="done" style="font-size:9px"><span class="sk-agent-status__indicator"></span><span class="sk-agent-status__text">done</span></div></div>` },
+  { slug:"code-block", name:"CodeBlock", cat:"ai", desc:"Syntax-highlighted code", variants:["default","minimal"],
+    preview:`<div style="background:hsl(var(--sk-foreground)/.06);padding:6px 8px;font-size:9px;border:1px solid hsl(var(--sk-border-color))"><span style="opacity:.5">import</span> skeehn <span style="opacity:.5">from</span> <span style="opacity:.8">'skeehn'</span></div>` },
+  { slug:"typing-indicator", name:"TypingIndicator", cat:"ai", desc:"Animated typing dots", variants:["default","ascii","dither"],
+    preview:`<div class="sk-typing-indicator" data-variant="dither"><span></span><span></span><span></span></div>` },
+  { slug:"markdown", name:"Markdown", cat:"ai", desc:"Markdown renderer", variants:["default"],
+    preview:`<div style="font-size:10px;line-height:1.5"><strong>Bold text</strong> and <em>italic</em> rendered natively.</div>` },
+  { slug:"voice-session", name:"VoiceSession", cat:"ai", desc:"Realtime voice with waveform", variants:["idle","listening","transcribing","speaking","handoff"],
+    preview:`<div style="display:flex;gap:2px;align-items:center;height:20px">${[3,8,5,12,7,15,9,6,11,4,13,8,5].map(h=>`<span style="display:inline-block;width:3px;height:${h}px;background:currentColor;opacity:.8;border-radius:1px"></span>`).join('')}</div>` },
+  { slug:"layout", name:"Layout", cat:"layout", desc:"Grid, Stack, Panel, Divider", variants:["container","grid","stack","panel","divider"],
+    preview:`<div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;font-size:9px">${[1,2,3,4].map(i=>`<div style="border:1px solid hsl(var(--sk-border-color));padding:4px 6px;opacity:.6">Panel ${i}</div>`).join('')}</div>` },
+  { slug:"dataviz", name:"DataViz", cat:"dataviz", desc:"ASCII charts and meters", variants:["chart","sparkline","meter","heatmap"],
+    preview:`<div style="font-size:10px;line-height:1.2">${['▁','▂','▄','▆','█','▆','▇','▅','▃','▄','▇','█'].join('')}</div>` },
+  { slug:"motion", name:"Motion", cat:"motion", desc:"Dither animations", variants:["dither-pulse","ascii-rain","glitch","texture-mask"],
+    preview:`<div class="sk-animate-pulse" style="height:20px;background-image:var(--sk-dither-bayer);background-size:32px 32px;background-color:hsl(var(--sk-foreground)/.1)"></div>` },
+];
 
-  // Pattern
-  const P = { bayer:'var(--sk-dither-bayer)', floyd:'var(--sk-dither-floyd)', cross:'var(--sk-dither-crosshatch)', diag:'var(--sk-dither-diagonal)', dots:'var(--sk-dither-dots)', noise:'var(--sk-dither-noise)', scan:'var(--sk-dither-scanlines)', checker:'var(--sk-dither-checker)' };
-  document.querySelectorAll('#pp button').forEach(b => b.addEventListener('click', () => {
-    document.querySelectorAll('#pp button').forEach(x => x.classList.remove('active'));
-    b.classList.add('active');
-    document.documentElement.style.setProperty('--sk-dither-pattern', P[b.dataset.p]);
-  }));
+// ── HERO ASCII ART ──
+const HERO_FONT = {
+  s:["▓░ ","▓▒▓","  ░","▓▒▓"," ░▓"],
+  k:["▓ ▓","▓▒ ","▓▓ ","▓▒ ","▓ ▓"],
+  e:["▓▒▓","▓  ","▓▒▓","▓  ","▓▒▓"],
+  h:["▓ ▓","▓▒▓","▓▒▓","▓ ▓","▓ ▓"],
+  n:["▓ ▓","▓▒▓","▓▒▓","▓ ▓","▓ ▓"],
+  ' ':["   ","   ","   ","   ","   "],
+};
+function renderHeroASCII(text) {
+  const rows = [[],[],[],[],[]];
+  for (const c of text.toLowerCase()) {
+    const g = HERO_FONT[c] || HERO_FONT[' '];
+    for (let i = 0; i < 5; i++) rows[i].push(g[i]);
+  }
+  return rows.map(r => r.join(' ')).join('\n');
+}
+document.getElementById('hero-art').textContent = renderHeroASCII('skeehn');
 
-  // Density
-  document.querySelectorAll('#dp button').forEach(b => b.addEventListener('click', () => {
-    document.querySelectorAll('#dp button').forEach(x => x.classList.remove('active'));
-    b.classList.add('active');
-    html.setAttribute('data-density', b.dataset.d);
-  }));
+// ── POPULATE COMPONENTS ──
+const compView = document.getElementById('view-components');
+COMPONENTS.forEach(c => {
+  const div = document.createElement('div');
+  div.className = 'comp-tile';
+  div.dataset.slug = c.slug;
+  div.innerHTML = `
+    <div class="comp-tile__header">
+      <span class="comp-tile__name">${c.name}</span>
+      <span class="comp-tile__cat">${c.cat}</span>
+    </div>
+    ${c.preview ? `<div class="comp-tile__preview">${c.preview}</div>` : ''}
+    <div class="comp-tile__variants">${c.variants.slice(0,4).map(v => `<span class="comp-tile__var">${v}</span>`).join('')}${c.variants.length > 4 ? `<span class="comp-tile__var">+${c.variants.length - 4}</span>` : ''}</div>
+  `;
+  div.addEventListener('click', () => {
+    document.querySelectorAll('.comp-tile').forEach(t => t.removeAttribute('data-active'));
+    div.setAttribute('data-active', 'true');
+    showInspector(c);
+  });
+  compView.appendChild(div);
+});
 
-  // ASCII Art from image
-  const upload = document.getElementById('img-upload');
-  const out = document.getElementById('ascii-out');
-  const resSlider = document.getElementById('res-slider');
-  const resVal = document.getElementById('res-val');
-  resSlider.addEventListener('input', () => { resVal.textContent = resSlider.value; if (upload.files[0]) renderAscii(upload.files[0]); });
-  document.querySelectorAll('input[name="algo"]').forEach(r => r.addEventListener('change', () => { if (upload.files[0]) renderAscii(upload.files[0]); }));
+// ── INSPECTOR ──
+function showInspector(c) {
+  // Props
+  const propsList = document.getElementById('props-list');
+  const commonProps = [
+    { name:'data-variant', type:'string', default: c.variants[0] },
+    { name:'data-size', type:'string', default:'default' },
+    { name:'data-density', type:'enum', default:'normal' },
+    { name:'class', type:'string', default:`sk-${c.slug}` },
+  ];
+  propsList.innerHTML = commonProps.map(p => `
+    <div class="prop-row">
+      <span class="prop-name">${p.name}</span>
+      <span class="prop-type">${p.type}</span>
+      <span class="prop-default">${p.default}</span>
+    </div>
+  `).join('') + c.variants.map(v => `
+    <div class="prop-row" style="opacity:0.55">
+      <span class="prop-name">${v}</span>
+      <span class="prop-type">variant</span>
+    </div>
+  `).join('');
 
-  function renderAscii(file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const res = parseInt(resSlider.value);
-        const aspect = 0.5;
-        const w = res;
-        const h = Math.round(w * (img.height / img.width) * aspect);
-        canvas.width = img.width;
-        canvas.height = img.height;
-        canvas.getContext('2d').drawImage(img, 0, 0);
-        const data = canvas.getContext('2d').getImageData(0, 0, img.width, img.height).data;
-        const algo = document.querySelector('input[name="algo"]:checked').value;
-        const chars = ' .:;-=+*#%@';
-        const levels = chars.length;
-        const step = 255 / (levels - 1);
-        const cellW = Math.max(1, Math.floor(img.width / w));
-        const cellH = Math.max(1, Math.floor(img.height / h));
-        let result = '';
-        for (let y = 0; y < h; y++) {
-          let line = '';
-          for (let x = 0; x < w; x++) {
-            let sum = 0, count = 0;
-            for (let dy = 0; dy < cellH && y*cellH+dy < img.height; dy++) {
-              for (let dx = 0; dx < cellW && x*cellW+dx < img.width; dx++) {
-                const px = ((x*cellW+dx) + (y*cellH+dy)*img.width) * 4;
-                sum += 0.2126*data[px] + 0.7152*data[px+1] + 0.0722*data[px+2];
-                count++;
-              }
-            }
-            const avg = sum / count;
-            const idx = Math.min(levels-1, Math.floor(avg / step));
-            line += chars[levels - 1 - idx];
-          }
-          result += line + '\n';
-        }
-        out.textContent = result;
-      };
-      img.src = e.target.result;
+  // Code
+  document.getElementById('code-block').textContent =
+    `<div class="sk-${c.slug}"\n  data-variant="${c.variants[0]}">\n  …\n</div>\n\n<!-- Install -->\nnpx skeehn add ${c.slug}`;
+}
+
+// ── PATTERN GRID ──
+const patterns = [
+  { key:'bayer', label:'Bayer', css:'var(--sk-dither-bayer)', size:'32px 32px' },
+  { key:'crosshatch', label:'Cross', css:'var(--sk-dither-crosshatch)', size:'12px 12px' },
+  { key:'diagonal', label:'Diag', css:'var(--sk-dither-diagonal)', size:'12px 12px' },
+  { key:'dots', label:'Dots', css:'var(--sk-dither-dots)', size:'8px 8px' },
+  { key:'scanlines', label:'Scan', css:'var(--sk-dither-scanlines)', size:'4px 4px' },
+  { key:'checker', label:'Check', css:'var(--sk-dither-checker)', size:'8px 8px' },
+  { key:'floyd', label:'Floyd', css:'var(--sk-dither-floyd)', size:'auto' },
+  { key:'noise', label:'Noise', css:'var(--sk-dither-noise)', size:'auto' },
+];
+let activePattern = patterns[0];
+const patternGrid = document.getElementById('pattern-grid');
+patterns.forEach(p => {
+  const el = document.createElement('div');
+  el.style.cssText = `height:40px;border:1px solid hsl(var(--sk-border-color));background-image:${p.css};background-size:${p.size};background-color:hsl(var(--sk-foreground)/0.06);cursor:pointer;position:relative;transition:border-color 60ms`;
+  el.innerHTML = `<span style="position:absolute;bottom:2px;right:4px;font-size:8px;opacity:0.35;font-family:var(--sk-font-mono)">${p.label}</span>`;
+  el.addEventListener('click', () => {
+    activePattern = p;
+    updateDitherPreview();
+    document.documentElement.style.setProperty('--sk-dither-pattern', p.css);
+    document.documentElement.style.setProperty('--sk-dither-size', p.size);
+  });
+  patternGrid.appendChild(el);
+});
+
+const ditherSlider = document.getElementById('dither-opacity-slider');
+function updateDitherPreview() {
+  const opacity = ditherSlider.value / 100;
+  const fill = document.getElementById('dither-preview-fill');
+  fill.style.backgroundImage = activePattern.css;
+  fill.style.backgroundSize = activePattern.size;
+  fill.style.opacity = opacity;
+  document.querySelector('#dither-preview span').textContent = `${activePattern.label.toUpperCase()} ${ditherSlider.value}%`;
+  document.documentElement.style.setProperty('--sk-dither-opacity', opacity);
+}
+ditherSlider.addEventListener('input', updateDitherPreview);
+
+// ── INSPECTOR TABS ──
+document.querySelectorAll('.inspector__tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.inspector__tab').forEach(t => t.removeAttribute('data-active'));
+    document.querySelectorAll('.inspector__panel').forEach(p => p.removeAttribute('data-active'));
+    tab.setAttribute('data-active', 'true');
+    document.querySelector(`.inspector__panel[data-panel="${tab.dataset.panel}"]`).setAttribute('data-active', 'true');
+  });
+});
+
+// ── VIEW SWITCHER ──
+window.switchView = function(id) {
+  document.querySelectorAll('.view').forEach(v => v.removeAttribute('data-active'));
+  document.querySelectorAll('.topbar__nav-btn').forEach(b => b.removeAttribute('data-active'));
+  document.querySelectorAll('.sidebar__item[data-view]').forEach(b => b.removeAttribute('data-active'));
+  document.getElementById(`view-${id}`).setAttribute('data-active', 'true');
+  document.querySelector(`.topbar__nav-btn[data-view="${id}"]`)?.setAttribute('data-active', 'true');
+  document.querySelectorAll(`.sidebar__item[data-view="${id}"]`).forEach(b => b.setAttribute('data-active', 'true'));
+};
+
+document.querySelectorAll('[data-view]').forEach(btn => {
+  btn.addEventListener('click', () => switchView(btn.dataset.view));
+});
+
+// ── THEME SWITCHER ──
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-css').href = `../themes/${theme}.css`;
+  document.getElementById('theme-sel').value = theme;
+  document.querySelectorAll('[data-theme-btn]').forEach(b => {
+    b.toggleAttribute('data-active', b.dataset.themeBtn === theme);
+  });
+  const darkBtn = document.getElementById('dark-toggle');
+  if (darkBtn) darkBtn.textContent = theme === 'dark' ? '☾' : '☀';
+}
+document.getElementById('theme-sel').addEventListener('change', e => applyTheme(e.target.value));
+document.querySelectorAll('[data-theme-btn]').forEach(b => {
+  b.addEventListener('click', () => applyTheme(b.dataset.themeBtn));
+});
+document.getElementById('dark-toggle')?.addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme');
+  applyTheme(current === 'dark' ? 'default' : 'dark');
+});
+
+// ── DENSITY SWITCHER ──
+document.getElementById('density-sel').addEventListener('change', e => {
+  document.documentElement.setAttribute('data-density', e.target.value);
+});
+
+// ── REASONING STEP TOGGLE ──
+window.toggleReasoning = function(btn) {
+  const step = btn.closest('.sk-reasoning-step');
+  const expanded = step.getAttribute('data-expanded') === 'true';
+  step.setAttribute('data-expanded', expanded ? 'false' : 'true');
+};
+
+// ── CHAT SEND ──
+const textarea = document.getElementById('chat-textarea');
+textarea.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+});
+textarea.addEventListener('input', () => {
+  textarea.style.height = 'auto';
+  textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+});
+
+window.sendMessage = function() {
+  const val = textarea.value.trim();
+  if (!val) return;
+  const thread = document.getElementById('chat-thread');
+
+  // Remove typing indicator if exists
+  thread.querySelector('.sk-typing-indicator')?.remove();
+
+  // User bubble
+  const userEl = document.createElement('div');
+  userEl.className = 'sk-chat-bubble';
+  userEl.setAttribute('data-role', 'user');
+  userEl.style.cssText = 'align-self:flex-end';
+  userEl.innerHTML = `<p>${val.replace(/</g,'&lt;')}</p>`;
+  thread.appendChild(userEl);
+
+  // Typing indicator
+  const typing = document.createElement('div');
+  typing.className = 'sk-typing-indicator';
+  typing.innerHTML = '▮ ▮ ▮';
+  typing.style.cssText = 'letter-spacing:4px;animation:blink-cur 0.6s steps(2) infinite';
+  thread.appendChild(typing);
+
+  textarea.value = '';
+  textarea.style.height = 'auto';
+  thread.scrollTop = thread.scrollHeight;
+
+  // Simulated response
+  setTimeout(() => {
+    typing.remove();
+    const reply = document.createElement('div');
+    reply.className = 'sk-chat-bubble';
+    reply.setAttribute('data-role', 'assistant');
+    reply.style.cssText = 'align-self:flex-start';
+    reply.innerHTML = `<p>I received your message. This is a live demo — the dither textures, streaming cursor, and reasoning traces you see are all real skeehn components running with zero dependencies.</p><span class="sk-chat-bubble__cursor"></span>`;
+    thread.appendChild(reply);
+    thread.scrollTop = thread.scrollHeight;
+  }, 1200);
+};
+
+// ── MIC TOGGLE ──
+let micActive = false;
+let recognition = null;
+window.toggleMic = function() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { alert('Voice requires Chrome'); return; }
+  const btn = document.getElementById('mic-btn');
+  if (!micActive) {
+    recognition = new SR();
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.onresult = e => {
+      textarea.value = Array.from(e.results).map(r => r[0].transcript).join('');
     };
-    reader.readAsDataURL(file);
+    recognition.onend = () => {
+      micActive = false;
+      btn.textContent = '◎';
+      btn.style.color = '';
+    };
+    recognition.start();
+    micActive = true;
+    btn.textContent = '●';
+    btn.style.color = 'hsl(0 80% 60%)';
+  } else {
+    recognition?.stop();
   }
-  upload.addEventListener('change', () => { if (upload.files[0]) renderAscii(upload.files[0]); });
+};
 
-  // Text-to-ASCII
-  const textIn = document.getElementById('text-input');
-  const textOut = document.getElementById('text-out');
-  const FONT = {
-    'H':['█   █','█   █','█████','█   █','█   █'],'E':['█████','█    ','████ ','█    ','█████'],
-    'L':['█    ','█    ','█    ','█    ','█████'],'O':[' ███ ','█   █','█   █','█   █',' ███ '],
-    ' ':'     ','A':[' ███ ','█   █','█████','█   █','█   █'],
+// ── ASCII ENGINE ──
+const imgUpload = document.getElementById('img-upload');
+const asciiOut = document.getElementById('ascii-out');
+const resSlider = document.getElementById('res-slider');
+document.getElementById('res-val').textContent = resSlider.value;
+resSlider.addEventListener('input', () => {
+  document.getElementById('res-val').textContent = resSlider.value;
+  if (imgUpload.files[0]) renderImg(imgUpload.files[0]);
+});
+document.getElementById('algo-sel').addEventListener('change', () => {
+  if (imgUpload.files[0]) renderImg(imgUpload.files[0]);
+});
+imgUpload.addEventListener('change', () => { if (imgUpload.files[0]) renderImg(imgUpload.files[0]); });
+
+function renderImg(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const W = parseInt(resSlider.value);
+      const H = Math.round(W * (img.height / img.width) * 0.5);
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width; canvas.height = img.height;
+      canvas.getContext('2d').drawImage(img, 0, 0);
+      const data = canvas.getContext('2d').getImageData(0, 0, img.width, img.height).data;
+      const chars = ' ░▒▓█▓▒░ .:-=+*#%@';
+      const cW = Math.max(1, Math.floor(img.width / W));
+      const cH = Math.max(1, Math.floor(img.height / H));
+      let out = '';
+      for (let y = 0; y < H; y++) {
+        let line = '';
+        for (let x = 0; x < W; x++) {
+          let sum = 0, cnt = 0;
+          for (let dy = 0; dy < cH && y*cH+dy < img.height; dy++)
+            for (let dx = 0; dx < cW && x*cW+dx < img.width; dx++) {
+              const px = ((x*cW+dx) + (y*cH+dy)*img.width) * 4;
+              sum += 0.299*data[px] + 0.587*data[px+1] + 0.114*data[px+2];
+              cnt++;
+            }
+          const lum = sum / cnt / 255;
+          line += chars[Math.floor(lum * (chars.length - 1))];
+        }
+        out += line + '\n';
+      }
+      asciiOut.textContent = out;
+    };
+    img.src = e.target.result;
   };
-  function renderText(text) {
-    const lines = [[],[],[],[],[]];
-    for (const c of text.toUpperCase()) {
-      const g = FONT[c] || FONT[' '] || FONT[' '];
-      for (let i = 0; i < 5; i++) lines[i].push(g[i]);
-    }
-    textOut.textContent = lines.map(l => l.join(' ')).join('\n');
+  reader.readAsDataURL(file);
+}
+
+// ── TEXT-TO-ASCII ──
+const GLYPHS = {
+  A:[' ▓ ','▓ ▓','▓▓▓','▓ ▓','▓ ▓'],B:['▓▓ ','▓ ▓','▓▓ ','▓ ▓','▓▓ '],
+  C:[' ▓▓','▓  ','▓  ','▓  ',' ▓▓'],D:['▓▓ ','▓ ▓','▓ ▓','▓ ▓','▓▓ '],
+  E:['▓▓▓','▓  ','▓▓ ','▓  ','▓▓▓'],F:['▓▓▓','▓  ','▓▓ ','▓  ','▓  '],
+  G:[' ▓▓','▓  ','▓ ▓','▓ ▓',' ▓▓'],H:['▓ ▓','▓ ▓','▓▓▓','▓ ▓','▓ ▓'],
+  I:['▓▓▓',' ▓ ',' ▓ ',' ▓ ','▓▓▓'],J:['▓▓▓','  ▓','  ▓','▓ ▓',' ▓ '],
+  K:['▓ ▓','▓▒ ','▓▓ ','▓▒ ','▓ ▓'],L:['▓  ','▓  ','▓  ','▓  ','▓▓▓'],
+  M:['▓ ▓','▓▓▓','▓▒▓','▓ ▓','▓ ▓'],N:['▓ ▓','▓▓▓','▓▒▓','▓ ▓','▓ ▓'],
+  O:[' ▓ ','▓ ▓','▓ ▓','▓ ▓',' ▓ '],P:['▓▓ ','▓ ▓','▓▓ ','▓  ','▓  '],
+  Q:[' ▓ ','▓ ▓','▓ ▓','▓▒▓',' ▓▓'],R:['▓▓ ','▓ ▓','▓▓ ','▓▒ ','▓ ▓'],
+  S:[' ▓▓','▓  ',' ▓ ','  ▓','▓▓ '],T:['▓▓▓',' ▓ ',' ▓ ',' ▓ ',' ▓ '],
+  U:['▓ ▓','▓ ▓','▓ ▓','▓ ▓',' ▓ '],V:['▓ ▓','▓ ▓','▓ ▓',' ▓ ',' ▓ '],
+  W:['▓ ▓','▓ ▓','▓▒▓','▓▓▓','▓ ▓'],X:['▓ ▓',' ▓ ',' ▓ ',' ▓ ','▓ ▓'],
+  Y:['▓ ▓',' ▓ ',' ▓ ',' ▓ ',' ▓ '],Z:['▓▓▓','  ▓',' ▓ ','▓  ','▓▓▓'],
+  '0':[' ▓ ','▓ ▓','▓▒▓','▓ ▓',' ▓ '],'1':[' ▓ ','▓▓ ',' ▓ ',' ▓ ','▓▓▓'],
+  ' ':['   ','   ','   ','   ','   ']
+};
+function renderText(text) {
+  const rows = [[],[],[],[],[]];
+  for (const c of (text || 'skeehn').toUpperCase().slice(0,14)) {
+    const g = GLYPHS[c] || GLYPHS[' '];
+    for (let i = 0; i < 5; i++) rows[i].push(g[i]);
   }
-  textIn.addEventListener('input', () => renderText(textIn.value));
-  renderText(textIn.value);
+  return rows.map(r => r.join(' ')).join('\n');
+}
+const textInput = document.getElementById('text-input');
+const textOut = document.getElementById('text-out');
+textInput.addEventListener('input', () => { textOut.textContent = renderText(textInput.value); });
+textOut.textContent = renderText(textInput.value);
+
 </script>
 </body>
 </html>

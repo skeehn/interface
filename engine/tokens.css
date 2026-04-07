@@ -1,102 +1,129 @@
 /*
  * skeehn — Design Tokens
- * Technical minimalist. Square, monospace, precise.
+ * Swiss technical minimal. Light by default. Dither as accent.
  */
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100;200;300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap');
 
 :root {
-  /* ═══ COLORS (HSL) ═══ */
-  --sk-background: 0 0% 100%;
-  --sk-foreground: 0 0% 3.9%;
-  --sk-primary: 0 0% 9%;
-  --sk-secondary: 0 0% 96.1%;
-  --sk-muted: 0 0% 96.1%;
-  --sk-muted-foreground: 0 0% 45.1%;
-  --sk-accent: 0 0% 96.1%;
-  --sk-accent-foreground: 0 0% 9%;
-  --sk-destructive: 0 84.2% 60.2%;
-  --sk-border-color: 0 0% 85%;
-  --sk-ring: 0 0% 3.9%;
-  --sk-success: 142 76% 36%;
-  --sk-warning: 38 92% 50%;
-  --sk-info: 221 83% 53%;
+  /* ═══ COLORS (HSL tuples — use with hsl()) ═══ */
+  --sk-background:        0 0% 100%;
+  --sk-foreground:        0 0% 4%;
+  --sk-surface:           0 0% 98%;
+  --sk-primary:           0 0% 8%;
+  --sk-primary-fg:        0 0% 98%;
+  --sk-secondary:         0 0% 96%;
+  --sk-secondary-fg:      0 0% 8%;
+  --sk-muted:             0 0% 96%;
+  --sk-muted-foreground:  0 0% 46%;
+  --sk-accent:            0 0% 94%;
+  --sk-accent-foreground: 0 0% 8%;
+  --sk-destructive:       0 84% 60%;
+  --sk-border-color:      0 0% 88%;
+  --sk-ring:              0 0% 8%;
+  --sk-success:           142 76% 36%;
+  --sk-warning:           38 92% 50%;
+  --sk-info:              221 83% 53%;
 
   /* ═══ TYPOGRAPHY ═══ */
-  --sk-font-mono: "SF Mono", "JetBrains Mono", "Fira Code", "Cascadia Code", "IBM Plex Mono", "Consolas", monospace;
-  --sk-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --sk-font-size-xs: 0.6875rem;
-  --sk-font-size-sm: 0.8125rem;
+  --sk-font-sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --sk-font-mono: "Geist Mono", "SF Mono", "JetBrains Mono", "IBM Plex Mono", monospace;
+  --sk-font-size-xs:   0.6875rem;
+  --sk-font-size-sm:   0.8125rem;
   --sk-font-size-base: 0.875rem;
-  --sk-font-size-lg: 1rem;
-  --sk-font-size-xl: 1.125rem;
-  --sk-font-size-2xl: 1.375rem;
-  --sk-line-height: 1.45;
+  --sk-font-size-lg:   1rem;
+  --sk-font-size-xl:   1.125rem;
+  --sk-font-size-2xl:  1.375rem;
+  --sk-font-size-3xl:  1.75rem;
+  --sk-font-size-4xl:  2.25rem;
+  --sk-font-size-5xl:  3rem;
+  --sk-line-height:       1.5;
+  --sk-line-height-tight: 1.2;
+  --sk-font-weight-thin:   200;
+  --sk-font-weight-light:  300;
+  --sk-font-weight-normal: 400;
+  --sk-font-weight-medium: 500;
+  --sk-font-weight-semi:   600;
+  --sk-letter-spacing-tight: -0.025em;
+  --sk-letter-spacing-wide:   0.06em;
 
-  /* ═══ SPACING (4px grid) ═══ */
-  --sk-space-1: 0.25rem;
-  --sk-space-2: 0.5rem;
-  --sk-space-3: 0.75rem;
-  --sk-space-4: 1rem;
-  --sk-space-5: 1.25rem;
-  --sk-space-6: 1.5rem;
-  --sk-space-8: 2rem;
+  /* ═══ SPACING (8px grid) ═══ */
+  --sk-space-1:  0.25rem;
+  --sk-space-2:  0.5rem;
+  --sk-space-3:  0.75rem;
+  --sk-space-4:  1rem;
+  --sk-space-5:  1.25rem;
+  --sk-space-6:  1.5rem;
+  --sk-space-8:  2rem;
   --sk-space-10: 2.5rem;
   --sk-space-12: 3rem;
   --sk-space-16: 4rem;
+  --sk-space-20: 5rem;
+  --sk-space-24: 6rem;
+  --sk-space-32: 8rem;
 
   /* ═══ RADIUS (square by default) ═══ */
-  --sk-radius: 0;
-  --sk-radius-sm: 0;
-  --sk-radius-md: 0;
-  --sk-radius-lg: 0;
+  --sk-radius:      0px;
+  --sk-radius-sm:   0px;
+  --sk-radius-md:   0px;
+  --sk-radius-lg:   0px;
   --sk-radius-full: 9999px;
 
   /* ═══ BORDERS ═══ */
   --sk-border-width: 1px;
-  --sk-border: var(--sk-border-width) solid hsl(var(--sk-border-color));
+  --sk-border:       var(--sk-border-width) solid hsl(var(--sk-border-color));
   --sk-border-thick: 2px solid hsl(var(--sk-foreground));
 
   /* ═══ SHADOWS ═══ */
   --sk-shadow-sm: none;
-  --sk-shadow-md: 0 1px 3px hsl(0 0% 0% / 0.08), 0 1px 2px hsl(0 0% 0% / 0.06);
-  --sk-shadow-lg: 0 4px 12px hsl(0 0% 0% / 0.1), 0 2px 4px hsl(0 0% 0% / 0.06);
+  --sk-shadow-md: 0 1px 3px hsl(0 0% 0% / 0.06), 0 1px 2px hsl(0 0% 0% / 0.04);
+  --sk-shadow-lg: 0 4px 12px hsl(0 0% 0% / 0.08), 0 2px 4px hsl(0 0% 0% / 0.04);
 
   /* ═══ TRANSITIONS ═══ */
-  --sk-transition: 100ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  --sk-transition-fast: 60ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --sk-transition:      100ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --sk-transition-fast:  60ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --sk-transition-slow: 180ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
   /* ═══ Z-INDEX ═══ */
   --sk-z-dropdown: 50;
-  --sk-z-sticky: 100;
-  --sk-z-overlay: 200;
-  --sk-z-modal: 300;
-  --sk-z-tooltip: 500;
+  --sk-z-sticky:   100;
+  --sk-z-overlay:  200;
+  --sk-z-modal:    300;
+  --sk-z-tooltip:  500;
 }
 
 /* ═══ DARK MODE ═══ */
+/* Responds to data-theme="dark" attribute (used by demo JS) AND .dark class */
+[data-theme="dark"],
 :root.dark {
-  --sk-background: 0 0% 3.9%;
-  --sk-foreground: 0 0% 98%;
-  --sk-primary: 0 0% 98%;
-  --sk-secondary: 0 0% 14.9%;
-  --sk-muted: 0 0% 14.9%;
-  --sk-muted-foreground: 0 0% 63.9%;
-  --sk-accent: 0 0% 14.9%;
-  --sk-accent-foreground: 0 0% 98%;
-  --sk-border-color: 0 0% 14.9%;
-  --sk-ring: 0 0% 83.1%;
+  --sk-background:        0 0% 6%;
+  --sk-foreground:        0 0% 97%;
+  --sk-surface:           0 0% 9%;
+  --sk-primary:           0 0% 97%;
+  --sk-primary-fg:        0 0% 6%;
+  --sk-secondary:         0 0% 13%;
+  --sk-secondary-fg:      0 0% 97%;
+  --sk-muted:             0 0% 13%;
+  --sk-muted-foreground:  0 0% 60%;
+  --sk-accent:            0 0% 15%;
+  --sk-accent-foreground: 0 0% 97%;
+  --sk-border-color:      0 0% 16%;
+  --sk-ring:              0 0% 75%;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
-    --sk-background: 0 0% 3.9%;
-    --sk-foreground: 0 0% 98%;
-    --sk-primary: 0 0% 98%;
-    --sk-secondary: 0 0% 14.9%;
-    --sk-muted: 0 0% 14.9%;
-    --sk-muted-foreground: 0 0% 63.9%;
-    --sk-accent: 0 0% 14.9%;
-    --sk-border-color: 0 0% 14.9%;
-    --sk-ring: 0 0% 83.1%;
+    --sk-background:        0 0% 6%;
+    --sk-foreground:        0 0% 97%;
+    --sk-surface:           0 0% 9%;
+    --sk-primary:           0 0% 97%;
+    --sk-primary-fg:        0 0% 6%;
+    --sk-secondary:         0 0% 13%;
+    --sk-secondary-fg:      0 0% 97%;
+    --sk-muted:             0 0% 13%;
+    --sk-muted-foreground:  0 0% 60%;
+    --sk-accent:            0 0% 15%;
+    --sk-accent-foreground: 0 0% 97%;
+    --sk-border-color:      0 0% 16%;
+    --sk-ring:              0 0% 75%;
   }
 }

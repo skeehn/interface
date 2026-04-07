@@ -11,10 +11,13 @@
   <link rel="stylesheet" href="../engine/tokens.css">
   <link rel="stylesheet" href="../engine/dither.css">
 
-  <!-- Themes -->
+  <!-- Active theme -->
   <link rel="stylesheet" href="../themes/default.css" id="theme-css">
 
-  <!-- All components -->
+  <!-- Docs styles -->
+  <link rel="stylesheet" href="./docs.css">
+
+  <!-- All component CSS (for live previews) -->
   <link rel="stylesheet" href="../components/button/button.css">
   <link rel="stylesheet" href="../components/badge/badge.css">
   <link rel="stylesheet" href="../components/card/card.css">
@@ -41,198 +44,23 @@
   <link rel="stylesheet" href="../components/code-block/code-block.css">
   <link rel="stylesheet" href="../components/markdown/markdown.css">
   <link rel="stylesheet" href="../components/layout/layout.css">
+  <link rel="stylesheet" href="../components/dataviz/dataviz.css">
+  <link rel="stylesheet" href="../components/motion/motion.css">
+  <link rel="stylesheet" href="../components/voice-session/voice-session.css">
+  <link rel="stylesheet" href="../components/thinking-block/thinking-block.css">
+  <link rel="stylesheet" href="../components/prompt-suggestions/prompt-suggestions.css">
+  <link rel="stylesheet" href="../components/file-attachment/file-attachment.css">
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ── SHELL ── */
     html, body {
-      height: 100%; width: 100%;
-      overflow: hidden;
-      background: hsl(var(--sk-background));
-      color: hsl(var(--sk-foreground));
-      font-family: var(--sk-font-sans);
-      font-size: 13px;
-    }
-
-    .app {
-      display: grid;
-      grid-template-rows: 36px 1fr;
-      grid-template-columns: 220px 1fr 260px;
-      height: 100vh;
-    }
-
-    /* ── TOPBAR ── */
-    .topbar {
-      grid-column: 1 / -1;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 0 12px;
-      border-bottom: 1px solid hsl(var(--sk-border-color));
-      background: hsl(var(--sk-background));
-      position: relative;
-      overflow: hidden;
-    }
-    .topbar::after {
-      content: "";
-      position: absolute; inset: 0;
-      background-image: var(--sk-dither-scanlines);
-      background-size: 4px 4px;
-      opacity: 0.08;
-      pointer-events: none;
-    }
-    .topbar__logo {
-      font-size: 15px;
-      font-weight: 800;
-      letter-spacing: -0.04em;
-      color: hsl(var(--sk-foreground));
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .topbar__logo::before {
-      content: "▓░";
-      font-size: 11px;
-      opacity: 0.6;
-      animation: logo-morph 2s steps(3) infinite;
-    }
-    @keyframes logo-morph {
-      0%   { content: "▓░"; }
-      33%  { content: "▒▓"; }
-      66%  { content: "░▒"; }
-      100% { content: "▓░"; }
-    }
-    .topbar__sep { opacity: 0.2; }
-    .topbar__nav { display: flex; gap: 2px; }
-    .topbar__nav-btn {
-      padding: 3px 10px;
-      font-family: var(--sk-font-mono);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      border: none;
-      background: transparent;
-      color: hsl(var(--sk-muted-foreground));
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: all 80ms;
-    }
-    .topbar__nav-btn:hover { color: hsl(var(--sk-foreground)); }
-    .topbar__nav-btn[data-active="true"] {
-      color: hsl(var(--sk-foreground));
-      border-bottom-color: hsl(var(--sk-foreground));
-    }
-    .topbar__controls {
-      margin-left: auto;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .topbar__select {
-      font-family: var(--sk-font-mono);
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      background: transparent;
-      color: hsl(var(--sk-muted-foreground));
-      border: 1px solid hsl(var(--sk-border-color));
-      padding: 2px 6px;
-      cursor: pointer;
-    }
-    .topbar__select:hover { color: hsl(var(--sk-foreground)); }
-    .topbar__badge {
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      padding: 2px 6px;
-      border: 1px solid hsl(var(--sk-border-color));
-      color: hsl(var(--sk-muted-foreground));
-      background-image: var(--sk-dither-bayer);
-      background-size: 32px 32px;
-    }
-
-    /* ── SIDEBAR ── */
-    .sidebar {
-      border-right: 1px solid hsl(var(--sk-border-color));
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      background: hsl(var(--sk-background));
-    }
-    .sidebar__section {
-      padding: 12px 0;
-      border-bottom: 1px solid hsl(var(--sk-border-color) / 0.5);
-    }
-    .sidebar__label {
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      opacity: 0.35;
-      padding: 0 12px 6px;
-      display: block;
-    }
-    .sidebar__item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      height: 100%;
       width: 100%;
-      padding: 5px 12px;
-      font-family: var(--sk-font-mono);
-      font-size: 12px;
-      font-weight: 500;
-      border: none;
-      background: transparent;
-      color: hsl(var(--sk-muted-foreground));
-      cursor: pointer;
-      text-align: left;
-      transition: all 60ms;
-      border-left: 2px solid transparent;
-    }
-    .sidebar__item:hover { color: hsl(var(--sk-foreground)); background: hsl(var(--sk-accent)); }
-    .sidebar__item[data-active="true"] {
-      color: hsl(var(--sk-foreground));
-      background: hsl(var(--sk-accent));
-      border-left-color: hsl(var(--sk-foreground));
-    }
-    .sidebar__item .icon { width: 14px; text-align: center; font-size: 11px; }
-    .sidebar__item .count {
-      margin-left: auto;
-      font-size: 9px;
-      opacity: 0.4;
-      letter-spacing: 0.05em;
-    }
-    .sidebar__stats {
-      padding: 8px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .sidebar__stat {
-      display: flex;
-      justify-content: space-between;
-      font-size: 10px;
-      opacity: 0.5;
-    }
-    .sidebar__stat span:last-child { opacity: 0.7; }
-
-    /* ── MAIN ── */
-    .main {
-      display: flex;
-      flex-direction: column;
       overflow: hidden;
-      position: relative;
     }
 
-    /* Views */
-    .view { display: none !important; flex-direction: column; height: 100%; overflow: hidden; }
-    .view[data-active="true"] { display: flex !important; }
-    #view-components[data-active="true"] { display: grid !important; }
-
-    /* ── CHAT VIEW ── */
+    /* Chat demo styles (for #ai-chat route) */
     .chat-thread {
       flex: 1;
       overflow-y: auto;
@@ -245,486 +73,6 @@
     .chat-thread::-webkit-scrollbar { width: 4px; }
     .chat-thread::-webkit-scrollbar-track { background: transparent; }
     .chat-thread::-webkit-scrollbar-thumb { background: hsl(var(--sk-border-color)); }
-
-    /* Override chat bubble for our theme */
-    .sk-chat-bubble[data-role="user"] {
-      align-self: flex-end;
-      max-width: 70%;
-    }
-    .sk-chat-bubble[data-role="assistant"],
-    .sk-chat-bubble[data-role="tool"] {
-      align-self: flex-start;
-      max-width: 80%;
-    }
-
-    .chat-footer {
-      padding: 12px 16px;
-      border-top: 1px solid hsl(var(--sk-border-color));
-      background: hsl(var(--sk-background));
-      position: relative;
-    }
-    .chat-footer::before {
-      content: "";
-      position: absolute; top: 0; left: 0; right: 0; height: 1px;
-      background: hsl(var(--sk-foreground));
-      opacity: 0.1;
-    }
-
-    /* Custom chat input */
-    .chat-input-wrap {
-      display: flex;
-      gap: 8px;
-      align-items: flex-end;
-      border: 1px solid hsl(var(--sk-border-color));
-      padding: 8px 10px;
-      background: hsl(var(--sk-background));
-      position: relative;
-      overflow: hidden;
-    }
-    .chat-input-wrap::before {
-      content: "";
-      position: absolute; inset: 0;
-      background-image: var(--sk-dither-bayer);
-      background-size: 32px 32px;
-      opacity: 0.04;
-      pointer-events: none;
-    }
-    .chat-input-wrap:focus-within {
-      border-color: hsl(var(--sk-foreground));
-    }
-    .chat-input-wrap:focus-within::before { opacity: 0.08; }
-    #chat-textarea {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      font-family: var(--sk-font-mono);
-      font-size: 13px;
-      color: hsl(var(--sk-foreground));
-      resize: none;
-      min-height: 20px;
-      max-height: 120px;
-      overflow-y: auto;
-      line-height: 1.5;
-      field-sizing: content;
-    }
-    #chat-textarea::placeholder { color: hsl(var(--sk-muted-foreground)); opacity: 0.5; }
-    .chat-input-actions { display: flex; gap: 4px; }
-    .chat-act-btn {
-      width: 26px; height: 26px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 13px;
-      background: transparent;
-      border: 1px solid hsl(var(--sk-border-color));
-      color: hsl(var(--sk-muted-foreground));
-      cursor: pointer;
-      transition: all 60ms;
-      font-family: var(--sk-font-mono);
-    }
-    .chat-act-btn:hover { color: hsl(var(--sk-foreground)); border-color: hsl(var(--sk-foreground)); }
-    .chat-act-btn.send {
-      background: hsl(var(--sk-foreground));
-      color: hsl(var(--sk-background));
-      border-color: hsl(var(--sk-foreground));
-      position: relative; overflow: hidden;
-    }
-    .chat-act-btn.send::before {
-      content: "";
-      position: absolute; inset: 0;
-      background-image: var(--sk-dither-bayer);
-      background-size: 32px 32px;
-      opacity: 0.2; mix-blend-mode: overlay;
-    }
-    .chat-act-btn.send:hover { opacity: 0.85; }
-    .chat-hint {
-      font-size: 9px;
-      letter-spacing: 0.05em;
-      opacity: 0.3;
-      margin-top: 5px;
-      text-transform: uppercase;
-    }
-
-    /* ── HERO ── */
-    #view-hero {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-      gap: var(--sk-space-8);
-      padding: var(--sk-space-16) var(--sk-space-12);
-      position: relative;
-      overflow: hidden;
-    }
-    #view-hero::before {
-      content: "";
-      position: absolute; inset: 0;
-      background:
-        radial-gradient(ellipse 70% 60% at 15% 50%, hsl(var(--sk-foreground) / 0.025) 0%, transparent 65%),
-        radial-gradient(ellipse 50% 40% at 85% 25%, hsl(var(--sk-info) / 0.03) 0%, transparent 60%);
-      pointer-events: none;
-    }
-    #view-hero::after {
-      content: "";
-      position: absolute; inset: 0;
-      background-image: var(--sk-dither-bayer);
-      background-size: 32px 32px;
-      opacity: 0.03;
-      pointer-events: none;
-    }
-    .hero-badge {
-      font-family: var(--sk-font-mono);
-      font-size: var(--sk-font-size-xs);
-      letter-spacing: var(--sk-letter-spacing-wide);
-      text-transform: uppercase;
-      color: hsl(var(--sk-muted-foreground));
-      display: flex;
-      align-items: center;
-      gap: var(--sk-space-2);
-      position: relative;
-    }
-    .hero-title {
-      font-family: var(--sk-font-sans);
-      font-size: clamp(2rem, 4vw, var(--sk-font-size-5xl));
-      font-weight: var(--sk-font-weight-thin);
-      letter-spacing: var(--sk-letter-spacing-tight);
-      line-height: var(--sk-line-height-tight);
-      color: hsl(var(--sk-foreground));
-      margin: 0;
-      position: relative;
-    }
-    .hero-title .brand {
-      background: linear-gradient(135deg, hsl(var(--sk-foreground)) 0%, hsl(var(--sk-foreground) / 0.5) 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .hero-sub {
-      font-family: var(--sk-font-sans);
-      font-size: var(--sk-font-size-base);
-      font-weight: var(--sk-font-weight-light);
-      color: hsl(var(--sk-muted-foreground));
-      max-width: 46ch;
-      line-height: 1.65;
-      position: relative;
-    }
-    .hero-grid {
-      display: flex;
-      gap: var(--sk-space-3);
-      flex-wrap: wrap;
-      position: relative;
-    }
-    .hero-tile {
-      padding: var(--sk-space-3) var(--sk-space-4);
-      border: var(--sk-border);
-      position: relative;
-      overflow: hidden;
-      min-width: 80px;
-    }
-    .hero-tile::before {
-      content: "";
-      position: absolute; inset: 0;
-      background-image: var(--sk-dither-bayer);
-      background-size: 8px 8px;
-      opacity: 0.06;
-      pointer-events: none;
-    }
-    .hero-tile__num {
-      font-family: var(--sk-font-mono);
-      font-size: var(--sk-font-size-2xl);
-      font-weight: var(--sk-font-weight-semi);
-      line-height: 1;
-      color: hsl(var(--sk-foreground));
-    }
-    .hero-tile__label {
-      font-family: var(--sk-font-mono);
-      font-size: var(--sk-font-size-xs);
-      color: hsl(var(--sk-muted-foreground));
-      margin-top: var(--sk-space-1);
-    }
-    .hero-cta {
-      display: flex;
-      gap: var(--sk-space-3);
-      flex-wrap: wrap;
-      position: relative;
-    }
-
-    /* ── COMPONENTS VIEW ── */
-    #view-components[data-active="true"] {
-      overflow-y: auto;
-      padding: 20px;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      grid-auto-rows: minmax(120px, auto);
-      gap: 1px;
-      align-content: start;
-    }
-    .comp-tile {
-      border: 1px solid hsl(var(--sk-border-color));
-      padding: 14px;
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 80ms;
-    }
-    .comp-tile::before {
-      content: "";
-      position: absolute; inset: 0;
-      background-image: var(--sk-dither-bayer);
-      background-size: 32px 32px;
-      opacity: 0;
-      transition: opacity 120ms;
-      pointer-events: none;
-    }
-    .comp-tile:hover::before { opacity: 0.18; }
-    .comp-tile:hover { border-color: hsl(var(--sk-foreground)); background: hsl(var(--sk-foreground) / 0.04); }
-    .comp-tile[data-active="true"] { border-color: hsl(var(--sk-foreground)); background: hsl(var(--sk-foreground) / 0.06); }
-    .comp-tile[data-active="true"]::before { opacity: 0.22; }
-    .comp-tile__header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 8px;
-    }
-    .comp-tile__name {
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-    }
-    .comp-tile__cat {
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      opacity: 0.35;
-    }
-    .comp-tile__preview {
-      padding: 10px 10px;
-      margin: 8px -2px 6px;
-      background: hsl(var(--sk-foreground) / 0.04);
-      border: 1px solid hsl(var(--sk-border-color));
-      min-height: 36px;
-      display: flex;
-      align-items: center;
-      overflow: hidden;
-      position: relative;
-    }
-    .comp-tile__preview::before {
-      content: "";
-      position: absolute; inset: 0;
-      background-image: var(--sk-dither-noise);
-      opacity: 0.06;
-      pointer-events: none;
-    }
-    .comp-tile__variants {
-      margin-top: 8px;
-      display: flex;
-      gap: 4px;
-      flex-wrap: wrap;
-    }
-    .comp-tile__var {
-      font-size: 9px;
-      padding: 2px 6px;
-      border: 1px solid hsl(var(--sk-border-color));
-      opacity: 0.5;
-      letter-spacing: 0.05em;
-    }
-
-    /* ── ENGINE VIEW ── */
-    #view-engine {
-      flex-direction: column;
-      gap: 0;
-    }
-    .engine-toolbar {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      padding: 10px 16px;
-      border-bottom: 1px solid hsl(var(--sk-border-color));
-      flex-shrink: 0;
-    }
-    .engine-toolbar label { font-size: 10px; opacity: 0.5; letter-spacing: 0.1em; text-transform: uppercase; }
-    .engine-toolbar input[type="file"] { font-size: 11px; font-family: var(--sk-font-mono); color: hsl(var(--sk-muted-foreground)); }
-    .engine-toolbar input[type="range"] { width: 80px; accent-color: hsl(var(--sk-foreground)); }
-    .engine-output {
-      flex: 1;
-      overflow: auto;
-      padding: 16px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-    .engine-panel {
-      border: 1px solid hsl(var(--sk-border-color));
-      display: flex;
-      flex-direction: column;
-    }
-    .engine-panel__title {
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      opacity: 0.4;
-      padding: 8px 10px 6px;
-      border-bottom: 1px solid hsl(var(--sk-border-color));
-    }
-    .engine-panel__content {
-      flex: 1;
-      padding: 10px;
-      font-size: 8px;
-      line-height: 1.1;
-      white-space: pre;
-      overflow: auto;
-      font-family: var(--sk-font-mono);
-      color: hsl(var(--sk-foreground));
-    }
-
-    /* ── INSPECTOR ── */
-    .inspector {
-      border-left: 1px solid hsl(var(--sk-border-color));
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    .inspector__header {
-      padding: 8px 12px;
-      border-bottom: 1px solid hsl(var(--sk-border-color));
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      opacity: 0.4;
-      flex-shrink: 0;
-    }
-    .inspector__tabs {
-      display: flex;
-      border-bottom: 1px solid hsl(var(--sk-border-color));
-      flex-shrink: 0;
-    }
-    .inspector__tab {
-      flex: 1;
-      padding: 7px 8px;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      border: none;
-      background: transparent;
-      color: hsl(var(--sk-muted-foreground));
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: all 60ms;
-      font-family: var(--sk-font-mono);
-    }
-    .inspector__tab:hover { color: hsl(var(--sk-foreground)); }
-    .inspector__tab[data-active="true"] {
-      color: hsl(var(--sk-foreground));
-      border-bottom-color: hsl(var(--sk-foreground));
-    }
-    .inspector__panel { display: none; flex: 1; overflow-y: auto; flex-direction: column; }
-    .inspector__panel[data-active="true"] { display: flex; }
-
-    /* Props panel */
-    .props-list { padding: 8px; display: flex; flex-direction: column; gap: 1px; }
-    .prop-row {
-      display: flex;
-      align-items: baseline;
-      gap: 8px;
-      padding: 5px 6px;
-      font-size: 11px;
-      border: 1px solid transparent;
-      transition: border-color 60ms;
-      cursor: default;
-    }
-    .prop-row:hover { border-color: hsl(var(--sk-border-color)); }
-    .prop-name { font-weight: 700; opacity: 0.7; min-width: 80px; }
-    .prop-type { opacity: 0.35; font-size: 10px; }
-    .prop-default { margin-left: auto; opacity: 0.5; font-size: 10px; }
-
-    /* Code panel */
-    .code-block {
-      margin: 8px;
-      padding: 10px;
-      font-size: 10px;
-      line-height: 1.5;
-      background: hsl(var(--sk-accent));
-      border: 1px solid hsl(var(--sk-border-color));
-      white-space: pre;
-      overflow-x: auto;
-      font-family: var(--sk-font-mono);
-      position: relative;
-    }
-    .code-block::before {
-      content: "";
-      position: absolute; inset: 0;
-      background-image: var(--sk-dither-crosshatch);
-      background-size: 12px 12px;
-      opacity: 0.04;
-      pointer-events: none;
-    }
-
-    /* Dither panel */
-    .dither-grid {
-      padding: 8px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4px;
-    }
-    .dither-swatch {
-      height: 48px;
-      border: 1px solid hsl(var(--sk-border-color));
-      position: relative;
-      cursor: pointer;
-      transition: border-color 60ms;
-    }
-    .dither-swatch:hover { border-color: hsl(var(--sk-foreground)); }
-    .dither-swatch::before {
-      content: attr(data-label);
-      position: absolute; bottom: 4px; right: 6px;
-      font-size: 8px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      opacity: 0.4;
-      font-family: var(--sk-font-mono);
-    }
-
-    /* ── COMPONENT STYLES ── */
-
-    /* Agent status */
-    .sk-agent-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 4px 10px;
-      border: 1px solid hsl(var(--sk-border-color));
-      position: relative;
-      overflow: hidden;
-    }
-    .sk-agent-status::before {
-      content: "";
-      position: absolute; inset: 0;
-      background-image: var(--sk-dither-bayer);
-      background-size: 32px 32px;
-      opacity: 0.04;
-      pointer-events: none;
-    }
-    .sk-agent-status__indicator {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: hsl(var(--sk-foreground));
-    }
-    .sk-agent-status[data-status="thinking"] .sk-agent-status__indicator {
-      animation: pulse-dot 1s ease-in-out infinite;
-    }
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.7); }
-    }
-
-    /* Chat bubbles - terminal style */
     .sk-chat-bubble {
       padding: 10px 12px;
       border: 1px solid hsl(var(--sk-border-color));
@@ -772,8 +120,6 @@
     }
     .sk-chat-bubble__tool-name { font-weight: 700; opacity: 0.6; font-size: 10px; letter-spacing: 0.08em; }
     .sk-chat-bubble__tool-output { font-size: 10px; opacity: 0.6; font-family: var(--sk-font-mono); }
-
-    /* Reasoning step */
     .sk-reasoning-step {
       border: 1px solid hsl(var(--sk-border-color));
       font-size: 11px;
@@ -788,6 +134,11 @@
       cursor: pointer;
       user-select: none;
       transition: background 60ms;
+      background: none;
+      border: none;
+      width: 100%;
+      color: inherit;
+      font: inherit;
     }
     .sk-reasoning-step__header:hover { background: hsl(var(--sk-accent)); }
     .sk-reasoning-step__indicator {
@@ -800,11 +151,12 @@
       border-color: hsl(var(--sk-foreground));
       animation: pulse-dot 1s ease-in-out infinite;
     }
-    .sk-reasoning-step__title { flex: 1; font-weight: 600; }
-    .sk-reasoning-step__chevron {
-      font-size: 10px; opacity: 0.4;
-      transition: transform 150ms;
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
     }
+    .sk-reasoning-step__title { flex: 1; font-weight: 600; text-align: left; }
+    .sk-reasoning-step__chevron { font-size: 10px; opacity: 0.4; transition: transform 150ms; }
     .sk-reasoning-step[data-expanded="true"] .sk-reasoning-step__chevron { transform: rotate(90deg); }
     .sk-reasoning-step__content {
       display: none;
@@ -812,20 +164,8 @@
       border-top: 1px solid hsl(var(--sk-border-color));
       opacity: 0.7;
       background: hsl(var(--sk-accent));
-      position: relative;
-      overflow: hidden;
-    }
-    .sk-reasoning-step__content::before {
-      content: "";
-      position: absolute; inset: 0;
-      background-image: var(--sk-dither-diagonal);
-      background-size: 12px 12px;
-      opacity: 0.05;
-      pointer-events: none;
     }
     .sk-reasoning-step[data-expanded="true"] .sk-reasoning-step__content { display: block; }
-
-    /* Citation card */
     .sk-citation-card {
       display: flex;
       gap: 10px;
@@ -835,40 +175,34 @@
       font-size: 11px;
       max-width: 80%;
       align-self: flex-start;
-      position: relative;
-      overflow: hidden;
-    }
-    .sk-citation-card::before {
-      content: "";
-      position: absolute; inset: 0;
-      background-image: var(--sk-dither-dots);
-      background-size: 8px 8px;
-      opacity: 0.04;
-      pointer-events: none;
     }
     .sk-citation-card__icon {
       width: 18px; height: 18px;
       border: 1px solid hsl(var(--sk-border-color));
       display: flex; align-items: center; justify-content: center;
       font-size: 9px; font-weight: 800; flex-shrink: 0;
-      background-image: var(--sk-dither-bayer);
-      background-size: 32px 32px;
     }
     .sk-citation-card__source { font-weight: 700; opacity: 0.7; }
     .sk-citation-card__snippet { opacity: 0.55; margin-top: 2px; line-height: 1.4; }
-
-    /* Typing indicator */
-    .sk-typing-indicator {
-      display: flex;
-      gap: 4px;
-      padding: 10px 12px;
+    .sk-agent-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
       border: 1px solid hsl(var(--sk-border-color));
-      align-self: flex-start;
-      font-size: 14px;
-      letter-spacing: 2px;
     }
-
-    /* Badge */
+    .sk-agent-status__indicator {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: hsl(var(--sk-foreground));
+    }
+    .sk-agent-status[data-status="thinking"] .sk-agent-status__indicator {
+      animation: pulse-dot 1s ease-in-out infinite;
+    }
     .sk-badge {
       display: inline-flex;
       align-items: center;
@@ -878,94 +212,138 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
       border: 1px solid hsl(var(--sk-border-color));
-      position: relative;
-      overflow: hidden;
-    }
-    .sk-badge::before {
-      content: "";
-      position: absolute; inset: 0;
-      background-image: var(--sk-dither-bayer);
-      background-size: 32px 32px;
-      opacity: 0.08;
-      pointer-events: none;
     }
     .sk-badge[data-color="success"] { border-color: hsl(var(--sk-success) / 0.5); color: hsl(var(--sk-success)); }
-    .sk-badge[data-color="warning"] { border-color: hsl(var(--sk-warning) / 0.5); color: hsl(var(--sk-warning)); }
-    .sk-badge[data-color="info"]    { border-color: hsl(var(--sk-info) / 0.5); color: hsl(var(--sk-info)); }
 
-    /* Button override for terminal */
-    .sk-btn {
-      position: relative;
-      overflow: hidden;
+    /* Chat footer */
+    .chat-footer {
+      padding: 12px 16px;
+      border-top: 1px solid hsl(var(--sk-border-color));
+      background: hsl(var(--sk-background));
     }
-    .sk-btn[data-variant="solid"],
-    .sk-btn[data-variant="dither"] {
+    .chat-input-wrap {
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+      border: 1px solid hsl(var(--sk-border-color));
+      padding: 8px 10px;
+      background: hsl(var(--sk-background));
+    }
+    .chat-input-wrap:focus-within { border-color: hsl(var(--sk-foreground)); }
+    #chat-textarea {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: var(--sk-font-mono);
+      font-size: 13px;
+      color: hsl(var(--sk-foreground));
+      resize: none;
+      min-height: 20px;
+      max-height: 120px;
+      overflow-y: auto;
+      line-height: 1.5;
+      field-sizing: content;
+    }
+    #chat-textarea::placeholder { color: hsl(var(--sk-muted-foreground)); opacity: 0.5; }
+    .chat-input-actions { display: flex; gap: 4px; }
+    .chat-act-btn {
+      width: 26px; height: 26px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+      background: transparent;
+      border: 1px solid hsl(var(--sk-border-color));
+      color: hsl(var(--sk-muted-foreground));
+      cursor: pointer;
+      transition: all 60ms;
+      font-family: var(--sk-font-mono);
+    }
+    .chat-act-btn:hover { color: hsl(var(--sk-foreground)); border-color: hsl(var(--sk-foreground)); }
+    .chat-act-btn.send {
       background: hsl(var(--sk-foreground));
       color: hsl(var(--sk-background));
       border-color: hsl(var(--sk-foreground));
     }
-    .sk-btn[data-variant="solid"]::before,
-    .sk-btn[data-variant="dither"]::before {
-      content: "";
-      position: absolute; inset: 0;
-      background-image: var(--sk-dither-bayer);
-      background-size: 32px 32px;
-      opacity: 0.15;
-      mix-blend-mode: overlay;
-      pointer-events: none;
+    .chat-act-btn.send:hover { opacity: 0.85; }
+    .chat-hint {
+      font-size: 9px;
+      letter-spacing: 0.05em;
+      opacity: 0.3;
+      margin-top: 5px;
+      text-transform: uppercase;
+      font-family: var(--sk-font-mono);
     }
-    .sk-btn[data-variant="outline"] {
-      background: transparent;
-      border: 1px solid hsl(var(--sk-foreground));
+
+    /* Engine view styles */
+    .engine-toolbar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 16px;
+      border-bottom: 1px solid hsl(var(--sk-border-color));
+      flex-shrink: 0;
+      flex-wrap: wrap;
+    }
+    .engine-toolbar label { font-size: 10px; opacity: 0.5; letter-spacing: 0.1em; text-transform: uppercase; font-family: var(--sk-font-mono); }
+    .engine-toolbar input[type="file"] { font-size: 11px; font-family: var(--sk-font-mono); color: hsl(var(--sk-muted-foreground)); }
+    .engine-toolbar input[type="range"] { width: 80px; accent-color: hsl(var(--sk-foreground)); }
+    .engine-output {
+      flex: 1;
+      overflow: auto;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .engine-panel {
+      border: 1px solid hsl(var(--sk-border-color));
+      display: flex;
+      flex-direction: column;
+    }
+    .engine-panel__title {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0.4;
+      padding: 8px 10px 6px;
+      border-bottom: 1px solid hsl(var(--sk-border-color));
+      font-family: var(--sk-font-mono);
+    }
+    .engine-panel__content {
+      flex: 1;
+      padding: 10px;
+      font-size: 8px;
+      line-height: 1.1;
+      white-space: pre;
+      overflow: auto;
+      font-family: var(--sk-font-mono);
       color: hsl(var(--sk-foreground));
     }
-    .sk-btn[data-variant="ghost"] {
+
+    /* Topbar select/controls shared style */
+    .docs-topbar__select {
+      font-family: var(--sk-font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
       background: transparent;
-      border-color: transparent;
       color: hsl(var(--sk-muted-foreground));
-    }
-    .sk-btn[data-variant="ghost"]:hover { color: hsl(var(--sk-foreground)); }
-
-    /* Progress bar with dither */
-    .progress-wrap {
       border: 1px solid hsl(var(--sk-border-color));
-      height: 8px;
-      position: relative;
-      overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%;
-      background: hsl(var(--sk-foreground));
-      position: relative;
-      overflow: hidden;
-      transition: width 600ms ease;
-    }
-    .progress-fill::before {
-      content: "";
-      position: absolute; inset: 0;
-      background-image: var(--sk-dither-diagonal);
-      background-size: 12px 12px;
-      opacity: 0.2;
-    }
-
-    /* Density controls */
-    .density-bar {
-      display: flex;
-      gap: 2px;
-      padding: 8px;
-    }
-    .density-swatch {
-      flex: 1;
-      height: 32px;
-      border: 1px solid hsl(var(--sk-border-color));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
+      padding: 2px 6px;
       cursor: pointer;
-      transition: border-color 60ms;
     }
-    .density-swatch:hover { border-color: hsl(var(--sk-foreground)); }
+    .docs-topbar__select:hover { color: hsl(var(--sk-foreground)); }
+    .docs-topbar__badge {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 2px 6px;
+      border: 1px solid hsl(var(--sk-border-color));
+      color: hsl(var(--sk-muted-foreground));
+      font-family: var(--sk-font-mono);
+    }
 
     /* Scrollbar */
     ::-webkit-scrollbar { width: 4px; height: 4px; }
@@ -974,706 +352,1373 @@
   </style>
 </head>
 <body>
-<div class="app">
 
-  <!-- ══════════ TOPBAR ══════════ -->
-  <header class="topbar">
-    <div class="topbar__logo">skeehn</div>
-    <span class="topbar__sep">—</span>
-    <nav class="topbar__nav">
-      <button class="topbar__nav-btn" data-view="hero" data-active="true">Overview</button>
-      <button class="topbar__nav-btn" data-view="chat">AI Chat</button>
-      <button class="topbar__nav-btn" data-view="components">Components</button>
-      <button class="topbar__nav-btn" data-view="engine">Engine</button>
+<div class="docs-app" id="docs-app">
+
+  <!-- ══ TOPBAR ══ -->
+  <header class="docs-topbar">
+    <a href="#" class="docs-logo">▓░ skeehn</a>
+    <nav class="docs-nav">
+      <a href="#" class="docs-nav__link" data-route="">Home</a>
+      <a href="#getting-started" class="docs-nav__link" data-route="getting-started">Docs</a>
+      <a href="#components" class="docs-nav__link" data-route="components">Components</a>
+      <a href="#tokens" class="docs-nav__link" data-route="tokens">Tokens</a>
+      <a href="#themes" class="docs-nav__link" data-route="themes">Themes</a>
+      <a href="#engine" class="docs-nav__link" data-route="engine">Engine</a>
+      <a href="#ai-chat" class="docs-nav__link" data-route="ai-chat">AI Chat</a>
     </nav>
-    <div class="topbar__controls">
-      <select class="topbar__select" id="theme-sel">
+    <div class="docs-topbar__controls">
+      <button class="docs-search-trigger" id="search-trigger" aria-label="Search">
+        <span>Search…</span>
+        <kbd>/</kbd>
+      </button>
+      <select class="docs-topbar__select" id="theme-sel" aria-label="Select theme">
         <option value="default" selected>Default</option>
         <option value="dark">Dark</option>
         <option value="terminal">Terminal</option>
         <option value="brutal">Brutal</option>
         <option value="print">Print</option>
         <option value="grain">Grain</option>
+        <option value="mardi-gras">Mardi Gras</option>
       </select>
-      <select class="topbar__select" id="density-sel">
-        <option value="sparse">Sparse</option>
-        <option value="normal" selected>Normal</option>
-        <option value="dense">Dense</option>
-        <option value="solid">Solid</option>
-      </select>
-      <button id="dark-toggle" class="topbar__select" style="cursor:pointer;border:1px solid hsl(var(--sk-border-color));padding:2px 8px;font-size:12px" aria-label="Toggle dark mode" title="Toggle dark/light">☀</button>
-      <span class="topbar__badge">v0.3.0</span>
+      <button id="dark-toggle" class="docs-topbar__select" style="cursor:pointer" aria-label="Toggle dark mode" title="Toggle dark/light">☀</button>
+      <span class="docs-topbar__badge">v0.4.0</span>
     </div>
   </header>
 
-  <!-- ══════════ SIDEBAR ══════════ -->
-  <aside class="sidebar">
-    <div class="sidebar__section">
-      <span class="sidebar__label">Views</span>
-      <button class="sidebar__item" data-view="hero" data-active="true">
-        <span class="icon">▦</span> Overview
-      </button>
-      <button class="sidebar__item" data-view="chat">
-        <span class="icon">◈</span> AI Chat
-        <span class="count">Live</span>
-      </button>
-      <button class="sidebar__item" data-view="components">
-        <span class="icon">▤</span> Components
-        <span class="count">29</span>
-      </button>
-      <button class="sidebar__item" data-view="engine">
-        <span class="icon">░</span> ASCII Engine
-      </button>
-    </div>
-    <div class="sidebar__section">
-      <span class="sidebar__label">Themes</span>
-      <button class="sidebar__item" data-theme-btn="default" data-active="true">
-        <span class="icon">○</span> Default
-      </button>
-      <button class="sidebar__item" data-theme-btn="dark">
-        <span class="icon">●</span> Dark
-      </button>
-      <button class="sidebar__item" data-theme-btn="terminal">
-        <span class="icon">▌</span> Terminal
-      </button>
-      <button class="sidebar__item" data-theme-btn="brutal">
-        <span class="icon">■</span> Brutal
-      </button>
-      <button class="sidebar__item" data-theme-btn="print">
-        <span class="icon">□</span> Print
-      </button>
-      <button class="sidebar__item" data-theme-btn="grain">
-        <span class="icon">▒</span> Grain
-      </button>
-    </div>
-    <div class="sidebar__section">
-      <span class="sidebar__label">Dither</span>
-      <div class="density-bar">
-        <div class="density-swatch sk-animate-pulse" title="25%">░</div>
-        <div class="density-swatch" title="50%">▒</div>
-        <div class="density-swatch" title="75%">▓</div>
-        <div class="density-swatch" title="100%">█</div>
-      </div>
-    </div>
-    <div class="sidebar__section" style="margin-top:auto;border-top:1px solid hsl(var(--sk-border-color));border-bottom:none">
-      <div class="sidebar__stats">
-        <div class="sidebar__stat"><span>Components</span><span>29</span></div>
-        <div class="sidebar__stat"><span>Themes</span><span>5</span></div>
-        <div class="sidebar__stat"><span>Patterns</span><span>8</span></div>
-        <div class="sidebar__stat"><span>Tests</span><span>328</span></div>
-        <div class="sidebar__stat"><span>Dependencies</span><span>0</span></div>
-      </div>
-    </div>
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="docs-sidebar" id="docs-sidebar">
+    <!-- populated by JS -->
   </aside>
 
-  <!-- ══════════ MAIN ══════════ -->
-  <main class="main">
-
-    <!-- OVERVIEW / HERO -->
-    <div class="view" id="view-hero" data-active="true">
-      <div class="hero-badge">
-        <span>▦</span> ASCII Native Component Library
-      </div>
-      <h1 class="hero-title">
-        <span class="brand">skeehn</span><br>
-        Build AI interfaces<br>that mean it.
-      </h1>
-      <p class="hero-sub">
-        29 components. 5 themes. 8 dither patterns.<br>
-        Zero dependencies. Every surface a canvas for ASCII.
-      </p>
-      <div class="hero-grid">
-        <div class="hero-tile">
-          <div class="hero-tile__num">29</div>
-          <div class="hero-tile__label">Components</div>
-        </div>
-        <div class="hero-tile">
-          <div class="hero-tile__num">5</div>
-          <div class="hero-tile__label">Themes</div>
-        </div>
-        <div class="hero-tile">
-          <div class="hero-tile__num">8</div>
-          <div class="hero-tile__label">Dither Patterns</div>
-        </div>
-        <div class="hero-tile">
-          <div class="hero-tile__num">0</div>
-          <div class="hero-tile__label">Dependencies</div>
-        </div>
-        <div class="hero-tile">
-          <div class="hero-tile__num">MCP</div>
-          <div class="hero-tile__label">AI Agent Native</div>
-        </div>
-      </div>
-      <div class="hero-cta">
-        <button class="sk-btn" data-variant="dither" onclick="switchView('chat')">Try AI Chat →</button>
-        <button class="sk-btn" data-variant="outline" onclick="switchView('components')">Browse Components</button>
-      </div>
-    </div>
-
-    <!-- CHAT VIEW -->
-    <div class="view" id="view-chat">
-      <div class="chat-thread" id="chat-thread">
-        <div class="sk-agent-status" data-status="thinking">
-          <span class="sk-agent-status__indicator"></span>
-          <span class="sk-agent-status__text">Thinking…</span>
-        </div>
-
-        <div class="sk-chat-bubble" data-role="user" style="align-self:flex-end">
-          <p>What makes skeehn different from shadcn?</p>
-        </div>
-
-        <div class="sk-reasoning-step" data-status="completed" data-expanded="false">
-          <button class="sk-reasoning-step__header" onclick="toggleReasoning(this)">
-            <span class="sk-reasoning-step__indicator"></span>
-            <span class="sk-reasoning-step__title">Analyzing the design philosophy question</span>
-            <span class="sk-reasoning-step__chevron">▸</span>
-          </button>
-          <div class="sk-reasoning-step__content">
-            <p>shadcn provides copy-paste React components. skeehn provides a zero-dependency ASCII dither rendering system — texture as a first-class design primitive alongside color and spacing. Fundamentally different layers of abstraction.</p>
-          </div>
-        </div>
-
-        <div class="sk-chat-bubble" data-role="tool" style="align-self:flex-start">
-          <div class="sk-chat-bubble__tool-header">
-            <span class="sk-chat-bubble__tool-name">search_components</span>
-            <span class="sk-badge" data-variant="dither" data-color="success">done</span>
-          </div>
-          <pre class="sk-chat-bubble__tool-output">→ 29 components, 0 JS dependencies</pre>
-        </div>
-
-        <div class="sk-chat-bubble" data-role="assistant" style="align-self:flex-start">
-          <p>shadcn gives you React components. skeehn gives you a rendering primitive — ASCII dither texture — as a first-class design element. Every component uses <code style="font-size:10px;opacity:0.7">░▒▓█</code> patterns as texture, not decoration. It runs on zero JS dependencies, ships pure CSS+HTML, and has native MCP support so AI agents can install and compose it directly.</p>
-          <br>
-          <p>The dither pattern you see in this interface right now? That's skeehn running live.</p>
-        </div>
-
-        <div class="sk-citation-card">
-          <div class="sk-citation-card__icon">1</div>
-          <div>
-            <div class="sk-citation-card__source">skeehn docs</div>
-            <div class="sk-citation-card__snippet">ASCII characters as native rendering — texture is the second dimension of visual identity.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="chat-footer">
-        <div class="chat-input-wrap">
-          <textarea id="chat-textarea" placeholder="Ask anything… (Enter to send, Shift+Enter for newline)" rows="1"></textarea>
-          <div class="chat-input-actions">
-            <button class="chat-act-btn" title="Attach" onclick="">+</button>
-            <button class="chat-act-btn" title="Voice" id="mic-btn" onclick="toggleMic()">◎</button>
-            <button class="chat-act-btn send" title="Send" onclick="sendMessage()">↑</button>
-          </div>
-        </div>
-        <div class="chat-hint">Enter to send · Shift+Enter for newline · ◎ for voice</div>
-      </div>
-    </div>
-
-    <!-- COMPONENTS VIEW -->
-    <div class="view" id="view-components">
-      <!-- populated by JS -->
-    </div>
-
-    <!-- ENGINE VIEW -->
-    <div class="view" id="view-engine">
-      <div class="engine-toolbar">
-        <label>Image: <input type="file" id="img-upload" accept="image/*" style="margin-left:6px"></label>
-        <label>Algo:
-          <select id="algo-sel" style="margin-left:4px;font-family:var(--sk-font-mono);font-size:11px;background:transparent;color:hsl(var(--sk-foreground));border:1px solid hsl(var(--sk-border-color));padding:2px 4px">
-            <option value="floyd">Floyd-Steinberg</option>
-            <option value="bayer">Bayer</option>
-            <option value="threshold">Threshold</option>
-          </select>
-        </label>
-        <label>Width: <input type="range" id="res-slider" min="40" max="160" value="90" style="margin-left:4px"> <span id="res-val">90</span></label>
-      </div>
-      <div class="engine-output">
-        <div class="engine-panel">
-          <div class="engine-panel__title">ASCII Output</div>
-          <div class="engine-panel__content" id="ascii-out">Upload an image above to see live ASCII dither rendering…</div>
-        </div>
-        <div class="engine-panel">
-          <div class="engine-panel__title">Block Letter Generator</div>
-          <div style="padding:10px;border-bottom:1px solid hsl(var(--sk-border-color))">
-            <input id="text-input" value="skeehn" placeholder="Type text…" style="width:100%;background:transparent;border:1px solid hsl(var(--sk-border-color));padding:5px 8px;font-family:var(--sk-font-mono);font-size:12px;color:hsl(var(--sk-foreground));outline:none">
-          </div>
-          <div class="engine-panel__content" id="text-out" style="font-size:7px;line-height:1.05"></div>
-        </div>
-        <div class="engine-panel">
-          <div class="engine-panel__title">Dither Patterns</div>
-          <div style="padding:8px;display:grid;grid-template-columns:1fr 1fr;gap:4px">
-            <div style="height:52px;border:1px solid hsl(var(--sk-border-color));background-image:var(--sk-dither-bayer);background-size:32px 32px;background-color:hsl(var(--sk-foreground)/0.15);position:relative"><span style="position:absolute;bottom:3px;right:5px;font-size:8px;opacity:0.4">BAYER</span></div>
-            <div style="height:52px;border:1px solid hsl(var(--sk-border-color));background-image:var(--sk-dither-crosshatch);background-size:12px 12px;background-color:hsl(var(--sk-foreground)/0.08);position:relative"><span style="position:absolute;bottom:3px;right:5px;font-size:8px;opacity:0.4">CROSS</span></div>
-            <div style="height:52px;border:1px solid hsl(var(--sk-border-color));background-image:var(--sk-dither-diagonal);background-size:12px 12px;background-color:hsl(var(--sk-foreground)/0.08);position:relative"><span style="position:absolute;bottom:3px;right:5px;font-size:8px;opacity:0.4">DIAG</span></div>
-            <div style="height:52px;border:1px solid hsl(var(--sk-border-color));background-image:var(--sk-dither-dots);background-size:8px 8px;background-color:hsl(var(--sk-foreground)/0.08);position:relative"><span style="position:absolute;bottom:3px;right:5px;font-size:8px;opacity:0.4">DOTS</span></div>
-            <div style="height:52px;border:1px solid hsl(var(--sk-border-color));background-image:var(--sk-dither-scanlines);background-size:4px 4px;background-color:hsl(var(--sk-foreground)/0.08);position:relative"><span style="position:absolute;bottom:3px;right:5px;font-size:8px;opacity:0.4">SCAN</span></div>
-            <div style="height:52px;border:1px solid hsl(var(--sk-border-color));background-image:var(--sk-dither-checker);background-size:8px 8px;background-color:hsl(var(--sk-foreground)/0.08);position:relative"><span style="position:absolute;bottom:3px;right:5px;font-size:8px;opacity:0.4">CHECK</span></div>
-          </div>
-        </div>
-        <div class="engine-panel">
-          <div class="engine-panel__title">Block Density</div>
-          <div style="padding:12px;display:flex;flex-direction:column;gap:10px">
-            <div>
-              <div style="font-size:9px;opacity:0.4;margin-bottom:4px;letter-spacing:0.1em">SPARSE 25%</div>
-              <div style="height:18px;background-image:var(--sk-dither-blocks-25);background-size:16px 16px;background-color:hsl(var(--sk-foreground)/0.1)"></div>
-            </div>
-            <div>
-              <div style="font-size:9px;opacity:0.4;margin-bottom:4px;letter-spacing:0.1em">MEDIUM 50%</div>
-              <div style="height:18px;background-image:var(--sk-dither-blocks-50);background-size:16px 16px;background-color:hsl(var(--sk-foreground)/0.1)"></div>
-            </div>
-            <div>
-              <div style="font-size:9px;opacity:0.4;margin-bottom:4px;letter-spacing:0.1em">DARK 75%</div>
-              <div style="height:18px;background-image:var(--sk-dither-blocks-75);background-size:16px 16px;background-color:hsl(var(--sk-foreground)/0.1)"></div>
-            </div>
-            <div>
-              <div style="font-size:9px;opacity:0.4;margin-bottom:4px;letter-spacing:0.1em">SOLID 100%</div>
-              <div style="height:18px;background-image:var(--sk-dither-blocks-100);background-size:16px 16px;background-color:hsl(var(--sk-foreground)/0.1)"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
+  <!-- ══ MAIN ══ -->
+  <main class="docs-main" id="docs-main">
+    <!-- populated by router -->
   </main>
 
-  <!-- ══════════ INSPECTOR ══════════ -->
-  <aside class="inspector">
-    <div class="inspector__header">Inspector</div>
-    <div class="inspector__tabs">
-      <button class="inspector__tab" data-panel="props" data-active="true">Props</button>
-      <button class="inspector__tab" data-panel="code">Code</button>
-      <button class="inspector__tab" data-panel="dither">Dither</button>
-    </div>
-
-    <!-- Props panel -->
-    <div class="inspector__panel" data-panel="props" data-active="true">
-      <div class="props-list" id="props-list">
-        <div style="padding:16px;opacity:0.3;font-size:11px;text-align:center">
-          Click a component<br>to inspect its props
-        </div>
-      </div>
-    </div>
-
-    <!-- Code panel -->
-    <div class="inspector__panel" data-panel="code">
-      <pre class="code-block" id="code-block" style="margin:8px;font-size:10px;line-height:1.5"><!-- Click a component
-to see its markup --></pre>
-    </div>
-
-    <!-- Dither panel -->
-    <div class="inspector__panel" data-panel="dither">
-      <div style="padding:8px;display:flex;flex-direction:column;gap:6px">
-        <div style="font-size:9px;opacity:0.35;letter-spacing:0.1em;text-transform:uppercase;padding:4px 4px 2px">Pattern</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px" id="pattern-grid">
-          <!-- filled by JS -->
-        </div>
-        <div style="font-size:9px;opacity:0.35;letter-spacing:0.1em;text-transform:uppercase;padding:8px 4px 2px">Opacity</div>
-        <input type="range" min="0" max="50" value="30" id="dither-opacity-slider"
-          style="width:100%;accent-color:hsl(var(--sk-foreground));margin:0 4px">
-        <div style="font-size:9px;opacity:0.35;letter-spacing:0.1em;text-transform:uppercase;padding:8px 4px 2px">Preview</div>
-        <div id="dither-preview" style="height:80px;border:1px solid hsl(var(--sk-border-color));position:relative;overflow:hidden">
-          <div id="dither-preview-fill" style="position:absolute;inset:0;background-image:var(--sk-dither-bayer);background-size:32px 32px;opacity:0.3"></div>
-          <span style="position:absolute;bottom:4px;right:6px;font-size:8px;opacity:0.35;font-family:var(--sk-font-mono)">BAYER 30%</span>
-        </div>
-      </div>
-    </div>
-
+  <!-- ══ INSPECTOR ══ -->
+  <aside class="docs-inspector" id="docs-inspector">
+    <!-- populated by router when on component page -->
   </aside>
 
 </div>
 
-<!-- Scripts -->
+<!-- Search overlay -->
+<div class="docs-search-overlay" id="search-overlay" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="docs-search-box">
+    <input class="docs-search-input" id="search-input" placeholder="Search components, tokens, pages…" autocomplete="off">
+    <div class="docs-search-results" id="search-results"></div>
+    <div class="docs-search-footer">
+      <span>↑↓ navigate</span>
+      <span>↵ select</span>
+      <span>Esc close</span>
+    </div>
+  </div>
+</div>
+
+<!-- Component scripts (non-module, no side effects) -->
 <script src="../components/tabs/tabs.js" type="module"></script>
 <script src="../components/toggle/toggle.js" type="module"></script>
 <script src="../components/accordion/accordion.js" type="module"></script>
 
 <script type="module">
-
-// ── COMPONENTS DATA ──
-const COMPONENTS = [
-  { slug:"button", name:"Button", cat:"core", desc:"6 variants including dither-fill", variants:["solid","dither","outline","ghost","inverted","ascii"],
-    preview:`<div style="display:flex;gap:6px;flex-wrap:wrap"><button class="sk-btn" data-variant="solid" data-size="sm">Solid</button><button class="sk-btn" data-variant="dither" data-size="sm">Dither</button><button class="sk-btn" data-variant="outline" data-size="sm">Outline</button></div>` },
-  { slug:"card", name:"Card", cat:"core", desc:"Container with header, body, footer", variants:["default","dither","elevated"],
-    preview:`<div class="sk-card" style="padding:8px 10px;font-size:11px"><div style="opacity:.5;font-size:9px;letter-spacing:.1em;margin-bottom:4px">CARD HEADER</div>Content goes here</div>` },
-  { slug:"input", name:"Input", cat:"core", desc:"Text input with dither focus states", variants:["default","error","disabled"],
-    preview:`<input class="sk-input" placeholder="Type here…" style="width:100%;font-size:11px">` },
-  { slug:"badge", name:"Badge", cat:"core", desc:"Status tags with dither textures", variants:["default","success","warning","error","info"],
-    preview:`<div style="display:flex;gap:4px"><span class="sk-badge" data-variant="success">done</span><span class="sk-badge" data-variant="warning">pending</span><span class="sk-badge" data-variant="error">failed</span></div>` },
-  { slug:"alert", name:"Alert", cat:"core", desc:"Info/warning/error alerts", variants:["info","success","warning","error"],
-    preview:`<div class="sk-alert" data-variant="info" style="font-size:10px;padding:6px 10px">System operational</div>` },
-  { slug:"dialog", name:"Dialog", cat:"core", desc:"Modal with dither backdrop", variants:["default","fullscreen"],
-    preview:`<div style="border:1px solid hsl(var(--sk-border-color));padding:8px 10px;font-size:10px"><div style="font-weight:700;margin-bottom:4px">Dialog Title</div><div style="opacity:.5;font-size:9px">Are you sure?</div></div>` },
-  { slug:"tabs", name:"Tabs", cat:"core", desc:"Tabbed interface", variants:["default","underline"],
-    preview:`<div class="sk-tabs"><div class="sk-tabs__list"><button class="sk-tabs__trigger" data-active="true">Tab 1</button><button class="sk-tabs__trigger">Tab 2</button></div></div>` },
-  { slug:"toggle", name:"Toggle", cat:"core", desc:"Switch with ASCII track", variants:["default","sm","lg"],
-    preview:`<div style="display:flex;gap:10px;align-items:center"><div style="width:36px;height:18px;border:1px solid hsl(var(--sk-foreground)/.8);background:hsl(var(--sk-foreground)/.15);position:relative;font-size:8px;font-family:monospace;display:flex;align-items:center;padding:0 3px"><span style="position:absolute;right:3px;width:12px;height:12px;background:hsl(var(--sk-foreground));display:block"></span>│──▐█▌</div><div style="width:36px;height:18px;border:1px solid hsl(var(--sk-border-color));position:relative;font-size:8px;font-family:monospace;display:flex;align-items:center;padding:0 3px"><span style="position:absolute;left:3px;width:12px;height:12px;background:hsl(var(--sk-foreground)/.3);display:block"></span>▐█▌──│</div></div>` },
-  { slug:"progress", name:"Progress", cat:"core", desc:"Dither-filled progress bar", variants:["bar","circular","steps","streaming"],
-    preview:`<div style="border:1px solid hsl(var(--sk-border-color));height:12px;width:100%;position:relative;overflow:hidden"><div style="position:absolute;inset:0;width:62%;background:hsl(var(--sk-foreground)/.8);background-image:var(--sk-dither-diagonal);background-size:12px 12px"></div></div>` },
-  { slug:"avatar", name:"Avatar", cat:"core", desc:"User avatar with dither fallback", variants:["default","sm","lg"],
-    preview:`<div style="display:flex;gap:6px;align-items:center"><div class="sk-avatar" style="width:28px;height:28px;font-size:11px">JD</div><div class="sk-avatar" data-size="sm" style="width:20px;height:20px;font-size:9px">AL</div></div>` },
-  { slug:"tooltip", name:"Tooltip", cat:"core", desc:"Hover tooltip", variants:["default","dark"],
-    preview:`<span style="font-size:10px;opacity:.5">Hover targets show tooltips</span>` },
-  { slug:"dropdown", name:"Dropdown", cat:"core", desc:"Dropdown menu", variants:["default"],
-    preview:`<div style="border:1px solid hsl(var(--sk-border-color));padding:2px 0;font-size:10px"><div style="padding:4px 10px">Item one</div><div style="padding:4px 10px;opacity:.4">Item two</div></div>` },
-  { slug:"table", name:"Table", cat:"core", desc:"Data table with dither rows", variants:["default","striped"],
-    preview:`<table class="sk-table" style="font-size:10px;width:100%"><tr><th>Key</th><th>Value</th></tr><tr><td>name</td><td>skeehn</td></tr></table>` },
-  { slug:"accordion", name:"Accordion", cat:"core", desc:"Expandable panels", variants:["default","flush"],
-    preview:`<div style="border:1px solid hsl(var(--sk-border-color));font-size:10px"><div style="padding:6px 10px;display:flex;justify-content:space-between"><span>Section</span><span style="opacity:.4">▸</span></div></div>` },
-  { slug:"chat-bubble", name:"ChatBubble", cat:"ai", desc:"Message bubbles with streaming cursor", variants:["user","assistant","tool","system"],
-    preview:`<div style="display:flex;flex-direction:column;gap:5px"><div class="sk-chat-bubble" data-role="user" style="align-self:flex-end;font-size:10px;padding:5px 9px">Hello!</div><div class="sk-chat-bubble" data-role="assistant" style="font-size:10px;padding:5px 9px">Hi there▌</div></div>` },
-  { slug:"chat-input", name:"ChatInput", cat:"ai", desc:"Prompt input with voice + attach", variants:["idle","streaming","recording"],
-    preview:`<div style="border:1px solid hsl(var(--sk-border-color));padding:5px 8px;display:flex;align-items:center;gap:6px;font-size:10px"><span style="flex:1;opacity:.4">Ask anything…</span><span style="opacity:.6">↑</span></div>` },
-  { slug:"reasoning-step", name:"ReasoningStep", cat:"ai", desc:"Expandable reasoning traces", variants:["pending","active","completed","error"],
-    preview:`<div class="sk-reasoning-step" data-status="completed" style="font-size:10px"><div style="display:flex;gap:6px;align-items:center;padding:4px 8px"><span style="opacity:.5">✓</span><span>Verified data sources</span><span style="margin-left:auto;opacity:.4">▸</span></div></div>` },
-  { slug:"tool-card", name:"ToolCard", cat:"ai", desc:"Tool invocation with status", variants:["pending","running","completed","error"],
-    preview:`<div class="sk-tool-card" data-status="completed" style="font-size:10px;padding:6px 10px"><div style="display:flex;justify-content:space-between"><code>search_web</code><span class="sk-badge" data-variant="success" style="font-size:8px">done</span></div></div>` },
-  { slug:"citation-card", name:"CitationCard", cat:"ai", desc:"Source citations", variants:["default"],
-    preview:`<div class="sk-citation-card" style="font-size:10px;padding:6px 10px"><div style="opacity:.5;font-size:9px">docs.skeehn.dev</div><div style="margin-top:2px">ASCII as a rendering medium</div></div>` },
-  { slug:"streaming-text", name:"StreamingText", cat:"ai", desc:"Character-by-character reveal", variants:["typewriter","scanline","wave","fade"],
-    preview:`<div style="font-size:11px">The answer is<span class="sk-animate-blink">▌</span></div>` },
-  { slug:"terminal-panel", name:"TerminalPanel", cat:"ai", desc:"Terminal output UI", variants:["default","compact"],
-    preview:`<div style="background:hsl(var(--sk-background));border:1px solid hsl(var(--sk-border-color));padding:6px 8px;font-size:9px"><span style="opacity:.4">$ </span>npx skeehn add button<br><span style="opacity:.6">✓ installed</span></div>` },
-  { slug:"agent-status", name:"AgentStatus", cat:"ai", desc:"Agent state indicator", variants:["idle","thinking","acting","done","error"],
-    preview:`<div style="display:flex;gap:8px"><div class="sk-agent-status" data-status="thinking" style="font-size:9px"><span class="sk-agent-status__indicator"></span><span class="sk-agent-status__text">thinking</span></div><div class="sk-agent-status" data-status="done" style="font-size:9px"><span class="sk-agent-status__indicator"></span><span class="sk-agent-status__text">done</span></div></div>` },
-  { slug:"code-block", name:"CodeBlock", cat:"ai", desc:"Syntax-highlighted code", variants:["default","minimal"],
-    preview:`<div style="background:hsl(var(--sk-foreground)/.06);padding:6px 8px;font-size:9px;border:1px solid hsl(var(--sk-border-color))"><span style="opacity:.5">import</span> skeehn <span style="opacity:.5">from</span> <span style="opacity:.8">'skeehn'</span></div>` },
-  { slug:"typing-indicator", name:"TypingIndicator", cat:"ai", desc:"Animated typing dots", variants:["default","ascii","dither"],
-    preview:`<div class="sk-typing-indicator" data-variant="dither"><span></span><span></span><span></span></div>` },
-  { slug:"markdown", name:"Markdown", cat:"ai", desc:"Markdown renderer", variants:["default"],
-    preview:`<div style="font-size:10px;line-height:1.5"><strong>Bold text</strong> and <em>italic</em> rendered natively.</div>` },
-  { slug:"voice-session", name:"VoiceSession", cat:"ai", desc:"Realtime voice with waveform", variants:["idle","listening","transcribing","speaking","handoff"],
-    preview:`<div style="display:flex;gap:2px;align-items:center;height:20px">${[3,8,5,12,7,15,9,6,11,4,13,8,5].map(h=>`<span style="display:inline-block;width:3px;height:${h}px;background:currentColor;opacity:.8;border-radius:1px"></span>`).join('')}</div>` },
-  { slug:"layout", name:"Layout", cat:"layout", desc:"Grid, Stack, Panel, Divider", variants:["container","grid","stack","panel","divider"],
-    preview:`<div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;font-size:9px">${[1,2,3,4].map(i=>`<div style="border:1px solid hsl(var(--sk-border-color));padding:4px 6px;opacity:.6">Panel ${i}</div>`).join('')}</div>` },
-  { slug:"dataviz", name:"DataViz", cat:"dataviz", desc:"ASCII charts and meters", variants:["chart","sparkline","meter","heatmap"],
-    preview:`<div style="font-size:10px;line-height:1.2">${['▁','▂','▄','▆','█','▆','▇','▅','▃','▄','▇','█'].join('')}</div>` },
-  { slug:"motion", name:"Motion", cat:"motion", desc:"Dither animations", variants:["dither-pulse","ascii-rain","glitch","texture-mask"],
-    preview:`<div class="sk-animate-pulse" style="height:20px;background-image:var(--sk-dither-bayer);background-size:32px 32px;background-color:hsl(var(--sk-foreground)/.1)"></div>` },
-];
-
-// ── HERO ASCII ART ──
-const HERO_FONT = {
-  s:["▓░ ","▓▒▓","  ░","▓▒▓"," ░▓"],
-  k:["▓ ▓","▓▒ ","▓▓ ","▓▒ ","▓ ▓"],
-  e:["▓▒▓","▓  ","▓▒▓","▓  ","▓▒▓"],
-  h:["▓ ▓","▓▒▓","▓▒▓","▓ ▓","▓ ▓"],
-  n:["▓ ▓","▓▒▓","▓▒▓","▓ ▓","▓ ▓"],
-  ' ':["   ","   ","   ","   ","   "],
-};
-function renderHeroASCII(text) {
-  const rows = [[],[],[],[],[]];
-  for (const c of text.toLowerCase()) {
-    const g = HERO_FONT[c] || HERO_FONT[' '];
-    for (let i = 0; i < 5; i++) rows[i].push(g[i]);
-  }
-  return rows.map(r => r.join(' ')).join('\n');
-}
-document.getElementById('hero-art').textContent = renderHeroASCII('skeehn');
-
-// ── POPULATE COMPONENTS ──
-const compView = document.getElementById('view-components');
-COMPONENTS.forEach(c => {
-  const div = document.createElement('div');
-  div.className = 'comp-tile';
-  div.dataset.slug = c.slug;
-  div.innerHTML = `
-    <div class="comp-tile__header">
-      <span class="comp-tile__name">${c.name}</span>
-      <span class="comp-tile__cat">${c.cat}</span>
-    </div>
-    ${c.preview ? `<div class="comp-tile__preview">${c.preview}</div>` : ''}
-    <div class="comp-tile__variants">${c.variants.slice(0,4).map(v => `<span class="comp-tile__var">${v}</span>`).join('')}${c.variants.length > 4 ? `<span class="comp-tile__var">+${c.variants.length - 4}</span>` : ''}</div>
-  `;
-  div.addEventListener('click', () => {
-    document.querySelectorAll('.comp-tile').forEach(t => t.removeAttribute('data-active'));
-    div.setAttribute('data-active', 'true');
-    showInspector(c);
-  });
-  compView.appendChild(div);
-});
-
-// ── INSPECTOR ──
-function showInspector(c) {
-  // Props
-  const propsList = document.getElementById('props-list');
-  const commonProps = [
-    { name:'data-variant', type:'string', default: c.variants[0] },
-    { name:'data-size', type:'string', default:'default' },
-    { name:'data-density', type:'enum', default:'normal' },
-    { name:'class', type:'string', default:`sk-${c.slug}` },
-  ];
-  propsList.innerHTML = commonProps.map(p => `
-    <div class="prop-row">
-      <span class="prop-name">${p.name}</span>
-      <span class="prop-type">${p.type}</span>
-      <span class="prop-default">${p.default}</span>
-    </div>
-  `).join('') + c.variants.map(v => `
-    <div class="prop-row" style="opacity:0.55">
-      <span class="prop-name">${v}</span>
-      <span class="prop-type">variant</span>
-    </div>
-  `).join('');
-
-  // Code
-  document.getElementById('code-block').textContent =
-    `<div class="sk-${c.slug}"\n  data-variant="${c.variants[0]}">\n  …\n</div>\n\n<!-- Install -->\nnpx skeehn add ${c.slug}`;
-}
-
-// ── PATTERN GRID ──
-const patterns = [
-  { key:'bayer', label:'Bayer', css:'var(--sk-dither-bayer)', size:'32px 32px' },
-  { key:'crosshatch', label:'Cross', css:'var(--sk-dither-crosshatch)', size:'12px 12px' },
-  { key:'diagonal', label:'Diag', css:'var(--sk-dither-diagonal)', size:'12px 12px' },
-  { key:'dots', label:'Dots', css:'var(--sk-dither-dots)', size:'8px 8px' },
-  { key:'scanlines', label:'Scan', css:'var(--sk-dither-scanlines)', size:'4px 4px' },
-  { key:'checker', label:'Check', css:'var(--sk-dither-checker)', size:'8px 8px' },
-  { key:'floyd', label:'Floyd', css:'var(--sk-dither-floyd)', size:'auto' },
-  { key:'noise', label:'Noise', css:'var(--sk-dither-noise)', size:'auto' },
-];
-let activePattern = patterns[0];
-const patternGrid = document.getElementById('pattern-grid');
-patterns.forEach(p => {
-  const el = document.createElement('div');
-  el.style.cssText = `height:40px;border:1px solid hsl(var(--sk-border-color));background-image:${p.css};background-size:${p.size};background-color:hsl(var(--sk-foreground)/0.06);cursor:pointer;position:relative;transition:border-color 60ms`;
-  el.innerHTML = `<span style="position:absolute;bottom:2px;right:4px;font-size:8px;opacity:0.35;font-family:var(--sk-font-mono)">${p.label}</span>`;
-  el.addEventListener('click', () => {
-    activePattern = p;
-    updateDitherPreview();
-    document.documentElement.style.setProperty('--sk-dither-pattern', p.css);
-    document.documentElement.style.setProperty('--sk-dither-size', p.size);
-  });
-  patternGrid.appendChild(el);
-});
-
-const ditherSlider = document.getElementById('dither-opacity-slider');
-function updateDitherPreview() {
-  const opacity = ditherSlider.value / 100;
-  const fill = document.getElementById('dither-preview-fill');
-  fill.style.backgroundImage = activePattern.css;
-  fill.style.backgroundSize = activePattern.size;
-  fill.style.opacity = opacity;
-  document.querySelector('#dither-preview span').textContent = `${activePattern.label.toUpperCase()} ${ditherSlider.value}%`;
-  document.documentElement.style.setProperty('--sk-dither-opacity', opacity);
-}
-ditherSlider.addEventListener('input', updateDitherPreview);
-
-// ── INSPECTOR TABS ──
-document.querySelectorAll('.inspector__tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.inspector__tab').forEach(t => t.removeAttribute('data-active'));
-    document.querySelectorAll('.inspector__panel').forEach(p => p.removeAttribute('data-active'));
-    tab.setAttribute('data-active', 'true');
-    document.querySelector(`.inspector__panel[data-panel="${tab.dataset.panel}"]`).setAttribute('data-active', 'true');
-  });
-});
-
-// ── VIEW SWITCHER ──
-window.switchView = function(id) {
-  document.querySelectorAll('.view').forEach(v => v.removeAttribute('data-active'));
-  document.querySelectorAll('.topbar__nav-btn').forEach(b => b.removeAttribute('data-active'));
-  document.querySelectorAll('.sidebar__item[data-view]').forEach(b => b.removeAttribute('data-active'));
-  document.getElementById(`view-${id}`).setAttribute('data-active', 'true');
-  document.querySelector(`.topbar__nav-btn[data-view="${id}"]`)?.setAttribute('data-active', 'true');
-  document.querySelectorAll(`.sidebar__item[data-view="${id}"]`).forEach(b => b.setAttribute('data-active', 'true'));
+// ════════════════════════════════════════════════════
+// REGISTRY — embedded from registry.json
+// ════════════════════════════════════════════════════
+const REGISTRY = {
+  name: "skeehn",
+  version: "0.4.0",
+  themes: ["default", "dark", "brutal", "terminal", "print", "grain", "mardi-gras"],
+  components: [
+    { name: "button", description: "Interactive button with ASCII dither", files: ["button.css"], category: "core" },
+    { name: "card", description: "Elevated container with dither surface", files: ["card.css"], category: "core" },
+    { name: "input", description: "Text input with dither focus", files: ["input.css"], category: "core" },
+    { name: "badge", description: "Status indicator with dither fill", files: ["badge.css"], category: "core" },
+    { name: "alert", description: "Feedback message with dither border", files: ["alert.css"], category: "core" },
+    { name: "dialog", description: "Modal overlay with dither backdrop", files: ["dialog.css", "dialog.js"], category: "core" },
+    { name: "tabs", description: "Tabbed navigation with dither tab", files: ["tabs.css", "tabs.js"], category: "core" },
+    { name: "toggle", description: "Two-state switch with dither", files: ["toggle.css", "toggle.js"], category: "core" },
+    { name: "progress", description: "Loading indicator with dither fill", files: ["progress.css"], category: "core" },
+    { name: "avatar", description: "User image with dither fallback", files: ["avatar.css"], category: "core" },
+    { name: "tooltip", description: "Hover info with dither tooltip", files: ["tooltip.css"], category: "core" },
+    { name: "dropdown", description: "Menu with dither items", files: ["dropdown.css", "dropdown.js"], category: "core" },
+    { name: "table", description: "Data table with dither rows", files: ["table.css"], category: "core" },
+    { name: "accordion", description: "Collapsible sections with dither", files: ["accordion.css", "accordion.js"], category: "core" },
+    { name: "chat-bubble", description: "AI message bubble with streaming", files: ["chat-bubble.css", "chat-bubble.js"], category: "ai" },
+    { name: "chat-input", description: "AI prompt input with actions", files: ["chat-input.css"], category: "ai" },
+    { name: "reasoning-step", description: "Expandable reasoning trace", files: ["reasoning-step.css", "reasoning-step.js"], category: "ai" },
+    { name: "tool-card", description: "Tool execution result card", files: ["tool-card.css"], category: "ai" },
+    { name: "citation-card", description: "Source reference card", files: ["citation-card.css"], category: "ai" },
+    { name: "streaming-text", description: "Streaming text animation", files: ["streaming-text.css", "streaming-text.js"], category: "ai" },
+    { name: "terminal-panel", description: "Code execution terminal", files: ["terminal-panel.css"], category: "ai" },
+    { name: "agent-status", description: "Agent state indicator", files: ["agent-status.css"], category: "ai" },
+    { name: "code-block", description: "Code display with copy and line numbers", files: ["code-block.css", "code-block.js"], category: "ai" },
+    { name: "typing-indicator", description: "Animated typing indicator for AI chat", files: ["typing-indicator.css"], category: "ai" },
+    { name: "markdown", description: "Markdown renderer for AI chat content", files: ["markdown.css", "markdown.js"], category: "ai" },
+    { name: "voice-session", description: "Realtime voice session with waveform, transcript, and state indicators", files: ["voice-session.css", "voice-session.js", "voice-session.html"], category: "ai" },
+    { name: "thinking-block", description: "AI extended thinking with pulse animation and expand/collapse", files: ["thinking-block.css", "thinking-block.html", "thinking-block.js"], category: "ai" },
+    { name: "prompt-suggestions", description: "Starter prompt suggestions for empty AI chat state", files: ["prompt-suggestions.css", "prompt-suggestions.html", "prompt-suggestions.js"], category: "ai" },
+    { name: "file-attachment", description: "File upload pill with progress and remove for chat input", files: ["file-attachment.css", "file-attachment.html", "file-attachment.js"], category: "ai" },
+    { name: "layout", description: "Container, Grid, Stack, Panel, Divider, Skeleton", files: ["layout.css"], category: "layout" },
+    { name: "dataviz", description: "AsciiChart, Sparkline, Meter, Heatmap", files: ["dataviz.css"], category: "dataviz" },
+    { name: "motion", description: "DitherPulse, AsciiRain, Glitch, TextureMask", files: ["motion.css"], category: "motion" },
+  ]
 };
 
-document.querySelectorAll('[data-view]').forEach(btn => {
-  btn.addEventListener('click', () => switchView(btn.dataset.view));
-});
+// ════════════════════════════════════════════════════
+// COMPONENT META — props + events per component
+// ════════════════════════════════════════════════════
+const COMPONENT_META = {
+  button: {
+    variants: ['dither', 'solid', 'outline', 'ghost', 'inverted'],
+    sizes: ['sm', 'default', 'lg'],
+    props: [
+      { attr: 'data-variant', values: 'dither | solid | outline | ghost | inverted', default: 'dither', desc: 'Visual style variant' },
+      { attr: 'data-size', values: 'sm | default | lg', default: 'default', desc: 'Size preset' },
+      { attr: 'disabled', values: 'boolean', default: 'false', desc: 'Disabled state' },
+    ],
+  },
+  card: {
+    props: [
+      { attr: 'data-variant', values: 'default | flush | bordered', default: 'default', desc: 'Card style' },
+    ],
+  },
+  input: {
+    props: [
+      { attr: 'data-state', values: 'default | error | success | warning', default: 'default', desc: 'Validation state' },
+      { attr: 'disabled', values: 'boolean', default: 'false', desc: 'Disabled state' },
+    ],
+  },
+  badge: {
+    props: [
+      { attr: 'data-variant', values: 'default | outline | primary | destructive', default: 'default', desc: 'Badge style' },
+    ],
+  },
+  'chat-bubble': {
+    props: [
+      { attr: 'data-role', values: 'user | assistant | tool | system', default: 'assistant', desc: 'Message sender role' },
+      { attr: 'data-streaming', values: 'true | (absent)', default: '(absent)', desc: 'Show streaming cursor animation' },
+    ],
+  },
+  'chat-input': {
+    events: ['sk:submit → { value: string }', 'sk:cancel', 'sk:voice-start', 'sk:voice-stop'],
+    props: [
+      { attr: 'data-state', values: 'idle | streaming | recording', default: 'idle', desc: 'Input state' },
+    ],
+  },
+  'agent-status': {
+    props: [
+      { attr: 'data-status', values: 'idle | thinking | acting | done | error', default: 'idle', desc: 'Agent state' },
+    ],
+  },
+  'reasoning-step': {
+    props: [
+      { attr: 'data-status', values: 'pending | active | completed | error', default: 'pending', desc: 'Step state' },
+      { attr: 'data-expanded', values: 'true | false', default: 'false', desc: 'Expanded/collapsed' },
+    ],
+  },
+  'thinking-block': {
+    props: [
+      { attr: 'data-state', values: 'thinking | done | error', default: 'thinking', desc: 'Thinking state' },
+      { attr: 'data-expanded', values: 'true | false', default: 'false', desc: 'Expanded/collapsed' },
+    ],
+  },
+  'prompt-suggestions': {
+    events: ['sk:suggest → { value: string }'],
+    props: [
+      { attr: 'data-variant', values: 'default | chips', default: 'default', desc: 'Layout variant' },
+    ],
+  },
+  'file-attachment': {
+    events: ['sk:attachment:remove → { name: string }'],
+    props: [
+      { attr: 'data-state', values: 'default | uploading | error | done', default: 'default', desc: 'Upload state' },
+    ],
+  },
+};
 
-// ── THEME SWITCHER ──
+// ════════════════════════════════════════════════════
+// COMPONENT PREVIEWS (inline HTML snippets)
+// ════════════════════════════════════════════════════
+const COMPONENT_PREVIEWS = {
+  button: `<div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="sk-btn" data-variant="dither">Dither</button>
+    <button class="sk-btn" data-variant="solid">Solid</button>
+    <button class="sk-btn" data-variant="outline">Outline</button>
+    <button class="sk-btn" data-variant="ghost">Ghost</button>
+  </div>`,
+  card: `<div class="sk-card" style="padding:16px;max-width:240px">
+    <div style="opacity:.5;font-size:9px;letter-spacing:.1em;margin-bottom:8px;font-family:var(--sk-font-mono)">CARD HEADER</div>
+    <p style="font-size:13px">Content goes here with dither texture surface.</p>
+  </div>`,
+  input: `<div style="display:flex;flex-direction:column;gap:8px;width:240px">
+    <input class="sk-input" placeholder="Default input…">
+    <input class="sk-input" data-state="error" placeholder="Error state">
+  </div>`,
+  badge: `<div style="display:flex;gap:6px;flex-wrap:wrap">
+    <span class="sk-badge">default</span>
+    <span class="sk-badge" data-variant="primary">primary</span>
+    <span class="sk-badge" data-variant="destructive">error</span>
+  </div>`,
+  alert: `<div class="sk-alert" data-variant="info" style="max-width:340px">System is fully operational.</div>`,
+  dialog: `<div style="border:1px solid hsl(var(--sk-border-color));padding:16px;max-width:260px;background:hsl(var(--sk-background))">
+    <div style="font-weight:700;margin-bottom:8px">Confirm action</div>
+    <div style="opacity:.6;font-size:12px;margin-bottom:12px">This cannot be undone.</div>
+    <div style="display:flex;gap:8px">
+      <button class="sk-btn" data-variant="outline" data-size="sm">Cancel</button>
+      <button class="sk-btn" data-variant="solid" data-size="sm">Confirm</button>
+    </div>
+  </div>`,
+  tabs: `<div class="sk-tabs">
+    <div class="sk-tabs__list">
+      <button class="sk-tabs__trigger" data-active="true">Overview</button>
+      <button class="sk-tabs__trigger">Props</button>
+      <button class="sk-tabs__trigger">Code</button>
+    </div>
+  </div>`,
+  toggle: `<div style="display:flex;gap:12px;align-items:center">
+    <div style="width:36px;height:18px;border:1px solid hsl(var(--sk-foreground)/.8);background:hsl(var(--sk-foreground)/.15);position:relative;font-size:8px;font-family:monospace;display:flex;align-items:center;padding:0 3px"><span style="position:absolute;right:3px;width:12px;height:12px;background:hsl(var(--sk-foreground));display:block"></span>ON</div>
+    <div style="width:36px;height:18px;border:1px solid hsl(var(--sk-border-color));position:relative;font-size:8px;font-family:monospace;display:flex;align-items:center;padding:0 3px"><span style="position:absolute;left:3px;width:12px;height:12px;background:hsl(var(--sk-foreground)/.3);display:block"></span>OFF</div>
+  </div>`,
+  progress: `<div style="width:280px;display:flex;flex-direction:column;gap:8px">
+    <div style="border:1px solid hsl(var(--sk-border-color));height:10px;width:100%;position:relative;overflow:hidden"><div style="position:absolute;inset:0;width:65%;background:hsl(var(--sk-foreground)/.85);background-image:var(--sk-dither-diagonal);background-size:12px 12px"></div></div>
+    <div style="border:1px solid hsl(var(--sk-border-color));height:10px;width:100%;position:relative;overflow:hidden"><div style="position:absolute;inset:0;width:30%;background:hsl(var(--sk-foreground)/.85);background-image:var(--sk-dither-bayer);background-size:32px 32px"></div></div>
+  </div>`,
+  avatar: `<div style="display:flex;gap:8px;align-items:center">
+    <div class="sk-avatar" style="width:36px;height:36px;font-size:13px;border:1px solid hsl(var(--sk-border-color));display:flex;align-items:center;justify-content:center;font-family:var(--sk-font-mono);font-weight:700">JD</div>
+    <div class="sk-avatar" style="width:28px;height:28px;font-size:10px;border:1px solid hsl(var(--sk-border-color));display:flex;align-items:center;justify-content:center;font-family:var(--sk-font-mono);font-weight:700">AL</div>
+  </div>`,
+  tooltip: `<div style="position:relative;display:inline-block">
+    <button class="sk-btn" data-variant="outline" data-size="sm">Hover me</button>
+    <div style="position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);white-space:nowrap;padding:4px 8px;background:hsl(var(--sk-foreground));color:hsl(var(--sk-background));font-size:10px;font-family:var(--sk-font-mono)">Tooltip text</div>
+  </div>`,
+  dropdown: `<div style="border:1px solid hsl(var(--sk-border-color));padding:2px 0;font-size:12px;width:180px;background:hsl(var(--sk-background))">
+    <div style="padding:6px 12px;cursor:pointer" class="hover:bg-accent">Edit component</div>
+    <div style="padding:6px 12px;cursor:pointer;opacity:.6">Duplicate</div>
+    <div style="height:1px;background:hsl(var(--sk-border-color));margin:2px 0"></div>
+    <div style="padding:6px 12px;cursor:pointer;color:hsl(var(--sk-destructive))">Delete</div>
+  </div>`,
+  table: `<table style="font-size:11px;width:100%;border-collapse:collapse">
+    <tr><th style="text-align:left;padding:4px 8px;border-bottom:1px solid hsl(var(--sk-border-color));font-family:var(--sk-font-mono);font-size:9px;text-transform:uppercase;letter-spacing:.08em;opacity:.5">Name</th><th style="text-align:left;padding:4px 8px;border-bottom:1px solid hsl(var(--sk-border-color));font-family:var(--sk-font-mono);font-size:9px;text-transform:uppercase;letter-spacing:.08em;opacity:.5">Category</th></tr>
+    <tr><td style="padding:5px 8px;border-bottom:1px solid hsl(var(--sk-border-color)/.4)">button</td><td style="padding:5px 8px;border-bottom:1px solid hsl(var(--sk-border-color)/.4)">core</td></tr>
+    <tr><td style="padding:5px 8px">chat-bubble</td><td style="padding:5px 8px">ai</td></tr>
+  </table>`,
+  accordion: `<div style="border:1px solid hsl(var(--sk-border-color));width:280px">
+    <div style="padding:10px 12px;display:flex;justify-content:space-between;border-bottom:1px solid hsl(var(--sk-border-color));cursor:pointer"><span style="font-size:12px">What is skeehn?</span><span style="opacity:.4">▸</span></div>
+    <div style="padding:10px 12px;font-size:12px;opacity:.7;background:hsl(var(--sk-accent))">A zero-dependency ASCII dither component library.</div>
+  </div>`,
+  'chat-bubble': `<div style="display:flex;flex-direction:column;gap:8px;width:280px">
+    <div style="padding:8px 12px;border:1px solid hsl(var(--sk-border-color)/.4);background:hsl(var(--sk-foreground)/.06);align-self:flex-end;font-size:12px">What is skeehn?</div>
+    <div style="padding:8px 12px;border:1px solid hsl(var(--sk-border-color));align-self:flex-start;font-size:12px">An ASCII dither UI system.<span style="display:inline-block;width:7px;height:11px;background:currentColor;margin-left:2px;animation:blink-cur .9s steps(2) infinite;vertical-align:text-bottom"></span></div>
+  </div>`,
+  'chat-input': `<div style="border:1px solid hsl(var(--sk-border-color));padding:8px 10px;display:flex;align-items:center;gap:8px;width:280px;background:hsl(var(--sk-background))">
+    <span style="flex:1;font-size:12px;font-family:var(--sk-font-mono);opacity:.35">Ask anything…</span>
+    <div style="display:flex;gap:4px">
+      <button style="width:24px;height:24px;border:1px solid hsl(var(--sk-border-color));background:transparent;font-size:12px;cursor:pointer">+</button>
+      <button style="width:24px;height:24px;border:1px solid hsl(var(--sk-foreground));background:hsl(var(--sk-foreground));color:hsl(var(--sk-background));font-size:12px;cursor:pointer">↑</button>
+    </div>
+  </div>`,
+  'reasoning-step': `<div style="border:1px solid hsl(var(--sk-border-color));font-size:11px;width:300px">
+    <div style="display:flex;gap:8px;align-items:center;padding:7px 10px">
+      <span style="width:10px;height:10px;border:1px solid hsl(var(--sk-border-color));display:flex;align-items:center;justify-content:center;font-size:8px">✓</span>
+      <span style="flex:1">Analyzing design philosophy</span>
+      <span style="opacity:.4;font-size:10px">▸</span>
+    </div>
+  </div>`,
+  'tool-card': `<div style="border:1px solid hsl(var(--sk-border-color));padding:8px 12px;font-size:11px;width:280px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+      <code style="font-family:var(--sk-font-mono)">search_web</code>
+      <span style="font-size:9px;padding:1px 6px;border:1px solid hsl(var(--sk-success)/.5);color:hsl(var(--sk-success));font-family:var(--sk-font-mono);text-transform:uppercase;letter-spacing:.06em">done</span>
+    </div>
+    <div style="font-size:10px;opacity:.55;font-family:var(--sk-font-mono)">→ 12 results found</div>
+  </div>`,
+  'citation-card': `<div style="display:flex;gap:10px;align-items:flex-start;padding:8px 12px;border:1px solid hsl(var(--sk-border-color));font-size:11px;width:280px">
+    <div style="width:18px;height:18px;border:1px solid hsl(var(--sk-border-color));display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;flex-shrink:0">1</div>
+    <div><div style="font-weight:700;opacity:.7">skeehn docs</div><div style="opacity:.55;margin-top:2px">ASCII as native rendering medium.</div></div>
+  </div>`,
+  'streaming-text': `<div style="font-size:14px;line-height:1.6">The dither renders<span style="display:inline-block;width:8px;height:14px;background:currentColor;margin-left:2px;animation:blink-cur .9s steps(2) infinite;vertical-align:text-bottom"></span></div>`,
+  'terminal-panel': `<div style="background:hsl(var(--sk-background));border:1px solid hsl(var(--sk-border-color));padding:10px 12px;font-size:11px;font-family:var(--sk-font-mono);width:280px">
+    <div><span style="opacity:.4">$ </span>npx skeehn add button</div>
+    <div style="margin-top:4px;opacity:.6">✓ Installed button.css</div>
+    <div style="opacity:.6">✓ Ready to use</div>
+  </div>`,
+  'agent-status': `<div style="display:flex;gap:10px;flex-wrap:wrap">
+    <div style="display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border:1px solid hsl(var(--sk-border-color));font-family:var(--sk-font-mono)">
+      <span style="width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse-dot 1s ease-in-out infinite"></span>thinking
+    </div>
+    <div style="display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border:1px solid hsl(var(--sk-border-color));font-family:var(--sk-font-mono)">
+      <span style="width:6px;height:6px;border-radius:50%;background:currentColor"></span>done
+    </div>
+  </div>`,
+  'code-block': `<div style="background:hsl(var(--sk-surface));padding:10px 12px;font-size:11px;border:1px solid hsl(var(--sk-border-color));font-family:var(--sk-font-mono);width:280px">
+    <span style="opacity:.5">import</span> skeehn <span style="opacity:.5">from</span> <span style="opacity:.8">'skeehn'</span>
+  </div>`,
+  'typing-indicator': `<div style="display:flex;gap:4px;padding:10px 12px;border:1px solid hsl(var(--sk-border-color));align-self:flex-start;font-size:18px;letter-spacing:3px;font-family:var(--sk-font-mono);animation:blink-cur 0.6s steps(2) infinite">▮ ▮ ▮</div>`,
+  markdown: `<div style="font-size:13px;line-height:1.7;max-width:280px"><strong>Bold</strong> and <em>italic</em> text, <code style="font-family:var(--sk-font-mono);background:hsl(var(--sk-accent));padding:1px 4px">inline code</code>, and more.</div>`,
+  'voice-session': `<div style="display:flex;gap:2px;align-items:center;height:32px;padding:0 8px">${[3,8,5,12,7,15,9,6,11,4,13,8,5].map(h=>`<span style="display:inline-block;width:3px;height:${h}px;background:currentColor;opacity:.8;border-radius:1px"></span>`).join('')}</div>`,
+  'thinking-block': `<div style="border:1px solid hsl(var(--sk-border-color));font-size:11px;width:280px">
+    <div style="display:flex;align-items:center;gap:8px;padding:7px 10px">
+      <span style="animation:pulse-dot 1s ease-in-out infinite;width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block"></span>
+      <span>Extended thinking…</span>
+      <span style="margin-left:auto;opacity:.4;font-size:10px">▸</span>
+    </div>
+  </div>`,
+  'prompt-suggestions': `<div style="display:flex;flex-direction:column;gap:6px;width:280px">
+    <div style="padding:8px 12px;border:1px solid hsl(var(--sk-border-color));font-size:12px;cursor:pointer">How does dither work?</div>
+    <div style="padding:8px 12px;border:1px solid hsl(var(--sk-border-color));font-size:12px;cursor:pointer">Show me all themes</div>
+  </div>`,
+  'file-attachment': `<div style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border:1px solid hsl(var(--sk-border-color));font-size:11px;font-family:var(--sk-font-mono)">
+    <span>report.pdf</span>
+    <span style="opacity:.4;cursor:pointer">✕</span>
+  </div>`,
+  layout: `<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:9px;width:200px">${[1,2,3,4].map(i=>`<div style="border:1px solid hsl(var(--sk-border-color));padding:8px;opacity:.6;font-family:var(--sk-font-mono)">Panel ${i}</div>`).join('')}</div>`,
+  dataviz: `<div style="font-size:14px;line-height:1.2;font-family:var(--sk-font-mono)">${['▁','▂','▄','▆','█','▆','▇','▅','▃','▄','▇','█'].join('')}</div>`,
+  motion: `<div style="animation:pulse-dot 1.5s ease-in-out infinite;height:24px;width:200px;background-image:var(--sk-dither-bayer);background-size:32px 32px;background-color:hsl(var(--sk-foreground)/.12)"></div>`,
+};
+
+// ════════════════════════════════════════════════════
+// THEME SWITCHER
+// ════════════════════════════════════════════════════
 function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
   document.getElementById('theme-css').href = `../themes/${theme}.css`;
-  document.getElementById('theme-sel').value = theme;
+  const sel = document.getElementById('theme-sel');
+  if (sel) sel.value = theme;
+  const darkBtn = document.getElementById('dark-toggle');
+  if (darkBtn) darkBtn.textContent = theme === 'dark' ? '☾' : '☀';
+  // Update sidebar theme items if rendered
   document.querySelectorAll('[data-theme-btn]').forEach(b => {
     b.toggleAttribute('data-active', b.dataset.themeBtn === theme);
   });
-  const darkBtn = document.getElementById('dark-toggle');
-  if (darkBtn) darkBtn.textContent = theme === 'dark' ? '☾' : '☀';
 }
+
 document.getElementById('theme-sel').addEventListener('change', e => applyTheme(e.target.value));
-document.querySelectorAll('[data-theme-btn]').forEach(b => {
-  b.addEventListener('click', () => applyTheme(b.dataset.themeBtn));
-});
-document.getElementById('dark-toggle')?.addEventListener('click', () => {
+document.getElementById('dark-toggle').addEventListener('click', () => {
   const current = document.documentElement.getAttribute('data-theme');
   applyTheme(current === 'dark' ? 'default' : 'dark');
 });
 
-// ── DENSITY SWITCHER ──
-document.getElementById('density-sel').addEventListener('change', e => {
-  document.documentElement.setAttribute('data-density', e.target.value);
-});
+// ════════════════════════════════════════════════════
+// COPY TO CLIPBOARD HELPER
+// ════════════════════════════════════════════════════
+function copyText(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = orig, 1500);
+  });
+}
 
-// ── REASONING STEP TOGGLE ──
-window.toggleReasoning = function(btn) {
-  const step = btn.closest('.sk-reasoning-step');
-  const expanded = step.getAttribute('data-expanded') === 'true';
-  step.setAttribute('data-expanded', expanded ? 'false' : 'true');
-};
+// ════════════════════════════════════════════════════
+// SIDEBAR BUILDER
+// ════════════════════════════════════════════════════
+function buildSidebar(currentRoute) {
+  const sidebar = document.getElementById('docs-sidebar');
+  const cats = ['core', 'ai', 'layout', 'dataviz', 'motion'];
+  const catLabels = { core: 'Core', ai: 'AI & Chat', layout: 'Layout', dataviz: 'Data Viz', motion: 'Motion' };
 
-// ── CHAT SEND ──
-const textarea = document.getElementById('chat-textarea');
-textarea.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-});
-textarea.addEventListener('input', () => {
-  textarea.style.height = 'auto';
-  textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
-});
+  const pages = [
+    { route: '', label: 'Home', icon: '▦' },
+    { route: 'getting-started', label: 'Getting Started', icon: '◌' },
+    { route: 'components', label: 'All Components', icon: '▤', badge: String(REGISTRY.components.length) },
+    { route: 'tokens', label: 'Design Tokens', icon: '○' },
+    { route: 'themes', label: 'Themes', icon: '◐', badge: String(REGISTRY.themes.length) },
+    { route: 'engine', label: 'ASCII Engine', icon: '░' },
+    { route: 'ai-chat', label: 'AI Chat Demo', icon: '◈' },
+  ];
 
-window.sendMessage = function() {
-  const val = textarea.value.trim();
-  if (!val) return;
-  const thread = document.getElementById('chat-thread');
-
-  // Remove typing indicator if exists
-  thread.querySelector('.sk-typing-indicator')?.remove();
-
-  // User bubble
-  const userEl = document.createElement('div');
-  userEl.className = 'sk-chat-bubble';
-  userEl.setAttribute('data-role', 'user');
-  userEl.style.cssText = 'align-self:flex-end';
-  userEl.innerHTML = `<p>${val.replace(/</g,'&lt;')}</p>`;
-  thread.appendChild(userEl);
-
-  // Typing indicator
-  const typing = document.createElement('div');
-  typing.className = 'sk-typing-indicator';
-  typing.innerHTML = '▮ ▮ ▮';
-  typing.style.cssText = 'letter-spacing:4px;animation:blink-cur 0.6s steps(2) infinite';
-  thread.appendChild(typing);
-
-  textarea.value = '';
-  textarea.style.height = 'auto';
-  thread.scrollTop = thread.scrollHeight;
-
-  // Simulated response
-  setTimeout(() => {
-    typing.remove();
-    const reply = document.createElement('div');
-    reply.className = 'sk-chat-bubble';
-    reply.setAttribute('data-role', 'assistant');
-    reply.style.cssText = 'align-self:flex-start';
-    reply.innerHTML = `<p>I received your message. This is a live demo — the dither textures, streaming cursor, and reasoning traces you see are all real skeehn components running with zero dependencies.</p><span class="sk-chat-bubble__cursor"></span>`;
-    thread.appendChild(reply);
-    thread.scrollTop = thread.scrollHeight;
-  }, 1200);
-};
-
-// ── MIC TOGGLE ──
-let micActive = false;
-let recognition = null;
-window.toggleMic = function() {
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) { alert('Voice requires Chrome'); return; }
-  const btn = document.getElementById('mic-btn');
-  if (!micActive) {
-    recognition = new SR();
-    recognition.continuous = false;
-    recognition.interimResults = true;
-    recognition.onresult = e => {
-      textarea.value = Array.from(e.results).map(r => r[0].transcript).join('');
-    };
-    recognition.onend = () => {
-      micActive = false;
-      btn.textContent = '◎';
-      btn.style.color = '';
-    };
-    recognition.start();
-    micActive = true;
-    btn.textContent = '●';
-    btn.style.color = 'hsl(0 80% 60%)';
-  } else {
-    recognition?.stop();
+  let html = '<div class="docs-sidebar__section">';
+  html += '<span class="docs-sidebar__label">Navigation</span>';
+  for (const p of pages) {
+    const active = currentRoute === p.route ? ' data-active' : '';
+    const badge = p.badge ? `<span class="docs-sidebar__badge">${p.badge}</span>` : '';
+    html += `<a href="#${p.route}" class="docs-sidebar__item"${active} data-route="${p.route}">${p.icon} ${p.label}${badge}</a>`;
   }
-};
+  html += '</div>';
 
-// ── ASCII ENGINE ──
-const imgUpload = document.getElementById('img-upload');
-const asciiOut = document.getElementById('ascii-out');
-const resSlider = document.getElementById('res-slider');
-document.getElementById('res-val').textContent = resSlider.value;
-resSlider.addEventListener('input', () => {
-  document.getElementById('res-val').textContent = resSlider.value;
-  if (imgUpload.files[0]) renderImg(imgUpload.files[0]);
-});
-document.getElementById('algo-sel').addEventListener('change', () => {
-  if (imgUpload.files[0]) renderImg(imgUpload.files[0]);
-});
-imgUpload.addEventListener('change', () => { if (imgUpload.files[0]) renderImg(imgUpload.files[0]); });
+  // Theme buttons
+  html += '<div class="docs-sidebar__section">';
+  html += '<span class="docs-sidebar__label">Themes</span>';
+  const themeIcons = { default: '○', dark: '●', terminal: '▌', brutal: '■', print: '□', grain: '▒', 'mardi-gras': '◉' };
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'default';
+  for (const t of REGISTRY.themes) {
+    const active = currentTheme === t ? ' data-active' : '';
+    html += `<button class="docs-sidebar__item" data-theme-btn="${t}"${active} style="width:100%;border:none;background:none;text-align:left;cursor:pointer;font:inherit">${themeIcons[t] || '○'} ${t}</button>`;
+  }
+  html += '</div>';
 
-function renderImg(file) {
-  const reader = new FileReader();
-  reader.onload = e => {
-    const img = new Image();
-    img.onload = () => {
-      const W = parseInt(resSlider.value);
-      const H = Math.round(W * (img.height / img.width) * 0.5);
-      const canvas = document.createElement('canvas');
-      canvas.width = img.width; canvas.height = img.height;
-      canvas.getContext('2d').drawImage(img, 0, 0);
-      const data = canvas.getContext('2d').getImageData(0, 0, img.width, img.height).data;
-      const chars = ' ░▒▓█▓▒░ .:-=+*#%@';
-      const cW = Math.max(1, Math.floor(img.width / W));
-      const cH = Math.max(1, Math.floor(img.height / H));
-      let out = '';
-      for (let y = 0; y < H; y++) {
-        let line = '';
-        for (let x = 0; x < W; x++) {
-          let sum = 0, cnt = 0;
-          for (let dy = 0; dy < cH && y*cH+dy < img.height; dy++)
-            for (let dx = 0; dx < cW && x*cW+dx < img.width; dx++) {
-              const px = ((x*cW+dx) + (y*cH+dy)*img.width) * 4;
-              sum += 0.299*data[px] + 0.587*data[px+1] + 0.114*data[px+2];
-              cnt++;
-            }
-          const lum = sum / cnt / 255;
-          line += chars[Math.floor(lum * (chars.length - 1))];
-        }
-        out += line + '\n';
+  // Per-category component links (only when on a component page)
+  if (currentRoute.startsWith('components/')) {
+    html += '<div class="docs-sidebar__divider"></div>';
+    for (const cat of cats) {
+      const comps = REGISTRY.components.filter(c => c.category === cat);
+      if (!comps.length) continue;
+      html += `<div class="docs-sidebar__section">`;
+      html += `<span class="docs-sidebar__label">${catLabels[cat]}</span>`;
+      for (const c of comps) {
+        const slug = `components/${c.name}`;
+        const active = currentRoute === slug ? ' data-active' : '';
+        html += `<a href="#${slug}" class="docs-sidebar__item"${active} data-route="${slug}">${c.name}</a>`;
       }
-      asciiOut.textContent = out;
-    };
-    img.src = e.target.result;
-  };
-  reader.readAsDataURL(file);
-}
-
-// ── TEXT-TO-ASCII ──
-const GLYPHS = {
-  A:[' ▓ ','▓ ▓','▓▓▓','▓ ▓','▓ ▓'],B:['▓▓ ','▓ ▓','▓▓ ','▓ ▓','▓▓ '],
-  C:[' ▓▓','▓  ','▓  ','▓  ',' ▓▓'],D:['▓▓ ','▓ ▓','▓ ▓','▓ ▓','▓▓ '],
-  E:['▓▓▓','▓  ','▓▓ ','▓  ','▓▓▓'],F:['▓▓▓','▓  ','▓▓ ','▓  ','▓  '],
-  G:[' ▓▓','▓  ','▓ ▓','▓ ▓',' ▓▓'],H:['▓ ▓','▓ ▓','▓▓▓','▓ ▓','▓ ▓'],
-  I:['▓▓▓',' ▓ ',' ▓ ',' ▓ ','▓▓▓'],J:['▓▓▓','  ▓','  ▓','▓ ▓',' ▓ '],
-  K:['▓ ▓','▓▒ ','▓▓ ','▓▒ ','▓ ▓'],L:['▓  ','▓  ','▓  ','▓  ','▓▓▓'],
-  M:['▓ ▓','▓▓▓','▓▒▓','▓ ▓','▓ ▓'],N:['▓ ▓','▓▓▓','▓▒▓','▓ ▓','▓ ▓'],
-  O:[' ▓ ','▓ ▓','▓ ▓','▓ ▓',' ▓ '],P:['▓▓ ','▓ ▓','▓▓ ','▓  ','▓  '],
-  Q:[' ▓ ','▓ ▓','▓ ▓','▓▒▓',' ▓▓'],R:['▓▓ ','▓ ▓','▓▓ ','▓▒ ','▓ ▓'],
-  S:[' ▓▓','▓  ',' ▓ ','  ▓','▓▓ '],T:['▓▓▓',' ▓ ',' ▓ ',' ▓ ',' ▓ '],
-  U:['▓ ▓','▓ ▓','▓ ▓','▓ ▓',' ▓ '],V:['▓ ▓','▓ ▓','▓ ▓',' ▓ ',' ▓ '],
-  W:['▓ ▓','▓ ▓','▓▒▓','▓▓▓','▓ ▓'],X:['▓ ▓',' ▓ ',' ▓ ',' ▓ ','▓ ▓'],
-  Y:['▓ ▓',' ▓ ',' ▓ ',' ▓ ',' ▓ '],Z:['▓▓▓','  ▓',' ▓ ','▓  ','▓▓▓'],
-  '0':[' ▓ ','▓ ▓','▓▒▓','▓ ▓',' ▓ '],'1':[' ▓ ','▓▓ ',' ▓ ',' ▓ ','▓▓▓'],
-  ' ':['   ','   ','   ','   ','   ']
-};
-function renderText(text) {
-  const rows = [[],[],[],[],[]];
-  for (const c of (text || 'skeehn').toUpperCase().slice(0,14)) {
-    const g = GLYPHS[c] || GLYPHS[' '];
-    for (let i = 0; i < 5; i++) rows[i].push(g[i]);
+      html += '</div>';
+    }
   }
-  return rows.map(r => r.join(' ')).join('\n');
-}
-const textInput = document.getElementById('text-input');
-const textOut = document.getElementById('text-out');
-textInput.addEventListener('input', () => { textOut.textContent = renderText(textInput.value); });
-textOut.textContent = renderText(textInput.value);
 
+  sidebar.innerHTML = html;
+
+  // Bind theme buttons in sidebar
+  sidebar.querySelectorAll('[data-theme-btn]').forEach(btn => {
+    btn.addEventListener('click', () => applyTheme(btn.dataset.themeBtn));
+  });
+}
+
+// ════════════════════════════════════════════════════
+// ROUTE → RENDER
+// ════════════════════════════════════════════════════
+function getHash() {
+  const h = location.hash.slice(1).replace(/^\//, '');
+  return h;
+}
+
+function navigate(route) {
+  location.hash = route ? `#${route}` : '#';
+}
+
+function renderRoute(route) {
+  buildSidebar(route);
+  updateNavActive(route);
+
+  const main = document.getElementById('docs-main');
+  const inspector = document.getElementById('docs-inspector');
+  const app = document.getElementById('docs-app');
+
+  inspector.innerHTML = '';
+  app.removeAttribute('data-inspector-open');
+
+  if (!route || route === '/') {
+    main.innerHTML = renderHome();
+  } else if (route === 'getting-started') {
+    main.innerHTML = renderGettingStarted();
+  } else if (route === 'components') {
+    main.innerHTML = renderComponentGrid();
+  } else if (route.startsWith('components/')) {
+    const slug = route.slice('components/'.length);
+    main.innerHTML = renderComponentPage(slug);
+    renderInspector(slug);
+    app.setAttribute('data-inspector-open', '');
+  } else if (route === 'tokens') {
+    main.innerHTML = renderTokens();
+  } else if (route === 'themes') {
+    main.innerHTML = renderThemes();
+    bindThemeCards();
+  } else if (route === 'engine') {
+    main.innerHTML = renderEngine();
+    initEngine();
+  } else if (route === 'ai-chat') {
+    main.innerHTML = renderAIChat();
+    initChat();
+  } else {
+    main.innerHTML = `<div class="doc-page"><p style="opacity:.5;margin-top:40px">Page not found: <code>${route}</code></p></div>`;
+  }
+
+  // Bind copy buttons
+  main.querySelectorAll('[data-copy-btn]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.getElementById(btn.dataset.copyBtn);
+      if (target) copyText(target.textContent, btn);
+    });
+  });
+  main.querySelectorAll('[data-copy-text]').forEach(btn => {
+    btn.addEventListener('click', () => copyText(btn.dataset.copyText, btn));
+  });
+
+  // Bind preview tabs
+  main.querySelectorAll('.doc-preview__tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const preview = tab.closest('.doc-preview');
+      preview.querySelectorAll('.doc-preview__tab').forEach(t => t.removeAttribute('data-active'));
+      tab.setAttribute('data-active', '');
+      const panel = tab.dataset.tab;
+      preview.querySelectorAll('[data-tab-panel]').forEach(p => {
+        p.style.display = p.dataset.tabPanel === panel ? '' : 'none';
+      });
+    });
+  });
+
+  main.scrollTop = 0;
+}
+
+function updateNavActive(route) {
+  document.querySelectorAll('.docs-nav__link').forEach(link => {
+    const r = link.dataset.route;
+    const active = route === r || (r && route.startsWith(r + '/') && r !== '');
+    link.toggleAttribute('data-active', active);
+  });
+}
+
+// ════════════════════════════════════════════════════
+// PAGE RENDERERS
+// ════════════════════════════════════════════════════
+
+function codeBlock(lang, code, id) {
+  const copyId = id || `code-${Math.random().toString(36).slice(2)}`;
+  const escaped = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return `<div class="doc-code">
+    <div class="doc-code__bar">
+      <span class="doc-code__lang">${lang}</span>
+      <button class="doc-code__copy" data-copy-btn="${copyId}">Copy</button>
+    </div>
+    <pre class="doc-code__pre" id="${copyId}"><code>${escaped}</code></pre>
+  </div>`;
+}
+
+// ── HOME ──
+function renderHome() {
+  return `<div class="doc-home">
+    <p class="doc-home__eyebrow">▓░ ASCII Native Component Library</p>
+    <h1 class="doc-home__title"><span class="brand-gradient">skeehn</span><br>Build AI interfaces<br>that mean it.</h1>
+    <p class="doc-home__sub">32 components. 7 themes. 8 dither patterns. Zero dependencies. Every surface a canvas for ASCII texture.</p>
+    <div class="doc-stats">
+      <div class="doc-stat"><strong>32</strong>Components</div>
+      <div class="doc-stat"><strong>7</strong>Themes</div>
+      <div class="doc-stat"><strong>8</strong>Dither Patterns</div>
+      <div class="doc-stat"><strong>0</strong>Dependencies</div>
+      <div class="doc-stat"><strong>MCP</strong>AI Agent Native</div>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:var(--sk-space-12)">
+      <a href="#getting-started" class="sk-btn" data-variant="dither" style="text-decoration:none">Get Started →</a>
+      <a href="#components" class="sk-btn" data-variant="outline" style="text-decoration:none">Browse Components</a>
+      <a href="#ai-chat" class="sk-btn" data-variant="ghost" style="text-decoration:none">Try AI Chat</a>
+    </div>
+    <div class="doc-feature-grid">
+      <div class="doc-feature">
+        <div class="doc-feature__icon">░▒▓</div>
+        <h3 class="doc-feature__title">ASCII Dither First</h3>
+        <p class="doc-feature__desc">Texture is a first-class design primitive. Every component uses dither patterns as visual identity, not decoration.</p>
+      </div>
+      <div class="doc-feature">
+        <div class="doc-feature__icon">⊘</div>
+        <h3 class="doc-feature__title">Zero Dependencies</h3>
+        <p class="doc-feature__desc">Pure CSS and vanilla JS. No build step, no framework, no runtime. Ships exactly what you write.</p>
+      </div>
+      <div class="doc-feature">
+        <div class="doc-feature__icon">◈</div>
+        <h3 class="doc-feature__title">AI Chat Native</h3>
+        <p class="doc-feature__desc">14 AI-specific components: chat bubbles, reasoning steps, tool cards, streaming text, voice sessions, and more.</p>
+      </div>
+      <div class="doc-feature">
+        <div class="doc-feature__icon">◐</div>
+        <h3 class="doc-feature__title">7 Themes</h3>
+        <p class="doc-feature__desc">Default, Dark, Terminal, Brutal, Print, Grain, Mardi Gras — each a coherent visual system powered by CSS custom properties.</p>
+      </div>
+      <div class="doc-feature">
+        <div class="doc-feature__icon">⌘</div>
+        <h3 class="doc-feature__title">MCP Support</h3>
+        <p class="doc-feature__desc">AI agents can install and compose components directly through the Model Context Protocol server.</p>
+      </div>
+      <div class="doc-feature">
+        <div class="doc-feature__icon">▦</div>
+        <h3 class="doc-feature__title">Copy &amp; Paste</h3>
+        <p class="doc-feature__desc">Every component is a self-contained HTML file. Copy the markup, link the CSS, done. No opaque abstractions.</p>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── GETTING STARTED ──
+function renderGettingStarted() {
+  const code1 = `npx skeehn init
+# or with a template:
+npx skeehn init --template dashboard`;
+  const code2 = `<!-- 1. Engine (required) -->
+<link rel="stylesheet" href="engine/reset.css">
+<link rel="stylesheet" href="engine/tokens.css">
+<link rel="stylesheet" href="engine/dither.css">
+
+<!-- 2. Component(s) -->
+<link rel="stylesheet" href="components/button/button.css">
+
+<!-- 3. Theme (pick one) -->
+<link rel="stylesheet" href="themes/default.css">`;
+  const code3 = `<button class="sk-btn" data-variant="dither">
+  Click me
+</button>
+
+<button class="sk-btn" data-variant="solid" data-size="lg">
+  Large Solid
+</button>
+
+<button class="sk-btn" data-variant="outline">
+  Outline
+</button>`;
+  const code4 = `<!-- Apply theme via attribute -->
+<html data-theme="dark">
+
+<!-- Or switch at runtime -->
+<script>
+  document.documentElement.setAttribute('data-theme', 'terminal');
+  document.getElementById('theme-css').href = 'themes/terminal.css';
+</scr` + `ipt>`;
+  const code5 = `import { Button, ChatBubble, ReasoningStep } from '@skeehn/react';
+
+export function App() {
+  return (
+    <div>
+      <Button variant="dither">Dither Button</Button>
+      <ChatBubble role="assistant">Hello, world!</ChatBubble>
+    </div>
+  );
+}`;
+
+  return `<div class="doc-getting-started">
+    <div class="doc-breadcrumb"><a href="#">Home</a> / Getting Started</div>
+    <h1 class="doc-header__title">Getting Started</h1>
+    <p class="doc-header__desc">Add skeehn to any project in minutes. No build step required — just CSS links and HTML.</p>
+
+    <div class="doc-step">
+      <div class="doc-step__num">01</div>
+      <div class="doc-step__body">
+        <h2 class="doc-step__title">Install via CLI</h2>
+        <p class="doc-step__desc">Use the skeehn CLI to scaffold a project or add individual components. Or just download the CSS directly.</p>
+        ${codeBlock('bash', code1)}
+      </div>
+    </div>
+
+    <div class="doc-step">
+      <div class="doc-step__num">02</div>
+      <div class="doc-step__body">
+        <h2 class="doc-step__title">Load CSS in order</h2>
+        <p class="doc-step__desc">The engine layer must load first — it defines the CSS custom properties that all components rely on. Then add component CSS and a theme.</p>
+        ${codeBlock('html', code2)}
+      </div>
+    </div>
+
+    <div class="doc-step">
+      <div class="doc-step__num">03</div>
+      <div class="doc-step__body">
+        <h2 class="doc-step__title">Add a component</h2>
+        <p class="doc-step__desc">Use the class name and data attributes. Components are pure HTML — no JS required for most of them.</p>
+        ${codeBlock('html', code3)}
+        <div style="margin-top:12px;padding:20px;border:1px solid hsl(var(--sk-border-color));display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:hsl(var(--sk-background))">
+          <button class="sk-btn" data-variant="dither">Dither</button>
+          <button class="sk-btn" data-variant="solid">Solid</button>
+          <button class="sk-btn" data-variant="outline">Outline</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-step">
+      <div class="doc-step__num">04</div>
+      <div class="doc-step__body">
+        <h2 class="doc-step__title">Customize with themes</h2>
+        <p class="doc-step__desc">Switch themes by swapping the theme stylesheet and setting a data attribute on &lt;html&gt;. All 7 themes work with every component.</p>
+        ${codeBlock('html', code4)}
+      </div>
+    </div>
+
+    <div class="doc-step">
+      <div class="doc-step__num">05</div>
+      <div class="doc-step__body">
+        <h2 class="doc-step__title">Use with React</h2>
+        <p class="doc-step__desc">The <code style="font-family:var(--sk-font-mono);font-size:12px;background:hsl(var(--sk-accent));padding:1px 4px">@skeehn/react</code> package wraps every component as a typed React component with the same API.</p>
+        ${codeBlock('tsx', code5)}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── COMPONENT GRID ──
+function renderComponentGrid() {
+  const cats = ['core', 'ai', 'layout', 'dataviz', 'motion'];
+  const catLabels = { core: 'Core — 14 components', ai: 'AI & Chat — 15 components', layout: 'Layout', dataviz: 'Data Visualization', motion: 'Motion & Animation' };
+  let html = `<div style="padding:var(--sk-space-10) var(--sk-space-12);max-width:1000px">
+    <div class="doc-breadcrumb"><a href="#">Home</a> / Components</div>
+    <h1 class="doc-header__title">Components</h1>
+    <p class="doc-header__desc">32 components across 5 categories. Click any component to open its documentation.</p>`;
+
+  for (const cat of cats) {
+    const comps = REGISTRY.components.filter(c => c.category === cat);
+    if (!comps.length) continue;
+    html += `<div class="doc-comp-header"><h2>${catLabels[cat] || cat}</h2></div>`;
+    html += `<div class="doc-comp-grid">`;
+    for (const c of comps) {
+      const hasJS = c.files.some(f => f.endsWith('.js'));
+      const hasHTML = c.files.some(f => f.endsWith('.html'));
+      html += `<a href="#components/${c.name}" class="doc-comp-card" data-route="components/${c.name}">
+        <div class="doc-comp-card__name">${c.name}</div>
+        <div class="doc-comp-card__desc">${c.description}</div>
+        <div class="doc-comp-card__files">
+          <span class="doc-comp-card__file">CSS</span>
+          ${hasJS ? '<span class="doc-comp-card__file">JS</span>' : ''}
+          ${hasHTML ? '<span class="doc-comp-card__file">HTML</span>' : ''}
+        </div>
+      </a>`;
+    }
+    html += `</div>`;
+  }
+  html += `</div>`;
+  return html;
+}
+
+// ── INDIVIDUAL COMPONENT PAGE ──
+function renderComponentPage(slug) {
+  const comp = REGISTRY.components.find(c => c.name === slug);
+  if (!comp) return `<div class="doc-page"><p style="opacity:.5;margin-top:40px">Component not found: <code>${slug}</code></p></div>`;
+
+  const meta = COMPONENT_META[slug];
+  const preview = COMPONENT_PREVIEWS[slug] || `<div style="opacity:.4;font-size:12px">Preview for <code>${slug}</code></div>`;
+
+  const installCode = `npx skeehn add ${slug}`;
+  const linkCode = comp.files.filter(f => f.endsWith('.css')).map(f =>
+    `<link rel="stylesheet" href="components/${slug}/${f}">`
+  ).join('\n');
+  const usageCode = `<div class="sk-${slug}" data-variant="${meta?.props?.[0]?.values?.split('|')?.[0]?.trim() || 'default'}">\n  …\n</div>`;
+
+  let propsHtml = '';
+  if (meta?.props?.length) {
+    propsHtml = `<div class="doc-section">
+      <div class="doc-section__title">Props</div>
+      <table class="doc-props-table">
+        <thead><tr><th>Attribute</th><th>Values</th><th>Default</th><th>Description</th></tr></thead>
+        <tbody>${meta.props.map(p => `<tr>
+          <td><code>${p.attr}</code></td>
+          <td style="font-size:11px;font-family:var(--sk-font-mono);opacity:.7">${p.values}</td>
+          <td><code>${p.default}</code></td>
+          <td style="color:hsl(var(--sk-muted-foreground))">${p.desc}</td>
+        </tr>`).join('')}</tbody>
+      </table>
+    </div>`;
+  }
+
+  let eventsHtml = '';
+  if (meta?.events?.length) {
+    eventsHtml = `<div class="doc-section">
+      <div class="doc-section__title">Events</div>
+      ${meta.events.map(e => `<div style="font-family:var(--sk-font-mono);font-size:11px;padding:var(--sk-space-2) 0;border-bottom:1px solid hsl(var(--sk-border-color)/.4)">${e}</div>`).join('')}
+    </div>`;
+  }
+
+  return `<div class="doc-page">
+    <div class="doc-breadcrumb">
+      <a href="#">Home</a> / <a href="#components">Components</a> / ${slug}
+    </div>
+    <div class="doc-header__meta">
+      ${comp.files.map(f => `<span class="doc-file-pill">${f}</span>`).join('')}
+      <span class="doc-file-pill" style="border-color:hsl(var(--sk-primary)/.4);color:hsl(var(--sk-primary))">${comp.category}</span>
+    </div>
+    <h1 class="doc-header__title">${slug}</h1>
+    <p class="doc-header__desc">${comp.description}</p>
+
+    <div class="doc-section">
+      <div class="doc-section__title">Preview</div>
+      <div class="doc-preview">
+        <div class="doc-preview__bar">
+          <button class="doc-preview__tab" data-active data-tab="preview" onclick="">Preview</button>
+          <div class="doc-preview__spacer"></div>
+          <button class="doc-preview__copy" data-copy-text="${usageCode.replace(/"/g, '&quot;')}">Copy HTML</button>
+        </div>
+        <div class="doc-preview__stage">${preview}</div>
+      </div>
+    </div>
+
+    <div class="doc-section">
+      <div class="doc-section__title">Install</div>
+      ${codeBlock('bash', installCode)}
+    </div>
+
+    <div class="doc-section">
+      <div class="doc-section__title">Link CSS</div>
+      ${codeBlock('html', linkCode)}
+    </div>
+
+    <div class="doc-section">
+      <div class="doc-section__title">Usage</div>
+      ${codeBlock('html', usageCode)}
+    </div>
+
+    ${propsHtml}
+    ${eventsHtml}
+  </div>`;
+}
+
+// ── INSPECTOR (right panel for component pages) ──
+function renderInspector(slug) {
+  const comp = REGISTRY.components.find(c => c.name === slug);
+  const meta = COMPONENT_META[slug];
+  const inspector = document.getElementById('docs-inspector');
+
+  let html = `<div class="docs-inspector__title">Inspector — ${slug}</div>`;
+  html += `<div class="docs-inspector__install">npx skeehn add ${slug}</div>`;
+
+  const rows = [
+    { key: 'category', val: comp?.category || '—' },
+    { key: 'files', val: comp?.files?.join(', ') || '—' },
+    { key: 'has JS', val: comp?.files?.some(f => f.endsWith('.js')) ? 'yes' : 'no' },
+    { key: 'has HTML', val: comp?.files?.some(f => f.endsWith('.html')) ? 'yes' : 'no' },
+    { key: 'props', val: String(meta?.props?.length || 0) },
+    { key: 'events', val: String(meta?.events?.length || 0) },
+  ];
+
+  html += rows.map(r => `<div class="docs-inspector__row">
+    <span class="docs-inspector__key">${r.key}</span>
+    <span class="docs-inspector__val">${r.val}</span>
+  </div>`).join('');
+
+  if (meta?.props) {
+    html += `<div style="margin-top:16px;margin-bottom:6px;font-family:var(--sk-font-mono);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:hsl(var(--sk-muted-foreground))">Attributes</div>`;
+    html += meta.props.map(p => `<div class="docs-inspector__row">
+      <span class="docs-inspector__key">${p.attr}</span>
+      <span class="docs-inspector__val" style="opacity:.6;font-size:9px">${p.default}</span>
+    </div>`).join('');
+  }
+
+  inspector.innerHTML = html;
+}
+
+// ── TOKENS ──
+function renderTokens() {
+  const colorTokens = [
+    { name: '--sk-background', value: 'hsl(var(--sk-background))', swatch: 'hsl(var(--sk-background))' },
+    { name: '--sk-foreground', value: 'hsl(var(--sk-foreground))', swatch: 'hsl(var(--sk-foreground))' },
+    { name: '--sk-surface', value: 'hsl(var(--sk-surface))', swatch: 'hsl(var(--sk-surface))' },
+    { name: '--sk-primary', value: 'hsl(var(--sk-primary))', swatch: 'hsl(var(--sk-primary))' },
+    { name: '--sk-muted-foreground', value: 'hsl(var(--sk-muted-foreground))', swatch: 'hsl(var(--sk-muted-foreground))' },
+    { name: '--sk-accent', value: 'hsl(var(--sk-accent))', swatch: 'hsl(var(--sk-accent))' },
+    { name: '--sk-border-color', value: 'hsl(var(--sk-border-color))', swatch: 'hsl(var(--sk-border-color))' },
+    { name: '--sk-destructive', value: 'hsl(var(--sk-destructive))', swatch: 'hsl(var(--sk-destructive))' },
+    { name: '--sk-success', value: 'hsl(var(--sk-success))', swatch: 'hsl(var(--sk-success))' },
+  ];
+  const fontTokens = [
+    { name: '--sk-font-sans', value: 'System UI stack' },
+    { name: '--sk-font-mono', value: 'JetBrains Mono, Menlo, monospace' },
+  ];
+  const spacingTokens = [1,2,3,4,5,6,8,10,12,16,20,24,32].map(n => ({
+    name: `--sk-space-${n}`,
+    value: `${n * 4}px`,
+  }));
+  const sizeTokens = [
+    { name: '--sk-font-size-xs', value: '11px' },
+    { name: '--sk-font-size-sm', value: '13px' },
+    { name: '--sk-font-size-base', value: '14px' },
+    { name: '--sk-font-size-lg', value: '16px' },
+    { name: '--sk-font-size-xl', value: '18px' },
+    { name: '--sk-font-size-2xl', value: '20px' },
+    { name: '--sk-font-size-4xl', value: '28px' },
+    { name: '--sk-font-size-5xl', value: '36px' },
+  ];
+
+  function tokenRow(t, hasSwatch = false) {
+    const swatch = hasSwatch
+      ? `<div class="doc-token-swatch" style="background:${t.swatch}"></div>`
+      : `<div></div>`;
+    return `<div class="doc-token-row">
+      <span class="doc-token-name">${t.name}</span>
+      <span class="doc-token-value">${t.value}</span>
+      ${swatch}
+    </div>`;
+  }
+
+  return `<div class="doc-tokens">
+    <div class="doc-breadcrumb"><a href="#">Home</a> / Design Tokens</div>
+    <h1 class="doc-header__title">Design Tokens</h1>
+    <p class="doc-header__desc">All visual properties are expressed as CSS custom properties. Themes override these values to create coherent visual systems.</p>
+
+    <div class="doc-token-group">
+      <div class="doc-section__title" style="margin-bottom:var(--sk-space-3)">Colors</div>
+      ${colorTokens.map(t => tokenRow(t, true)).join('')}
+    </div>
+
+    <div class="doc-token-group">
+      <div class="doc-section__title" style="margin-bottom:var(--sk-space-3)">Font Families</div>
+      ${fontTokens.map(t => tokenRow(t)).join('')}
+    </div>
+
+    <div class="doc-token-group">
+      <div class="doc-section__title" style="margin-bottom:var(--sk-space-3)">Font Sizes</div>
+      ${sizeTokens.map(t => tokenRow(t)).join('')}
+    </div>
+
+    <div class="doc-token-group">
+      <div class="doc-section__title" style="margin-bottom:var(--sk-space-3)">Spacing Scale</div>
+      ${spacingTokens.map(t => tokenRow(t)).join('')}
+    </div>
+
+    <div class="doc-token-group">
+      <div class="doc-section__title" style="margin-bottom:var(--sk-space-3)">Dither Patterns</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-top:8px">
+        ${[
+          { key: 'bayer', size: '32px 32px' },
+          { key: 'crosshatch', size: '12px 12px' },
+          { key: 'diagonal', size: '12px 12px' },
+          { key: 'dots', size: '8px 8px' },
+          { key: 'scanlines', size: '4px 4px' },
+          { key: 'checker', size: '8px 8px' },
+          { key: 'floyd', size: 'auto' },
+          { key: 'noise', size: 'auto' },
+        ].map(p => `<div style="border:1px solid hsl(var(--sk-border-color));height:60px;position:relative;background-image:var(--sk-dither-${p.key});background-size:${p.size};background-color:hsl(var(--sk-foreground)/.1)">
+          <span style="position:absolute;bottom:3px;right:5px;font-size:8px;opacity:.4;font-family:var(--sk-font-mono)">${p.key.toUpperCase()}</span>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── THEMES ──
+const THEME_COLORS = {
+  default:     { bg: '#ffffff', fg: '#111111', accent: '#f4f4f4' },
+  dark:        { bg: '#0a0a0a', fg: '#e8e8e8', accent: '#1a1a1a' },
+  terminal:    { bg: '#0d1117', fg: '#39ff14', accent: '#111827' },
+  brutal:      { bg: '#f5f5f5', fg: '#000000', accent: '#e5e5e5' },
+  print:       { bg: '#fafafa', fg: '#1a1a1a', accent: '#f0f0f0' },
+  grain:       { bg: '#f2ede6', fg: '#1c1917', accent: '#e8e0d6' },
+  'mardi-gras':{ bg: '#1a0a2e', fg: '#ffd700', accent: '#2d1a4e' },
+};
+
+function renderThemes() {
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'default';
+  let html = `<div class="doc-themes">
+    <div class="doc-breadcrumb"><a href="#">Home</a> / Themes</div>
+    <h1 class="doc-header__title">Themes</h1>
+    <p class="doc-header__desc">7 complete themes — each a coherent visual system powered by CSS custom properties. Click a card to apply the theme.</p>
+    <div class="doc-theme-grid">`;
+
+  for (const t of REGISTRY.themes) {
+    const colors = THEME_COLORS[t] || { bg: '#ffffff', fg: '#000000', accent: '#f0f0f0' };
+    const isActive = currentTheme === t;
+    html += `<div class="doc-theme-card" data-apply-theme="${t}" style="cursor:pointer">
+      <div class="doc-theme-preview" style="background:${colors.bg};color:${colors.fg}">
+        <div class="doc-theme-preview-btn" style="border-color:${colors.fg};color:${colors.fg}">Button</div>
+        <div class="doc-theme-preview-chip" style="border-color:${colors.fg};color:${colors.fg}">sk-badge</div>
+        <div style="font-family:monospace;font-size:10px;opacity:.5;margin-top:auto">${colors.bg}</div>
+      </div>
+      <div class="doc-theme-name">
+        <span>${t}</span>
+        ${isActive ? '<span class="doc-theme-active">active</span>' : ''}
+      </div>
+    </div>`;
+  }
+
+  html += `</div></div>`;
+  return html;
+}
+
+function bindThemeCards() {
+  document.querySelectorAll('[data-apply-theme]').forEach(card => {
+    card.addEventListener('click', () => {
+      applyTheme(card.dataset.applyTheme);
+      // Re-render themes page to update active indicator
+      document.getElementById('docs-main').innerHTML = renderThemes();
+      bindThemeCards();
+    });
+  });
+}
+
+// ── ENGINE ──
+function renderEngine() {
+  return `<div class="doc-engine" style="display:flex;flex-direction:column;height:100%;overflow:hidden">
+    <div class="doc-breadcrumb" style="margin-bottom:12px"><a href="#">Home</a> / ASCII Engine</div>
+    <div class="engine-toolbar">
+      <label>Image: <input type="file" id="img-upload" accept="image/*" style="margin-left:6px"></label>
+      <label>Algo:
+        <select id="algo-sel" style="margin-left:4px;font-family:var(--sk-font-mono);font-size:11px;background:transparent;color:hsl(var(--sk-foreground));border:1px solid hsl(var(--sk-border-color));padding:2px 4px">
+          <option value="floyd">Floyd-Steinberg</option>
+          <option value="bayer">Bayer</option>
+          <option value="threshold">Threshold</option>
+        </select>
+      </label>
+      <label>Width: <input type="range" id="res-slider" min="40" max="160" value="90" style="margin-left:4px"> <span id="res-val">90</span></label>
+    </div>
+    <div class="engine-output" style="flex:1">
+      <div class="engine-panel">
+        <div class="engine-panel__title">ASCII Output</div>
+        <div class="engine-panel__content" id="ascii-out">Upload an image above to see live ASCII dither rendering…</div>
+      </div>
+      <div class="engine-panel">
+        <div class="engine-panel__title">Block Letter Generator</div>
+        <div style="padding:10px;border-bottom:1px solid hsl(var(--sk-border-color))">
+          <input id="text-input" value="skeehn" placeholder="Type text…" style="width:100%;background:transparent;border:1px solid hsl(var(--sk-border-color));padding:5px 8px;font-family:var(--sk-font-mono);font-size:12px;color:hsl(var(--sk-foreground));outline:none">
+        </div>
+        <div class="engine-panel__content" id="text-out" style="font-size:7px;line-height:1.05"></div>
+      </div>
+      <div class="engine-panel">
+        <div class="engine-panel__title">Dither Patterns</div>
+        <div style="padding:8px;display:grid;grid-template-columns:1fr 1fr;gap:4px">
+          <div style="height:52px;border:1px solid hsl(var(--sk-border-color));background-image:var(--sk-dither-bayer);background-size:32px 32px;background-color:hsl(var(--sk-foreground)/0.15);position:relative"><span style="position:absolute;bottom:3px;right:5px;font-size:8px;opacity:0.4">BAYER</span></div>
+          <div style="height:52px;border:1px solid hsl(var(--sk-border-color));background-image:var(--sk-dither-crosshatch);background-size:12px 12px;background-color:hsl(var(--sk-foreground)/0.08);position:relative"><span style="position:absolute;bottom:3px;right:5px;font-size:8px;opacity:0.4">CROSS</span></div>
+          <div style="height:52px;border:1px solid hsl(var(--sk-border-color));background-image:var(--sk-dither-diagonal);background-size:12px 12px;background-color:hsl(var(--sk-foreground)/0.08);position:relative"><span style="position:absolute;bottom:3px;right:5px;font-size:8px;opacity:0.4">DIAG</span></div>
+          <div style="height:52px;border:1px solid hsl(var(--sk-border-color));background-image:var(--sk-dither-dots);background-size:8px 8px;background-color:hsl(var(--sk-foreground)/0.08);position:relative"><span style="position:absolute;bottom:3px;right:5px;font-size:8px;opacity:0.4">DOTS</span></div>
+          <div style="height:52px;border:1px solid hsl(var(--sk-border-color));background-image:var(--sk-dither-scanlines);background-size:4px 4px;background-color:hsl(var(--sk-foreground)/0.08);position:relative"><span style="position:absolute;bottom:3px;right:5px;font-size:8px;opacity:0.4">SCAN</span></div>
+          <div style="height:52px;border:1px solid hsl(var(--sk-border-color));background-image:var(--sk-dither-checker);background-size:8px 8px;background-color:hsl(var(--sk-foreground)/0.08);position:relative"><span style="position:absolute;bottom:3px;right:5px;font-size:8px;opacity:0.4">CHECK</span></div>
+        </div>
+      </div>
+      <div class="engine-panel">
+        <div class="engine-panel__title">Block Density</div>
+        <div style="padding:12px;display:flex;flex-direction:column;gap:10px">
+          <div>
+            <div style="font-size:9px;opacity:0.4;margin-bottom:4px;letter-spacing:0.1em;font-family:var(--sk-font-mono)">SPARSE 25%</div>
+            <div style="height:18px;background-image:var(--sk-dither-blocks-25);background-size:16px 16px;background-color:hsl(var(--sk-foreground)/0.1)"></div>
+          </div>
+          <div>
+            <div style="font-size:9px;opacity:0.4;margin-bottom:4px;letter-spacing:0.1em;font-family:var(--sk-font-mono)">MEDIUM 50%</div>
+            <div style="height:18px;background-image:var(--sk-dither-blocks-50);background-size:16px 16px;background-color:hsl(var(--sk-foreground)/0.1)"></div>
+          </div>
+          <div>
+            <div style="font-size:9px;opacity:0.4;margin-bottom:4px;letter-spacing:0.1em;font-family:var(--sk-font-mono)">DARK 75%</div>
+            <div style="height:18px;background-image:var(--sk-dither-blocks-75);background-size:16px 16px;background-color:hsl(var(--sk-foreground)/0.1)"></div>
+          </div>
+          <div>
+            <div style="font-size:9px;opacity:0.4;margin-bottom:4px;letter-spacing:0.1em;font-family:var(--sk-font-mono)">SOLID 100%</div>
+            <div style="height:18px;background-image:var(--sk-dither-blocks-100);background-size:16px 16px;background-color:hsl(var(--sk-foreground)/0.1)"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function initEngine() {
+  const imgUpload = document.getElementById('img-upload');
+  const asciiOut = document.getElementById('ascii-out');
+  const resSlider = document.getElementById('res-slider');
+  const resVal = document.getElementById('res-val');
+  const algoSel = document.getElementById('algo-sel');
+  const textInput = document.getElementById('text-input');
+  const textOut = document.getElementById('text-out');
+
+  if (!imgUpload) return;
+
+  resSlider.addEventListener('input', () => {
+    resVal.textContent = resSlider.value;
+    if (imgUpload.files[0]) renderImg(imgUpload.files[0]);
+  });
+  algoSel.addEventListener('change', () => {
+    if (imgUpload.files[0]) renderImg(imgUpload.files[0]);
+  });
+  imgUpload.addEventListener('change', () => {
+    if (imgUpload.files[0]) renderImg(imgUpload.files[0]);
+  });
+
+  function renderImg(file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const W = parseInt(resSlider.value);
+        const H = Math.round(W * (img.height / img.width) * 0.5);
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width; canvas.height = img.height;
+        canvas.getContext('2d').drawImage(img, 0, 0);
+        const data = canvas.getContext('2d').getImageData(0, 0, img.width, img.height).data;
+        const chars = ' ░▒▓█▓▒░ .:-=+*#%@';
+        const cW = Math.max(1, Math.floor(img.width / W));
+        const cH = Math.max(1, Math.floor(img.height / H));
+        let out = '';
+        for (let y = 0; y < H; y++) {
+          let line = '';
+          for (let x = 0; x < W; x++) {
+            let sum = 0, cnt = 0;
+            for (let dy = 0; dy < cH && y*cH+dy < img.height; dy++)
+              for (let dx = 0; dx < cW && x*cW+dx < img.width; dx++) {
+                const px = ((x*cW+dx) + (y*cH+dy)*img.width) * 4;
+                sum += 0.299*data[px] + 0.587*data[px+1] + 0.114*data[px+2];
+                cnt++;
+              }
+            const lum = sum / cnt / 255;
+            line += chars[Math.floor(lum * (chars.length - 1))];
+          }
+          out += line + '\n';
+        }
+        asciiOut.textContent = out;
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Text-to-ASCII
+  const GLYPHS = {
+    A:[' ▓ ','▓ ▓','▓▓▓','▓ ▓','▓ ▓'],B:['▓▓ ','▓ ▓','▓▓ ','▓ ▓','▓▓ '],
+    C:[' ▓▓','▓  ','▓  ','▓  ',' ▓▓'],D:['▓▓ ','▓ ▓','▓ ▓','▓ ▓','▓▓ '],
+    E:['▓▓▓','▓  ','▓▓ ','▓  ','▓▓▓'],F:['▓▓▓','▓  ','▓▓ ','▓  ','▓  '],
+    G:[' ▓▓','▓  ','▓ ▓','▓ ▓',' ▓▓'],H:['▓ ▓','▓ ▓','▓▓▓','▓ ▓','▓ ▓'],
+    I:['▓▓▓',' ▓ ',' ▓ ',' ▓ ','▓▓▓'],J:['▓▓▓','  ▓','  ▓','▓ ▓',' ▓ '],
+    K:['▓ ▓','▓▒ ','▓▓ ','▓▒ ','▓ ▓'],L:['▓  ','▓  ','▓  ','▓  ','▓▓▓'],
+    M:['▓ ▓','▓▓▓','▓▒▓','▓ ▓','▓ ▓'],N:['▓ ▓','▓▓▓','▓▒▓','▓ ▓','▓ ▓'],
+    O:[' ▓ ','▓ ▓','▓ ▓','▓ ▓',' ▓ '],P:['▓▓ ','▓ ▓','▓▓ ','▓  ','▓  '],
+    Q:[' ▓ ','▓ ▓','▓ ▓','▓▒▓',' ▓▓'],R:['▓▓ ','▓ ▓','▓▓ ','▓▒ ','▓ ▓'],
+    S:[' ▓▓','▓  ',' ▓ ','  ▓','▓▓ '],T:['▓▓▓',' ▓ ',' ▓ ',' ▓ ',' ▓ '],
+    U:['▓ ▓','▓ ▓','▓ ▓','▓ ▓',' ▓ '],V:['▓ ▓','▓ ▓','▓ ▓',' ▓ ',' ▓ '],
+    W:['▓ ▓','▓ ▓','▓▒▓','▓▓▓','▓ ▓'],X:['▓ ▓',' ▓ ',' ▓ ',' ▓ ','▓ ▓'],
+    Y:['▓ ▓',' ▓ ',' ▓ ',' ▓ ',' ▓ '],Z:['▓▓▓','  ▓',' ▓ ','▓  ','▓▓▓'],
+    '0':[' ▓ ','▓ ▓','▓▒▓','▓ ▓',' ▓ '],'1':[' ▓ ','▓▓ ',' ▓ ',' ▓ ','▓▓▓'],
+    ' ':['   ','   ','   ','   ','   ']
+  };
+
+  function renderText(text) {
+    const rows = [[],[],[],[],[]];
+    for (const c of (text || 'skeehn').toUpperCase().slice(0, 14)) {
+      const g = GLYPHS[c] || GLYPHS[' '];
+      for (let i = 0; i < 5; i++) rows[i].push(g[i]);
+    }
+    return rows.map(r => r.join(' ')).join('\n');
+  }
+
+  textInput.addEventListener('input', () => { textOut.textContent = renderText(textInput.value); });
+  textOut.textContent = renderText(textInput.value);
+}
+
+// ── AI CHAT ──
+function renderAIChat() {
+  return `<div style="display:flex;flex-direction:column;height:100%;overflow:hidden">
+    <div class="chat-thread" id="chat-thread">
+      <div class="sk-agent-status" data-status="thinking">
+        <span class="sk-agent-status__indicator"></span>
+        <span class="sk-agent-status__text">Thinking…</span>
+      </div>
+
+      <div class="sk-chat-bubble" data-role="user" style="align-self:flex-end">
+        <p>What makes skeehn different from shadcn?</p>
+      </div>
+
+      <div class="sk-reasoning-step" data-status="completed" data-expanded="false">
+        <button class="sk-reasoning-step__header" id="reasoning-btn-1">
+          <span class="sk-reasoning-step__indicator"></span>
+          <span class="sk-reasoning-step__title">Analyzing the design philosophy question</span>
+          <span class="sk-reasoning-step__chevron">▸</span>
+        </button>
+        <div class="sk-reasoning-step__content">
+          <p>shadcn provides copy-paste React components. skeehn provides a zero-dependency ASCII dither rendering system — texture as a first-class design primitive alongside color and spacing. Fundamentally different layers of abstraction.</p>
+        </div>
+      </div>
+
+      <div class="sk-chat-bubble" data-role="tool" style="align-self:flex-start">
+        <div class="sk-chat-bubble__tool-header">
+          <span class="sk-chat-bubble__tool-name">search_components</span>
+          <span class="sk-badge" data-color="success">done</span>
+        </div>
+        <pre class="sk-chat-bubble__tool-output">→ 32 components, 0 JS dependencies</pre>
+      </div>
+
+      <div class="sk-chat-bubble" data-role="assistant" style="align-self:flex-start">
+        <p>shadcn gives you React components. skeehn gives you a rendering primitive — ASCII dither texture — as a first-class design element. Every component uses <code style="font-size:10px;opacity:0.7">░▒▓█</code> patterns as texture, not decoration. It runs on zero JS dependencies, ships pure CSS+HTML, and has native MCP support so AI agents can install and compose it directly.</p>
+        <br>
+        <p>The dither pattern you see in this interface right now? That's skeehn running live.</p>
+      </div>
+
+      <div class="sk-citation-card">
+        <div class="sk-citation-card__icon">1</div>
+        <div>
+          <div class="sk-citation-card__source">skeehn docs</div>
+          <div class="sk-citation-card__snippet">ASCII characters as native rendering — texture is the second dimension of visual identity.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-footer">
+      <div class="chat-input-wrap">
+        <textarea id="chat-textarea" placeholder="Ask anything… (Enter to send, Shift+Enter for newline)" rows="1"></textarea>
+        <div class="chat-input-actions">
+          <button class="chat-act-btn" title="Attach">+</button>
+          <button class="chat-act-btn" title="Voice" id="mic-btn">◎</button>
+          <button class="chat-act-btn send" title="Send" id="send-btn">↑</button>
+        </div>
+      </div>
+      <div class="chat-hint">Enter to send · Shift+Enter for newline · ◎ for voice</div>
+    </div>
+  </div>`;
+}
+
+function initChat() {
+  // Reasoning step toggle
+  const reasoningBtn = document.getElementById('reasoning-btn-1');
+  if (reasoningBtn) {
+    reasoningBtn.addEventListener('click', () => {
+      const step = reasoningBtn.closest('.sk-reasoning-step');
+      const expanded = step.getAttribute('data-expanded') === 'true';
+      step.setAttribute('data-expanded', expanded ? 'false' : 'true');
+    });
+  }
+
+  const textarea = document.getElementById('chat-textarea');
+  const sendBtn = document.getElementById('send-btn');
+  const micBtn = document.getElementById('mic-btn');
+  if (!textarea) return;
+
+  textarea.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  });
+  textarea.addEventListener('input', () => {
+    textarea.style.height = 'auto';
+    textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+  });
+  sendBtn.addEventListener('click', sendMessage);
+
+  function sendMessage() {
+    const val = textarea.value.trim();
+    if (!val) return;
+    const thread = document.getElementById('chat-thread');
+    thread.querySelector('.sk-typing-indicator')?.remove();
+
+    const userEl = document.createElement('div');
+    userEl.className = 'sk-chat-bubble';
+    userEl.setAttribute('data-role', 'user');
+    userEl.style.cssText = 'align-self:flex-end';
+    userEl.innerHTML = `<p>${val.replace(/</g, '&lt;')}</p>`;
+    thread.appendChild(userEl);
+
+    const typing = document.createElement('div');
+    typing.className = 'sk-typing-indicator';
+    typing.innerHTML = '▮ ▮ ▮';
+    typing.style.cssText = 'letter-spacing:4px;animation:blink-cur 0.6s steps(2) infinite;padding:10px 12px;border:1px solid hsl(var(--sk-border-color));align-self:flex-start;font-family:var(--sk-font-mono)';
+    thread.appendChild(typing);
+
+    textarea.value = '';
+    textarea.style.height = 'auto';
+    thread.scrollTop = thread.scrollHeight;
+
+    setTimeout(() => {
+      typing.remove();
+      const reply = document.createElement('div');
+      reply.className = 'sk-chat-bubble';
+      reply.setAttribute('data-role', 'assistant');
+      reply.style.cssText = 'align-self:flex-start';
+      reply.innerHTML = `<p>I received your message. This is a live demo — the dither textures, streaming cursor, and reasoning traces you see are all real skeehn components running with zero dependencies.</p><span class="sk-chat-bubble__cursor"></span>`;
+      thread.appendChild(reply);
+      thread.scrollTop = thread.scrollHeight;
+    }, 1200);
+  }
+
+  // Mic toggle
+  let micActive = false;
+  let recognition = null;
+  micBtn.addEventListener('click', () => {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { alert('Voice requires Chrome'); return; }
+    if (!micActive) {
+      recognition = new SR();
+      recognition.continuous = false;
+      recognition.interimResults = true;
+      recognition.onresult = e => {
+        textarea.value = Array.from(e.results).map(r => r[0].transcript).join('');
+      };
+      recognition.onend = () => {
+        micActive = false;
+        micBtn.textContent = '◎';
+        micBtn.style.color = '';
+      };
+      recognition.start();
+      micActive = true;
+      micBtn.textContent = '●';
+      micBtn.style.color = 'hsl(0 80% 60%)';
+    } else {
+      recognition?.stop();
+    }
+  });
+}
+
+// ════════════════════════════════════════════════════
+// SEARCH
+// ════════════════════════════════════════════════════
+const SEARCH_INDEX = [
+  { name: 'Home', route: '', desc: 'Overview and getting started' },
+  { name: 'Getting Started', route: 'getting-started', desc: 'Installation and setup guide' },
+  { name: 'Components', route: 'components', desc: 'All 32 components' },
+  { name: 'Design Tokens', route: 'tokens', desc: 'CSS custom properties reference' },
+  { name: 'Themes', route: 'themes', desc: '7 theme previews and switcher' },
+  { name: 'ASCII Engine', route: 'engine', desc: 'Image-to-ASCII and text generator' },
+  { name: 'AI Chat Demo', route: 'ai-chat', desc: 'Live chat with reasoning steps' },
+  ...REGISTRY.components.map(c => ({
+    name: c.name,
+    route: `components/${c.name}`,
+    desc: c.description,
+    category: c.category,
+  })),
+];
+
+let selectedResult = -1;
+
+function openSearch() {
+  document.getElementById('search-overlay').setAttribute('data-open', '');
+  document.getElementById('search-input').value = '';
+  document.getElementById('search-input').focus();
+  renderSearchResults('');
+}
+
+function closeSearch() {
+  document.getElementById('search-overlay').removeAttribute('data-open');
+  selectedResult = -1;
+}
+
+function renderSearchResults(query) {
+  const q = query.toLowerCase().trim();
+  const results = q
+    ? SEARCH_INDEX.filter(item =>
+        item.name.toLowerCase().includes(q) || item.desc.toLowerCase().includes(q)
+      ).slice(0, 8)
+    : SEARCH_INDEX.slice(0, 8);
+
+  const container = document.getElementById('search-results');
+  if (!results.length) {
+    container.innerHTML = `<div style="padding:20px;text-align:center;opacity:.4;font-family:var(--sk-font-mono);font-size:12px">No results for "${query}"</div>`;
+    return;
+  }
+  container.innerHTML = results.map((r, i) => `
+    <a href="#${r.route}" class="docs-search-result" data-idx="${i}">
+      <div>
+        <div class="docs-search-result__name">${r.name}</div>
+        <div class="docs-search-result__desc">${r.desc}</div>
+      </div>
+      ${r.category ? `<span style="font-family:var(--sk-font-mono);font-size:9px;opacity:.4;text-transform:uppercase;letter-spacing:.08em">${r.category}</span>` : ''}
+    </a>`).join('');
+
+  container.querySelectorAll('.docs-search-result').forEach(el => {
+    el.addEventListener('click', closeSearch);
+  });
+}
+
+document.getElementById('search-trigger').addEventListener('click', openSearch);
+document.getElementById('search-input').addEventListener('input', e => {
+  selectedResult = -1;
+  renderSearchResults(e.target.value);
+});
+document.getElementById('search-input').addEventListener('keydown', e => {
+  const results = document.querySelectorAll('.docs-search-result');
+  if (e.key === 'Escape') { closeSearch(); return; }
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    selectedResult = Math.min(selectedResult + 1, results.length - 1);
+    results.forEach((r, i) => r.toggleAttribute('data-selected', i === selectedResult));
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    selectedResult = Math.max(selectedResult - 1, 0);
+    results.forEach((r, i) => r.toggleAttribute('data-selected', i === selectedResult));
+  } else if (e.key === 'Enter') {
+    const sel = results[selectedResult];
+    if (sel) { sel.click(); }
+  }
+});
+document.getElementById('search-overlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeSearch();
+});
+
+// Keyboard shortcut: / to open search
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && !['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) {
+    e.preventDefault();
+    openSearch();
+  }
+  if (e.key === 'Escape') closeSearch();
+});
+
+// ════════════════════════════════════════════════════
+// HASH ROUTER — init
+// ════════════════════════════════════════════════════
+function handleRoute() {
+  renderRoute(getHash());
+}
+
+window.addEventListener('hashchange', handleRoute);
+handleRoute();
 </script>
 </body>
 </html>

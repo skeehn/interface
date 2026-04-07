@@ -1,10 +1,10 @@
 /**
  * skeehn MCP Server
- * 
+ *
  * Model Context Protocol server for AI agents.
  * Exposes component schemas, theme registry, prop contracts, and tools
  * for installing components, generating UI code, and managing projects.
- * 
+ *
  * Usage:
  *   npx skeehn mcp          # Start local MCP server
  *   # Connect Cursor/Claude Code to stdio transport
@@ -14,6 +14,25 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { componentSchema, themeRegistry, propContracts, examples, patterns } from "./schema/index.js";
+import { execFile as execFileCallback } from "node:child_process";
+import { promisify } from "node:util";
+const execFile = promisify(execFileCallback);
+
+// ─── Input Allowlist Validators ──────────────────────────────────────────────
+
+const VALID_COMPONENT_SLUG = /^[a-z][a-z0-9-]{0,48}$/;
+const VALID_THEME = new Set(["default", "brutal", "terminal", "print", "grain"]);
+const VALID_PATH = /^[a-zA-Z0-9._/~-]{1,256}$/;
+
+function assertSafeComponentName(name: string): void {
+  if (!VALID_COMPONENT_SLUG.test(name)) throw new Error(`Invalid component name: ${JSON.stringify(name)}`);
+}
+function assertSafeTheme(theme: string): void {
+  if (!VALID_THEME.has(theme)) throw new Error(`Invalid theme: ${JSON.stringify(theme)}`);
+}
+function assertSafePath(p: string): void {
+  if (!VALID_PATH.test(p)) throw new Error(`Invalid path: ${JSON.stringify(p)}`);
+}
 
 // ─── MCP Server Configuration ───────────────────────────────────────────────
 
@@ -151,12 +170,10 @@ server.tool(
     target: z.string().default("./components").describe("Target directory"),
   },
   async ({ name, target }) => {
-    const { exec } = await import("node:child_process");
-    const { promisify } = await import("node:util");
-    const execAsync = promisify(exec);
-    
     try {
-      const { stdout, stderr } = await execAsync(`npx skeehn add ${name} -p ${target}`);
+      assertSafeComponentName(name);
+      assertSafePath(target);
+      const { stdout, stderr } = await execFile("npx", ["skeehn", "add", name, "-p", target]);
       return {
         content: [
           { type: "text", text: stdout || `Installed ${name} in ${target}` },
@@ -200,12 +217,10 @@ server.tool(
     target: z.string().default(".").describe("Project directory"),
   },
   async ({ theme, target }) => {
-    const { exec } = await import("node:child_process");
-    const { promisify } = await import("node:util");
-    const execAsync = promisify(exec);
-    
     try {
-      const { stdout } = await execAsync(`npx skeehn theme ${theme} -p ${target}`);
+      assertSafeTheme(theme);
+      assertSafePath(target);
+      const { stdout } = await execFile("npx", ["skeehn", "theme", theme, "-p", target]);
       return {
         content: [{ type: "text", text: stdout || `Theme swapped to ${theme}` }],
         isError: false,
@@ -235,21 +250,21 @@ server.tool(
         isError: true,
       };
     }
-    
+
     // Simple validation (in production, use full Zod validation)
     const required = Object.entries(contract.properties || {})
       .filter(([_, v]: [string, any]) => v.required)
       .map(([k]) => k);
-    
+
     const missing = required.filter((key: string) => !(key in props));
-    
+
     if (missing.length > 0) {
       return {
         content: [{ type: "text", text: `Missing required props: ${missing.join(", ")}` }],
         isError: true,
       };
     }
-    
+
     return {
       content: [{ type: "text", text: `Props valid for ${component}` }],
       isError: false,
@@ -265,13 +280,13 @@ server.tool(
     category: z.enum(["core", "ai", "layout", "dataviz", "motion", "all"]).default("all").describe("Component category"),
   },
   async ({ category }) => {
-    const comps = category === "all" 
-      ? componentSchema.components 
+    const comps = category === "all"
+      ? componentSchema.components
       : componentSchema.components.filter((c: any) => c.category === category);
-    
+
     return {
-      content: [{ 
-        type: "text", 
+      content: [{
+        type: "text",
         text: comps.map((c: any) => `${c.name}: ${c.description}`).join("\n"),
       }],
       isError: false,
@@ -289,14 +304,14 @@ server.tool(
     components: z.array(z.string()).default(["all"]).describe("Components to install"),
   },
   async ({ path, theme, components }) => {
-    const { exec } = await import("node:child_process");
-    const { promisify } = await import("node:util");
-    const execAsync = promisify(exec);
-    
     try {
-      await execAsync(`npx skeehn init -p ${path} -t ${theme}`);
+      assertSafePath(path);
+      assertSafeTheme(theme);
+      await execFile("npx", ["skeehn", "init", "-p", path, "-t", theme]);
       for (const comp of components) {
-        await execAsync(`npx skeehn add ${comp} -p ${path}`);
+        assertSafeComponentName(comp);
+        assertSafePath(path);
+        await execFile("npx", ["skeehn", "add", comp, "-p", path]);
       }
       return {
         content: [{ type: "text", text: `skeehn initialized in ${path} with theme ${theme}` }],
@@ -407,7 +422,7 @@ Generate the converted code with skeehn imports and theme setup.`,
 
 function generateSkeehnCode(description: string, theme: string, components?: string[]): string {
   const desc = description.toLowerCase();
-  
+
   // Detect what kind of UI to generate
   if (desc.includes("chat")) {
     return generateChatCode(theme);
@@ -434,7 +449,7 @@ function generateChatCode(theme: string): string {
       <p>Absolutely! skeehn is the ASCII-native UI framework...</p>
     </div>
   </div>
-  
+
   <!-- Chat Input -->
   <div class="sk-chat-input">
     <input class="sk-input" placeholder="Ask anything..." data-dither>
@@ -458,13 +473,13 @@ function generateDashboardCode(theme: string): string {
     <span class="sk-agent-status__indicator"></span>
     <span class="sk-agent-status__text">Thinking...</span>
   </div>
-  
+
   <!-- Tool Cards -->
   <div class="sk-tool-card" data-status="success">
     <h3>search_web</h3>
     <pre>Query: "skeehn UI framework"</pre>
   </div>
-  
+
   <!-- Reasoning Steps -->
   <div class="sk-reasoning-step" data-status="completed">
     <h4>Analyzing user request</h4>

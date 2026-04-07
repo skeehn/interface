@@ -26,13 +26,27 @@ app.get("/api/components", {
 });
 
 app.get("/api/components/:name", {
-  input: z.object({ name: z.string() }),
-  output: z.object({ component: z.any() }),
   mcp: { name: "get_component", description: "Get a specific component definition" },
-  handler: async ({ params }) => {
-    const comp = componentSchema.components.find((c) => c.name.toLowerCase() === params.name);
-    if (!comp) return { error: "Component not found" };
-    return { component: comp };
+  handler: async (ctx) => {
+    const name = (ctx.params as Record<string, string>).name;
+    if (!name || typeof name !== "string") {
+      return new Response(JSON.stringify({ error: "name required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    const component = componentSchema.components.find(
+      (c) => c.slug === name || c.name.toLowerCase() === name.toLowerCase()
+    );
+    if (!component) {
+      return new Response(JSON.stringify({ error: "component not found" }), {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    return new Response(JSON.stringify(component), {
+      headers: { "Content-Type": "application/json" },
+    });
   },
 });
 

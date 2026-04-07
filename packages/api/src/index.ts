@@ -248,6 +248,19 @@ export class Loom {
       try {
         const result = await endpoint.config.handler(ctx);
 
+        // If handler returns a raw Response, pass it through directly
+        if (result instanceof Response) {
+          if (this.corsEnabled) {
+            const corsHeaders = this.corsHeaders();
+            const newHeaders = new Headers(result.headers);
+            for (const [key, value] of Object.entries(corsHeaders)) {
+              newHeaders.set(key, value);
+            }
+            return new Response(result.body, { status: result.status, headers: newHeaders });
+          }
+          return result;
+        }
+
         // Validate output
         let output = result;
         if (endpoint.config.output) {

@@ -1,0 +1,138 @@
+/*
+ * skeehn — Markdown Renderer Styles
+ * Styles for AI-generated markdown content within chat bubbles and panels.
+ */
+
+.sk-markdown {
+  font-family: var(--sk-font-mono);
+  font-size: var(--sk-font-size-sm);
+  line-height: var(--sk-line-height);
+  color: hsl(var(--sk-foreground));
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.sk-markdown > *:first-child { margin-top: 0; }
+.sk-markdown > *:last-child { margin-bottom: 0; }
+
+.sk-markdown h1, .sk-markdown h2, .sk-markdown h3,
+.sk-markdown h4, .sk-markdown h5, .sk-markdown h6 {
+  margin: var(--sk-space-4) 0 var(--sk-space-2);
+  font-family: var(--sk-font-mono);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+}
+
+.sk-markdown h1 { font-size: var(--sk-font-size-xl); text-transform: uppercase; }
+.sk-markdown h2 { font-size: var(--sk-font-size-lg); text-transform: uppercase; }
+.sk-markdown h3 { font-size: var(--sk-font-size-base); }
+.sk-markdown h4 { font-size: var(--sk-font-size-sm); }
+
+.sk-markdown p {
+  margin: var(--sk-space-2) 0;
+}
+
+.sk-markdown strong { font-weight: 700; }
+.sk-markdown em { font-style: italic; }
+
+.sk-markdown a {
+  color: hsl(var(--sk-primary));
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.sk-markdown a:hover {
+  opacity: 0.8;
+}
+
+.sk-markdown code:not(pre code) {
+  font-family: var(--sk-font-mono);
+  font-size: 0.85em;
+  padding: 0.1em 0.35em;
+  background: hsl(var(--sk-muted));
+  border: var(--sk-border);
+  border-radius: var(--sk-radius);
+}
+
+.sk-markdown pre {
+  margin: var(--sk-space-3) 0;
+  padding: var(--sk-space-3);
+  background: hsl(var(--sk-muted) / 0.3);
+  border: var(--sk-border);
+  border-radius: var(--sk-radius);
+  overflow-x: auto;
+  position: relative;
+}
+
+.sk-markdown pre::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--sk-dither-pattern);
+  background-repeat: repeat;
+  opacity: calc(var(--sk-dither-opacity, 0.15) * 0.08);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.sk-markdown pre code {
+  font-size: var(--sk-font-size-xs);
+  line-height: 1.6;
+  background: none;
+  border: none;
+  padding: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.sk-markdown ul, .sk-markdown ol {
+  margin: var(--sk-space-2) 0;
+  padding-left: var(--sk-space-6);
+}
+
+.sk-markdown li {
+  margin: var(--sk-space-1) 0;
+}
+
+.sk-markdown ul li::marker { content: "▸ "; color: hsl(var(--sk-muted-foreground)); }
+.sk-markdown ol li::marker { color: hsl(var(--sk-muted-foreground)); }
+
+.sk-markdown blockquote {
+  margin: var(--sk-space-3) 0;
+  padding: var(--sk-space-2) var(--sk-space-4);
+  border-left: 3px solid hsl(var(--sk-border-color));
+  color: hsl(var(--sk-muted-foreground));
+  font-style: italic;
+}
+
+.sk-markdown hr {
+  margin: var(--sk-space-4) 0;
+  border: none;
+  border-top: 1px solid hsl(var(--sk-border-color));
+}
+
+.sk-markdown table {
+  width: 100%;
+  margin: var(--sk-space-3) 0;
+  border-collapse: collapse;
+}
+
+.sk-markdown th, .sk-markdown td {
+  padding: var(--sk-space-2) var(--sk-space-3);
+  text-align: left;
+  border-bottom: var(--sk-border);
+  font-size: var(--sk-font-size-xs);
+}
+
+.sk-markdown th {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.sk-markdown img {
+  max-width: 100%;
+  border-radius: var(--sk-radius);
+  border: var(--sk-border);
+}

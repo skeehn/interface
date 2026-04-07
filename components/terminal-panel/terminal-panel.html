@@ -1,0 +1,92 @@
+<!-- skeehn — TerminalPanel Component -->
+
+<!-- Default theme -->
+<div class="sk-terminal-panel">
+  <div class="sk-terminal-panel__header">
+    <span class="sk-terminal-panel__title">Terminal</span>
+    <div class="sk-terminal-panel__actions">
+      <button class="sk-terminal-panel__action sk-terminal-panel__action--close" aria-label="Close"></button>
+      <button class="sk-terminal-panel__action sk-terminal-panel__action--minimize" aria-label="Minimize"></button>
+      <button class="sk-terminal-panel__action sk-terminal-panel__action--maximize" aria-label="Maximize"></button>
+    </div>
+  </div>
+  <div class="sk-terminal-panel__body">
+    <div><span class="sk-terminal-panel__prompt">$ </span><span class="sk-terminal-panel__command">npx skeehn init</span></div>
+    <div class="sk-terminal-panel__output">✓ Created skeehn.config.js
+✓ Installed dependencies
+✓ Generated theme tokens</div>
+    <div><span class="sk-terminal-panel__prompt">$ </span><span class="sk-terminal-panel__command">npm run dev</span></div>
+    <div class="sk-terminal-panel__output">Server running at http://localhost:3000</div>
+  </div>
+  <div class="sk-terminal-panel__input">
+    <span class="sk-terminal-panel__prompt">$ </span>
+    <input class="sk-terminal-panel__input-field" type="text" placeholder="Enter command…" aria-label="Terminal input">
+  </div>
+</div>
+
+<!-- Terminal theme -->
+<div class="sk-terminal-panel" data-theme="terminal">
+  <div class="sk-terminal-panel__header">
+    <span class="sk-terminal-panel__title">zsh — skeehn</span>
+    <div class="sk-terminal-panel__actions">
+      <button class="sk-terminal-panel__action sk-terminal-panel__action--close" aria-label="Close"></button>
+      <button class="sk-terminal-panel__action sk-terminal-panel__action--minimize" aria-label="Minimize"></button>
+      <button class="sk-terminal-panel__action sk-terminal-panel__action--maximize" aria-label="Maximize"></button>
+    </div>
+  </div>
+  <div class="sk-terminal-panel__body">
+    <div><span class="sk-terminal-panel__prompt">~/skeehn ❯ </span><span class="sk-terminal-panel__command">git status</span></div>
+    <div class="sk-terminal-panel__output">On branch main
+Changes not staged for commit:
+  modified:   components/button/button.css
+  modified:   components/card/card.css</div>
+    <div><span class="sk-terminal-panel__prompt">~/skeehn ❯ </span><span class="sk-terminal-panel__command">git add -A && git commit -m "update dither patterns"</span></div>
+    <div class="sk-terminal-panel__output">[main a1b2c3d] update dither patterns
+ 2 files changed, 14 insertions(+), 6 deletions(-)</div>
+  </div>
+  <div class="sk-terminal-panel__input">
+    <span class="sk-terminal-panel__prompt">~/skeehn ❯ </span>
+    <input class="sk-terminal-panel__input-field" type="text" placeholder="Enter command…" aria-label="Terminal input">
+  </div>
+</div>
+
+<!-- Brutal theme -->
+<div class="sk-terminal-panel" data-theme="brutal">
+  <div class="sk-terminal-panel__header">
+    <span class="sk-terminal-panel__title">Build Output</span>
+    <div class="sk-terminal-panel__actions">
+      <button class="sk-terminal-panel__action sk-terminal-panel__action--close" aria-label="Close"></button>
+      <button class="sk-terminal-panel__action sk-terminal-panel__action--minimize" aria-label="Minimize"></button>
+      <button class="sk-terminal-panel__action sk-terminal-panel__action--maximize" aria-label="Maximize"></button>
+    </div>
+  </div>
+  <div class="sk-terminal-panel__body">
+    <div><span class="sk-terminal-panel__prompt">$ </span><span class="sk-terminal-panel__command">npm run build</span></div>
+    <div class="sk-terminal-panel__output">Building skeehn components...
+  ✓ badge.css      0.8 KB
+  ✓ button.css     2.1 KB
+  ✓ card.css       1.4 KB
+  ✓ dialog.css     1.2 KB
+  ✓ motion.css     3.6 KB
+
+Build complete — 25 components, 42.3 KB total</div>
+  </div>
+</div>
+
+<!-- Default theme without input (output-only) -->
+<div class="sk-terminal-panel">
+  <div class="sk-terminal-panel__header">
+    <span class="sk-terminal-panel__title">Logs</span>
+    <div class="sk-terminal-panel__actions">
+      <button class="sk-terminal-panel__action sk-terminal-panel__action--close" aria-label="Close"></button>
+      <button class="sk-terminal-panel__action sk-terminal-panel__action--minimize" aria-label="Minimize"></button>
+      <button class="sk-terminal-panel__action sk-terminal-panel__action--maximize" aria-label="Maximize"></button>
+    </div>
+  </div>
+  <div class="sk-terminal-panel__body">
+    <div class="sk-terminal-panel__output">[10:32:01] INFO  Server started on port 3000
+[10:32:04] INFO  Connected to database
+[10:32:05] WARN  Deprecated API endpoint /v1/themes
+[10:32:12] INFO  Request GET /components — 200 (12ms)</div>
+  </div>
+</div>

@@ -1,0 +1,8 @@
+.sk-toggle { display: inline-flex; align-items: center; gap: var(--sk-space-2); cursor: pointer; user-select: none; font-family: var(--sk-font-mono); }
+.sk-toggle__input { position: absolute; opacity: 0; width: 0; height: 0; }
+.sk-toggle__thumb { width: 2.5rem; height: 1.25rem; background: hsl(var(--sk-muted)); border: var(--sk-border); border-radius: var(--sk-radius); position: relative; transition: all var(--sk-transition); flex-shrink: 0; }
+.sk-toggle__thumb::before { content: ""; position: absolute; top: 2px; left: 2px; width: calc(1.25rem - 4px); height: calc(1.25rem - 4px); background: hsl(var(--sk-background)); border: var(--sk-border); border-radius: var(--sk-radius); transition: all var(--sk-transition); }
+.sk-toggle__input:checked + .sk-toggle__thumb { background: hsl(var(--sk-primary)); border-color: hsl(var(--sk-primary)); }
+.sk-toggle__input:checked + .sk-toggle__thumb::before { transform: translateX(1.25rem); }
+.sk-toggle__input:checked + .sk-toggle__thumb::after { content: ""; position: absolute; inset: 0; background-image: var(--sk-dither-pattern); background-repeat: repeat; opacity: var(--sk-dither-opacity); border-radius: inherit; pointer-events: none; }
+.sk-toggle__label { font-size: var(--sk-font-size-sm); color: hsl(var(--sk-foreground)); letter-spacing: 0.02em; }

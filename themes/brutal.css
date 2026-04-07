@@ -1,0 +1,8 @@
+/* skeehn — Brutal: Heavy ASCII Blocks */
+:root[data-theme="brutal"] {
+  --sk-background: 0 0% 98%; --sk-foreground: 0 0% 5%; --sk-primary: 0 0% 5%;
+  --sk-secondary: 0 0% 92%; --sk-muted: 0 0% 92%; --sk-muted-foreground: 0 0% 40%;
+  --sk-accent: 50 100% 50%; --sk-accent-foreground: 0 0% 5%; --sk-border-color: 0 0% 70%;
+  --sk-ring: 0 0% 5%; --sk-dither-pattern: var(--sk-dither-blocks-75); --sk-dither-opacity: 0.25;
+  --sk-border-width: 2px;
+}

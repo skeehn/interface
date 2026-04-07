@@ -1,0 +1,9 @@
+.sk-table { width: 100%; border-collapse: collapse; font-family: var(--sk-font-mono); font-size: var(--sk-font-size-sm); }
+.sk-table thead tr { border-bottom: 2px solid hsl(var(--sk-border)); }
+.sk-table th { padding: var(--sk-space-2) var(--sk-space-3); text-align: left; font-weight: 600; font-size: var(--sk-font-size-xs); letter-spacing: 0.03em; text-transform: uppercase; }
+.sk-table td { padding: var(--sk-space-2) var(--sk-space-3); color: hsl(var(--sk-muted-foreground)); border-bottom: var(--sk-border); }
+.sk-table tbody tr { position: relative; }
+.sk-table tbody tr::before { content: ""; position: absolute; inset: 0; background-image: var(--sk-dither-pattern); background-repeat: repeat; opacity: 0; pointer-events: none; transition: opacity var(--sk-transition-fast); }
+.sk-table tbody tr:hover::before { opacity: calc(var(--sk-dither-opacity, 0.15) * 0.3); }
+.sk-table tbody tr:last-child td { border-bottom: none; }
+.sk-table__actions { text-align: right; }

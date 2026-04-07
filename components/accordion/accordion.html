@@ -1,0 +1,54 @@
+<!-- skeehn — Accordion Component -->
+
+<!-- Accordion with first item open -->
+<div class="sk-accordion">
+  <div class="sk-accordion__item" data-open>
+    <button class="sk-accordion__trigger" data-accordion-trigger aria-expanded="true" aria-controls="accordion-1">
+      What is skeehn?
+      <span class="sk-accordion__chevron" aria-hidden="true">▼</span>
+    </button>
+    <div class="sk-accordion__content" id="accordion-1" role="region">
+      <p>skeehn is the ASCII-native UI framework where texture is a first-class design primitive. It uses dither patterns and monospace typography to create a distinctive terminal aesthetic.</p>
+    </div>
+  </div>
+  <div class="sk-accordion__item">
+    <button class="sk-accordion__trigger" data-accordion-trigger aria-expanded="false" aria-controls="accordion-2">
+      How do I install it?
+      <span class="sk-accordion__chevron" aria-hidden="true">▼</span>
+    </button>
+    <div class="sk-accordion__content" id="accordion-2" role="region" hidden>
+      <p>Install via npm with npx skeehn init, then import the CSS and optional JS modules into your project.</p>
+    </div>
+  </div>
+  <div class="sk-accordion__item">
+    <button class="sk-accordion__trigger" data-accordion-trigger aria-expanded="false" aria-controls="accordion-3">
+      Does it require JavaScript?
+      <span class="sk-accordion__chevron" aria-hidden="true">▼</span>
+    </button>
+    <div class="sk-accordion__content" id="accordion-3" role="region" hidden>
+      <p>Most components are CSS-only. Minimal JS is provided for interactive behaviors like tabs, accordions, and dropdowns.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Accordion with all items collapsed -->
+<div class="sk-accordion">
+  <div class="sk-accordion__item">
+    <button class="sk-accordion__trigger" data-accordion-trigger aria-expanded="false" aria-controls="accordion-4">
+      Customization
+      <span class="sk-accordion__chevron" aria-hidden="true">▼</span>
+    </button>
+    <div class="sk-accordion__content" id="accordion-4" role="region" hidden>
+      <p>Override --sk-* custom properties to customize colors, spacing, typography, and dither patterns globally or per component.</p>
+    </div>
+  </div>
+  <div class="sk-accordion__item">
+    <button class="sk-accordion__trigger" data-accordion-trigger aria-expanded="false" aria-controls="accordion-5">
+      Browser Support
+      <span class="sk-accordion__chevron" aria-hidden="true">▼</span>
+    </button>
+    <div class="sk-accordion__content" id="accordion-5" role="region" hidden>
+      <p>skeehn supports all modern browsers including Chrome, Firefox, Safari, and Edge.</p>
+    </div>
+  </div>
+</div>

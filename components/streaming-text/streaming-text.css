@@ -1,0 +1,15 @@
+/*
+ * skeehn — StreamingText Component
+ * Text streaming animation with dither effects.
+ */
+
+.sk-streaming-text { font-family: var(--sk-font-mono); font-size: var(--sk-font-size-sm); line-height: var(--sk-line-height); white-space: pre-wrap; position: relative; }
+.sk-streaming-text[data-cursor="true"]::after { content: "▋"; display: inline-block; color: hsl(var(--sk-primary)); animation: sk-ascii-blink 1s steps(2) infinite; margin-left: 0.1em; }
+.sk-streaming-text[data-effect="scanline"] { position: relative; }
+.sk-streaming-text[data-effect="scanline"]::before { content: ""; position: absolute; left: 0; right: 0; height: 1.5em; background: linear-gradient(to bottom, transparent, hsl(var(--sk-primary) / 0.05), transparent); animation: sk-scanline 2s linear infinite; pointer-events: none; }
+@keyframes sk-scanline { 0% { top: -1.5em; } 100% { top: 100%; } }
+.sk-streaming-text[data-effect="wave"] span { display: inline-block; animation: sk-wave 1.5s ease-in-out infinite; }
+@keyframes sk-wave { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-0.1em); } }
+.sk-streaming-text[data-effect="fade"] span { display: inline-block; opacity: 0; animation: sk-fade-in 0.3s ease forwards; }
+@keyframes sk-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sk-ascii-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }

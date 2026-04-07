@@ -1,0 +1,21 @@
+/*
+ * skeehn — ToolCard Component
+ * Tool execution result with box-drawing borders.
+ */
+
+.sk-tool-card { border: 2px solid hsl(var(--sk-border)); border-radius: var(--sk-radius); overflow: hidden; font-family: var(--sk-font-mono); margin-bottom: var(--sk-space-3); }
+.sk-tool-card__header { display: flex; align-items: center; justify-content: space-between; padding: var(--sk-space-2) var(--sk-space-3); background: hsl(var(--sk-muted) / 0.5); border-bottom: var(--sk-border); position: relative; }
+.sk-tool-card__name { font-size: var(--sk-font-size-sm); font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; }
+.sk-tool-card__status { font-size: var(--sk-font-size-xs); padding: 0.1em var(--sk-space-2); border-radius: var(--sk-radius-full); letter-spacing: 0.02em; }
+.sk-tool-card[data-status="pending"] .sk-tool-card__status { background: hsl(var(--sk-muted)); color: hsl(var(--sk-muted-foreground)); }
+.sk-tool-card[data-status="running"] .sk-tool-card__status { background: hsl(var(--sk-info) / 0.15); color: hsl(var(--sk-info)); }
+.sk-tool-card[data-status="success"] .sk-tool-card__status { background: hsl(var(--sk-success) / 0.15); color: hsl(var(--sk-success)); }
+.sk-tool-card[data-status="error"] .sk-tool-card__status { background: hsl(var(--sk-destructive) / 0.15); color: hsl(var(--sk-destructive)); }
+.sk-tool-card__body { padding: var(--sk-space-3); font-size: var(--sk-font-size-xs); position: relative; }
+.sk-tool-card__body::before { content: ""; position: absolute; inset: 0; background-image: var(--sk-dither-pattern); background-repeat: repeat; opacity: calc(var(--sk-dither-opacity, 0.15) * 0.1); pointer-events: none; }
+.sk-tool-card__body > * { position: relative; z-index: 1; }
+.sk-tool-card__input, .sk-tool-card__output { margin-bottom: var(--sk-space-2); }
+.sk-tool-card__label { font-size: var(--sk-font-size-xs); font-weight: 600; color: hsl(var(--sk-muted-foreground)); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: var(--sk-space-1); }
+.sk-tool-card__code { font-family: var(--sk-font-mono); font-size: var(--sk-font-size-xs); padding: var(--sk-space-2); background: hsl(var(--sk-muted) / 0.3); border: var(--sk-border); border-radius: var(--sk-radius); overflow-x: auto; white-space: pre-wrap; color: hsl(var(--sk-foreground)); }
+.sk-tool-card[data-status="running"] .sk-tool-card__header::after { content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: hsl(var(--sk-info)); animation: sk-progress-slide 1.5s ease-in-out infinite; }
+@keyframes sk-progress-slide { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }

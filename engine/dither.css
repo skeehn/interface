@@ -1,0 +1,206 @@
+/**
+ * skeehn — ASCII Dither CSS Engine
+ *
+ * CSS custom properties for ASCII dither rendering.
+ * 8 dither patterns as SVG data URIs using ASCII characters.
+ *
+ * Usage:
+ *   @import 'dither.css'
+ *   .my-element { --sk-dither-pattern: var(--sk-dither-floyd); }
+ */
+
+/* ═══════════════════════════════════════════════════════════
+   ASCII CHARACTER PATTERNS (SVG Data URIs)
+   Each pattern renders ASCII characters as a repeating background
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  /* Block shade patterns — ░▒▓█ */
+  --sk-dither-blocks-25: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Ctext x='0' y='13' font-family='monospace' font-size='14' fill='%23000'%3E░%3C/text%3E%3C/svg%3E");
+  --sk-dither-blocks-50: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Ctext x='0' y='13' font-family='monospace' font-size='14' fill='%23000'%3E▒%3C/text%3E%3C/svg%3E");
+  --sk-dither-blocks-75: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Ctext x='0' y='13' font-family='monospace' font-size='14' fill='%23000'%3E▓%3C/text%3E%3C/svg%3E");
+  --sk-dither-blocks-100: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Ctext x='0' y='13' font-family='monospace' font-size='14' fill='%23000'%3E█%3C/text%3E%3C/svg%3E");
+
+  /* Bayer ordered dither — 4×4 matrix pattern */
+  --sk-dither-bayer: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Cdefs%3E%3Cpattern id='b' width='8' height='8' patternUnits='userSpaceOnUse'%3E%3Crect x='0' y='0' width='4' height='4' fill='%23000' opacity='0.1'/%3E%3Crect x='4' y='0' width='4' height='4' fill='%23000' opacity='0.6'/%3E%3Crect x='0' y='4' width='4' height='4' fill='%23000' opacity='0.3'/%3E%3Crect x='4' y='4' width='4' height='4' fill='%23000' opacity='0.8'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='32' height='32' fill='url(%23b)'/%3E%3C/svg%3E");
+
+  /* Floyd-Steinberg — organic noise pattern */
+  --sk-dither-floyd: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='fs'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23fs)' opacity='0.2'/%3E%3C/svg%3E");
+
+  /* Crosshatch — intersecting diagonals */
+  --sk-dither-crosshatch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath d='M-1,2 l3,-3 M0,6 l6,-6 M4,10 l10,-10 M8,12 l12,-12 M2,-1 l-2,2 M6,0 l-6,6 M10,4 l-4,4 M12,8 l-8,8' stroke='%23000' stroke-width='1' fill='none'/%3E%3C/svg%3E");
+
+  /* Diagonal — parallel lines at 45° */
+  --sk-dither-diagonal: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath d='M-1,2 l3,-3 M0,6 l6,-6 M4,10 l10,-10 M8,12 l12,-12' stroke='%23000' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+
+  /* Dots — clean circle grid */
+  --sk-dither-dots: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Ccircle cx='2' cy='2' r='1' fill='%23000'/%3E%3C/svg%3E");
+
+  /* Noise — organic grain via feTurbulence */
+  --sk-dither-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E");
+
+  /* Scanlines — CRT horizontal lines */
+  --sk-dither-scanlines: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect x='0' y='0' width='4' height='1' fill='%23000' opacity='0.15'/%3E%3C/svg%3E");
+
+  /* Checker — alternating squares */
+  --sk-dither-checker: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Crect width='4' height='4' fill='%23000' opacity='0.15'/%3E%3Crect x='4' y='4' width='4' height='4' fill='%23000' opacity='0.15'/%3E%3C/svg%3E");
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ASCII BORDER CHARACTERS
+   Box-drawing characters for component borders
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  --sk-border-h: "─";
+  --sk-border-v: "│";
+  --sk-border-tl: "┌";
+  --sk-border-tr: "┐";
+  --sk-border-bl: "└";
+  --sk-border-br: "┘";
+  --sk-border-cross: "┼";
+  --sk-border-tj: "┬";
+  --sk-border-bj: "┴";
+  --sk-border-lj: "├";
+  --sk-border-rj: "┤";
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ASCII DENSITY PALETTE
+   ░▒▓█ characters as CSS content
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  --sk-block-empty: " ";
+  --sk-block-light: "░";
+  --sk-block-medium: "▒";
+  --sk-block-dark: "▓";
+  --sk-block-full: "█";
+  --sk-block-half-up: "▀";
+  --sk-block-half-down: "▄";
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DENSITY SYSTEM
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  --sk-density: 50%;
+  --sk-dither-pattern: var(--sk-dither-floyd);
+  --sk-dither-opacity: 0.15;
+  --sk-dither-size: auto;
+  --sk-char-palette: 'blocks';
+}
+
+:root[data-density="sparse"]   { --sk-density: 25%; --sk-dither-opacity: 0.06; }
+:root[data-density="normal"]   { --sk-density: 50%; --sk-dither-opacity: 0.15; }
+:root[data-density="dense"]    { --sk-density: 75%; --sk-dither-opacity: 0.3; }
+:root[data-density="solid"]    { --sk-density: 100%; --sk-dither-opacity: 0.5; }
+
+/* ═══════════════════════════════════════════════════════════
+   UTILITY CLASSES
+   ═══════════════════════════════════════════════════════════ */
+
+.sk-fill-25   { background-image: var(--sk-dither-blocks-25); background-size: 16px 16px; background-repeat: repeat; }
+.sk-fill-50   { background-image: var(--sk-dither-blocks-50); background-size: 16px 16px; background-repeat: repeat; }
+.sk-fill-75   { background-image: var(--sk-dither-blocks-75); background-size: 16px 16px; background-repeat: repeat; }
+.sk-fill-100  { background-image: var(--sk-dither-blocks-100); background-size: 16px 16px; background-repeat: repeat; }
+
+.sk-fill-bayer      { background-image: var(--sk-dither-bayer); background-size: 32px 32px; background-repeat: repeat; }
+.sk-fill-floyd      { background-image: var(--sk-dither-floyd); background-repeat: repeat; }
+.sk-fill-crosshatch { background-image: var(--sk-dither-crosshatch); background-size: 12px 12px; background-repeat: repeat; }
+.sk-fill-diagonal   { background-image: var(--sk-dither-diagonal); background-size: 12px 12px; background-repeat: repeat; }
+.sk-fill-dots       { background-image: var(--sk-dither-dots); background-size: 8px 8px; background-repeat: repeat; }
+.sk-fill-noise      { background-image: var(--sk-dither-noise); background-repeat: repeat; }
+.sk-fill-scanlines  { background-image: var(--sk-dither-scanlines); background-size: 4px 4px; background-repeat: repeat; }
+.sk-fill-checker    { background-image: var(--sk-dither-checker); background-size: 8px 8px; background-repeat: repeat; }
+
+/* ═══════════════════════════════════════════════════════════
+   ASCII DITHER OVERLAY
+   ═══════════════════════════════════════════════════════════ */
+
+.sk-dither { position: relative; }
+
+.sk-dither::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--sk-dither-pattern);
+  background-repeat: repeat;
+  background-size: var(--sk-dither-size, auto);
+  opacity: var(--sk-dither-opacity, 0.15);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ASCII BORDER RENDERING (using pseudo-elements)
+   ═══════════════════════════════════════════════════════════ */
+
+.sk-border-ascii {
+  position: relative;
+  font-family: var(--sk-font-mono, monospace);
+}
+
+/* Top border */
+.sk-border-ascii::before {
+  content: "┌────────────────────┐";
+  display: block;
+  font-size: 0.5rem;
+  line-height: 1;
+  color: hsl(var(--sk-border-color));
+  letter-spacing: 0;
+}
+
+/* Bottom border */
+.sk-border-ascii::after {
+  content: "└────────────────────┘";
+  display: block;
+  font-size: 0.5rem;
+  line-height: 1;
+  color: hsl(var(--sk-border-color));
+  letter-spacing: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════════════════════ */
+
+@keyframes sk-dither-pulse {
+  0%, 100% { opacity: 0.08; }
+  50%      { opacity: 0.25; }
+}
+
+@keyframes sk-dither-morph {
+  0%   { background-image: var(--sk-dither-blocks-25); }
+  33%  { background-image: var(--sk-dither-blocks-50); }
+  66%  { background-image: var(--sk-dither-blocks-75); }
+  100% { background-image: var(--sk-dither-blocks-100); }
+}
+
+@keyframes sk-dither-scan {
+  0%   { background-position: 0 0; }
+  100% { background-position: 0 4px; }
+}
+
+@keyframes sk-ascii-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.sk-animate-pulse  { animation: sk-dither-pulse 2s ease-in-out infinite; }
+.sk-animate-morph  { animation: sk-dither-morph 1.5s steps(4) infinite; }
+.sk-animate-scan   { animation: sk-dither-scan 0.1s linear infinite; }
+.sk-animate-blink  { animation: sk-ascii-blink 1s steps(2) infinite; }
+
+/* ═══════════════════════════════════════════════════════════
+   ACCESSIBILITY
+   ═══════════════════════════════════════════════════════════ */
+
+@media (prefers-contrast: more) {
+  .sk-dither::before { background-image: none !important; content: "" !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [class*="sk-animate-"] { animation: none !important; }
+}

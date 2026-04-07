@@ -1,0 +1,51 @@
+/* skeehn — DitherPulse */
+.sk-dither-pulse { position: relative; overflow: hidden; }
+.sk-dither-pulse::before { content: ""; position: absolute; inset: 0; background-image: var(--sk-dither-pattern); background-repeat: repeat; pointer-events: none; border-radius: inherit; }
+.sk-dither-pulse[data-effect="pulse"]::before { animation: sk-dither-pulse 2s ease-in-out infinite; }
+.sk-dither-pulse[data-effect="morph"]::before { animation: sk-dither-morph 1.5s steps(4) infinite; }
+.sk-dither-pulse[data-effect="scan"]::before { animation: sk-dither-scan 0.1s linear infinite; }
+.sk-dither-pulse[data-effect="flow"]::before { animation: sk-flow 3s linear infinite; }
+@keyframes sk-flow { 0% { background-position: 0 0; } 100% { background-position: 100% 100%; } }
+
+/* skeehn — AsciiRain */
+.sk-ascii-rain { position: relative; overflow: hidden; font-family: var(--sk-font-mono); font-size: 0.75rem; line-height: 1; color: hsl(var(--sk-primary) / 0.6); white-space: pre; }
+.sk-ascii-rain__column { position: absolute; top: -100%; animation: sk-rain-fall linear infinite; }
+@keyframes sk-rain-fall { 0% { transform: translateY(-100%); } 100% { transform: translateY(200vh); } }
+.sk-ascii-rain[data-density="sparse"] .sk-ascii-rain__column { opacity: 0.3; }
+.sk-ascii-rain[data-density="normal"] .sk-ascii-rain__column { opacity: 0.6; }
+.sk-ascii-rain[data-density="dense"] .sk-ascii-rain__column { opacity: 1; }
+
+/* skeehn — Glitch */
+.sk-glitch { position: relative; }
+.sk-glitch[data-active="true"] { animation: sk-glitch 0.3s steps(2) infinite; }
+.sk-glitch[data-active="true"]::before { content: attr(data-text); position: absolute; inset: 0; color: hsl(var(--sk-destructive)); clip-path: inset(0 0 60% 0); animation: sk-glitch-clip 0.3s steps(2) infinite; }
+.sk-glitch[data-active="true"]::after { content: attr(data-text); position: absolute; inset: 0; color: hsl(var(--sk-info)); clip-path: inset(60% 0 0 0); animation: sk-glitch-clip 0.3s steps(2) reverse infinite; }
+@keyframes sk-glitch { 0% { transform: translate(0); } 20% { transform: translate(-2px, 2px); } 40% { transform: translate(2px, -2px); } 60% { transform: translate(-1px, -1px); } 80% { transform: translate(1px, 1px); } 100% { transform: translate(0); } }
+@keyframes sk-glitch-clip { 0% { clip-path: inset(0 0 80% 0); } 50% { clip-path: inset(20% 0 40% 0); } 100% { clip-path: inset(60% 0 0 0); } }
+.sk-glitch[data-intensity="severe"] { animation-duration: 0.1s; }
+.sk-glitch[data-intensity="subtle"] { animation-duration: 0.5s; opacity: 0.8; }
+
+/* skeehn — TextureMask */
+.sk-texture-mask { position: relative; overflow: hidden; }
+.sk-texture-mask__reveal { position: absolute; inset: 0; background-image: var(--sk-dither-pattern); background-repeat: repeat; opacity: 0; pointer-events: none; transition: opacity var(--sk-transition); border-radius: inherit; }
+.sk-texture-mask[data-trigger="hover"]:hover .sk-texture-mask__reveal { opacity: var(--sk-dither-opacity); }
+.sk-texture-mask[data-trigger="focus"]:focus-within .sk-texture-mask__reveal { opacity: var(--sk-dither-opacity); }
+.sk-texture-mask[data-trigger="active"]:active .sk-texture-mask__reveal { opacity: var(--sk-dither-opacity); }
+.sk-texture-mask[data-direction="fade"] .sk-texture-mask__reveal { mask-image: linear-gradient(to right, transparent, black); -webkit-mask-image: linear-gradient(to right, transparent, black); }
+.sk-texture-mask[data-direction="wipe"] .sk-texture-mask__reveal { mask-image: linear-gradient(to right, black 0%, transparent 100%); -webkit-mask-image: linear-gradient(to right, black 0%, transparent 100%); animation: sk-wipe 2s ease-in-out infinite; }
+@keyframes sk-wipe { 0%, 100% { mask-size: 0% 100%; -webkit-mask-size: 0% 100%; } 50% { mask-size: 100% 100%; -webkit-mask-size: 100% 100%; } }
+.sk-texture-mask[data-direction="dissolve"] .sk-texture-mask__reveal { animation: sk-dissolve 2s ease-in-out infinite; }
+@keyframes sk-dissolve { 0%, 100% { opacity: 0; } 50% { opacity: var(--sk-dither-opacity); } }
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .sk-dither-pulse::before,
+  .sk-ascii-rain__column,
+  .sk-glitch[data-active="true"],
+  .sk-glitch[data-active="true"]::before,
+  .sk-glitch[data-active="true"]::after,
+  .sk-texture-mask[data-direction="wipe"] .sk-texture-mask__reveal,
+  .sk-texture-mask[data-direction="dissolve"] .sk-texture-mask__reveal {
+    animation: none !important;
+  }
+}

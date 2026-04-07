@@ -1,0 +1,4 @@
+.sk-tooltip-wrapper { position: relative; display: inline-flex; }
+.sk-tooltip { position: absolute; bottom: calc(100% + var(--sk-space-1)); left: 50%; transform: translateX(-50%); padding: var(--sk-space-1) var(--sk-space-2); font-family: var(--sk-font-mono); font-size: var(--sk-font-size-xs); color: hsl(var(--sk-background)); background: hsl(var(--sk-foreground)); border-radius: var(--sk-radius); white-space: nowrap; opacity: 0; visibility: hidden; transition: all var(--sk-transition-fast); z-index: var(--sk-z-tooltip); pointer-events: none; letter-spacing: 0.02em; }
+.sk-tooltip::after { content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 4px solid transparent; border-top-color: hsl(var(--sk-foreground)); }
+.sk-tooltip-wrapper:hover .sk-tooltip, .sk-tooltip-wrapper:focus-within .sk-tooltip { opacity: 1; visibility: visible; }

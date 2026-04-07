@@ -1,0 +1,13 @@
+{
+  "name": "skeehn-monorepo",
+  "private": true,
+  "workspaces": ["packages/*", "apps/*"],
+  "scripts": {
+    "test": "bun test",
+    "demo": "cd demo && bun run ../demo/server.ts",
+    "registry": "cd apps/registry-api && bun run index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}

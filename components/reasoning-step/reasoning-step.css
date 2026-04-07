@@ -1,0 +1,20 @@
+/*
+ * skeehn — ReasoningStep Component
+ * Expandable reasoning trace with dither unfold animation.
+ */
+
+.sk-reasoning-step { margin-bottom: var(--sk-space-3); border: var(--sk-border); border-radius: var(--sk-radius); overflow: hidden; font-family: var(--sk-font-mono); }
+.sk-reasoning-step__header { display: flex; align-items: center; gap: var(--sk-space-2); padding: var(--sk-space-2) var(--sk-space-3); background: hsl(var(--sk-muted) / 0.5); cursor: pointer; transition: background var(--sk-transition-fast); }
+.sk-reasoning-step__header:hover { background: hsl(var(--sk-muted)); }
+.sk-reasoning-step__indicator { width: 0.5rem; height: 0.5rem; border-radius: var(--sk-radius-full); flex-shrink: 0; }
+.sk-reasoning-step[data-status="pending"] .sk-reasoning-step__indicator { background: hsl(var(--sk-muted-foreground)); }
+.sk-reasoning-step[data-status="active"] .sk-reasoning-step__indicator { background: hsl(var(--sk-info)); animation: sk-dither-pulse 1.5s ease-in-out infinite; }
+.sk-reasoning-step[data-status="completed"] .sk-reasoning-step__indicator { background: hsl(var(--sk-success)); }
+.sk-reasoning-step[data-status="error"] .sk-reasoning-step__indicator { background: hsl(var(--sk-destructive)); }
+.sk-reasoning-step__title { flex: 1; font-size: var(--sk-font-size-sm); font-weight: 500; letter-spacing: 0.01em; }
+.sk-reasoning-step__chevron { font-size: var(--sk-font-size-xs); color: hsl(var(--sk-muted-foreground)); transition: transform var(--sk-transition); }
+.sk-reasoning-step[data-expanded="true"] .sk-reasoning-step__chevron { transform: rotate(90deg); }
+.sk-reasoning-step__content { padding: var(--sk-space-3); font-size: var(--sk-font-size-xs); color: hsl(var(--sk-muted-foreground)); line-height: var(--sk-line-height); position: relative; background: hsl(var(--sk-background)); }
+.sk-reasoning-step[data-expanded="true"] .sk-reasoning-step__content::before { content: ""; position: absolute; inset: 0; background-image: var(--sk-dither-pattern); background-repeat: repeat; opacity: calc(var(--sk-dither-opacity, 0.15) * 0.15); pointer-events: none; }
+.sk-reasoning-step__content > * { position: relative; z-index: 1; }
+.sk-reasoning-step[hidden] .sk-reasoning-step__content { display: none; }

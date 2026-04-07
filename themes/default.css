@@ -1,0 +1,7 @@
+/* skeehn — Default: Technical Minimalist */
+:root[data-theme="default"] {
+  --sk-background: 0 0% 100%; --sk-foreground: 0 0% 3.9%; --sk-primary: 0 0% 9%;
+  --sk-secondary: 0 0% 96.1%; --sk-muted: 0 0% 96.1%; --sk-muted-foreground: 0 0% 45.1%;
+  --sk-accent: 0 0% 94%; --sk-accent-foreground: 0 0% 9%; --sk-border-color: 0 0% 85%;
+  --sk-ring: 0 0% 3.9%; --sk-dither-pattern: var(--sk-dither-floyd); --sk-dither-opacity: 0.12;
+}

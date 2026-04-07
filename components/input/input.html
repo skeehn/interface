@@ -1,0 +1,36 @@
+<!-- skeehn — Input Component -->
+
+<!-- Default input -->
+<div class="sk-input-group">
+  <label class="sk-input-label" for="input-default">Username</label>
+  <input class="sk-input" id="input-default" type="text" placeholder="Enter username">
+</div>
+
+<!-- Input with dither focus effect -->
+<div class="sk-input-group">
+  <label class="sk-input-label" for="input-dither">API Key</label>
+  <input class="sk-input" id="input-dither" type="text" placeholder="sk-xxxx" data-dither>
+</div>
+
+<!-- Error state -->
+<div class="sk-input-group">
+  <label class="sk-input-label" for="input-error">Email</label>
+  <input class="sk-input" id="input-error" type="email" placeholder="user@example.com" data-state="error" aria-invalid="true" aria-describedby="input-error-hint">
+  <span class="sk-input-hint" id="input-error-hint">Invalid email address</span>
+</div>
+
+<!-- Disabled state -->
+<div class="sk-input-group">
+  <label class="sk-input-label" for="input-disabled">Read Only</label>
+  <input class="sk-input" id="input-disabled" type="text" value="Locked value" disabled aria-disabled="true">
+</div>
+
+<!-- Standalone input (no group) -->
+<input class="sk-input" type="text" placeholder="Standalone input" aria-label="Standalone input">
+
+<!-- Input with dither focus and error combined -->
+<div class="sk-input-group">
+  <label class="sk-input-label" for="input-dither-error">Token</label>
+  <input class="sk-input" id="input-dither-error" type="text" placeholder="Enter token" data-dither data-state="error" aria-invalid="true" aria-describedby="input-dither-error-hint">
+  <span class="sk-input-hint" id="input-dither-error-hint">Token has expired</span>
+</div>

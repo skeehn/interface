@@ -1,0 +1,97 @@
+<!-- skeehn — AgentStatus Component -->
+
+<!-- Idle status (default variant) -->
+<div class="sk-agent-status" data-status="idle">
+  <span class="sk-agent-status__indicator" aria-hidden="true"></span>
+  <span class="sk-agent-status__text">Idle</span>
+</div>
+
+<!-- Thinking status (default variant) -->
+<div class="sk-agent-status" data-status="thinking">
+  <span class="sk-agent-status__indicator" aria-hidden="true"></span>
+  <span class="sk-agent-status__text">Thinking…</span>
+</div>
+
+<!-- Thinking status with pulse (default variant) -->
+<div class="sk-agent-status" data-status="thinking" data-pulse="true">
+  <span class="sk-agent-status__indicator" aria-hidden="true"></span>
+  <span class="sk-agent-status__text">Thinking…</span>
+</div>
+
+<!-- Acting status (default variant) -->
+<div class="sk-agent-status" data-status="acting">
+  <span class="sk-agent-status__indicator" aria-hidden="true"></span>
+  <span class="sk-agent-status__text">Executing tool</span>
+</div>
+
+<!-- Done status (default variant) -->
+<div class="sk-agent-status" data-status="done">
+  <span class="sk-agent-status__indicator" aria-hidden="true"></span>
+  <span class="sk-agent-status__text">Complete</span>
+</div>
+
+<!-- Error status (default variant) -->
+<div class="sk-agent-status" data-status="error">
+  <span class="sk-agent-status__indicator" aria-hidden="true"></span>
+  <span class="sk-agent-status__text">Error occurred</span>
+</div>
+
+<!-- Compact variant: idle -->
+<div class="sk-agent-status" data-status="idle" data-variant="compact">
+  <span class="sk-agent-status__indicator" aria-hidden="true"></span>
+  <span class="sk-agent-status__text">Idle</span>
+</div>
+
+<!-- Compact variant: thinking with pulse -->
+<div class="sk-agent-status" data-status="thinking" data-variant="compact" data-pulse="true">
+  <span class="sk-agent-status__indicator" aria-hidden="true"></span>
+  <span class="sk-agent-status__text">Thinking…</span>
+</div>
+
+<!-- Compact variant: acting -->
+<div class="sk-agent-status" data-status="acting" data-variant="compact">
+  <span class="sk-agent-status__indicator" aria-hidden="true"></span>
+  <span class="sk-agent-status__text">Acting</span>
+</div>
+
+<!-- Compact variant: done -->
+<div class="sk-agent-status" data-status="done" data-variant="compact">
+  <span class="sk-agent-status__indicator" aria-hidden="true"></span>
+  <span class="sk-agent-status__text">Done</span>
+</div>
+
+<!-- Compact variant: error -->
+<div class="sk-agent-status" data-status="error" data-variant="compact">
+  <span class="sk-agent-status__indicator" aria-hidden="true"></span>
+  <span class="sk-agent-status__text">Error</span>
+</div>
+
+<!-- Full variant: idle -->
+<div class="sk-agent-status" data-status="idle" data-variant="full">
+  <span class="sk-agent-status__indicator" aria-hidden="true"></span>
+  <span class="sk-agent-status__text">Agent idle — waiting for input</span>
+</div>
+
+<!-- Full variant: thinking with pulse -->
+<div class="sk-agent-status" data-status="thinking" data-variant="full" data-pulse="true">
+  <span class="sk-agent-status__indicator" aria-hidden="true"></span>
+  <span class="sk-agent-status__text">Agent thinking — analyzing request</span>
+</div>
+
+<!-- Full variant: acting -->
+<div class="sk-agent-status" data-status="acting" data-variant="full">
+  <span class="sk-agent-status__indicator" aria-hidden="true"></span>
+  <span class="sk-agent-status__text">Agent acting — executing search_files</span>
+</div>
+
+<!-- Full variant: done -->
+<div class="sk-agent-status" data-status="done" data-variant="full">
+  <span class="sk-agent-status__indicator" aria-hidden="true"></span>
+  <span class="sk-agent-status__text">Agent complete — task finished successfully</span>
+</div>
+
+<!-- Full variant: error -->
+<div class="sk-agent-status" data-status="error" data-variant="full">
+  <span class="sk-agent-status__indicator" aria-hidden="true"></span>
+  <span class="sk-agent-status__text">Agent error — failed to connect to API</span>
+</div>

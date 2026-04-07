@@ -1,0 +1,43 @@
+<!-- skeehn — Tabs Component -->
+
+<!-- Default tabs (first tab selected) -->
+<div class="sk-tabs">
+  <div class="sk-tabs__list" role="tablist" aria-label="Settings tabs">
+    <button class="sk-tabs__trigger" role="tab" data-tab="general" aria-selected="true" aria-controls="panel-general" id="tab-general">General</button>
+    <button class="sk-tabs__trigger" role="tab" data-tab="appearance" aria-selected="false" aria-controls="panel-appearance" id="tab-appearance">Appearance</button>
+    <button class="sk-tabs__trigger" role="tab" data-tab="advanced" aria-selected="false" aria-controls="panel-advanced" id="tab-advanced">Advanced</button>
+  </div>
+  <div class="sk-tabs__content" data-tab="general" role="tabpanel" id="panel-general" aria-labelledby="tab-general">
+    <h4 class="sk-tabs__panel-title">General Settings</h4>
+    <p>Configure your workspace name, language, and region preferences.</p>
+  </div>
+  <div class="sk-tabs__content" data-tab="appearance" role="tabpanel" id="panel-appearance" aria-labelledby="tab-appearance" hidden>
+    <h4 class="sk-tabs__panel-title">Appearance</h4>
+    <p>Customize theme, font size, and dither pattern intensity.</p>
+  </div>
+  <div class="sk-tabs__content" data-tab="advanced" role="tabpanel" id="panel-advanced" aria-labelledby="tab-advanced" hidden>
+    <h4 class="sk-tabs__panel-title">Advanced</h4>
+    <p>Developer options, API keys, and experimental features.</p>
+  </div>
+</div>
+
+<!-- Tabs with second tab selected -->
+<div class="sk-tabs">
+  <div class="sk-tabs__list" role="tablist" aria-label="Code tabs">
+    <button class="sk-tabs__trigger" role="tab" data-tab="html" aria-selected="false" aria-controls="panel-html" id="tab-html">HTML</button>
+    <button class="sk-tabs__trigger" role="tab" data-tab="css" aria-selected="true" aria-controls="panel-css" id="tab-css">CSS</button>
+    <button class="sk-tabs__trigger" role="tab" data-tab="js" aria-selected="false" aria-controls="panel-js" id="tab-js">JS</button>
+  </div>
+  <div class="sk-tabs__content" data-tab="html" role="tabpanel" id="panel-html" aria-labelledby="tab-html" hidden>
+    <h4 class="sk-tabs__panel-title">HTML</h4>
+    <p>Semantic markup with data-* attributes for variant selection.</p>
+  </div>
+  <div class="sk-tabs__content" data-tab="css" role="tabpanel" id="panel-css" aria-labelledby="tab-css">
+    <h4 class="sk-tabs__panel-title">CSS</h4>
+    <p>Pure CSS styling with custom properties and dither patterns.</p>
+  </div>
+  <div class="sk-tabs__content" data-tab="js" role="tabpanel" id="panel-js" aria-labelledby="tab-js" hidden>
+    <h4 class="sk-tabs__panel-title">JavaScript</h4>
+    <p>Minimal JS for interactive behaviors — no framework required.</p>
+  </div>
+</div>

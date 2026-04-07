@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="default" data-density="normal">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>skeehn — ASCII Native Rendering</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>░</text></svg>">
+  <link rel="stylesheet" href="../engine/reset.css">
+  <link rel="stylesheet" href="../engine/tokens.css">
+  <link rel="stylesheet" href="../engine/dither.css">
+  <link rel="stylesheet" href="../themes/default.css" id="theme-css">
+  <link rel="stylesheet" href="../components/button/button.css">
+  <link rel="stylesheet" href="../components/card/card.css">
+  <link rel="stylesheet" href="../components/input/input.css">
+  <link rel="stylesheet" href="../components/badge/badge.css">
+  <link rel="stylesheet" href="../components/alert/alert.css">
+  <link rel="stylesheet" href="../components/dialog/dialog.css">
+  <link rel="stylesheet" href="../components/tabs/tabs.css">
+  <link rel="stylesheet" href="../components/toggle/toggle.css">
+  <link rel="stylesheet" href="../components/progress/progress.css">
+  <link rel="stylesheet" href="../components/avatar/avatar.css">
+  <link rel="stylesheet" href="../components/tooltip/tooltip.css">
+  <link rel="stylesheet" href="../components/dropdown/dropdown.css">
+  <link rel="stylesheet" href="../components/table/table.css">
+  <link rel="stylesheet" href="../components/accordion/accordion.css">
+  <link rel="stylesheet" href="../components/chat-bubble/chat-bubble.css">
+  <link rel="stylesheet" href="../components/chat-input/chat-input.css">
+  <link rel="stylesheet" href="../components/reasoning-step/reasoning-step.css">
+  <link rel="stylesheet" href="../components/tool-card/tool-card.css">
+  <link rel="stylesheet" href="../components/citation-card/citation-card.css">
+  <link rel="stylesheet" href="../components/streaming-text/streaming-text.css">
+  <link rel="stylesheet" href="../components/terminal-panel/terminal-panel.css">
+  <link rel="stylesheet" href="../components/agent-status/agent-status.css">
+  <style>
+    body { max-width: 60rem; margin: 0 auto; padding: 2rem 1rem; background: hsl(var(--sk-background)); color: hsl(var(--sk-foreground)); }
+    .hdr { text-align: center; margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 2px solid hsl(var(--sk-border)); }
+    .hdr h1 { font-size: 3rem; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 0.25rem; font-family: var(--sk-font-mono); }
+    .hdr p { color: hsl(var(--sk-muted-foreground)); font-size: var(--sk-font-size-sm); font-family: var(--sk-font-mono); }
+    .ctrl { position: sticky; top: 0; z-index: 100; background: hsl(var(--sk-background)); border: 2px solid hsl(var(--sk-foreground)); padding: 0.75rem; margin-bottom: 2rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: center; font-family: var(--sk-font-mono); }
+    .ctrl label { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: hsl(var(--sk-muted-foreground)); }
+    .pill { display: inline-flex; gap: 1px; padding: 2px; background: hsl(var(--sk-muted)); border-radius: var(--sk-radius); }
+    .pill button { padding: 4px 8px; font-size: 0.6rem; font-weight: 600; font-family: var(--sk-font-mono); border: none; background: transparent; cursor: pointer; color: hsl(var(--sk-muted-foreground)); transition: all 60ms; letter-spacing: 0.03em; text-transform: uppercase; }
+    .pill button:hover { color: hsl(var(--sk-foreground)); }
+    .pill button.active { background: hsl(var(--sk-background)); color: hsl(var(--sk-foreground)); }
+    .sec { margin-bottom: 3rem; }
+    .sec h2 { font-size: var(--sk-font-size-lg); font-weight: 700; margin-bottom: 0.25rem; letter-spacing: 0.02em; text-transform: uppercase; font-family: var(--sk-font-mono); }
+    .sec > p { color: hsl(var(--sk-muted-foreground)); margin-bottom: 1rem; font-size: var(--sk-font-size-sm); font-family: var(--sk-font-mono); }
+    .row { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: 0.75rem; }
+    .block { max-width: 28rem; }
+    .ascii { font-family: var(--sk-font-mono); font-size: 0.45rem; line-height: 1.1; color: hsl(var(--sk-muted-foreground)); background: hsl(var(--sk-muted) / 0.3); padding: 0.5rem; border: var(--sk-border); border-radius: var(--sk-radius); margin-top: 0.5rem; white-space: pre; overflow-x: auto; }
+    .ft { text-align: center; padding-top: 2rem; border-top: 2px solid hsl(var(--sk-border)); color: hsl(var(--sk-muted-foreground)); font-size: var(--sk-font-size-sm); font-family: var(--sk-font-mono); }
+    .ft a { color: hsl(var(--sk-primary)); font-weight: 600; }
+    code { font-family: var(--sk-font-mono); font-size: 0.8em; padding: 1px 4px; background: hsl(var(--sk-muted)); border-radius: 2px; }
+
+    /* AI Chat Demo */
+    .chat-demo { border: 2px solid hsl(var(--sk-border)); border-radius: var(--sk-radius); overflow: hidden; }
+    .chat-demo__header { padding: var(--sk-space-3) var(--sk-space-4); background: hsl(var(--sk-muted) / 0.5); border-bottom: var(--sk-border); display: flex; align-items: center; gap: var(--sk-space-2); }
+    .chat-demo__header h3 { font-family: var(--sk-font-mono); font-size: var(--sk-font-size-sm); font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; margin: 0; }
+    .chat-demo__messages { padding: var(--sk-space-4); max-height: 24rem; overflow-y: auto; background: hsl(var(--sk-background)); }
+    .chat-demo__input { padding: var(--sk-space-3) var(--sk-space-4); border-top: var(--sk-border); background: hsl(var(--sk-muted) / 0.3); }
+
+    /* ASCII Art Preview */
+    .ascii-art-large { font-family: var(--sk-font-mono); font-size: 0.55rem; line-height: 1.15; color: hsl(var(--sk-foreground)); white-space: pre; overflow-x: auto; padding: 1rem; background: hsl(var(--sk-muted) / 0.2); border: var(--sk-border); border-radius: var(--sk-radius); }
+  </style>
+</head>
+<body>
+
+<header class="hdr">
+  <h1>skeehn</h1>
+  <p>ASCII as native rendering. The dither UI system.</p>
+</header>
+
+<div class="ctrl">
+  <div><label>Theme</label><br><div class="pill" id="tp">
+    <button data-t="default" class="active">Default</button>
+    <button data-t="brutal">Brutal</button>
+    <button data-t="terminal">Terminal</button>
+    <button data-t="print">Print</button>
+    <button data-t="grain">Grain</button>
+  </div></div>
+  <div><label>Pattern</label><br><div class="pill" id="pp">
+    <button data-p="bayer" class="active">Bayer</button>
+    <button data-p="floyd">Floyd</button>
+    <button data-p="cross">Cross</button>
+    <button data-p="diag">Diag</button>
+    <button data-p="dots">Dots</button>
+    <button data-p="noise">Noise</button>
+    <button data-p="scan">Scan</button>
+    <button data-p="checker">Checker</button>
+  </div></div>
+  <div><label>Density</label><br><div class="pill" id="dp">
+    <button data-d="sparse">Sparse</button>
+    <button data-d="normal" class="active">Normal</button>
+    <button data-d="dense">Dense</button>
+    <button data-d="solid">Solid</button>
+  </div></div>
+</div>
+
+<!-- CORE UI -->
+<section class="sec"><h2>Core UI</h2><p>14 components with ASCII dither variants.</p>
+  <div class="row">
+    <button class="sk-btn" data-variant="solid">Solid</button>
+    <button class="sk-btn" data-variant="dither">Dither</button>
+    <button class="sk-btn" data-variant="outline">Outline</button>
+    <button class="sk-btn" data-variant="ghost">Ghost</button>
+    <button class="sk-btn" data-variant="inverted">Inverted</button>
+    <button class="sk-btn" data-variant="dither" disabled>Disabled</button>
+  </div>
+  <div class="row">
+    <span class="sk-badge" data-variant="dither">Default</span>
+    <span class="sk-badge" data-variant="dither" data-color="success">Success</span>
+    <span class="sk-badge" data-variant="dither" data-color="warning">Warning</span>
+    <span class="sk-badge" data-variant="dither" data-color="destructive">Error</span>
+  </div>
+  <div class="block"><div class="sk-card" data-variant="dither">
+    <div class="sk-card__header"><h3 class="sk-card__title">Dither Card</h3></div>
+    <div class="sk-card__body"><p>Texture is the second dimension of visual identity.</p></div>
+    <div class="sk-card__footer"><span class="sk-card__footer-text">SKEEHN 0.3.0</span></div>
+  </div></div>
+  <div class="block">
+    <div class="sk-input-group"><label class="sk-input-label">Dither Focus</label><input class="sk-input" placeholder="Focus for dither..." data-dither></div>
+    <div class="sk-input-group"><label class="sk-input-label">Error</label><input class="sk-input" value="Invalid" data-state="error"><span class="sk-input-hint">Required</span></div>
+  </div>
+  <div class="block">
+    <div class="sk-alert" data-type="info"><div class="sk-alert__icon">ℹ</div><div class="sk-alert__content"><p class="sk-alert__title">Info</p><p class="sk-alert__description">Dither alert overlay.</p></div></div>
+    <div class="sk-alert" data-type="success" style="margin-top:0.5rem"><div class="sk-alert__icon">✓</div><div class="sk-alert__content"><p class="sk-alert__title">Success</p><p class="sk-alert__description">Saved.</p></div></div>
+  </div>
+</section>
+
+<!-- AI CHAT DEMO -->
+<section class="sec"><h2>AI Chat Interface</h2><p>Full AI chat with streaming, tool cards, and reasoning — all skeehn-styled.</p>
+  <div class="chat-demo">
+    <div class="chat-demo__header">
+      <div class="sk-agent-status" data-status="thinking" data-pulse="true">
+        <span class="sk-agent-status__indicator"></span>
+        <span class="sk-agent-status__text">Thinking...</span>
+      </div>
+    </div>
+    <div class="chat-demo__messages">
+      <div class="sk-chat-bubble" data-role="user"><p>What is skeehn?</p></div>
+      <div class="sk-chat-bubble" data-role="assistant" data-streaming>
+        <p>skeehn is the ASCII-native UI framework where texture is a first-class primitive</p>
+        <span class="sk-chat-bubble__cursor"></span>
+      </div>
+      <div class="sk-chat-bubble" data-role="tool">
+        <div class="sk-chat-bubble__tool-header">
+          <span class="sk-chat-bubble__tool-name">search_docs</span>
+          <span class="sk-badge" data-variant="dither" data-color="success">Done</span>
+        </div>
+        <pre class="sk-chat-bubble__tool-output">Query: "skeehn framework"</pre>
+      </div>
+      <div class="sk-reasoning-step" data-status="completed" data-expanded="true">
+        <div class="sk-reasoning-step__header">
+          <span class="sk-reasoning-step__indicator"></span>
+          <span class="sk-reasoning-step__title">Analyzing request</span>
+          <span class="sk-reasoning-step__chevron">▸</span>
+        </div>
+        <div class="sk-reasoning-step__content"><p>Understanding the user's question about skeehn's purpose and architecture.</p></div>
+      </div>
+      <div class="sk-citation-card">
+        <span class="sk-citation-card__icon">1</span>
+        <div class="sk-citation-card__content">
+          <span class="sk-citation-card__source">skeehn.dev/docs</span>
+          <p class="sk-citation-card__snippet">ASCII as native rendering — texture is the second dimension of visual identity.</p>
+          <div class="sk-citation-card__meta"><span>skeehn.dev</span><span>Confidence: 0.95</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="chat-demo__input">
+      <div class="sk-chat-input">
+        <div class="sk-chat-input__wrapper">
+          <input class="sk-chat-input__field sk-input" placeholder="Ask anything..." data-dither>
+          <div class="sk-chat-input__actions">
+            <button class="sk-chat-input__attach sk-btn" data-variant="ghost" data-size="sm">+</button>
+            <button class="sk-chat-input__send sk-btn" data-variant="dither" data-size="sm">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ASCII ART ENGINE -->
+<section class="sec"><h2>ASCII Art Engine</h2><p>Upload an image → real-time ASCII conversion with 4 dither algorithms.</p>
+  <div class="block">
+    <input type="file" id="img-upload" accept="image/*" style="margin-bottom:0.5rem">
+    <div class="ascii" id="ascii-out">Upload an image to see ASCII art...</div>
+    <div style="margin-top:0.5rem;display:flex;gap:0.5rem;flex-wrap:wrap">
+      <label style="font-size:var(--sk-font-size-xs);display:flex;align-items:center;gap:0.25rem"><input type="radio" name="algo" value="floyd" checked> Floyd-Steinberg</label>
+      <label style="font-size:var(--sk-font-size-xs);display:flex;align-items:center;gap:0.25rem"><input type="radio" name="algo" value="threshold"> Threshold</label>
+      <label style="font-size:var(--sk-font-size-xs);display:flex;align-items:center;gap:0.25rem"><input type="radio" name="algo" value="bayer"> Bayer</label>
+    </div>
+    <div style="margin-top:0.25rem">
+      <label style="font-size:var(--sk-font-size-xs)">Resolution: <span id="res-val">80</span> chars</label>
+      <input type="range" id="res-slider" min="40" max="200" value="80" style="width:100%;margin-top:0.25rem">
+    </div>
+  </div>
+</section>
+
+<!-- TEXT-TO-ASCII -->
+<section class="sec"><h2>Text-to-ASCII</h2><p>Type text → large block-letter ASCII art.</p>
+  <div class="block">
+    <input class="sk-input" id="text-input" placeholder="Type text..." value="HELLO" style="margin-bottom:0.5rem">
+    <div class="ascii-art-large" id="text-out"></div>
+  </div>
+</section>
+
+<!-- COMPONENT GALLERY -->
+<section class="sec"><h2>All Components</h2><p>22 components across 2 categories.</p>
+  <div class="block">
+    <table class="sk-table">
+      <thead><tr><th>Component</th><th>Category</th><th>Variants</th></tr></thead>
+      <tbody>
+        <tr><td>Button</td><td><span class="sk-badge" data-variant="dither" data-color="info">Core</span></td><td>6</td></tr>
+        <tr><td>ChatBubble</td><td><span class="sk-badge" data-variant="dither" data-color="success">AI</span></td><td>4</td></tr>
+        <tr><td>TerminalPanel</td><td><span class="sk-badge" data-variant="dither" data-color="success">AI</span></td><td>3</td></tr>
+        <tr><td>AgentStatus</td><td><span class="sk-badge" data-variant="dither" data-color="success">AI</span></td><td>5</td></tr>
+        <tr><td>StreamingText</td><td><span class="sk-badge" data-variant="dither" data-color="success">AI</span></td><td>4</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer class="ft">
+  <p>Built with zero dependencies. <a href="https://github.com/skeehn/skeehn">GitHub</a></p>
+  <p style="margin-top:0.5rem;font-size:var(--sk-font-size-xs)"><code>npx skeehn@latest init</code> — <code>npx skeehn@latest add all</code></p>
+</footer>
+
+<script src="../components/tabs/tabs.js" type="module"></script>
+<script src="../components/toggle/toggle.js" type="module"></script>
+<script src="../components/dialog/dialog.js" type="module"></script>
+<script src="../components/accordion/accordion.js" type="module"></script>
+<script src="../components/dropdown/dropdown.js" type="module"></script>
+
+<script type="module">
+  const html = document.documentElement;
+
+  // Theme
+  document.querySelectorAll('#tp button').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('#tp button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    html.setAttribute('data-theme', b.dataset.t);
+    document.getElementById('theme-css').href = `../themes/${b.dataset.t}.css`;
+  }));
+
+  // Pattern
+  const P = { bayer:'var(--sk-dither-bayer)', floyd:'var(--sk-dither-floyd)', cross:'var(--sk-dither-crosshatch)', diag:'var(--sk-dither-diagonal)', dots:'var(--sk-dither-dots)', noise:'var(--sk-dither-noise)', scan:'var(--sk-dither-scanlines)', checker:'var(--sk-dither-checker)' };
+  document.querySelectorAll('#pp button').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('#pp button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    document.documentElement.style.setProperty('--sk-dither-pattern', P[b.dataset.p]);
+  }));
+
+  // Density
+  document.querySelectorAll('#dp button').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('#dp button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    html.setAttribute('data-density', b.dataset.d);
+  }));
+
+  // ASCII Art from image
+  const upload = document.getElementById('img-upload');
+  const out = document.getElementById('ascii-out');
+  const resSlider = document.getElementById('res-slider');
+  const resVal = document.getElementById('res-val');
+  resSlider.addEventListener('input', () => { resVal.textContent = resSlider.value; if (upload.files[0]) renderAscii(upload.files[0]); });
+  document.querySelectorAll('input[name="algo"]').forEach(r => r.addEventListener('change', () => { if (upload.files[0]) renderAscii(upload.files[0]); }));
+
+  function renderAscii(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const res = parseInt(resSlider.value);
+        const aspect = 0.5;
+        const w = res;
+        const h = Math.round(w * (img.height / img.width) * aspect);
+        canvas.width = img.width;
+        canvas.height = img.height;
+        canvas.getContext('2d').drawImage(img, 0, 0);
+        const data = canvas.getContext('2d').getImageData(0, 0, img.width, img.height).data;
+        const algo = document.querySelector('input[name="algo"]:checked').value;
+        const chars = ' .:;-=+*#%@';
+        const levels = chars.length;
+        const step = 255 / (levels - 1);
+        const cellW = Math.max(1, Math.floor(img.width / w));
+        const cellH = Math.max(1, Math.floor(img.height / h));
+        let result = '';
+        for (let y = 0; y < h; y++) {
+          let line = '';
+          for (let x = 0; x < w; x++) {
+            let sum = 0, count = 0;
+            for (let dy = 0; dy < cellH && y*cellH+dy < img.height; dy++) {
+              for (let dx = 0; dx < cellW && x*cellW+dx < img.width; dx++) {
+                const px = ((x*cellW+dx) + (y*cellH+dy)*img.width) * 4;
+                sum += 0.2126*data[px] + 0.7152*data[px+1] + 0.0722*data[px+2];
+                count++;
+              }
+            }
+            const avg = sum / count;
+            const idx = Math.min(levels-1, Math.floor(avg / step));
+            line += chars[levels - 1 - idx];
+          }
+          result += line + '\n';
+        }
+        out.textContent = result;
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+  upload.addEventListener('change', () => { if (upload.files[0]) renderAscii(upload.files[0]); });
+
+  // Text-to-ASCII
+  const textIn = document.getElementById('text-input');
+  const textOut = document.getElementById('text-out');
+  const FONT = {
+    'H':['█   █','█   █','█████','█   █','█   █'],'E':['█████','█    ','████ ','█    ','█████'],
+    'L':['█    ','█    ','█    ','█    ','█████'],'O':[' ███ ','█   █','█   █','█   █',' ███ '],
+    ' ':'     ','A':[' ███ ','█   █','█████','█   █','█   █'],
+  };
+  function renderText(text) {
+    const lines = [[],[],[],[],[]];
+    for (const c of text.toUpperCase()) {
+      const g = FONT[c] || FONT[' '] || FONT[' '];
+      for (let i = 0; i < 5; i++) lines[i].push(g[i]);
+    }
+    textOut.textContent = lines.map(l => l.join(' ')).join('\n');
+  }
+  textIn.addEventListener('input', () => renderText(textIn.value));
+  renderText(textIn.value);
+</script>
+</body>
+</html>

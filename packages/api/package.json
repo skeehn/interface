@@ -1,0 +1,19 @@
+{
+  "name": "@skeehn/loom",
+  "version": "0.3.0",
+  "description": "Schema-first, MCP-native, Bun-native API framework for AI agents",
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./streaming": "./dist/streaming.js",
+    "./mcp": "./dist/mcp.js"
+  },
+  "scripts": {
+    "build": "bun build src/index.ts --outfile dist/index.js --target bun",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "zod": "^3.0.0"
+  }
+}

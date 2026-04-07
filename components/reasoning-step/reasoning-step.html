@@ -1,0 +1,85 @@
+<!-- skeehn — ReasoningStep Component -->
+
+<!-- Pending step (collapsed) -->
+<div class="sk-reasoning-step" data-status="pending">
+  <div class="sk-reasoning-step__header" aria-expanded="false">
+    <span class="sk-reasoning-step__indicator" aria-hidden="true"></span>
+    <span class="sk-reasoning-step__title">Gathering context</span>
+    <span class="sk-reasoning-step__chevron" aria-hidden="true">▸</span>
+  </div>
+  <div class="sk-reasoning-step__content" hidden>
+    <p>Searching through available documentation and project files to understand the problem space.</p>
+  </div>
+</div>
+
+<!-- Active step (collapsed) -->
+<div class="sk-reasoning-step" data-status="active">
+  <div class="sk-reasoning-step__header" aria-expanded="false">
+    <span class="sk-reasoning-step__indicator" aria-hidden="true"></span>
+    <span class="sk-reasoning-step__title">Analyzing dependencies</span>
+    <span class="sk-reasoning-step__chevron" aria-hidden="true">▸</span>
+  </div>
+  <div class="sk-reasoning-step__content" hidden>
+    <p>Checking package.json and import graph for potential conflicts and version mismatches.</p>
+  </div>
+</div>
+
+<!-- Active step (expanded) -->
+<div class="sk-reasoning-step" data-status="active" data-expanded="true">
+  <div class="sk-reasoning-step__header" aria-expanded="true">
+    <span class="sk-reasoning-step__indicator" aria-hidden="true"></span>
+    <span class="sk-reasoning-step__title">Evaluating solutions</span>
+    <span class="sk-reasoning-step__chevron" aria-hidden="true">▸</span>
+  </div>
+  <div class="sk-reasoning-step__content">
+    <p>Comparing three approaches: CSS-only toggles, minimal JS with data attributes, or a web component wrapper. The CSS-only approach best aligns with skeehn's design philosophy.</p>
+  </div>
+</div>
+
+<!-- Completed step (collapsed) -->
+<div class="sk-reasoning-step" data-status="completed">
+  <div class="sk-reasoning-step__header" aria-expanded="false">
+    <span class="sk-reasoning-step__indicator" aria-hidden="true"></span>
+    <span class="sk-reasoning-step__title">Identified root cause</span>
+    <span class="sk-reasoning-step__chevron" aria-hidden="true">▸</span>
+  </div>
+  <div class="sk-reasoning-step__content" hidden>
+    <p>The issue was caused by a missing CSS custom property fallback in the dither pattern generator.</p>
+  </div>
+</div>
+
+<!-- Completed step (expanded) -->
+<div class="sk-reasoning-step" data-status="completed" data-expanded="true">
+  <div class="sk-reasoning-step__header" aria-expanded="true">
+    <span class="sk-reasoning-step__indicator" aria-hidden="true"></span>
+    <span class="sk-reasoning-step__title">Generated implementation plan</span>
+    <span class="sk-reasoning-step__chevron" aria-hidden="true">▸</span>
+  </div>
+  <div class="sk-reasoning-step__content">
+    <p>Created a step-by-step plan: 1) Add CSS custom property fallbacks, 2) Update dither pattern generator, 3) Test across all components using dither textures.</p>
+  </div>
+</div>
+
+<!-- Error step (collapsed) -->
+<div class="sk-reasoning-step" data-status="error">
+  <div class="sk-reasoning-step__header" aria-expanded="false">
+    <span class="sk-reasoning-step__indicator" aria-hidden="true"></span>
+    <span class="sk-reasoning-step__title">Failed to parse input</span>
+    <span class="sk-reasoning-step__chevron" aria-hidden="true">▸</span>
+  </div>
+  <div class="sk-reasoning-step__content" hidden>
+    <p>The provided JSON configuration was malformed — missing closing bracket on line 42.</p>
+  </div>
+</div>
+
+<!-- Error step (expanded) -->
+<div class="sk-reasoning-step" data-status="error" data-expanded="true">
+  <div class="sk-reasoning-step__header" aria-expanded="true">
+    <span class="sk-reasoning-step__indicator" aria-hidden="true"></span>
+    <span class="sk-reasoning-step__title">Validation failed</span>
+    <span class="sk-reasoning-step__chevron" aria-hidden="true">▸</span>
+  </div>
+  <div class="sk-reasoning-step__content">
+    <p>Required field "component-name" is missing from the registry entry. Cannot proceed without a valid component identifier.</p>
+  </div>
+</div>

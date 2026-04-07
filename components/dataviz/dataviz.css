@@ -1,0 +1,35 @@
+/* skeehn — AsciiChart (bar chart rendered in ASCII) */
+.sk-ascii-chart { font-family: var(--sk-font-mono); font-size: var(--sk-font-size-xs); line-height: 1; color: hsl(var(--sk-foreground)); }
+.sk-ascii-chart__row { display: flex; align-items: flex-end; gap: 0; }
+.sk-ascii-chart__bar { display: flex; flex-direction: column-reverse; width: 1ch; }
+.sk-ascii-chart__bar-cell { width: 1ch; height: 1ch; text-align: center; line-height: 1; }
+.sk-ascii-chart__bar-cell--filled { background: hsl(var(--sk-primary)); color: hsl(var(--sk-background)); }
+.sk-ascii-chart__bar-cell--dither { background: hsl(var(--sk-primary)); color: hsl(var(--sk-background)); position: relative; }
+.sk-ascii-chart__bar-cell--dither::before { content: "░"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; }
+.sk-ascii-chart__label { margin-top: var(--sk-space-1); display: flex; gap: 0; }
+.sk-ascii-chart__label-cell { width: 1ch; text-align: center; font-size: 0.5rem; color: hsl(var(--sk-muted-foreground)); }
+
+/* skeehn — Sparkline */
+.sk-sparkline { display: inline-flex; align-items: flex-end; gap: 1px; height: 1.5rem; vertical-align: middle; }
+.sk-sparkline__bar { width: 2px; background: hsl(var(--sk-primary)); border-radius: 1px; transition: height var(--sk-transition-fast); }
+.sk-sparkline__bar--dither { position: relative; }
+.sk-sparkline__bar--dither::before { content: ""; position: absolute; inset: 0; background-image: var(--sk-dither-pattern); background-repeat: repeat; opacity: var(--sk-dither-opacity); border-radius: inherit; }
+
+/* skeehn — Meter */
+.sk-meter { display: flex; align-items: center; gap: var(--sk-space-2); font-family: var(--sk-font-mono); font-size: var(--sk-font-size-xs); }
+.sk-meter__track { flex: 1; height: 0.5rem; background: hsl(var(--sk-muted)); border-radius: var(--sk-radius); overflow: hidden; border: var(--sk-border); position: relative; }
+.sk-meter__fill { height: 100%; background: hsl(var(--sk-primary)); border-radius: var(--sk-radius); transition: width var(--sk-transition-slow); }
+.sk-meter__fill--dither { position: relative; }
+.sk-meter__fill--dither::before { content: ""; position: absolute; inset: 0; background-image: var(--sk-dither-pattern); background-repeat: repeat; opacity: var(--sk-dither-opacity); mix-blend-mode: overlay; }
+.sk-meter__label { color: hsl(var(--sk-muted-foreground)); min-width: 2.5rem; text-align: right; }
+
+/* skeehn — Heatmap */
+.sk-heatmap { display: grid; gap: 1px; font-family: var(--sk-font-mono); }
+.sk-heatmap__cell { width: 1ch; height: 1ch; text-align: center; line-height: 1; font-size: 0.5rem; }
+.sk-heatmap__cell--0 { background: hsl(var(--sk-muted)); color: transparent; }
+.sk-heatmap__cell--1 { background: hsl(var(--sk-muted)); color: hsl(var(--sk-muted-foreground) / 0.3); }
+.sk-heatmap__cell--2 { background: hsl(var(--sk-muted)); color: hsl(var(--sk-muted-foreground) / 0.5); }
+.sk-heatmap__cell--3 { background: hsl(var(--sk-muted)); color: hsl(var(--sk-muted-foreground) / 0.7); }
+.sk-heatmap__cell--4 { background: hsl(var(--sk-primary)); color: hsl(var(--sk-background)); }
+.sk-heatmap__cell--dither { position: relative; }
+.sk-heatmap__cell--dither::before { content: "░"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0.3; }

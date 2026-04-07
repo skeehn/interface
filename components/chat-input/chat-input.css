@@ -1,0 +1,105 @@
+/*
+ * skeehn — ChatInput Component
+ * Prompt input with send/attach/cancel actions and streaming states.
+ */
+
+.sk-chat-input {
+  padding: var(--sk-space-3) 0;
+  font-family: var(--sk-font-mono);
+}
+
+.sk-chat-input__wrapper {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--sk-space-2);
+  padding: var(--sk-space-2);
+  border: 2px solid hsl(var(--sk-border));
+  border-radius: var(--sk-radius);
+  background: hsl(var(--sk-background));
+  transition: border-color var(--sk-transition);
+}
+
+.sk-chat-input__wrapper:focus-within {
+  border-color: hsl(var(--sk-ring));
+  box-shadow: 0 0 0 1px hsl(var(--sk-ring) / 0.2);
+}
+
+/* Dither focus effect */
+.sk-chat-input__wrapper:focus-within::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--sk-dither-pattern);
+  background-repeat: repeat;
+  opacity: calc(var(--sk-dither-opacity, 0.15) * 0.2);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.sk-chat-input__wrapper {
+  position: relative;
+}
+
+.sk-chat-input__field {
+  flex: 1;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  resize: none;
+  min-height: 2rem;
+  max-height: 8rem;
+  padding: var(--sk-space-1) 0;
+  font-family: var(--sk-font-mono);
+  font-size: var(--sk-font-size-sm);
+  line-height: var(--sk-line-height);
+  color: hsl(var(--sk-foreground));
+}
+
+.sk-chat-input__field::placeholder {
+  color: hsl(var(--sk-muted-foreground) / 0.5);
+}
+
+.sk-chat-input__field:focus {
+  outline: none;
+}
+
+.sk-chat-input__actions {
+  display: flex;
+  gap: var(--sk-space-1);
+  flex-shrink: 0;
+}
+
+.sk-chat-input__attach {
+  min-width: 2rem;
+  padding: var(--sk-space-1);
+}
+
+.sk-chat-input__send {
+  min-width: 4rem;
+}
+
+.sk-chat-input__hint {
+  margin-top: var(--sk-space-1);
+  font-size: var(--sk-font-size-xs);
+  color: hsl(var(--sk-muted-foreground) / 0.6);
+  text-align: center;
+}
+
+/* Streaming state */
+.sk-chat-input[data-state="streaming"] .sk-chat-input__wrapper {
+  border-color: hsl(var(--sk-primary) / 0.3);
+  background: hsl(var(--sk-muted) / 0.3);
+}
+
+.sk-chat-input[data-state="streaming"] .sk-chat-input__field {
+  opacity: 0.5;
+}
+
+/* Compact variant */
+.sk-chat-input[data-variant="compact"] .sk-chat-input__wrapper {
+  padding: var(--sk-space-1);
+}
+
+.sk-chat-input[data-variant="compact"] .sk-chat-input__hint {
+  display: none;
+}

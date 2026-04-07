@@ -1,0 +1,17 @@
+.sk-card { border: var(--sk-border); border-radius: var(--sk-radius); overflow: hidden; transition: box-shadow var(--sk-transition); }
+.sk-card:hover { box-shadow: var(--sk-shadow-md); }
+.sk-card__header { padding: var(--sk-space-3) var(--sk-space-4); border-bottom: var(--sk-border); display: flex; align-items: center; justify-content: space-between; }
+.sk-card__title { margin: 0; font-family: var(--sk-font-mono); font-size: var(--sk-font-size-sm); font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; }
+.sk-card__body { padding: var(--sk-space-4); }
+.sk-card__body p { margin: 0; font-size: var(--sk-font-size-sm); color: hsl(var(--sk-muted-foreground)); line-height: var(--sk-line-height); }
+.sk-card__footer { padding: var(--sk-space-2) var(--sk-space-4); border-top: var(--sk-border); background: hsl(var(--sk-muted) / 0.3); display: flex; align-items: center; justify-content: space-between; }
+.sk-card__footer-text { font-family: var(--sk-font-mono); font-size: var(--sk-font-size-xs); color: hsl(var(--sk-muted-foreground)); letter-spacing: 0.02em; }
+.sk-card[data-variant="solid"] { background: hsl(var(--sk-background)); }
+.sk-card[data-variant="dither"] { background: hsl(var(--sk-background)); position: relative; }
+.sk-card[data-variant="dither"]::before { content: ""; position: absolute; inset: 0; background-image: var(--sk-dither-pattern); background-repeat: repeat; opacity: calc(var(--sk-dither-opacity, 0.15) * 0.5); pointer-events: none; }
+.sk-card[data-variant="dither"] > * { position: relative; z-index: 1; }
+.sk-card[data-variant="outline"] { background: transparent; border: 2px solid hsl(var(--sk-border)); }
+.sk-card[data-variant="ghost"] { background: hsl(var(--sk-accent)); border-color: transparent; }
+.sk-card[data-variant="inverted"] { background: hsl(var(--sk-foreground)); color: hsl(var(--sk-background)); border-color: transparent; }
+.sk-card[data-variant="inverted"] .sk-card__title { color: hsl(var(--sk-background)); }
+.sk-card[data-variant="inverted"] .sk-card__body p { color: hsl(var(--sk-background) / 0.7); }

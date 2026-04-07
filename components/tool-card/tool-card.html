@@ -1,0 +1,88 @@
+<!-- skeehn — ToolCard Component -->
+
+<!-- Pending tool card -->
+<div class="sk-tool-card" data-status="pending">
+  <div class="sk-tool-card__header">
+    <span class="sk-tool-card__name">search_files</span>
+    <span class="sk-tool-card__status">Pending</span>
+  </div>
+  <div class="sk-tool-card__body">
+    <div class="sk-tool-card__input">
+      <div class="sk-tool-card__label">Input</div>
+      <pre class="sk-tool-card__code">{ "query": "sk-dither-pattern", "path": "components/" }</pre>
+    </div>
+  </div>
+</div>
+
+<!-- Running tool card -->
+<div class="sk-tool-card" data-status="running">
+  <div class="sk-tool-card__header">
+    <span class="sk-tool-card__name">read_file</span>
+    <span class="sk-tool-card__status">Running</span>
+  </div>
+  <div class="sk-tool-card__body">
+    <div class="sk-tool-card__input">
+      <div class="sk-tool-card__label">Input</div>
+      <pre class="sk-tool-card__code">{ "path": "components/button/button.css" }</pre>
+    </div>
+  </div>
+</div>
+
+<!-- Success tool card -->
+<div class="sk-tool-card" data-status="success">
+  <div class="sk-tool-card__header">
+    <span class="sk-tool-card__name">search_web</span>
+    <span class="sk-tool-card__status">Success</span>
+  </div>
+  <div class="sk-tool-card__body">
+    <div class="sk-tool-card__input">
+      <div class="sk-tool-card__label">Input</div>
+      <pre class="sk-tool-card__code">{ "query": "CSS dither pattern techniques" }</pre>
+    </div>
+    <div class="sk-tool-card__output">
+      <div class="sk-tool-card__label">Output</div>
+      <pre class="sk-tool-card__code">Found 3 relevant results:
+1. "Dithering in CSS" — css-tricks.com
+2. "ASCII Art Patterns" — developer.mozilla.org
+3. "Retro UI with CSS" — smashingmagazine.com</pre>
+    </div>
+  </div>
+</div>
+
+<!-- Error tool card -->
+<div class="sk-tool-card" data-status="error">
+  <div class="sk-tool-card__header">
+    <span class="sk-tool-card__name">execute_command</span>
+    <span class="sk-tool-card__status">Error</span>
+  </div>
+  <div class="sk-tool-card__body">
+    <div class="sk-tool-card__input">
+      <div class="sk-tool-card__label">Input</div>
+      <pre class="sk-tool-card__code">{ "command": "npm run build" }</pre>
+    </div>
+    <div class="sk-tool-card__output">
+      <div class="sk-tool-card__label">Output</div>
+      <pre class="sk-tool-card__code">Error: Module not found — cannot resolve './dither-utils'
+  at components/motion/motion.css:14:1</pre>
+    </div>
+  </div>
+</div>
+
+<!-- Success tool card (minimal, input only) -->
+<div class="sk-tool-card" data-status="success">
+  <div class="sk-tool-card__header">
+    <span class="sk-tool-card__name">list_directory</span>
+    <span class="sk-tool-card__status">Success</span>
+  </div>
+  <div class="sk-tool-card__body">
+    <div class="sk-tool-card__input">
+      <div class="sk-tool-card__label">Input</div>
+      <pre class="sk-tool-card__code">{ "path": "components/" }</pre>
+    </div>
+    <div class="sk-tool-card__output">
+      <div class="sk-tool-card__label">Output</div>
+      <pre class="sk-tool-card__code">accordion/ alert/ avatar/ badge/ button/ card/
+chat-bubble/ chat-input/ dialog/ dropdown/ tabs/</pre>
+    </div>
+  </div>
+</div>

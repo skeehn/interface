@@ -1,0 +1,56 @@
+/* skeehn — Button: Square, technical, ASCII dither variants */
+.sk-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--sk-space-2);
+  padding: var(--sk-space-2) var(--sk-space-4); min-height: 2rem;
+  font-family: var(--sk-font-mono); font-size: var(--sk-font-size-sm); font-weight: 500;
+  letter-spacing: 0.01em; line-height: 1; border: var(--sk-border); border-radius: var(--sk-radius);
+  background: transparent; cursor: pointer; user-select: none;
+  transition: all var(--sk-transition); white-space: nowrap; position: relative; overflow: hidden;
+}
+.sk-btn:focus-visible { outline: 2px solid hsl(var(--sk-ring)); outline-offset: 2px; }
+.sk-btn:active { transform: scale(0.98); }
+.sk-btn:disabled { opacity: 0.4; pointer-events: none; cursor: not-allowed; }
+
+/* Sizes */
+.sk-btn[data-size="sm"] { padding: var(--sk-space-1) var(--sk-space-3); min-height: 1.5rem; font-size: var(--sk-font-size-xs); }
+.sk-btn[data-size="lg"] { padding: var(--sk-space-3) var(--sk-space-6); min-height: 2.75rem; font-size: var(--sk-font-size-base); }
+.sk-btn[data-size="xl"] { padding: var(--sk-space-4) var(--sk-space-8); min-height: 3.5rem; font-size: var(--sk-font-size-lg); }
+
+/* Solid */
+.sk-btn[data-variant="solid"] { background: hsl(var(--sk-primary)); color: hsl(var(--sk-background)); border-color: transparent; }
+.sk-btn[data-variant="solid"]:hover:not(:disabled) { opacity: 0.85; }
+
+/* Dither */
+.sk-btn[data-variant="dither"] { background: hsl(var(--sk-primary)); color: hsl(var(--sk-background)); border-color: transparent; }
+.sk-btn[data-variant="dither"]::before {
+  content: ""; position: absolute; inset: 0;
+  background-image: var(--sk-dither-pattern); background-repeat: repeat;
+  opacity: var(--sk-dither-opacity); mix-blend-mode: overlay; pointer-events: none;
+}
+.sk-btn[data-variant="dither"]:hover:not(:disabled) { --sk-dither-opacity: 0.25; }
+
+/* Outline */
+.sk-btn[data-variant="outline"] { background: transparent; color: hsl(var(--sk-foreground)); border-color: hsl(var(--sk-border)); }
+.sk-btn[data-variant="outline"]:hover:not(:disabled) { background: hsl(var(--sk-accent)); border-color: hsl(var(--sk-foreground)); }
+
+/* Ghost */
+.sk-btn[data-variant="ghost"] { background: transparent; color: hsl(var(--sk-foreground)); border-color: transparent; }
+.sk-btn[data-variant="ghost"]:hover:not(:disabled) { background: hsl(var(--sk-accent)); }
+
+/* Inverted */
+.sk-btn[data-variant="inverted"] { background: hsl(var(--sk-background)); color: hsl(var(--sk-foreground)); border: 2px solid hsl(var(--sk-foreground)); }
+.sk-btn[data-variant="inverted"]:hover:not(:disabled) { background: hsl(var(--sk-primary)); color: hsl(var(--sk-background)); }
+
+/* ASCII — border drawn with box-drawing chars */
+.sk-btn[data-variant="ascii"] {
+  background: transparent; color: hsl(var(--sk-foreground)); border: none;
+  font-family: var(--sk-font-mono); padding: var(--sk-space-1) var(--sk-space-3);
+}
+.sk-btn[data-variant="ascii"]::before {
+  content: "┌────────┐"; position: absolute; top: -0.5rem; left: 0; right: 0;
+  font-size: 0.5rem; line-height: 1; color: hsl(var(--sk-border-color)); pointer-events: none;
+}
+.sk-btn[data-variant="ascii"]::after {
+  content: "└────────┘"; position: absolute; bottom: -0.5rem; left: 0; right: 0;
+  font-size: 0.5rem; line-height: 1; color: hsl(var(--sk-border-color)); pointer-events: none;
+}

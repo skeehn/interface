@@ -1,0 +1,26 @@
+/*
+ * skeehn — TerminalPanel Component
+ * Code execution panel with ASCII borders.
+ */
+
+.sk-terminal-panel { border: 2px solid hsl(var(--sk-border)); border-radius: var(--sk-radius); overflow: hidden; font-family: var(--sk-font-mono); margin-bottom: var(--sk-space-3); }
+.sk-terminal-panel__header { display: flex; align-items: center; justify-content: space-between; padding: var(--sk-space-2) var(--sk-space-3); background: hsl(var(--sk-muted) / 0.5); border-bottom: var(--sk-border); }
+.sk-terminal-panel__title { font-size: var(--sk-font-size-xs); font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: hsl(var(--sk-muted-foreground)); }
+.sk-terminal-panel__actions { display: flex; gap: var(--sk-space-1); }
+.sk-terminal-panel__action { width: 0.75rem; height: 0.75rem; border-radius: var(--sk-radius-full); border: none; cursor: pointer; transition: opacity var(--sk-transition-fast); }
+.sk-terminal-panel__action:hover { opacity: 0.7; }
+.sk-terminal-panel__action--close { background: hsl(var(--sk-destructive)); }
+.sk-terminal-panel__action--minimize { background: hsl(var(--sk-warning)); }
+.sk-terminal-panel__action--maximize { background: hsl(var(--sk-success)); }
+.sk-terminal-panel__body { padding: var(--sk-space-3); background: hsl(var(--sk-background)); font-size: var(--sk-font-size-xs); line-height: 1.6; position: relative; }
+.sk-terminal-panel__body::before { content: ""; position: absolute; inset: 0; background-image: var(--sk-dither-scanlines); background-repeat: repeat; opacity: 0.08; pointer-events: none; }
+.sk-terminal-panel__body > * { position: relative; z-index: 1; }
+.sk-terminal-panel__prompt { color: hsl(var(--sk-success)); font-weight: 600; }
+.sk-terminal-panel__command { color: hsl(var(--sk-foreground)); }
+.sk-terminal-panel__output { color: hsl(var(--sk-muted-foreground)); margin: var(--sk-space-1) 0; white-space: pre-wrap; overflow-x: auto; }
+.sk-terminal-panel__input { display: flex; align-items: center; gap: var(--sk-space-2); padding: var(--sk-space-2) var(--sk-space-3); border-top: var(--sk-border); background: hsl(var(--sk-muted) / 0.3); }
+.sk-terminal-panel__input-field { flex: 1; border: none; background: transparent; font-family: var(--sk-font-mono); font-size: var(--sk-font-size-xs); color: hsl(var(--sk-foreground)); outline: none; }
+.sk-terminal-panel[data-theme="terminal"] { border-color: hsl(var(--sk-primary) / 0.3); }
+.sk-terminal-panel[data-theme="terminal"] .sk-terminal-panel__body { background: hsl(var(--sk-background)); }
+.sk-terminal-panel[data-theme="terminal"] .sk-terminal-panel__prompt { color: hsl(var(--sk-success)); }
+.sk-terminal-panel[data-theme="brutal"] { border-width: 3px; }

@@ -1,0 +1,127 @@
+/*
+ * skeehn — ChatBubble Component
+ * Message bubble with ASCII dither fill, streaming states, and tool integration.
+ */
+
+.sk-chat-bubble {
+  max-width: 80%;
+  padding: var(--sk-space-3) var(--sk-space-4);
+  margin-bottom: var(--sk-space-3);
+  border-radius: var(--sk-radius);
+  border: var(--sk-border);
+  font-family: var(--sk-font-mono);
+  font-size: var(--sk-font-size-sm);
+  line-height: var(--sk-line-height);
+  position: relative;
+}
+
+/* User messages — right aligned, solid */
+.sk-chat-bubble[data-role="user"] {
+  margin-left: auto;
+  background: hsl(var(--sk-primary));
+  color: hsl(var(--sk-background));
+  border-color: transparent;
+}
+
+/* Assistant messages — left aligned, dither fill */
+.sk-chat-bubble[data-role="assistant"] {
+  margin-right: auto;
+  background: hsl(var(--sk-background));
+  color: hsl(var(--sk-foreground));
+}
+
+.sk-chat-bubble[data-role="assistant"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--sk-dither-pattern);
+  background-repeat: repeat;
+  opacity: calc(var(--sk-dither-opacity, 0.15) * 0.4);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.sk-chat-bubble[data-role="assistant"] > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Tool messages — box-drawing borders */
+.sk-chat-bubble[data-role="tool"] {
+  margin-right: auto;
+  background: hsl(var(--sk-muted));
+  border: 2px solid hsl(var(--sk-border));
+  font-size: var(--sk-font-size-xs);
+}
+
+.sk-chat-bubble__tool-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--sk-space-2);
+  padding-bottom: var(--sk-space-2);
+  border-bottom: var(--sk-border);
+}
+
+.sk-chat-bubble__tool-name {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.sk-chat-bubble__tool-output {
+  margin: 0;
+  font-family: var(--sk-font-mono);
+  font-size: var(--sk-font-size-xs);
+  color: hsl(var(--sk-muted-foreground));
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+/* System messages — centered, minimal */
+.sk-chat-bubble[data-role="system"] {
+  margin: var(--sk-space-2) auto;
+  max-width: 60%;
+  background: transparent;
+  border: 1px dashed hsl(var(--sk-border));
+  text-align: center;
+  font-size: var(--sk-font-size-xs);
+  color: hsl(var(--sk-muted-foreground));
+}
+
+/* Streaming state */
+.sk-chat-bubble[data-streaming] {
+  border-color: hsl(var(--sk-primary) / 0.3);
+}
+
+.sk-chat-bubble__cursor {
+  display: inline-block;
+  width: 0.5em;
+  height: 1em;
+  background: hsl(var(--sk-primary));
+  margin-left: 0.25em;
+  vertical-align: text-bottom;
+  animation: sk-ascii-blink 1s steps(2) infinite;
+}
+
+/* Streaming shimmer effect */
+.sk-chat-bubble[data-streaming]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, hsl(var(--sk-primary) / 0.05), transparent);
+  background-size: 200% 100%;
+  animation: sk-shimmer 2s ease-in-out infinite;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+@keyframes sk-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes sk-ascii-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}

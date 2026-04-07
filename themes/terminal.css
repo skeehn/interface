@@ -1,0 +1,7 @@
+/* skeehn — Terminal: Green Phosphor CRT */
+:root[data-theme="terminal"] {
+  --sk-background: 140 100% 2%; --sk-foreground: 140 100% 80%; --sk-primary: 140 100% 70%;
+  --sk-secondary: 140 60% 6%; --sk-muted: 140 50% 6%; --sk-muted-foreground: 140 60% 45%;
+  --sk-accent: 140 80% 12%; --sk-accent-foreground: 140 100% 80%; --sk-border-color: 140 50% 18%;
+  --sk-ring: 140 100% 70%; --sk-dither-pattern: var(--sk-dither-scanlines); --sk-dither-opacity: 0.15;
+}

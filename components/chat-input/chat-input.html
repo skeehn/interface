@@ -1,0 +1,20 @@
+<!-- skeehn — ChatInput Component -->
+<div class="sk-chat-input">
+  <div class="sk-chat-input__wrapper">
+    <input class="sk-chat-input__field sk-input" type="text" placeholder="Ask anything..." data-dither>
+    <div class="sk-chat-input__actions">
+      <button class="sk-chat-input__attach sk-btn" data-variant="ghost" data-size="sm" title="Attach file">+</button>
+      <button class="sk-chat-input__send sk-btn" data-variant="dither" data-size="sm">Send</button>
+    </div>
+  </div>
+  <div class="sk-chat-input__hint">Press Enter to send, Shift+Enter for new line</div>
+</div>
+
+<div class="sk-chat-input" data-state="streaming">
+  <div class="sk-chat-input__wrapper">
+    <input class="sk-chat-input__field sk-input" type="text" placeholder="Generating..." disabled>
+    <div class="sk-chat-input__actions">
+      <button class="sk-chat-input__cancel sk-btn" data-variant="outline" data-size="sm">Cancel</button>
+    </div>
+  </div>
+</div>

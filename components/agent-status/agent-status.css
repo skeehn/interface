@@ -1,0 +1,18 @@
+/*
+ * skeehn — AgentStatus Component
+ * Agent state indicator with dither pulse animation.
+ */
+
+.sk-agent-status { display: inline-flex; align-items: center; gap: var(--sk-space-2); padding: var(--sk-space-2) var(--sk-space-3); border: var(--sk-border); border-radius: var(--sk-radius); font-family: var(--sk-font-mono); font-size: var(--sk-font-size-sm); background: hsl(var(--sk-background)); }
+.sk-agent-status__indicator { width: 0.5rem; height: 0.5rem; border-radius: var(--sk-radius-full); flex-shrink: 0; }
+.sk-agent-status__text { color: hsl(var(--sk-muted-foreground)); letter-spacing: 0.01em; }
+.sk-agent-status[data-status="idle"] .sk-agent-status__indicator { background: hsl(var(--sk-muted-foreground)); }
+.sk-agent-status[data-status="thinking"] .sk-agent-status__indicator { background: hsl(var(--sk-info)); }
+.sk-agent-status[data-status="thinking"][data-pulse="true"] .sk-agent-status__indicator { animation: sk-dither-pulse 1.5s ease-in-out infinite; }
+.sk-agent-status[data-status="acting"] .sk-agent-status__indicator { background: hsl(var(--sk-warning)); animation: sk-dither-pulse 0.8s ease-in-out infinite; }
+.sk-agent-status[data-status="done"] .sk-agent-status__indicator { background: hsl(var(--sk-success)); }
+.sk-agent-status[data-status="error"] .sk-agent-status__indicator { background: hsl(var(--sk-destructive)); }
+.sk-agent-status[data-status="error"] .sk-agent-status__text { color: hsl(var(--sk-destructive)); }
+.sk-agent-status[data-variant="compact"] { padding: var(--sk-space-1) var(--sk-space-2); font-size: var(--sk-font-size-xs); }
+.sk-agent-status[data-variant="compact"] .sk-agent-status__indicator { width: 0.375rem; height: 0.375rem; }
+.sk-agent-status[data-variant="full"] { display: flex; width: 100%; justify-content: center; border: none; background: transparent; }

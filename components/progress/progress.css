@@ -1,0 +1,6 @@
+.sk-progress { display: flex; align-items: center; gap: var(--sk-space-3); font-family: var(--sk-font-mono); }
+.sk-progress__track { flex: 1; height: 0.5rem; background: hsl(var(--sk-secondary)); border-radius: var(--sk-radius); overflow: hidden; border: var(--sk-border); }
+.sk-progress__indicator { height: 100%; background: hsl(var(--sk-primary)); border-radius: var(--sk-radius); transition: width var(--sk-transition-slow); position: relative; }
+.sk-progress[data-variant="dither"] .sk-progress__indicator::before { content: ""; position: absolute; inset: 0; background-image: var(--sk-dither-pattern); background-repeat: repeat; opacity: var(--sk-dither-opacity); mix-blend-mode: overlay; }
+.sk-progress[data-state="loading"] .sk-progress__indicator { animation: sk-dither-pulse 1.5s ease-in-out infinite; }
+.sk-progress__label { font-size: var(--sk-font-size-xs); font-weight: 500; color: hsl(var(--sk-muted-foreground)); letter-spacing: 0.02em; min-width: 2.5rem; text-align: right; }

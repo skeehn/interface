@@ -1,0 +1,39 @@
+<!-- skeehn — CodeBlock Component -->
+
+<!-- Basic code block -->
+<div class="sk-code-block">
+  <div class="sk-code-block__header">
+    <span class="sk-code-block__lang">javascript</span>
+    <button class="sk-code-block__copy" aria-label="Copy code">Copy</button>
+  </div>
+  <div class="sk-code-block__body">
+    <pre><code>const greeting = "Hello, skeehn!";
+console.log(greeting);</code></pre>
+  </div>
+</div>
+
+<!-- With line numbers -->
+<div class="sk-code-block" data-line-numbers>
+  <div class="sk-code-block__header">
+    <span class="sk-code-block__lang">typescript</span>
+    <button class="sk-code-block__copy" aria-label="Copy code">Copy</button>
+  </div>
+  <div class="sk-code-block__body">
+    <pre><code>import { DitherEngine } from './dither';
+import { CharacterEngine } from './characters';
+
+const chars = new CharacterEngine('blocks');
+const dither = new DitherEngine('floyd', 4, chars);
+const ascii = dither.dither1D(luminance, 80, 40);</code></pre>
+  </div>
+</div>
+
+<!-- No header (inline style) -->
+<div class="sk-code-block">
+  <div class="sk-code-block__body">
+    <pre><code>npx skeehn init && npx skeehn add all</code></pre>
+  </div>
+</div>
+
+<!-- Inline code -->
+<p>Use the <code class="sk-code-inline">sk-btn</code> class with <code class="sk-code-inline">data-variant="dither"</code> for dithered buttons.</p>

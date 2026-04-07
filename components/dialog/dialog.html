@@ -1,0 +1,51 @@
+<!-- skeehn — Dialog Component -->
+
+<!-- Default dialog (open) -->
+<dialog class="sk-dialog" id="dialog-default" open aria-labelledby="dialog-title-1" aria-describedby="dialog-body-1">
+  <div class="sk-dialog__content">
+    <div class="sk-dialog__header">
+      <h3 class="sk-dialog__title" id="dialog-title-1">Confirm Action</h3>
+      <button class="sk-dialog__close" aria-label="Close dialog">[×]</button>
+    </div>
+    <div class="sk-dialog__body" id="dialog-body-1">
+      <p>Are you sure you want to proceed? This action cannot be undone.</p>
+    </div>
+    <div class="sk-dialog__footer">
+      <button class="sk-btn" data-variant="ghost" data-size="sm">Cancel</button>
+      <button class="sk-btn" data-variant="solid" data-size="sm">Confirm</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Dialog with only body and footer -->
+<dialog class="sk-dialog" id="dialog-minimal" open aria-labelledby="dialog-title-2" aria-describedby="dialog-body-2">
+  <div class="sk-dialog__content">
+    <div class="sk-dialog__header">
+      <h3 class="sk-dialog__title" id="dialog-title-2">Delete Item</h3>
+      <button class="sk-dialog__close" aria-label="Close dialog">[×]</button>
+    </div>
+    <div class="sk-dialog__body" id="dialog-body-2">
+      <p>This will permanently delete the selected item from your workspace.</p>
+    </div>
+    <div class="sk-dialog__footer">
+      <button class="sk-btn" data-variant="outline" data-size="sm">Keep</button>
+      <button class="sk-btn" data-variant="solid" data-size="sm">Delete</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Dialog with longer content -->
+<dialog class="sk-dialog" id="dialog-info" open aria-labelledby="dialog-title-3" aria-describedby="dialog-body-3">
+  <div class="sk-dialog__content">
+    <div class="sk-dialog__header">
+      <h3 class="sk-dialog__title" id="dialog-title-3">About skeehn</h3>
+      <button class="sk-dialog__close" aria-label="Close dialog">[×]</button>
+    </div>
+    <div class="sk-dialog__body" id="dialog-body-3">
+      <p>skeehn is the ASCII-native UI framework where texture is a first-class design primitive. Every component leverages dither patterns and monospace typography to create a distinctive terminal aesthetic.</p>
+    </div>
+    <div class="sk-dialog__footer">
+      <button class="sk-btn" data-variant="solid" data-size="sm">Close</button>
+    </div>
+  </div>
+</dialog>

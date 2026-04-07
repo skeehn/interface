@@ -1,0 +1,96 @@
+/*
+ * skeehn — TypingIndicator Component
+ * Animated typing/thinking indicator for AI chat interfaces.
+ */
+
+.sk-typing-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sk-space-2);
+  padding: var(--sk-space-2) var(--sk-space-3);
+  font-family: var(--sk-font-mono);
+  font-size: var(--sk-font-size-xs);
+  color: hsl(var(--sk-muted-foreground));
+}
+
+.sk-typing-indicator__dots {
+  display: inline-flex;
+  gap: 3px;
+  align-items: center;
+}
+
+.sk-typing-indicator__dot {
+  width: 4px;
+  height: 4px;
+  background: hsl(var(--sk-muted-foreground));
+  border-radius: var(--sk-radius-full);
+  animation: sk-typing-bounce 1.4s ease-in-out infinite;
+}
+
+.sk-typing-indicator__dot:nth-child(2) { animation-delay: 0.2s; }
+.sk-typing-indicator__dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes sk-typing-bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+
+/* ASCII variant — uses block characters instead of dots */
+.sk-typing-indicator[data-variant="ascii"] .sk-typing-indicator__dots {
+  font-family: var(--sk-font-mono);
+  font-size: var(--sk-font-size-sm);
+  gap: 1px;
+}
+
+.sk-typing-indicator[data-variant="ascii"] .sk-typing-indicator__dot {
+  width: auto;
+  height: auto;
+  background: none;
+  border-radius: 0;
+  color: hsl(var(--sk-foreground));
+}
+
+.sk-typing-indicator[data-variant="ascii"] .sk-typing-indicator__dot:nth-child(1)::after { content: "░"; }
+.sk-typing-indicator[data-variant="ascii"] .sk-typing-indicator__dot:nth-child(2)::after { content: "▒"; }
+.sk-typing-indicator[data-variant="ascii"] .sk-typing-indicator__dot:nth-child(3)::after { content: "▓"; }
+
+/* Dither variant — pulsing dither pattern */
+.sk-typing-indicator[data-variant="dither"] {
+  position: relative;
+  padding: var(--sk-space-2) var(--sk-space-4);
+  border: var(--sk-border);
+  border-radius: var(--sk-radius);
+}
+
+.sk-typing-indicator[data-variant="dither"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--sk-dither-pattern);
+  background-repeat: repeat;
+  animation: sk-dither-pulse 2s ease-in-out infinite;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.sk-typing-indicator__text {
+  position: relative;
+  z-index: 1;
+  letter-spacing: 0.02em;
+}
+
+/* Compact */
+.sk-typing-indicator[data-size="compact"] {
+  padding: var(--sk-space-1) var(--sk-space-2);
+  gap: var(--sk-space-1);
+}
+
+.sk-typing-indicator[data-size="compact"] .sk-typing-indicator__dot {
+  width: 3px;
+  height: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-typing-indicator__dot { animation: none; opacity: 0.6; }
+  .sk-typing-indicator[data-variant="dither"]::before { animation: none; opacity: 0.1; }
+}

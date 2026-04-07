@@ -1,0 +1,8 @@
+/* skeehn — Grain: Film Grain */
+:root[data-theme="grain"] {
+  --sk-background: 30 10% 96%; --sk-foreground: 30 15% 15%; --sk-primary: 30 20% 18%;
+  --sk-secondary: 30 8% 90%; --sk-muted: 30 6% 91%; --sk-muted-foreground: 30 10% 48%;
+  --sk-accent: 30 15% 85%; --sk-accent-foreground: 30 20% 18%; --sk-border-color: 30 10% 82%;
+  --sk-ring: 30 20% 18%; --sk-dither-pattern: var(--sk-dither-noise); --sk-dither-opacity: 0.12;
+  --sk-radius: 0.125rem;
+}

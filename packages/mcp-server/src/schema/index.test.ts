@@ -7,8 +7,8 @@ describe("MCP Server Schema", () => {
       expect(componentSchema.version).toBe("0.3.0");
     });
 
-    test("has all 22 components", () => {
-      expect(componentSchema.components.length).toBe(22);
+    test("has all 29 components", () => {
+      expect(componentSchema.components.length).toBe(29);
     });
 
     test("all components have required fields", () => {

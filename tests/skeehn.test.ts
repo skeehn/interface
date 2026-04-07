@@ -87,10 +87,10 @@ describe("themes", () => {
 
 describe("components", () => {
   const reg = JSON.parse(readFileSync(join(ROOT, "registry.json"), "utf-8"));
-  test("28 components (14 core + 11 AI + 3 layout/dataviz/motion)", () => {
-    expect(reg.components.length).toBe(28);
+  test("29 components (14 core + 12 AI + 3 layout/dataviz/motion)", () => {
+    expect(reg.components.length).toBe(29);
     expect(reg.components.filter((c: any) => c.category === "core").length).toBe(14);
-    expect(reg.components.filter((c: any) => c.category === "ai").length).toBe(11);
+    expect(reg.components.filter((c: any) => c.category === "ai").length).toBe(12);
     expect(reg.components.filter((c: any) => c.category === "layout").length).toBe(1);
     expect(reg.components.filter((c: any) => c.category === "dataviz").length).toBe(1);
     expect(reg.components.filter((c: any) => c.category === "motion").length).toBe(1);

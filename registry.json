@@ -33,6 +33,7 @@
     { "name": "motion", "description": "DitherPulse, AsciiRain, Glitch, TextureMask", "files": ["motion.css"], "category": "motion" },
     { "name": "code-block", "description": "Code display with copy and line numbers", "files": ["code-block.css", "code-block.js"], "category": "ai" },
     { "name": "typing-indicator", "description": "Animated typing indicator for AI chat", "files": ["typing-indicator.css"], "category": "ai" },
-    { "name": "markdown", "description": "Markdown renderer for AI chat content", "files": ["markdown.css", "markdown.js"], "category": "ai" }
+    { "name": "markdown", "description": "Markdown renderer for AI chat content", "files": ["markdown.css", "markdown.js"], "category": "ai" },
+    { "name": "voice-session", "category": "ai", "description": "Realtime voice session with waveform, transcript, and state indicators", "files": ["voice-session.css", "voice-session.js", "voice-session.html"], "version": "0.3.0" }
   ]
 }

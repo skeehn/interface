@@ -4,7 +4,7 @@
 
 ```bash
 npx skeehn init          # Setup engine + themes
-npx skeehn add all       # Add all 25 components
+npx skeehn add all       # Add all 29 components
 npx skeehn theme terminal # Pick a theme
 ```
 
@@ -13,7 +13,7 @@ npx skeehn theme terminal # Pick a theme
 ```
 skeehn/
 ├── engine/              # Core: characters, dither, canvas
-├── components/          # 25 components (CSS + HTML examples)
+├── components/          # 29 components (CSS + HTML examples)
 ├── themes/              # 5 presets
 ├── packages/
 │   ├── mcp-server/      # MCP server for AI agents
@@ -22,7 +22,7 @@ skeehn/
 │   ├── demo/            # Live showcase
 │   └── registry-api/    # Component registry
 ├── cli/                 # Bun CLI
-└── tests/               # 152 tests
+└── tests/               # 321 tests
 ```
 
 ## Engine
@@ -46,8 +46,8 @@ skeehn/
 ### Core (14)
 Button, Card, Input, Badge, Alert, Dialog, Tabs, Toggle, Progress, Avatar, Tooltip, Dropdown, Table, Accordion
 
-### AI-Native (8)
-ChatBubble, ChatInput, ReasoningStep, ToolCard, CitationCard, StreamingText, TerminalPanel, AgentStatus
+### AI-Native (12)
+ChatBubble, ChatInput, ReasoningStep, ToolCard, CitationCard, StreamingText, TerminalPanel, AgentStatus, CodeBlock, TypingIndicator, Markdown, VoiceSession
 
 ### Layout
 Container, Grid, Stack, Panel, Divider, Skeleton
@@ -73,7 +73,7 @@ DitherPulse, AsciiRain, Glitch, TextureMask
 ```bash
 npx skeehn init              # Setup
 npx skeehn add <component>   # Add component
-npx skeehn add all           # Add all 25
+npx skeehn add all           # Add all 29
 npx skeehn theme <name>      # Swap theme
 npx skeehn density <level>   # Change density
 npx skeehn mcp               # MCP server for AI agents

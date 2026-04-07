@@ -22,7 +22,7 @@ const execFile = promisify(execFileCallback);
 
 const VALID_COMPONENT_SLUG = /^[a-z][a-z0-9-]{0,48}$/;
 const VALID_THEME = new Set(["default", "brutal", "terminal", "print", "grain"]);
-const VALID_PATH = /^[a-zA-Z0-9._/~-]{1,256}$/;
+const VALID_PATH = /^[-a-zA-Z0-9._/~]{1,256}$/;
 
 function assertSafeComponentName(name: string): void {
   if (!VALID_COMPONENT_SLUG.test(name)) throw new Error(`Invalid component name: ${JSON.stringify(name)}`);
@@ -32,6 +32,7 @@ function assertSafeTheme(theme: string): void {
 }
 function assertSafePath(p: string): void {
   if (p.includes("..")) throw new Error(`Path traversal not allowed: ${JSON.stringify(p)}`);
+  if (p.startsWith("/")) throw new Error(`Absolute paths not allowed: ${JSON.stringify(p)}`);
   if (!VALID_PATH.test(p)) throw new Error(`Invalid path: ${JSON.stringify(p)}`);
 }
 

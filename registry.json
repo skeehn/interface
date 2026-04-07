@@ -1,10 +1,10 @@
 {
   "name": "skeehn",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "ASCII as native rendering. The dither UI system.",
   "homepage": "https://skeehn.dev",
   "license": "MIT",
-  "themes": ["default", "brutal", "terminal", "print", "grain"],
+  "themes": ["default", "dark", "brutal", "terminal", "print", "grain", "mardi-gras"],
   "components": [
     { "name": "button", "description": "Interactive button with ASCII dither", "files": ["button.css"], "category": "core" },
     { "name": "card", "description": "Elevated container with dither surface", "files": ["card.css"], "category": "core" },
@@ -22,7 +22,7 @@
     { "name": "accordion", "description": "Collapsible sections with dither", "files": ["accordion.css", "accordion.js"], "category": "core" },
     { "name": "chat-bubble", "description": "AI message bubble with streaming", "files": ["chat-bubble.css", "chat-bubble.js"], "category": "ai" },
     { "name": "chat-input", "description": "AI prompt input with actions", "files": ["chat-input.css"], "category": "ai" },
-    { "name": "reasoning-step", "description": "Expandable reasoning trace", "files": ["reasoning-step.css"], "category": "ai" },
+    { "name": "reasoning-step", "description": "Expandable reasoning trace", "files": ["reasoning-step.css", "reasoning-step.js"], "category": "ai" },
     { "name": "tool-card", "description": "Tool execution result card", "files": ["tool-card.css"], "category": "ai" },
     { "name": "citation-card", "description": "Source reference card", "files": ["citation-card.css"], "category": "ai" },
     { "name": "streaming-text", "description": "Streaming text animation", "files": ["streaming-text.css", "streaming-text.js"], "category": "ai" },
@@ -34,6 +34,9 @@
     { "name": "code-block", "description": "Code display with copy and line numbers", "files": ["code-block.css", "code-block.js"], "category": "ai" },
     { "name": "typing-indicator", "description": "Animated typing indicator for AI chat", "files": ["typing-indicator.css"], "category": "ai" },
     { "name": "markdown", "description": "Markdown renderer for AI chat content", "files": ["markdown.css", "markdown.js"], "category": "ai" },
-    { "name": "voice-session", "category": "ai", "description": "Realtime voice session with waveform, transcript, and state indicators", "files": ["voice-session.css", "voice-session.js", "voice-session.html"], "version": "0.3.0" }
+    { "name": "voice-session", "category": "ai", "description": "Realtime voice session with waveform, transcript, and state indicators", "files": ["voice-session.css", "voice-session.js", "voice-session.html"] },
+    { "name": "thinking-block", "description": "AI extended thinking with pulse animation and expand/collapse", "files": ["thinking-block.css", "thinking-block.html", "thinking-block.js"], "category": "ai" },
+    { "name": "prompt-suggestions", "description": "Starter prompt suggestions for empty AI chat state", "files": ["prompt-suggestions.css", "prompt-suggestions.html", "prompt-suggestions.js"], "category": "ai" },
+    { "name": "file-attachment", "description": "File upload pill with progress and remove for chat input", "files": ["file-attachment.css", "file-attachment.html", "file-attachment.js"], "category": "ai" }
   ]
 }

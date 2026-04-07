@@ -1,0 +1,133 @@
+/*
+ * skeehn — ThinkingBlock
+ * AI extended thinking with pulse animation. Distinct from reasoning-step:
+ * this is a live process (pulsing while active), reasoning-step is a completed trace.
+ *
+ * States: thinking (pulsing, auto-expanded) | done (collapsed) | error
+ */
+
+.sk-thinking-block {
+  border: 1px solid hsl(var(--sk-border-color));
+  font-family: var(--sk-font-mono);
+  font-size: var(--sk-font-size-xs);
+  position: relative;
+  overflow: hidden;
+  transition: border-color var(--sk-transition-slow);
+}
+
+.sk-thinking-block[data-state="thinking"] {
+  border-color: hsl(var(--sk-muted-foreground) / 0.35);
+}
+.sk-thinking-block[data-state="error"] {
+  border-color: hsl(var(--sk-destructive) / 0.5);
+}
+
+/* ── Header ── */
+.sk-thinking-block__header {
+  display: flex;
+  align-items: center;
+  gap: var(--sk-space-2);
+  padding: var(--sk-space-2) var(--sk-space-3);
+  cursor: pointer;
+  user-select: none;
+  background: hsl(var(--sk-surface));
+  border: none;
+  width: 100%;
+  text-align: left;
+  color: hsl(var(--sk-muted-foreground));
+  font-family: var(--sk-font-mono);
+  font-size: var(--sk-font-size-xs);
+  transition: background var(--sk-transition), color var(--sk-transition);
+}
+.sk-thinking-block__header:hover {
+  background: hsl(var(--sk-accent));
+  color: hsl(var(--sk-foreground));
+}
+.sk-thinking-block__header:focus-visible {
+  outline: 2px solid hsl(var(--sk-ring));
+  outline-offset: -2px;
+}
+
+/* ── Animated dot ── */
+.sk-thinking-block__dot {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  background: hsl(var(--sk-muted-foreground));
+}
+.sk-thinking-block[data-state="thinking"] .sk-thinking-block__dot {
+  background: hsl(var(--sk-foreground));
+  animation: sk-thinking-pulse 1.2s steps(2) infinite;
+}
+.sk-thinking-block[data-state="done"] .sk-thinking-block__dot {
+  background: hsl(var(--sk-success));
+}
+.sk-thinking-block[data-state="error"] .sk-thinking-block__dot {
+  background: hsl(var(--sk-destructive));
+}
+
+@keyframes sk-thinking-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.15; }
+}
+
+.sk-thinking-block__label {
+  flex: 1;
+  letter-spacing: 0.04em;
+}
+.sk-thinking-block__meta {
+  font-size: 9px;
+  opacity: 0.45;
+}
+.sk-thinking-block__chevron {
+  font-style: normal;
+  transition: transform var(--sk-transition);
+  opacity: 0.5;
+}
+.sk-thinking-block[data-expanded="true"] .sk-thinking-block__chevron {
+  transform: rotate(90deg);
+}
+
+/* ── Content ── */
+.sk-thinking-block__content {
+  display: none;
+  padding: var(--sk-space-3) var(--sk-space-4);
+  color: hsl(var(--sk-muted-foreground));
+  line-height: 1.65;
+  border-top: 1px solid hsl(var(--sk-border-color));
+  max-height: 280px;
+  overflow-y: auto;
+  background: hsl(var(--sk-surface));
+  position: relative;
+}
+.sk-thinking-block[data-expanded="true"] .sk-thinking-block__content {
+  display: block;
+}
+
+/* Scanline texture overlay */
+.sk-thinking-block__content::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--sk-dither-scanlines);
+  background-size: 100% 4px;
+  opacity: 0.04;
+  pointer-events: none;
+}
+
+/* Blinking cursor while actively thinking */
+.sk-thinking-block[data-state="thinking"] .sk-thinking-block__content::after {
+  content: "▊";
+  animation: sk-cursor-blink 0.8s steps(2) infinite;
+}
+@keyframes sk-cursor-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-thinking-block__dot                { animation: none; }
+  .sk-thinking-block__content::after     { animation: none; content: ""; }
+  .sk-thinking-block__chevron            { transition: none; }
+  .sk-thinking-block__header             { transition: none; }
+}

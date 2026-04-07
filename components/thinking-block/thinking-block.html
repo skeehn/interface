@@ -1,0 +1,37 @@
+<!-- skeehn — ThinkingBlock: AI extended thinking display -->
+
+<!-- Actively thinking (auto-expanded) -->
+<div class="sk-thinking-block" data-state="thinking" data-expanded="true">
+  <button class="sk-thinking-block__header" aria-expanded="true">
+    <span class="sk-thinking-block__dot"></span>
+    <span class="sk-thinking-block__label">Thinking…</span>
+    <span class="sk-thinking-block__meta">2.4s</span>
+    <span class="sk-thinking-block__chevron">▸</span>
+  </button>
+  <div class="sk-thinking-block__content">
+    Let me analyze this step by step. First I need to consider the full context of the question, then identify the most relevant information before constructing a response…
+  </div>
+</div>
+
+<!-- Done (collapsed by default) -->
+<div class="sk-thinking-block" data-state="done" data-expanded="false">
+  <button class="sk-thinking-block__header" aria-expanded="false">
+    <span class="sk-thinking-block__dot"></span>
+    <span class="sk-thinking-block__label">Thought for 3.2s</span>
+    <span class="sk-thinking-block__meta">312 tokens</span>
+    <span class="sk-thinking-block__chevron">▸</span>
+  </button>
+  <div class="sk-thinking-block__content">
+    I considered multiple approaches. The user is asking about X, which requires understanding Y. The most direct answer involves Z because of the underlying constraint that...
+  </div>
+</div>
+
+<!-- Error state -->
+<div class="sk-thinking-block" data-state="error" data-expanded="false">
+  <button class="sk-thinking-block__header" aria-expanded="false">
+    <span class="sk-thinking-block__dot"></span>
+    <span class="sk-thinking-block__label">Thinking interrupted</span>
+    <span class="sk-thinking-block__chevron">▸</span>
+  </button>
+  <div class="sk-thinking-block__content">Reasoning was cut short before completion.</div>
+</div>

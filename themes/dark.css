@@ -1,0 +1,5 @@
+/* skeehn — Dark: Clean dark mode with subtle Bayer dither */
+[data-theme="dark"] {
+  --sk-dither-pattern:  var(--sk-dither-bayer);
+  --sk-dither-opacity:  0.06;
+}

@@ -9,7 +9,7 @@
   line-height: var(--sk-line-height);
   color: hsl(var(--sk-foreground));
   background: hsl(var(--sk-background));
-  border: 1px solid hsl(var(--sk-border));
+  border: 1px solid hsl(var(--sk-border-color));
   padding: var(--sk-space-4);
   display: flex;
   flex-direction: column;
@@ -60,7 +60,7 @@
   font-size: var(--sk-font-size-sm);
   color: hsl(var(--sk-foreground));
   padding: var(--sk-space-1) var(--sk-space-2);
-  border-left: 2px solid hsl(var(--sk-border));
+  border-left: 2px solid hsl(var(--sk-border-color));
 }
 
 .sk-voice-session__turn[data-role="user"] {

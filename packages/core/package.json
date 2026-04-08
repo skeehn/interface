@@ -1,0 +1,43 @@
+{
+  "name": "@skeehn/core",
+  "version": "1.0.0",
+  "description": "ASCII-native dither UI engine — CSS + JS. Zero dependencies.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./css": "./dist/skeehn.css",
+    "./css/reset": "./dist/css/reset.css",
+    "./css/tokens": "./dist/css/tokens.css",
+    "./css/dither": "./dist/css/dither.css",
+    "./css/animation": "./dist/css/animation.css",
+    "./components/*": "./dist/components/*",
+    "./themes/*": "./dist/themes/*",
+    "./registry": "./dist/registry.json"
+  },
+  "files": [
+    "dist/"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "keywords": [
+    "skeehn",
+    "ascii",
+    "dither",
+    "ui",
+    "components",
+    "ai",
+    "design-system"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/skeehn/skeehn"
+  }
+}

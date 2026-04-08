@@ -10,7 +10,10 @@
     "demo": "bun run demo/server.ts",
     "registry": "cd apps/registry-api && bun run index.ts",
     "test": "bun test",
-    "build": "bun run packages/api/package.json#build && bun run packages/mcp-server/package.json#build"
+    "build": "bun run build:core && bun run build:react",
+    "build:core": "bun run packages/core/build.ts",
+    "build:react": "cd packages/react && bun run build",
+    "build:all": "bun run build && bun run packages/api/package.json#build && bun run packages/mcp-server/package.json#build"
   },
   "devDependencies": {
     "@types/bun": "latest"

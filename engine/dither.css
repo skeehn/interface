@@ -354,3 +354,248 @@
 @media (prefers-reduced-motion: reduce) {
   [class*="sk-animate-"] { animation: none !important; }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   11. REGISTERED CUSTOM PROPERTY — ANIMATED DITHER DENSITY
+   Enables smooth CSS transitions / keyframe animation on density.
+   ═══════════════════════════════════════════════════════════ */
+
+@property --sk-dither-density {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 50%;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   12. ANIMATED DITHER REVEAL
+   Stepped density reveal from b1 → b14 using discrete keyframes.
+   Usage: <div class="sk-dither-animate">...</div>
+   ═══════════════════════════════════════════════════════════ */
+
+@keyframes sk-dither-reveal {
+  0%    { --sk-dither-density: 0%;   background-image: none; }
+  14%   { --sk-dither-density: 6%;   background-image: var(--sk-dither-b1); }
+  28%   { --sk-dither-density: 12%;  background-image: var(--sk-dither-b2); }
+  42%   { --sk-dither-density: 25%;  background-image: var(--sk-dither-b4); }
+  56%   { --sk-dither-density: 37%;  background-image: var(--sk-dither-b6); }
+  70%   { --sk-dither-density: 50%;  background-image: var(--sk-dither-b8); }
+  84%   { --sk-dither-density: 62%;  background-image: var(--sk-dither-b10); }
+  100%  { --sk-dither-density: 87%;  background-image: var(--sk-dither-b14); }
+}
+
+.sk-dither-animate {
+  position: relative;
+  isolation: isolate;
+}
+
+.sk-dither-animate::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--sk-dither-b1);
+  background-repeat: repeat;
+  background-size: var(--sk-dither-size, 16px 16px);
+  opacity: var(--sk-dither-opacity, 0.12);
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 0;
+  animation: sk-dither-reveal var(--sk-anim-slow, 600ms) steps(7) both;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   13. 8×8 BAYER ORDERED DITHER PATTERNS
+   32×32 px tile — 8×8 px cells — smoother density gradients
+   Complements the 4×4 system with finer granularity.
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  /* 8x8-b4 — ~6.25% fill — 4 of 64 cells */
+  --sk-dither-8x8-b4: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Crect x='0' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='16' y='16' width='4' height='4' fill='%23000'/%3E%3Crect x='16' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='0' y='16' width='4' height='4' fill='%23000'/%3E%3C/svg%3E");
+
+  /* 8x8-b8 — ~12.5% fill — 8 of 64 cells */
+  --sk-dither-8x8-b8: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Crect x='0' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='16' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='8' y='8' width='4' height='4' fill='%23000'/%3E%3Crect x='24' y='8' width='4' height='4' fill='%23000'/%3E%3Crect x='0' y='16' width='4' height='4' fill='%23000'/%3E%3Crect x='16' y='16' width='4' height='4' fill='%23000'/%3E%3Crect x='8' y='24' width='4' height='4' fill='%23000'/%3E%3Crect x='24' y='24' width='4' height='4' fill='%23000'/%3E%3C/svg%3E");
+
+  /* 8x8-b16 — 25% fill — 16 of 64 cells (checkerboard-like) */
+  --sk-dither-8x8-b16: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Crect x='0' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='8' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='16' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='24' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='4' y='8' width='4' height='4' fill='%23000'/%3E%3Crect x='12' y='8' width='4' height='4' fill='%23000'/%3E%3Crect x='20' y='8' width='4' height='4' fill='%23000'/%3E%3Crect x='28' y='8' width='4' height='4' fill='%23000'/%3E%3Crect x='0' y='16' width='4' height='4' fill='%23000'/%3E%3Crect x='8' y='16' width='4' height='4' fill='%23000'/%3E%3Crect x='16' y='16' width='4' height='4' fill='%23000'/%3E%3Crect x='24' y='16' width='4' height='4' fill='%23000'/%3E%3Crect x='4' y='24' width='4' height='4' fill='%23000'/%3E%3Crect x='12' y='24' width='4' height='4' fill='%23000'/%3E%3Crect x='20' y='24' width='4' height='4' fill='%23000'/%3E%3Crect x='28' y='24' width='4' height='4' fill='%23000'/%3E%3C/svg%3E");
+
+  /* 8x8-b32 — 50% fill — 32 of 64 cells */
+  --sk-dither-8x8-b32: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Crect x='0' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='8' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='16' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='24' y='0' width='4' height='4' fill='%23000'/%3E%3Crect x='4' y='4' width='4' height='4' fill='%23000'/%3E%3Crect x='12' y='4' width='4' height='4' fill='%23000'/%3E%3Crect x='20' y='4' width='4' height='4' fill='%23000'/%3E%3Crect x='28' y='4' width='4' height='4' fill='%23000'/%3E%3Crect x='0' y='8' width='4' height='4' fill='%23000'/%3E%3Crect x='8' y='8' width='4' height='4' fill='%23000'/%3E%3Crect x='16' y='8' width='4' height='4' fill='%23000'/%3E%3Crect x='24' y='8' width='4' height='4' fill='%23000'/%3E%3Crect x='4' y='12' width='4' height='4' fill='%23000'/%3E%3Crect x='12' y='12' width='4' height='4' fill='%23000'/%3E%3Crect x='20' y='12' width='4' height='4' fill='%23000'/%3E%3Crect x='28' y='12' width='4' height='4' fill='%23000'/%3E%3Crect x='0' y='16' width='4' height='4' fill='%23000'/%3E%3Crect x='8' y='16' width='4' height='4' fill='%23000'/%3E%3Crect x='16' y='16' width='4' height='4' fill='%23000'/%3E%3Crect x='24' y='16' width='4' height='4' fill='%23000'/%3E%3Crect x='4' y='20' width='4' height='4' fill='%23000'/%3E%3Crect x='12' y='20' width='4' height='4' fill='%23000'/%3E%3Crect x='20' y='20' width='4' height='4' fill='%23000'/%3E%3Crect x='28' y='20' width='4' height='4' fill='%23000'/%3E%3Crect x='0' y='24' width='4' height='4' fill='%23000'/%3E%3Crect x='8' y='24' width='4' height='4' fill='%23000'/%3E%3Crect x='16' y='24' width='4' height='4' fill='%23000'/%3E%3Crect x='24' y='24' width='4' height='4' fill='%23000'/%3E%3Crect x='4' y='28' width='4' height='4' fill='%23000'/%3E%3Crect x='12' y='28' width='4' height='4' fill='%23000'/%3E%3Crect x='20' y='28' width='4' height='4' fill='%23000'/%3E%3Crect x='28' y='28' width='4' height='4' fill='%23000'/%3E%3C/svg%3E");
+
+  /* 8x8-b48 — 75% fill — 48 of 64 cells */
+  --sk-dither-8x8-b48: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Crect width='32' height='32' fill='%23000'/%3E%3Crect x='4' y='0' width='4' height='4' fill='transparent'/%3E%3Crect x='20' y='0' width='4' height='4' fill='transparent'/%3E%3Crect x='12' y='4' width='4' height='4' fill='transparent'/%3E%3Crect x='28' y='4' width='4' height='4' fill='transparent'/%3E%3Crect x='4' y='8' width='4' height='4' fill='transparent'/%3E%3Crect x='20' y='8' width='4' height='4' fill='transparent'/%3E%3Crect x='12' y='12' width='4' height='4' fill='transparent'/%3E%3Crect x='28' y='12' width='4' height='4' fill='transparent'/%3E%3Crect x='4' y='16' width='4' height='4' fill='transparent'/%3E%3Crect x='20' y='16' width='4' height='4' fill='transparent'/%3E%3Crect x='12' y='20' width='4' height='4' fill='transparent'/%3E%3Crect x='28' y='20' width='4' height='4' fill='transparent'/%3E%3Crect x='4' y='24' width='4' height='4' fill='transparent'/%3E%3Crect x='20' y='24' width='4' height='4' fill='transparent'/%3E%3Crect x='12' y='28' width='4' height='4' fill='transparent'/%3E%3Crect x='28' y='28' width='4' height='4' fill='transparent'/%3E%3C/svg%3E");
+}
+
+/* 8x8 fill utility classes */
+.sk-fill-8x8-b4  { background-image: var(--sk-dither-8x8-b4);  background-size: 32px 32px; background-repeat: repeat; }
+.sk-fill-8x8-b8  { background-image: var(--sk-dither-8x8-b8);  background-size: 32px 32px; background-repeat: repeat; }
+.sk-fill-8x8-b16 { background-image: var(--sk-dither-8x8-b16); background-size: 32px 32px; background-repeat: repeat; }
+.sk-fill-8x8-b32 { background-image: var(--sk-dither-8x8-b32); background-size: 32px 32px; background-repeat: repeat; }
+.sk-fill-8x8-b48 { background-image: var(--sk-dither-8x8-b48); background-size: 32px 32px; background-repeat: repeat; }
+
+/* ═══════════════════════════════════════════════════════════
+   14. COLOR DITHER PATTERNS
+   Two-tone color dither via HSL overlay on existing patterns.
+   Usage: set --sk-dither-color-a and --sk-dither-color-b
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  --sk-dither-color-a: var(--sk-foreground);
+  --sk-dither-color-b: var(--sk-primary);
+}
+
+.sk-dither-color {
+  position: relative;
+  isolation: isolate;
+}
+
+.sk-dither-color::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: hsl(var(--sk-dither-color-a));
+  -webkit-mask-image: var(--sk-dither-pattern, var(--sk-dither-b8));
+  mask-image: var(--sk-dither-pattern, var(--sk-dither-b8));
+  -webkit-mask-size: var(--sk-dither-size, 16px 16px);
+  mask-size: var(--sk-dither-size, 16px 16px);
+  -webkit-mask-repeat: repeat;
+  mask-repeat: repeat;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 1;
+}
+
+.sk-dither-color::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: hsl(var(--sk-dither-color-b));
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 0;
+}
+
+.sk-dither-color > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   15. GRADIENT DITHER
+   mask-image compositing with linear-gradient for smooth
+   dithered gradient transitions along any axis.
+   ═══════════════════════════════════════════════════════════ */
+
+.sk-dither-gradient-r {
+  -webkit-mask-image:
+    var(--sk-dither-pattern, var(--sk-dither-b8)),
+    linear-gradient(to right, black 30%, transparent 100%);
+  mask-image:
+    var(--sk-dither-pattern, var(--sk-dither-b8)),
+    linear-gradient(to right, black 30%, transparent 100%);
+  -webkit-mask-size: var(--sk-dither-size, 16px 16px), 100% 100%;
+  mask-size: var(--sk-dither-size, 16px 16px), 100% 100%;
+  -webkit-mask-repeat: repeat, no-repeat;
+  mask-repeat: repeat, no-repeat;
+  -webkit-mask-composite: intersect;
+  mask-composite: intersect;
+}
+
+.sk-dither-gradient-l {
+  -webkit-mask-image:
+    var(--sk-dither-pattern, var(--sk-dither-b8)),
+    linear-gradient(to left, black 30%, transparent 100%);
+  mask-image:
+    var(--sk-dither-pattern, var(--sk-dither-b8)),
+    linear-gradient(to left, black 30%, transparent 100%);
+  -webkit-mask-size: var(--sk-dither-size, 16px 16px), 100% 100%;
+  mask-size: var(--sk-dither-size, 16px 16px), 100% 100%;
+  -webkit-mask-repeat: repeat, no-repeat;
+  mask-repeat: repeat, no-repeat;
+  -webkit-mask-composite: intersect;
+  mask-composite: intersect;
+}
+
+.sk-dither-gradient-b {
+  -webkit-mask-image:
+    var(--sk-dither-pattern, var(--sk-dither-b8)),
+    linear-gradient(to bottom, black 30%, transparent 100%);
+  mask-image:
+    var(--sk-dither-pattern, var(--sk-dither-b8)),
+    linear-gradient(to bottom, black 30%, transparent 100%);
+  -webkit-mask-size: var(--sk-dither-size, 16px 16px), 100% 100%;
+  mask-size: var(--sk-dither-size, 16px 16px), 100% 100%;
+  -webkit-mask-repeat: repeat, no-repeat;
+  mask-repeat: repeat, no-repeat;
+  -webkit-mask-composite: intersect;
+  mask-composite: intersect;
+}
+
+.sk-dither-gradient-t {
+  -webkit-mask-image:
+    var(--sk-dither-pattern, var(--sk-dither-b8)),
+    linear-gradient(to top, black 30%, transparent 100%);
+  mask-image:
+    var(--sk-dither-pattern, var(--sk-dither-b8)),
+    linear-gradient(to top, black 30%, transparent 100%);
+  -webkit-mask-size: var(--sk-dither-size, 16px 16px), 100% 100%;
+  mask-size: var(--sk-dither-size, 16px 16px), 100% 100%;
+  -webkit-mask-repeat: repeat, no-repeat;
+  mask-repeat: repeat, no-repeat;
+  -webkit-mask-composite: intersect;
+  mask-composite: intersect;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   16. CONTAINER QUERY AWARE PATTERNS
+   Adjusts dither density based on container size.
+   ═══════════════════════════════════════════════════════════ */
+
+.sk-dither-responsive {
+  container-type: inline-size;
+}
+
+@container (max-width: 320px) {
+  .sk-dither-responsive .sk-dither::before,
+  .sk-dither-responsive .sk-dither-animate::before {
+    background-image: var(--sk-dither-b2);
+    opacity: calc(var(--sk-dither-opacity, 0.12) * 0.5);
+  }
+}
+
+@container (min-width: 321px) and (max-width: 768px) {
+  .sk-dither-responsive .sk-dither::before,
+  .sk-dither-responsive .sk-dither-animate::before {
+    background-image: var(--sk-dither-b6);
+  }
+}
+
+@container (min-width: 769px) {
+  .sk-dither-responsive .sk-dither::before,
+  .sk-dither-responsive .sk-dither-animate::before {
+    background-image: var(--sk-dither-b10);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   17. PRINT — disable all dither patterns
+   ═══════════════════════════════════════════════════════════ */
+
+@media print {
+  .sk-dither::before,
+  .sk-dither-animate::before,
+  .sk-dither-color::before,
+  .sk-dither-color::after,
+  [class*="sk-fill-"]::before,
+  .sk-dither-fade-r::after,
+  .sk-dither-fade-l::after,
+  .sk-dither-fade-b::after,
+  .sk-dither-fade-t::after {
+    display: none;
+  }
+  [class*="sk-fill-"] {
+    background-image: none;
+  }
+  .sk-dither-gradient-pre {
+    display: none;
+  }
+}

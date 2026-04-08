@@ -1,3 +1,15 @@
+/**
+ * skeehn — Alert Component
+ *
+ * @component sk-alert
+ * @types     info | success | warning | destructive
+ * @variants  default | [data-variant="pixel"] | [data-variant="retro"] | [data-variant="ascii"]
+ * @states    [data-loading] | [data-skeleton]
+ * @slots     __icon | __content | __title | __description
+ * @a11y      role="alert" recommended, color not sole indicator
+ * @print     Visible with border, dither overlay hidden
+ */
+
 .sk-alert { display: flex; gap: var(--sk-space-3); padding: var(--sk-space-3) var(--sk-space-4); border-radius: var(--sk-radius); border: var(--sk-border); position: relative; font-family: var(--sk-font-mono); }
 .sk-alert::before { content: ""; position: absolute; inset: 0; background-image: var(--sk-dither-pattern); background-repeat: repeat; opacity: 0.04; pointer-events: none; border-radius: inherit; }
 .sk-alert__icon { font-size: var(--sk-font-size-base); line-height: 1; flex-shrink: 0; }
@@ -12,3 +24,84 @@
 .sk-alert[data-type="warning"] .sk-alert__icon, .sk-alert[data-type="warning"] .sk-alert__title { color: hsl(var(--sk-warning)); }
 .sk-alert[data-type="destructive"] { background: hsl(var(--sk-destructive) / 0.06); border-color: hsl(var(--sk-destructive) / 0.25); }
 .sk-alert[data-type="destructive"] .sk-alert__icon, .sk-alert[data-type="destructive"] .sk-alert__title { color: hsl(var(--sk-destructive)); }
+
+/* Pixel variant */
+.sk-alert[data-variant="pixel"] {
+  border: 2px solid hsl(var(--sk-foreground));
+  box-shadow: 4px 4px 0 hsl(var(--sk-foreground));
+}
+
+/* Retro variant */
+.sk-alert[data-variant="retro"] {
+  border: 2px solid hsl(var(--sk-foreground));
+  box-shadow: 0 0 8px hsl(var(--sk-foreground) / 0.08);
+}
+.sk-alert[data-variant="retro"]::before {
+  background-image: var(--sk-dither-scanlines);
+  background-size: 100% 4px;
+  opacity: 0.04;
+}
+
+/* ASCII variant */
+.sk-alert[data-variant="ascii"] {
+  border: none;
+  background: transparent;
+  padding-left: var(--sk-space-6);
+}
+.sk-alert[data-variant="ascii"]::before {
+  content: "│";
+  position: absolute;
+  left: var(--sk-space-2);
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  font-family: var(--sk-font-mono);
+  color: hsl(var(--sk-border-color));
+  background-image: none;
+  opacity: 1;
+}
+
+/* Loading state */
+@keyframes sk-alert-dither-fill {
+  0%, 100% { opacity: 0.03; }
+  50%      { opacity: 0.1; }
+}
+
+.sk-alert[data-loading]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--sk-dither-pattern);
+  background-repeat: repeat;
+  animation: sk-alert-dither-fill 1.5s ease-in-out infinite;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* Skeleton state */
+@keyframes sk-alert-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.sk-alert[data-skeleton] .sk-alert__title,
+.sk-alert[data-skeleton] .sk-alert__description {
+  color: transparent;
+  background: linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-accent)) 50%, hsl(var(--sk-muted)) 75%);
+  background-size: 200% 100%;
+  animation: sk-alert-shimmer 1.8s ease-in-out infinite;
+  border-radius: var(--sk-radius);
+}
+
+@media print {
+  .sk-alert { border: 1px solid currentColor; box-shadow: none; }
+  .sk-alert::before, .sk-alert::after { display: none; }
+  .sk-alert[data-skeleton] { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-alert[data-loading]::after { animation: none; opacity: 0.05; }
+  .sk-alert[data-skeleton] .sk-alert__title,
+  .sk-alert[data-skeleton] .sk-alert__description { animation: none; background: hsl(var(--sk-muted)); }
+}

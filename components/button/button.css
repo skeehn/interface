@@ -1,4 +1,13 @@
-/* skeehn — Button: Square, technical, ASCII dither variants */
+/**
+ * skeehn — Button Component
+ *
+ * @component sk-btn
+ * @variants  solid | dither | outline | ghost | inverted | ascii | pixel | retro
+ * @sizes     sm | md (default) | lg | xl
+ * @states    :hover | :active | :focus-visible | :disabled | [data-loading] | [data-skeleton]
+ * @a11y      Focus ring via outline, disabled opacity, aria-disabled support
+ * @print     Renders as outline-only, no shadows or animations
+ */
 .sk-btn {
   display: inline-flex; align-items: center; justify-content: center; gap: var(--sk-space-2);
   padding: var(--sk-space-2) var(--sk-space-4); min-height: 2rem;
@@ -152,4 +161,115 @@
 /* for ascii, use the gap slot instead */
 .sk-btn[data-variant="ascii"][data-loading] {
   /* inherit default loading ::after — ascii border decorators use top/bottom not right */
+}
+
+/* ============================================================
+   MICRO-INTERACTIONS
+   ============================================================ */
+
+.sk-btn:hover:not(:disabled):not([data-variant="pixel"]):not([data-variant="ascii"]) {
+  transform: translateY(-1px);
+}
+
+.sk-btn:focus-visible {
+  outline: 2px solid hsl(var(--sk-ring));
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px hsl(var(--sk-ring) / 0.12);
+}
+
+/* ============================================================
+   SKELETON STATE
+   [data-skeleton] — shimmer placeholder before content loads
+   ============================================================ */
+
+@keyframes sk-btn-skeleton-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.sk-btn[data-skeleton] {
+  pointer-events: none;
+  color: transparent;
+  border-color: hsl(var(--sk-border-color));
+  background:
+    linear-gradient(
+      90deg,
+      hsl(var(--sk-muted)) 25%,
+      hsl(var(--sk-accent)) 50%,
+      hsl(var(--sk-muted)) 75%
+    );
+  background-size: 200% 100%;
+  animation: sk-btn-skeleton-shimmer 1.8s ease-in-out infinite;
+}
+
+.sk-btn[data-skeleton]::before,
+.sk-btn[data-skeleton]::after {
+  display: none;
+}
+
+/* ============================================================
+   RETRO VARIANT — CRT glow + scanlines
+   ============================================================ */
+
+.sk-btn[data-variant="retro"] {
+  background: hsl(var(--sk-primary));
+  color: hsl(var(--sk-background));
+  border: 2px solid hsl(var(--sk-primary));
+  text-shadow: 0 0 4px hsl(var(--sk-primary) / 0.6);
+  box-shadow:
+    0 0 6px hsl(var(--sk-primary) / 0.15),
+    inset 0 0 12px hsl(var(--sk-primary) / 0.05);
+  position: relative;
+}
+
+.sk-btn[data-variant="retro"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    hsl(var(--sk-background) / 0.06) 2px,
+    hsl(var(--sk-background) / 0.06) 3px
+  );
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.sk-btn[data-variant="retro"]:hover:not(:disabled) {
+  box-shadow:
+    0 0 10px hsl(var(--sk-primary) / 0.3),
+    inset 0 0 16px hsl(var(--sk-primary) / 0.08);
+  text-shadow: 0 0 8px hsl(var(--sk-primary) / 0.8);
+}
+
+/* ============================================================
+   PRINT OPTIMIZATION
+   ============================================================ */
+
+@media print {
+  .sk-btn {
+    box-shadow: none;
+    text-shadow: none;
+    background: transparent;
+    color: hsl(var(--sk-foreground));
+    border: 1px solid hsl(var(--sk-foreground));
+  }
+  .sk-btn::before,
+  .sk-btn::after {
+    display: none;
+  }
+  .sk-btn[data-skeleton],
+  .sk-btn[data-loading] {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-btn { transition: none; }
+  .sk-btn:hover:not(:disabled) { transform: none; }
+  .sk-btn:active:not(:disabled) { transform: none; }
+  .sk-btn[data-skeleton] { animation: none; background: hsl(var(--sk-muted)); }
+  .sk-btn[data-loading]::after { animation: none; }
 }

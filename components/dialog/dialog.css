@@ -1,3 +1,14 @@
+/**
+ * skeehn — Dialog Component
+ *
+ * @component sk-dialog (uses <dialog> element)
+ * @variants  default | [data-variant="pixel"] | [data-variant="retro"] | [data-variant="ascii"]
+ * @states    [open] | [data-loading] | [data-skeleton]
+ * @slots     __content | __header | __title | __close | __body | __footer
+ * @a11y      Native dialog focus trapping, Escape to close, backdrop click
+ * @print     Content visible, backdrop and animations hidden
+ */
+
 .sk-dialog { padding: 0; border: none; border-radius: var(--sk-radius); background: transparent; max-width: 28rem; width: 90vw; font-family: var(--sk-font-mono); }
 .sk-dialog::backdrop { background: hsl(var(--sk-foreground) / 0.6); backdrop-filter: blur(2px); }
 .sk-dialog__content { position: relative; background: hsl(var(--sk-background)); border: 2px solid hsl(var(--sk-foreground)); border-radius: var(--sk-radius); overflow: hidden; }
@@ -9,3 +20,68 @@
 .sk-dialog__body { padding: var(--sk-space-4); position: relative; z-index: 1; }
 .sk-dialog__body p { margin: 0; color: hsl(var(--sk-muted-foreground)); font-size: var(--sk-font-size-sm); line-height: var(--sk-line-height); }
 .sk-dialog__footer { display: flex; justify-content: flex-end; gap: var(--sk-space-2); padding: var(--sk-space-3) var(--sk-space-4); border-top: var(--sk-border); position: relative; z-index: 1; }
+
+/* Micro-interactions */
+.sk-dialog[open] { animation: sk-scale-up var(--sk-anim-normal, 300ms) var(--sk-ease-pixel, cubic-bezier(0.25, 0.46, 0.45, 0.94)) both; }
+@keyframes sk-scale-up { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+.sk-dialog__close:focus-visible { outline: 2px solid hsl(var(--sk-ring)); outline-offset: 2px; }
+
+/* Pixel variant */
+.sk-dialog[data-variant="pixel"] .sk-dialog__content {
+  border: 3px solid hsl(var(--sk-foreground));
+  box-shadow: 6px 6px 0 hsl(var(--sk-foreground));
+}
+
+/* Retro variant */
+.sk-dialog[data-variant="retro"] .sk-dialog__content {
+  border: 2px solid hsl(var(--sk-foreground));
+  box-shadow: 0 0 20px hsl(var(--sk-foreground) / 0.1);
+}
+.sk-dialog[data-variant="retro"] .sk-dialog__content::before {
+  background-image: var(--sk-dither-scanlines);
+  background-size: 100% 4px;
+  opacity: 0.03;
+}
+
+/* ASCII variant */
+.sk-dialog[data-variant="ascii"] .sk-dialog__content { border: none; background: hsl(var(--sk-background)); }
+.sk-dialog[data-variant="ascii"] .sk-dialog__header { border-bottom: 1px dashed hsl(var(--sk-border-color)); }
+.sk-dialog[data-variant="ascii"] .sk-dialog__footer { border-top: 1px dashed hsl(var(--sk-border-color)); }
+
+/* Loading */
+.sk-dialog[data-loading] .sk-dialog__body { position: relative; opacity: 0.6; pointer-events: none; }
+.sk-dialog[data-loading] .sk-dialog__body::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--sk-dither-pattern);
+  background-repeat: repeat;
+  opacity: 0.06;
+  animation: sk-pulse-dither 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Skeleton */
+.sk-dialog[data-skeleton] .sk-dialog__title,
+.sk-dialog[data-skeleton] .sk-dialog__body p {
+  color: transparent;
+  background: linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-accent)) 50%, hsl(var(--sk-muted)) 75%);
+  background-size: 200% 100%;
+  animation: sk-card-shimmer 1.8s ease-in-out infinite;
+  border-radius: var(--sk-radius);
+}
+
+@media print {
+  .sk-dialog { position: static; max-width: 100%; width: 100%; }
+  .sk-dialog::backdrop { display: none; }
+  .sk-dialog__content { box-shadow: none; border: 1px solid hsl(var(--sk-foreground)); }
+  .sk-dialog[data-skeleton] { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-dialog[open] { animation: none; }
+  .sk-dialog__close { transition: none; }
+  .sk-dialog[data-skeleton] .sk-dialog__title,
+  .sk-dialog[data-skeleton] .sk-dialog__body p { animation: none; background: hsl(var(--sk-muted)); }
+}

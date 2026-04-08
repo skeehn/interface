@@ -1,3 +1,14 @@
+/**
+ * skeehn — Toggle Component
+ *
+ * @component sk-toggle
+ * @variants  default | [data-variant="pixel"] | [data-variant="retro"] | [data-variant="ascii"]
+ * @states    :checked | :disabled | [data-loading] | [data-skeleton]
+ * @slots     __input | __thumb | __label
+ * @a11y      Hidden input for screen readers, label association, focus-visible
+ * @print     Shows checked/unchecked text state
+ */
+
 .sk-toggle { display: inline-flex; align-items: center; gap: var(--sk-space-2); cursor: pointer; user-select: none; font-family: var(--sk-font-mono); }
 .sk-toggle__input { position: absolute; opacity: 0; width: 0; height: 0; }
 .sk-toggle__thumb { width: 2.5rem; height: 1.25rem; background: hsl(var(--sk-muted)); border: var(--sk-border); border-radius: var(--sk-radius); position: relative; transition: all var(--sk-transition); flex-shrink: 0; }
@@ -6,3 +17,39 @@
 .sk-toggle__input:checked + .sk-toggle__thumb::before { transform: translateX(1.25rem); }
 .sk-toggle__input:checked + .sk-toggle__thumb::after { content: ""; position: absolute; inset: 0; background-image: var(--sk-dither-pattern); background-repeat: repeat; opacity: var(--sk-dither-opacity); border-radius: inherit; pointer-events: none; }
 .sk-toggle__label { font-size: var(--sk-font-size-sm); color: hsl(var(--sk-foreground)); letter-spacing: 0.02em; }
+
+/* Micro-interactions */
+.sk-toggle__input:focus-visible + .sk-toggle__thumb { outline: 2px solid hsl(var(--sk-ring)); outline-offset: 2px; box-shadow: 0 0 0 4px hsl(var(--sk-ring) / 0.12); }
+.sk-toggle:hover .sk-toggle__thumb { border-color: hsl(var(--sk-foreground) / 0.3); }
+
+/* Pixel variant */
+.sk-toggle[data-variant="pixel"] .sk-toggle__thumb { border: 2px solid hsl(var(--sk-foreground)); box-shadow: 2px 2px 0 hsl(var(--sk-foreground)); border-radius: 0; }
+.sk-toggle[data-variant="pixel"] .sk-toggle__thumb::before { border-radius: 0; border: 1px solid hsl(var(--sk-foreground)); }
+
+/* Retro variant */
+.sk-toggle[data-variant="retro"] .sk-toggle__input:checked + .sk-toggle__thumb { box-shadow: 0 0 6px hsl(var(--sk-primary) / 0.3); }
+
+/* ASCII variant */
+.sk-toggle[data-variant="ascii"] .sk-toggle__thumb { background: transparent; border: none; width: 3rem; }
+.sk-toggle[data-variant="ascii"] .sk-toggle__thumb::before { background: transparent; border: 1px solid hsl(var(--sk-foreground)); content: "[ ]"; width: auto; height: auto; font-family: var(--sk-font-mono); font-size: var(--sk-font-size-xs); display: flex; align-items: center; justify-content: center; }
+.sk-toggle[data-variant="ascii"] .sk-toggle__input:checked + .sk-toggle__thumb::before { content: "[x]"; }
+
+/* Loading */
+.sk-toggle[data-loading] { pointer-events: none; opacity: 0.6; }
+.sk-toggle[data-loading] .sk-toggle__thumb { animation: sk-pulse-dither 1.5s ease-in-out infinite; }
+
+/* Skeleton */
+.sk-toggle[data-skeleton] .sk-toggle__thumb { background: linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-accent)) 50%, hsl(var(--sk-muted)) 75%); background-size: 200% 100%; animation: sk-card-shimmer 1.8s ease-in-out infinite; }
+.sk-toggle[data-skeleton] .sk-toggle__label { color: transparent; background: hsl(var(--sk-muted)); border-radius: var(--sk-radius); }
+
+@media print {
+  .sk-toggle { box-shadow: none; }
+  .sk-toggle__thumb, .sk-toggle__thumb::before, .sk-toggle__thumb::after { animation: none; }
+  .sk-toggle[data-skeleton] { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-toggle__thumb, .sk-toggle__thumb::before { transition: none; }
+  .sk-toggle[data-loading] .sk-toggle__thumb { animation: none; }
+  .sk-toggle[data-skeleton] .sk-toggle__thumb { animation: none; background: hsl(var(--sk-muted)); }
+}

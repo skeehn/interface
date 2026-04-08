@@ -1,6 +1,54 @@
+/**
+ * skeehn — Progress Component
+ *
+ * @component sk-progress
+ * @variants  default | [data-variant="dither"] | [data-variant="pixel"] | [data-variant="retro"] | [data-variant="ascii"]
+ * @states    [data-state="loading"] | [data-loading] | [data-skeleton]
+ * @slots     __track | __indicator | __label
+ * @a11y      role="progressbar" recommended, aria-valuenow/aria-valuemin/aria-valuemax
+ * @print     Shows track with filled indicator as solid bar
+ */
+
 .sk-progress { display: flex; align-items: center; gap: var(--sk-space-3); font-family: var(--sk-font-mono); }
 .sk-progress__track { flex: 1; height: 0.5rem; background: hsl(var(--sk-secondary)); border-radius: var(--sk-radius); overflow: hidden; border: var(--sk-border); }
 .sk-progress__indicator { height: 100%; background: hsl(var(--sk-primary)); border-radius: var(--sk-radius); transition: width var(--sk-transition-slow); position: relative; }
 .sk-progress[data-variant="dither"] .sk-progress__indicator::before { content: ""; position: absolute; inset: 0; background-image: var(--sk-dither-pattern); background-repeat: repeat; opacity: var(--sk-dither-opacity); mix-blend-mode: overlay; }
 .sk-progress[data-state="loading"] .sk-progress__indicator { animation: sk-dither-pulse 1.5s ease-in-out infinite; }
 .sk-progress__label { font-size: var(--sk-font-size-xs); font-weight: 500; color: hsl(var(--sk-muted-foreground)); letter-spacing: 0.02em; min-width: 2.5rem; text-align: right; }
+
+/* Pixel variant */
+.sk-progress[data-variant="pixel"] .sk-progress__track { border: 2px solid hsl(var(--sk-foreground)); box-shadow: 2px 2px 0 hsl(var(--sk-foreground)); }
+.sk-progress[data-variant="pixel"] .sk-progress__indicator { border-radius: 0; }
+
+/* Retro variant */
+.sk-progress[data-variant="retro"] .sk-progress__indicator { box-shadow: 0 0 4px hsl(var(--sk-primary) / 0.3); }
+.sk-progress[data-variant="retro"] .sk-progress__track { box-shadow: inset 0 0 4px hsl(var(--sk-foreground) / 0.05); }
+
+/* ASCII variant */
+.sk-progress[data-variant="ascii"] .sk-progress__track { border: none; background: transparent; overflow: visible; }
+.sk-progress[data-variant="ascii"] .sk-progress__indicator { background: transparent; border-radius: 0; }
+.sk-progress[data-variant="ascii"] .sk-progress__track::before { content: "["; position: absolute; left: -0.75em; color: hsl(var(--sk-border-color)); font-family: var(--sk-font-mono); font-size: var(--sk-font-size-xs); }
+.sk-progress[data-variant="ascii"] .sk-progress__track::after { content: "]"; position: absolute; right: -0.75em; color: hsl(var(--sk-border-color)); font-family: var(--sk-font-mono); font-size: var(--sk-font-size-xs); }
+.sk-progress[data-variant="ascii"] .sk-progress__track { position: relative; }
+
+/* Loading */
+@keyframes sk-dither-pulse { 0%, 100% { opacity: var(--sk-dither-opacity, 0.12); } 50% { opacity: calc(var(--sk-dither-opacity, 0.12) * 2.5); } }
+.sk-progress[data-loading] .sk-progress__indicator { width: 100%; animation: sk-progress-indeterminate 1.8s ease-in-out infinite; position: absolute; }
+
+/* Skeleton */
+.sk-progress[data-skeleton] .sk-progress__track { background: linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-accent)) 50%, hsl(var(--sk-muted)) 75%); background-size: 200% 100%; animation: sk-card-shimmer 1.8s ease-in-out infinite; }
+.sk-progress[data-skeleton] .sk-progress__indicator { display: none; }
+.sk-progress[data-skeleton] .sk-progress__label { color: transparent; }
+
+@media print {
+  .sk-progress { box-shadow: none; }
+  .sk-progress__track { border: 1px solid hsl(var(--sk-foreground)); }
+  .sk-progress__indicator { background: hsl(var(--sk-foreground)); }
+  .sk-progress[data-skeleton] { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-progress__indicator { transition: none; }
+  .sk-progress[data-loading] .sk-progress__indicator { animation: none; width: 60%; }
+  .sk-progress[data-skeleton] .sk-progress__track { animation: none; background: hsl(var(--sk-muted)); }
+}

@@ -1,4 +1,13 @@
-/* skeehn — Card */
+/**
+ * skeehn — Card Component
+ *
+ * @component sk-card
+ * @variants  solid | dither | outline | ghost | inverted | pixel | retro | ascii
+ * @states    :hover | [data-loading] | [data-skeleton]
+ * @slots     __header | __title | __body | __footer | __footer-text
+ * @a11y      Semantic structure with header/body/footer regions
+ * @print     Flat borders, no shadows or overlays
+ */
 
 /* Base */
 .sk-card {
@@ -122,4 +131,162 @@
 .sk-card[data-variant="pixel"]:hover {
   box-shadow: 6px 6px 0 hsl(var(--sk-foreground));
   transform: translate(-1px, -1px);
+}
+
+/* Retro — CRT glow + scanline texture */
+.sk-card[data-variant="retro"] {
+  background: hsl(var(--sk-background));
+  border: 2px solid hsl(var(--sk-foreground));
+  box-shadow:
+    0 0 8px hsl(var(--sk-foreground) / 0.08),
+    inset 0 0 20px hsl(var(--sk-foreground) / 0.02);
+  position: relative;
+}
+
+.sk-card[data-variant="retro"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    hsl(var(--sk-foreground) / 0.04) 2px,
+    hsl(var(--sk-foreground) / 0.04) 3px
+  );
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 0;
+}
+
+.sk-card[data-variant="retro"] > * {
+  position: relative;
+  z-index: 1;
+}
+
+.sk-card[data-variant="retro"]:hover {
+  box-shadow:
+    0 0 14px hsl(var(--sk-foreground) / 0.12),
+    inset 0 0 24px hsl(var(--sk-foreground) / 0.03);
+}
+
+/* ASCII — box-drawing border card */
+.sk-card[data-variant="ascii"] {
+  border: none;
+  background: transparent;
+  font-family: var(--sk-font-mono);
+  position: relative;
+  padding-top: var(--sk-space-3);
+  padding-bottom: var(--sk-space-3);
+}
+
+.sk-card[data-variant="ascii"]::before {
+  content: "┌──────────────────────────────┐";
+  display: block;
+  font-size: 0.5rem;
+  line-height: 1;
+  color: hsl(var(--sk-border-color));
+  letter-spacing: 0;
+  padding: 0 var(--sk-space-2);
+}
+
+.sk-card[data-variant="ascii"]::after {
+  content: "└──────────────────────────────┘";
+  display: block;
+  font-size: 0.5rem;
+  line-height: 1;
+  color: hsl(var(--sk-border-color));
+  letter-spacing: 0;
+  padding: 0 var(--sk-space-2);
+}
+
+/* ============================================================
+   LOADING STATE
+   ============================================================ */
+
+@keyframes sk-card-dither-fill {
+  0%   { background-image: var(--sk-dither-b2); opacity: 0.05; }
+  50%  { background-image: var(--sk-dither-b8); opacity: 0.12; }
+  100% { background-image: var(--sk-dither-b2); opacity: 0.05; }
+}
+
+.sk-card[data-loading] {
+  pointer-events: none;
+}
+
+.sk-card[data-loading] .sk-card__body::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--sk-dither-pattern);
+  background-repeat: repeat;
+  animation: sk-card-dither-fill 2s steps(4) infinite;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.sk-card[data-loading] .sk-card__body {
+  position: relative;
+}
+
+/* ============================================================
+   SKELETON STATE
+   ============================================================ */
+
+@keyframes sk-card-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.sk-card[data-skeleton] {
+  pointer-events: none;
+  border-color: hsl(var(--sk-border-color));
+}
+
+.sk-card[data-skeleton] .sk-card__title,
+.sk-card[data-skeleton] .sk-card__body p,
+.sk-card[data-skeleton] .sk-card__footer-text {
+  color: transparent;
+  background:
+    linear-gradient(
+      90deg,
+      hsl(var(--sk-muted)) 25%,
+      hsl(var(--sk-accent)) 50%,
+      hsl(var(--sk-muted)) 75%
+    );
+  background-size: 200% 100%;
+  animation: sk-card-shimmer 1.8s ease-in-out infinite;
+  border-radius: var(--sk-radius);
+}
+
+/* ============================================================
+   PRINT & MOTION
+   ============================================================ */
+
+@media print {
+  .sk-card {
+    box-shadow: none;
+    border: 1px solid hsl(var(--sk-foreground));
+    break-inside: avoid;
+  }
+  .sk-card::before,
+  .sk-card::after {
+    display: none;
+  }
+  .sk-card[data-skeleton],
+  .sk-card[data-loading] {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-card { transition: none; }
+  .sk-card:not([data-variant]):hover { transform: none; }
+  .sk-card[data-skeleton] .sk-card__title,
+  .sk-card[data-skeleton] .sk-card__body p,
+  .sk-card[data-skeleton] .sk-card__footer-text {
+    animation: none;
+    background: hsl(var(--sk-muted));
+  }
+  .sk-card[data-loading] .sk-card__body::after { animation: none; }
 }

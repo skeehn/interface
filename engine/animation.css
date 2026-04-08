@@ -241,3 +241,185 @@
     transition-duration:       0.01ms !important;
   }
 }
+
+/* ============================================================
+   SCROLL-DRIVEN ANIMATIONS
+   Progressive enhancement for scroll-linked effects.
+   Only activates in browsers that support animation-timeline.
+   ============================================================ */
+
+@supports (animation-timeline: scroll()) {
+  .sk-scroll-reveal {
+    animation: sk-fade-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 100%;
+  }
+
+  .sk-scroll-reveal-slide {
+    animation: sk-slide-in-b linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 80%;
+  }
+
+  .sk-scroll-progress {
+    animation: sk-progress-fill linear both;
+    animation-timeline: scroll();
+  }
+
+  .sk-scroll-dither {
+    animation: sk-morph-dither linear both;
+    animation-timeline: scroll();
+  }
+}
+
+/* ============================================================
+   STAGGER UTILITIES
+   Cascading delay for children via nth-child.
+   Usage: <div class="sk-stagger">child1, child2, ...</div>
+   ============================================================ */
+
+.sk-stagger > *:nth-child(1)  { animation-delay: calc(var(--sk-stagger-interval, 60ms) * 0); }
+.sk-stagger > *:nth-child(2)  { animation-delay: calc(var(--sk-stagger-interval, 60ms) * 1); }
+.sk-stagger > *:nth-child(3)  { animation-delay: calc(var(--sk-stagger-interval, 60ms) * 2); }
+.sk-stagger > *:nth-child(4)  { animation-delay: calc(var(--sk-stagger-interval, 60ms) * 3); }
+.sk-stagger > *:nth-child(5)  { animation-delay: calc(var(--sk-stagger-interval, 60ms) * 4); }
+.sk-stagger > *:nth-child(6)  { animation-delay: calc(var(--sk-stagger-interval, 60ms) * 5); }
+.sk-stagger > *:nth-child(7)  { animation-delay: calc(var(--sk-stagger-interval, 60ms) * 6); }
+.sk-stagger > *:nth-child(8)  { animation-delay: calc(var(--sk-stagger-interval, 60ms) * 7); }
+.sk-stagger > *:nth-child(9)  { animation-delay: calc(var(--sk-stagger-interval, 60ms) * 8); }
+.sk-stagger > *:nth-child(10) { animation-delay: calc(var(--sk-stagger-interval, 60ms) * 9); }
+.sk-stagger > *:nth-child(11) { animation-delay: calc(var(--sk-stagger-interval, 60ms) * 10); }
+.sk-stagger > *:nth-child(12) { animation-delay: calc(var(--sk-stagger-interval, 60ms) * 11); }
+
+/* ============================================================
+   SPRING EASING
+   Approximated via CSS linear() — physically plausible
+   overshoot-then-settle curve for natural motion.
+   ============================================================ */
+
+:root {
+  /* Spring — moderate overshoot, fast settle */
+  --sk-ease-spring: linear(
+    0, 0.009, 0.035 2.1%, 0.141 4.4%, 0.723 12.9%, 0.938 16.7%,
+    1.017, 1.069 21.3%, 1.091, 1.099 24.7%, 1.093, 1.07 28.7%,
+    0.999 34.7%, 0.968 38.5%, 0.957, 0.956 42.4%, 0.966 46.2%,
+    0.993 53.5%, 1.006 58.5%, 1.008 64%, 1.004 71.6%, 1
+  );
+
+  /* Spring-heavy — strong overshoot for attention-grabbing */
+  --sk-ease-spring-heavy: linear(
+    0, 0.006, 0.025 2.8%, 0.101 5.6%, 0.539 14.5%, 0.721 18.1%,
+    0.915 22.5%, 1.026 26.2%, 1.107 30.7%, 1.131 33.3%,
+    1.127 36.7%, 1.077 42.7%, 1.012 51%, 0.986 58%, 0.976 65%,
+    0.981 73.1%, 0.994 83.7%, 1
+  );
+}
+
+/* ============================================================
+   VIEW TRANSITION STYLES
+   Styling for ::view-transition pseudo-elements.
+   ============================================================ */
+
+::view-transition-group(*) {
+  animation-duration: var(--sk-anim-normal, 300ms);
+  animation-timing-function: var(--sk-ease-spring);
+}
+
+::view-transition-old(*) {
+  animation: sk-fade-out var(--sk-anim-fast, 150ms) var(--sk-ease-sharp) both;
+}
+
+::view-transition-new(*) {
+  animation: sk-fade-in var(--sk-anim-normal, 300ms) var(--sk-ease-spring) both;
+}
+
+/* Named view transitions for dithered morph */
+::view-transition-old(sk-dither-morph) {
+  animation:
+    sk-fade-out var(--sk-anim-fast, 150ms) var(--sk-ease-sharp) both,
+    sk-morph-dither var(--sk-anim-normal, 300ms) steps(4) both;
+}
+
+::view-transition-new(sk-dither-morph) {
+  animation:
+    sk-fade-in var(--sk-anim-normal, 300ms) var(--sk-ease-spring) both,
+    sk-morph-dither var(--sk-anim-normal, 300ms) steps(4) reverse both;
+}
+
+/* ============================================================
+   DITHER MORPH ANIMATION
+   Pattern morphing between densities — smooth density shift.
+   ============================================================ */
+
+@keyframes sk-dither-morph-in {
+  0%   { background-image: none;                opacity: 0; }
+  15%  { background-image: var(--sk-dither-b1);  opacity: 0.3; }
+  30%  { background-image: var(--sk-dither-b2);  opacity: 0.5; }
+  50%  { background-image: var(--sk-dither-b6);  opacity: 0.7; }
+  70%  { background-image: var(--sk-dither-b10); opacity: 0.85; }
+  85%  { background-image: var(--sk-dither-b12); opacity: 0.95; }
+  100% { background-image: var(--sk-dither-b14); opacity: 1; }
+}
+
+@keyframes sk-dither-morph-out {
+  0%   { background-image: var(--sk-dither-b14); opacity: 1; }
+  20%  { background-image: var(--sk-dither-b10); opacity: 0.85; }
+  40%  { background-image: var(--sk-dither-b6);  opacity: 0.65; }
+  60%  { background-image: var(--sk-dither-b4);  opacity: 0.4; }
+  80%  { background-image: var(--sk-dither-b2);  opacity: 0.2; }
+  100% { background-image: none;                 opacity: 0; }
+}
+
+.sk-dither-morph-in  { animation: sk-dither-morph-in  var(--sk-anim-slow, 600ms)  steps(6) both; }
+.sk-dither-morph-out { animation: sk-dither-morph-out var(--sk-anim-slow, 600ms)  steps(6) both; }
+
+/* ============================================================
+   GPU ACCELERATION HINTS
+   Apply to elements that animate frequently for smoother perf.
+   ============================================================ */
+
+.sk-gpu {
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+/* Remove will-change after animation settles to release memory */
+.sk-gpu-settle {
+  will-change: auto;
+}
+
+/* ============================================================
+   ADDITIONAL KEYFRAMES — POP, SCALE, ROTATE
+   ============================================================ */
+
+@keyframes sk-pop-in {
+  0%   { transform: scale(0.8); opacity: 0; }
+  60%  { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes sk-pop-out {
+  0%   { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.85); opacity: 0; }
+}
+
+@keyframes sk-scale-up {
+  from { transform: scale(0.95); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.sk-pop-in  { animation: sk-pop-in  var(--sk-anim-normal) var(--sk-ease-spring) both; }
+.sk-pop-out { animation: sk-pop-out var(--sk-anim-fast)   var(--sk-ease-sharp)  both; }
+.sk-scale-up { animation: sk-scale-up var(--sk-anim-normal) var(--sk-ease-spring) both; }
+
+/* ============================================================
+   PRINT — disable all animations
+   ============================================================ */
+
+@media print {
+  *, *::before, *::after {
+    animation: none;
+    transition: none;
+  }
+}

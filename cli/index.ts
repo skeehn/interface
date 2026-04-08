@@ -1,312 +1,450 @@
 #!/usr/bin/env bun
-// skeehn CLI — AI-native. Zero deps. Pure Bun.
+/**
+ * skeehn CLI — ASCII native AI component library
+ *
+ * Commands:
+ *   init          Set up skeehn in a Next.js/React project
+ *   add <name>    Copy component source into your project (shadcn-style)
+ *   theme <name>  Switch theme
+ *   doctor        Validate setup
+ *   --help        Show usage
+ *
+ * @packageDocumentation
+ */
 
-import { existsSync, mkdirSync, copyFileSync, readFileSync, writeFileSync } from "node:fs";
-import { resolve, join, dirname } from "node:path";
+import { existsSync, mkdirSync, copyFileSync, readFileSync, writeFileSync, readdirSync } from "node:fs";
+import { resolve, join, dirname, basename, extname } from "node:path";
 import { fileURLToPath } from "node:url";
 
+const VERSION = "1.0.0";
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const ENGINE = join(ROOT, "engine");
 const THEMES = join(ROOT, "themes");
 const COMPONENTS = join(ROOT, "components");
-const VALID_THEMES = ["default", "dark", "brutal", "terminal", "print", "grain"];
-const VALID_DENSITIES = ["sparse", "normal", "dense", "solid"];
-const VALID_TEMPLATES = ["hello-world", "dashboard", "gradient"];
+const REACT_COMPONENTS = join(ROOT, "packages", "react", "src", "components");
+const REGISTRY_PATH = join(ROOT, "registry.json");
 
-const log = (m: string) => console.log(`\n  ${m}`);
+const ALL_THEMES = ["default", "dark", "brutal", "terminal", "print", "grain", "mardi-gras"];
+
+// ─── Logging ───────────────────────────────────────────────
+const log = (m: string) => console.log(`  ${m}`);
 const ok = (m: string) => console.log(`  ✓ ${m}`);
-const err = (m: string) => { console.error(`\n  ✗ ${m}\n`); process.exit(1); };
+const warn = (m: string) => console.log(`  ⚠ ${m}`);
+const err = (m: string) => { console.error(`  ✗ ${m}`); process.exit(1); };
 
+// ─── Registry ──────────────────────────────────────────────
+interface RegistryComponent {
+  name: string;
+  description: string;
+  files: string[];
+  category: string;
+}
+
+interface Registry {
+  name: string;
+  version: string;
+  themes: string[];
+  components: RegistryComponent[];
+}
+
+function loadRegistry(): Registry {
+  return JSON.parse(readFileSync(REGISTRY_PATH, "utf-8"));
+}
+
+// ─── Flag Parser ───────────────────────────────────────────
 function parseFlags(args: string[]): Record<string, string> {
   const f: Record<string, string> = {};
   for (let i = 0; i < args.length; i++) {
-    if ((args[i] === "-p" || args[i] === "--path") && args[i+1]) f.path = args[++i];
-    if ((args[i] === "-t" || args[i] === "--theme") && args[i+1]) f.theme = args[++i];
-    if (args[i] === "--template" && args[i+1]) f.template = args[++i];
-    if (args[i] === "--json") f.json = "true";
+    const arg = args[i];
+    if ((arg === "-p" || arg === "--path") && args[i + 1]) f.path = args[++i];
+    else if ((arg === "-t" || arg === "--theme") && args[i + 1]) f.theme = args[++i];
+    else if (arg === "--template" && args[i + 1]) f.template = args[++i];
+    else if (arg === "--css-dir" && args[i + 1]) f.cssDir = args[++i];
+    else if (arg === "--component-dir" && args[i + 1]) f.componentDir = args[++i];
+    else if (arg === "--json") f.json = "true";
+    else if (arg === "--no-css") f.noCss = "true";
+    else if (arg === "--css-only") f.cssOnly = "true";
   }
   return f;
 }
 
-function detectFramework(target: string): 'next' | 'react' | 'vue' | 'svelte' | 'html' {
-  const pkgPath = join(target, 'package.json');
-  if (!existsSync(pkgPath)) return 'html';
+// ─── Framework Detection ───────────────────────────────────
+type Framework = "next" | "react" | "vue" | "svelte" | "html";
+
+function detectFramework(target: string): Framework {
+  const pkgPath = join(target, "package.json");
+  if (!existsSync(pkgPath)) return "html";
   try {
-    const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
+    const pkg = JSON.parse(readFileSync(pkgPath, "utf-8"));
     const deps = { ...pkg.dependencies, ...pkg.devDependencies };
-    if (deps['next']) return 'next';
-    if (deps['react']) return 'react';
-    if (deps['vue']) return 'vue';
-    if (deps['svelte']) return 'svelte';
+    if (deps["next"]) return "next";
+    if (deps["react"]) return "react";
+    if (deps["vue"]) return "vue";
+    if (deps["svelte"]) return "svelte";
   } catch {}
-  return 'html';
+  return "html";
 }
 
+// ─── Pascal Case ───────────────────────────────────────────
+function toPascalCase(name: string): string {
+  return name
+    .split("-")
+    .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+    .join("");
+}
+
+// ═══════════════════════════════════════════════════════════
+// INIT — Set up skeehn in a project
+// ═══════════════════════════════════════════════════════════
 async function init(args: string[]) {
   const f = parseFlags(args);
   const target = resolve(f.path || process.cwd());
   const theme = f.theme || "default";
-  log("skeehn — ASCII dither UI system\n");
-  if (!VALID_THEMES.includes(theme)) err(`Theme "${theme}" invalid. Choose: ${VALID_THEMES.join(", ")}`);
-
-  mkdirSync(join(target, "styles"), { recursive: true });
-  mkdirSync(join(target, "components"), { recursive: true });
-
-  for (const file of ["dither.css", "tokens.css", "reset.css"]) {
-    const src = join(ENGINE, file);
-    if (existsSync(src)) { copyFileSync(src, join(target, "styles", file)); ok(`styles/${file}`); }
-  }
-  for (const file of ["characters.ts", "dither.ts", "canvas.ts"]) {
-    const src = join(ENGINE, file);
-    if (existsSync(src)) { mkdirSync(join(target, "engine"), { recursive: true }); copyFileSync(src, join(target, "engine", file)); ok(`engine/${file}`); }
-  }
-  const tSrc = join(THEMES, `${theme}.css`);
-  if (existsSync(tSrc)) { copyFileSync(tSrc, join(target, "styles", "theme.css")); ok(`styles/theme.css (${theme})`); }
-
-  // Template support
-  const template = f.template || "hello-world";
-  if (f.template && !VALID_TEMPLATES.includes(template)) {
-    err(`Template "${template}" not found. Choose: ${VALID_TEMPLATES.join(", ")}`);
-  }
-
-  const idx = join(target, "index.html");
-  if (!existsSync(idx)) {
-    const tplSrc = join(ROOT, "templates", template, "index.html");
-    if (existsSync(tplSrc)) {
-      let html = readFileSync(tplSrc, "utf-8");
-      // Rewrite relative paths for target location
-      html = html.replace(/\.\.\/\.\.\/engine\//g, "styles/");
-      html = html.replace(/\.\.\/\.\.\/themes\//g, "styles/themes/");
-      html = html.replace(/\.\.\/\.\.\/components\//g, "components/");
-      writeFileSync(idx, html);
-    } else {
-      writeFileSync(idx, `<!DOCTYPE html><html lang="en" data-theme="${theme}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>skeehn</title><link rel="stylesheet" href="styles/reset.css"><link rel="stylesheet" href="styles/tokens.css"><link rel="stylesheet" href="styles/dither.css"><link rel="stylesheet" href="styles/theme.css"></head><body><h1>skeehn</h1><p>Run <code>npx skeehn add button</code></p></body></html>`);
-    }
-    ok(`index.html (template: ${template})`);
-  }
-
-  // Framework detection
   const framework = detectFramework(target);
-  const nextSteps: Record<string, string> = {
-    next:   'Import CSS in app/globals.css. Use @skeehn/react for typed wrappers.',
-    react:  'Import CSS in your entry file. Use @skeehn/react for typed wrappers.',
-    vue:    'Import CSS in main.ts. skeehn custom elements work natively in Vue.',
-    svelte: 'Import CSS in +layout.svelte. skeehn custom elements work natively in Svelte.',
-    html:   'Link CSS files in <head>. Load component JS via <script type="module">.',
-  };
 
-  log(`Done in ${target}\nTheme: ${theme} · Template: ${template}\nFramework: ${framework} → ${nextSteps[framework]}\nNext: npx skeehn add button\n      npx skeehn theme brutal\n`);
+  console.log("\n  ▦ skeehn init\n");
+
+  if (!ALL_THEMES.includes(theme)) {
+    err(`Theme "${theme}" not found. Available: ${ALL_THEMES.join(", ")}`);
+  }
+
+  // 1. Create directories
+  const stylesDir = join(target, "styles", "skeehn");
+  const componentsDir = join(target, f.componentDir || "components", "ui");
+  mkdirSync(stylesDir, { recursive: true });
+  mkdirSync(componentsDir, { recursive: true });
+
+  // 2. Copy engine CSS
+  for (const file of ["reset.css", "tokens.css", "dither.css", "animation.css"]) {
+    const src = join(ENGINE, file);
+    if (existsSync(src)) {
+      copyFileSync(src, join(stylesDir, file));
+      ok(`styles/skeehn/${file}`);
+    }
+  }
+
+  // 3. Copy theme
+  const themeSrc = join(THEMES, `${theme}.css`);
+  if (existsSync(themeSrc)) {
+    copyFileSync(themeSrc, join(stylesDir, "theme.css"));
+    ok(`styles/skeehn/theme.css (${theme})`);
+  }
+
+  // 4. Framework-specific setup
+  if (framework === "next") {
+    // Add CSS imports to globals.css if it exists
+    const globalsPath = join(target, "src", "app", "globals.css");
+    const altGlobalsPath = join(target, "app", "globals.css");
+    const gp = existsSync(globalsPath) ? globalsPath : existsSync(altGlobalsPath) ? altGlobalsPath : null;
+
+    if (gp) {
+      const existing = readFileSync(gp, "utf-8");
+      if (!existing.includes("skeehn")) {
+        const imports = [
+          "",
+          "/* skeehn engine CSS */",
+          '@import "./../../styles/skeehn/reset.css";',
+          '@import "./../../styles/skeehn/tokens.css";',
+          '@import "./../../styles/skeehn/dither.css";',
+          '@import "./../../styles/skeehn/animation.css";',
+          '@import "./../../styles/skeehn/theme.css";',
+          "",
+        ].join("\n");
+        writeFileSync(gp, existing + imports);
+        ok(`Updated globals.css with skeehn imports`);
+      }
+    }
+
+    // Check if @skeehn/react is installed
+    const pkgPath = join(target, "package.json");
+    if (existsSync(pkgPath)) {
+      const pkg = JSON.parse(readFileSync(pkgPath, "utf-8"));
+      const deps = { ...pkg.dependencies, ...pkg.devDependencies };
+      if (!deps["@skeehn/react"]) {
+        log(`\n  Run: bun add @skeehn/react`);
+      }
+    }
+  }
+
+  // 5. Summary
+  console.log(`
+  ✓ skeehn initialized!
+
+  Framework: ${framework}
+  Theme:     ${theme}
+  Styles:    styles/skeehn/
+  Components: ${componentsDir.replace(target + "/", "")}
+
+  Next steps:
+    npx skeehn add button              Add a component
+    npx skeehn add chat-bubble         Add AI chat bubble
+    npx skeehn add --all               Add all 32 components
+    npx skeehn doctor                  Validate setup
+`);
 }
 
+// ═══════════════════════════════════════════════════════════
+// ADD — Copy component source into project (shadcn-style)
+// ═══════════════════════════════════════════════════════════
 async function add(args: string[]) {
   const comp = args[0];
   const f = parseFlags(args.slice(1));
   const target = resolve(f.path || process.cwd());
-  const reg = JSON.parse(readFileSync(join(ROOT, "registry.json"), "utf-8"));
+  const reg = loadRegistry();
+  const framework = detectFramework(target);
 
-  if (comp === "all") {
-    let n = 0;
+  const cssDir = join(target, f.cssDir || "styles", "skeehn", "components");
+  const componentDir = join(target, f.componentDir || "components", "ui");
+
+  if (!comp) {
+    const names = reg.components.map((c) => c.name).join(", ");
+    err(`Component name required.\n\n  Available: ${names}\n\n  Usage: npx skeehn add button`);
+  }
+
+  // Handle --all
+  if (comp === "all" || comp === "--all") {
+    console.log("\n  ▦ skeehn add --all\n");
+    let count = 0;
     for (const c of reg.components) {
-      const dir = join(target, "components", c.name);
-      mkdirSync(dir, { recursive: true });
-      for (const file of c.files) {
-        const src = join(COMPONENTS, c.name, file);
-        if (existsSync(src)) { copyFileSync(src, join(dir, file)); ok(`components/${c.name}/${file}`); n++; }
-      }
+      addSingleComponent(c, { target, cssDir, componentDir, framework, noCss: f.noCss === "true", cssOnly: f.cssOnly === "true" });
+      count++;
     }
-    log(`Added all ${reg.components.length} components (${n} files)\n`);
+    console.log(`\n  ✓ Added all ${count} components\n`);
     return;
   }
-  if (!comp) { const names = reg.components.map((c: {name:string})=>c.name).join(", "); err(`Component required. Available: ${names}`); }
-  const c = reg.components.find((x: {name:string})=>x.name === comp);
-  if (!c) { const names = reg.components.map((x: {name:string})=>x.name).join(", "); err(`"${comp}" not found. Available: ${names}`); }
 
-  const dir = join(target, "components", c.name);
-  mkdirSync(dir, { recursive: true });
-  let n = 0;
-  for (const file of c.files) {
-    const src = join(COMPONENTS, c.name, file);
-    if (existsSync(src)) { copyFileSync(src, join(dir, file)); ok(`components/${c.name}/${file}`); n++; }
+  // Find component
+  const c = reg.components.find((x) => x.name === comp);
+  if (!c) {
+    const names = reg.components.map((x) => x.name).join(", ");
+    err(`"${comp}" not found.\n\n  Available: ${names}`);
+    return; // unreachable but TS needs it
   }
-  log(`Added ${c.name} (${n} files)\n<link rel="stylesheet" href="components/${c.name}/${c.name}.css">\n`);
+
+  console.log(`\n  ▦ skeehn add ${comp}\n`);
+  addSingleComponent(c, { target, cssDir, componentDir, framework, noCss: f.noCss === "true", cssOnly: f.cssOnly === "true" });
+
+  // Show next steps
+  const pascal = toPascalCase(c.name);
+  const cssFile = c.files.find((f) => f.endsWith(".css"));
+
+  console.log(`
+  Next steps:`);
+  if (cssFile && f.cssOnly !== "true") {
+    log(`  Import CSS in globals.css:`);
+    log(`    @import "./../../styles/skeehn/components/${cssFile}";`);
+  }
+  if (framework === "next" || framework === "react") {
+    log(`  Import component:`);
+    log(`    import { ${pascal} } from '@/components/ui/${pascal}';`);
+  }
+  console.log();
 }
 
+function addSingleComponent(
+  c: RegistryComponent,
+  opts: { target: string; cssDir: string; componentDir: string; framework: Framework; noCss: boolean; cssOnly: boolean }
+) {
+  // 1. Copy CSS files
+  if (!opts.noCss) {
+    mkdirSync(opts.cssDir, { recursive: true });
+    for (const file of c.files.filter((f) => f.endsWith(".css"))) {
+      const src = join(COMPONENTS, c.name, file);
+      if (existsSync(src)) {
+        copyFileSync(src, join(opts.cssDir, file));
+        ok(`styles/skeehn/components/${file}`);
+      }
+    }
+  }
+
+  // 2. Copy React wrapper (.tsx) if framework is React/Next
+  if (!opts.cssOnly && (opts.framework === "next" || opts.framework === "react")) {
+    const pascal = toPascalCase(c.name);
+    const tsxSrc = join(REACT_COMPONENTS, `${pascal}.tsx`);
+
+    if (existsSync(tsxSrc)) {
+      mkdirSync(opts.componentDir, { recursive: true });
+      copyFileSync(tsxSrc, join(opts.componentDir, `${pascal}.tsx`));
+      ok(`components/ui/${pascal}.tsx`);
+    }
+  }
+
+  // 3. Copy JS files (for vanilla components with behavior)
+  if (!opts.cssOnly) {
+    for (const file of c.files.filter((f) => f.endsWith(".js"))) {
+      const src = join(COMPONENTS, c.name, file);
+      if (existsSync(src)) {
+        mkdirSync(opts.cssDir, { recursive: true });
+        copyFileSync(src, join(opts.cssDir, file));
+        ok(`styles/skeehn/components/${file}`);
+      }
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// THEME — Switch theme
+// ═══════════════════════════════════════════════════════════
 async function theme(args: string[]) {
   const name = args[0];
   const f = parseFlags(args.slice(1));
   const target = resolve(f.path || process.cwd());
-  if (!VALID_THEMES.includes(name)) err(`Theme "${name}" invalid. Choose: ${VALID_THEMES.join(", ")}`);
+
+  if (!name) err(`Theme name required. Available: ${ALL_THEMES.join(", ")}`);
+  if (!ALL_THEMES.includes(name)) err(`"${name}" not found. Available: ${ALL_THEMES.join(", ")}`);
+
+  console.log(`\n  ▦ skeehn theme ${name}\n`);
+
   const src = join(THEMES, `${name}.css`);
-  const dest = join(target, "styles", "theme.css");
-  if (!existsSync(src)) err(`Theme not found`);
-  mkdirSync(join(target, "styles"), { recursive: true });
-  copyFileSync(src, dest);
-  const idx = join(target, "index.html");
-  if (existsSync(idx)) { let h = readFileSync(idx, "utf-8"); h = h.replace(/data-theme="[^"]*"/g, `data-theme="${name}"`); writeFileSync(idx, h); ok(`index.html → data-theme="${name}"`); }
-  log(`Theme: "${name}"\nPresets: default | brutal | terminal | print | grain\n`);
-}
-
-async function density(args: string[]) {
-  const level = args[0];
-  const f = parseFlags(args.slice(1));
-  const target = resolve(f.path || process.cwd());
-  if (!VALID_DENSITIES.includes(level)) err(`Density "${level}" invalid. Choose: ${VALID_DENSITIES.join(", ")}`);
-
-  const densityMap: Record<string, string> = { sparse: "25%", normal: "50%", dense: "75%", solid: "100%" };
-  const opacityMap: Record<string, string> = { sparse: "0.06", normal: "0.15", dense: "0.3", solid: "0.5" };
-
-  const idx = join(target, "index.html");
-  if (existsSync(idx)) {
-    let h = readFileSync(idx, "utf-8");
-    h = h.replace(/data-density="[^"]*"/g, `data-density="${level}"`);
-    writeFileSync(idx, h);
-    ok(`index.html → data-density="${level}"`);
+  const dest = join(target, "styles", "skeehn", "theme.css");
+  if (existsSync(src)) {
+    mkdirSync(dirname(dest), { recursive: true });
+    copyFileSync(src, dest);
+    ok(`styles/skeehn/theme.css → ${name}`);
   }
 
-  const path = join(target, "styles", "dither.css");
-  if (existsSync(path)) {
-    let c = readFileSync(path, "utf-8");
-    c = c.replace(/--sk-density:\s*[^;]+;/, `--sk-density: ${densityMap[level]};`);
-    c = c.replace(/--sk-dither-opacity:\s*[^;]+;/, `--sk-dither-opacity: ${opacityMap[level]};`);
-    writeFileSync(path, c);
-  }
-
-  log(`Density: "${level}" (${densityMap[level]})\nLevels: sparse | normal | dense | solid\n`);
+  log(`\n  Set data-theme="${name}" on your <html> element.`);
+  log(`  Available: ${ALL_THEMES.join(", ")}\n`);
 }
 
-async function mcp(args: string[]) {
+// ═══════════════════════════════════════════════════════════
+// DOCTOR — Validate setup
+// ═══════════════════════════════════════════════════════════
+async function doctor(args: string[]) {
   const f = parseFlags(args);
   const target = resolve(f.path || process.cwd());
-  log("skeehn MCP Server\n");
-  
-  // Copy MCP server to target
-  const mcpSrc = join(ROOT, "packages", "mcp-server");
-  const mcpDest = join(target, "skeehn-mcp");
-  if (!existsSync(mcpDest)) {
-    mkdirSync(mcpDest, { recursive: true });
-    // Copy essential files
-    const srcDir = join(mcpSrc, "src");
-    const destDir = join(mcpDest, "src");
-    mkdirSync(destDir, { recursive: true });
-    if (existsSync(join(srcDir, "index.ts"))) {
-      copyFileSync(join(srcDir, "index.ts"), join(destDir, "index.ts"));
-      ok("skeehn-mcp/src/index.ts");
-    }
-    if (existsSync(join(srcDir, "schema/index.ts"))) {
-      mkdirSync(join(destDir, "schema"), { recursive: true });
-      copyFileSync(join(srcDir, "schema/index.ts"), join(destDir, "schema/index.ts"));
-      ok("skeehn-mcp/src/schema/index.ts");
-    }
-    // Copy package.json
-    if (existsSync(join(mcpSrc, "package.json"))) {
-      copyFileSync(join(mcpSrc, "package.json"), join(mcpDest, "package.json"));
-      ok("skeehn-mcp/package.json");
+  let issues = 0;
+
+  console.log("\n  ▦ skeehn doctor\n");
+
+  // Check engine CSS files
+  const stylesDir = join(target, "styles", "skeehn");
+  const required = ["reset.css", "tokens.css", "dither.css"];
+  for (const file of required) {
+    if (existsSync(join(stylesDir, file))) {
+      ok(`styles/skeehn/${file}`);
+    } else {
+      warn(`Missing: styles/skeehn/${file}`);
+      issues++;
     }
   }
-  
-  log(`MCP server ready in ${mcpDest}`);
-  log(`Start: cd ${mcpDest} && bun install && bun run src/index.ts`);
-  log(`Connect Cursor/Claude Code to stdio transport\n`);
-}
 
-async function generate(args: string[]) {
-  const f = parseFlags(args);
-  const type = args[0];
-  
-  if (type === "image") {
-    log("Image-to-ASCII: Use the demo site at http://localhost:3000");
-    log("Upload an image and select algorithm (Floyd-Steinberg, Bayer, Threshold)\n");
-  } else if (type === "text") {
-    const text = args.slice(1).join(" ") || "HELLO";
-    log(`Text-to-ASCII: "${text}"\n`);
-    const FONT: Record<string, string[]> = {
-      'H':['█   █','█   █','█████','█   █','█   █'],'E':['█████','█    ','████ ','█    ','█████'],
-      'L':['█    ','█    ','█    ','█    ','█████'],'O':[' ███ ','█   █','█   █','█   █',' ███ '],
-      ' ':['     ','     ','     ','     ','     '],'A':[' ███ ','█   █','█████','█   █','█   █'],
-    };
-    const lines: string[][] = [[],[],[],[],[]];
-    for (const c of text.toUpperCase()) {
-      const g = FONT[c] || FONT[' '] || FONT[' '];
-      for (let i = 0; i < 5; i++) lines[i].push(g[i]);
-    }
-    console.log(lines.map(l => l.join(' ')).join('\n') + '\n');
+  // Check theme
+  if (existsSync(join(stylesDir, "theme.css"))) {
+    ok(`styles/skeehn/theme.css`);
   } else {
-    err(`Generate type required: image | text`);
+    warn(`Missing: styles/skeehn/theme.css — run: npx skeehn theme default`);
+    issues++;
+  }
+
+  // Check globals.css for imports
+  const framework = detectFramework(target);
+  if (framework === "next") {
+    const globalsPath = join(target, "src", "app", "globals.css");
+    const altGlobalsPath = join(target, "app", "globals.css");
+    const gp = existsSync(globalsPath) ? globalsPath : existsSync(altGlobalsPath) ? altGlobalsPath : null;
+
+    if (gp) {
+      const content = readFileSync(gp, "utf-8");
+      if (content.includes("skeehn") || content.includes("tokens.css")) {
+        ok(`globals.css has skeehn imports`);
+      } else {
+        warn(`globals.css missing skeehn imports — run: npx skeehn init`);
+        issues++;
+      }
+    }
+
+    // Check package.json for @skeehn/react
+    const pkgPath = join(target, "package.json");
+    if (existsSync(pkgPath)) {
+      const pkg = JSON.parse(readFileSync(pkgPath, "utf-8"));
+      const deps = { ...pkg.dependencies, ...pkg.devDependencies };
+      if (deps["@skeehn/react"]) {
+        ok(`@skeehn/react installed`);
+      } else {
+        warn(`@skeehn/react not installed — run: bun add @skeehn/react`);
+        issues++;
+      }
+    }
+  }
+
+  // Check component files
+  const componentDir = join(target, "components", "ui");
+  if (existsSync(componentDir)) {
+    const files = readdirSync(componentDir).filter((f) => f.endsWith(".tsx"));
+    ok(`${files.length} component(s) in components/ui/`);
+  } else {
+    warn(`No components found — run: npx skeehn add button`);
+    issues++;
+  }
+
+  // Summary
+  if (issues === 0) {
+    console.log("\n  ✓ All checks passed!\n");
+  } else {
+    console.log(`\n  ${issues} issue(s) found. Fix them with the commands above.\n`);
   }
 }
 
-async function schema(args: string[]) {
-  const f = parseFlags(args);
-  const target = resolve(f.path || process.cwd());
-  log("skeehn Schema Generation\n");
-  
-  const reg = JSON.parse(readFileSync(join(ROOT, "registry.json"), "utf-8"));
-  const schemaDir = join(target, "skeehn-schema");
-  mkdirSync(schemaDir, { recursive: true });
-  
-  // Generate component schema
-  const componentSchema = {
-    version: "0.3.0",
-    components: reg.components.map((c: any) => ({
-      name: c.name,
-      category: c.category,
-      description: c.description,
-      files: c.files,
-    })),
-  };
-  writeFileSync(join(schemaDir, "components.json"), JSON.stringify(componentSchema, null, 2));
-  ok("skeehn-schema/components.json");
-  
-  // Generate theme schema
-  const themeSchema = { version: "0.3.0", themes: VALID_THEMES };
-  writeFileSync(join(schemaDir, "themes.json"), JSON.stringify(themeSchema, null, 2));
-  ok("skeehn-schema/themes.json");
-  
-  // Generate MCP tool definitions
-  const mcpTools = reg.components.map((c: any) => ({
-    name: `add_${c.name.replace(/-/g, '_')}`,
-    description: `Add ${c.name} component`,
-    input: { component: c.name, category: c.category },
-  }));
-  writeFileSync(join(schemaDir, "mcp-tools.json"), JSON.stringify(mcpTools, null, 2));
-  ok("skeehn-schema/mcp-tools.json");
-  
-  log(`Schema generated in ${schemaDir}`);
-  log(`Use with AI agents: Cursor, Claude Code, Copilot\n`);
-}
-
-// ─── Router ───
+// ═══════════════════════════════════════════════════════════
+// ROUTER
+// ═══════════════════════════════════════════════════════════
 const [cmd, ...rest] = Bun.argv.slice(2);
+
 switch (cmd) {
-  case "init": await init(rest); break;
-  case "add": await add(rest); break;
-  case "theme": await theme(rest); break;
-  case "density": await density(rest); break;
-  case "mcp": await mcp(rest); break;
-  case "generate": await generate(rest); break;
-  case "schema": await schema(rest); break;
-  case "--version": case "-v": console.log("0.3.0"); break;
-  case "--help": case "-h": case undefined:
+  case "init":
+    await init(rest);
+    break;
+  case "add":
+    await add(rest);
+    break;
+  case "theme":
+    await theme(rest);
+    break;
+  case "doctor":
+    await doctor(rest);
+    break;
+  case "--version":
+  case "-v":
+    console.log(VERSION);
+    break;
+  case "--help":
+  case "-h":
+  case undefined:
     console.log(`
-  skeehn — ASCII native AI component library
+  ▦ skeehn v${VERSION} — ASCII native AI component library
 
   Usage:
-    npx skeehn@latest init                          Set up in current directory
-    npx skeehn@latest init --template dashboard     Use dashboard template
-    npx skeehn@latest init --template gradient      Use gradient/hero template
-    npx skeehn@latest add <component>               Add component
-    npx skeehn@latest add all                       Add all 29 components
-    npx skeehn@latest theme <name>                  Swap theme
-    npx skeehn@latest density <level>               Change density
-    npx skeehn@latest mcp                           Set up MCP server for AI agents
-    npx skeehn@latest generate <type>               Generate ASCII art (image|text)
-    npx skeehn@latest schema                        Generate machine-readable schemas
+    npx skeehn init                    Set up in current directory
+    npx skeehn init --theme terminal   Use terminal theme
+    npx skeehn add <component>         Copy component into your project
+    npx skeehn add --all               Copy all 32 components
+    npx skeehn theme <name>            Switch theme
+    npx skeehn doctor                  Validate setup
 
-  Templates: hello-world, dashboard, gradient
-  Themes: default, dark, brutal, terminal, print, grain
-  Density: sparse, normal, dense, solid
+  Components: 32 total (14 core + 13 AI + 3 bundles)
 
-  Components: 29 total (14 core + 11 AI + layout + dataviz + motion)
-`); break;
-  default: err(`Unknown: ${cmd}. Run: npx skeehn --help`);
+  Themes: ${ALL_THEMES.join(", ")}
+
+  Flags:
+    -p, --path <dir>          Target directory
+    -t, --theme <name>        Theme for init
+    --component-dir <dir>     Custom component output directory
+    --css-dir <dir>           Custom CSS output directory
+    --no-css                  Skip CSS files (React wrapper only)
+    --css-only                Skip React wrapper (CSS only)
+
+  Examples:
+    npx skeehn init
+    npx skeehn add button
+    npx skeehn add chat-bubble
+    npx skeehn add --all
+    npx skeehn theme mardi-gras
+    npx skeehn doctor
+
+  Docs: https://ui.skeehn.com
+`);
+    break;
+  default:
+    err(`Unknown command: "${cmd}". Run: npx skeehn --help`);
 }

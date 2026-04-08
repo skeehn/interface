@@ -1,0 +1,131 @@
+/* ═══ ENGINE CSS ═══ */
+@import "../../../../engine/reset.css";
+@import "../../../../engine/tokens.css";
+@import "../../../../engine/dither.css";
+@import "../../../../engine/animation.css";
+
+/* ═══ THEME CSS ═══ */
+@import "../../../../themes/default.css";
+@import "../../../../themes/dark.css";
+@import "../../../../themes/terminal.css";
+@import "../../../../themes/brutal.css";
+@import "../../../../themes/print.css";
+@import "../../../../themes/grain.css";
+@import "../../../../themes/mardi-gras.css";
+
+/* ═══ COMPONENT CSS ═══ */
+@import "../../../../components/button/button.css";
+@import "../../../../components/card/card.css";
+@import "../../../../components/input/input.css";
+@import "../../../../components/badge/badge.css";
+@import "../../../../components/alert/alert.css";
+@import "../../../../components/dialog/dialog.css";
+@import "../../../../components/tabs/tabs.css";
+@import "../../../../components/toggle/toggle.css";
+@import "../../../../components/progress/progress.css";
+@import "../../../../components/avatar/avatar.css";
+@import "../../../../components/tooltip/tooltip.css";
+@import "../../../../components/dropdown/dropdown.css";
+@import "../../../../components/table/table.css";
+@import "../../../../components/accordion/accordion.css";
+@import "../../../../components/chat-bubble/chat-bubble.css";
+@import "../../../../components/chat-input/chat-input.css";
+@import "../../../../components/reasoning-step/reasoning-step.css";
+@import "../../../../components/tool-card/tool-card.css";
+@import "../../../../components/citation-card/citation-card.css";
+@import "../../../../components/streaming-text/streaming-text.css";
+@import "../../../../components/terminal-panel/terminal-panel.css";
+@import "../../../../components/agent-status/agent-status.css";
+@import "../../../../components/layout/layout.css";
+@import "../../../../components/dataviz/dataviz.css";
+@import "../../../../components/motion/motion.css";
+@import "../../../../components/code-block/code-block.css";
+@import "../../../../components/typing-indicator/typing-indicator.css";
+@import "../../../../components/markdown/markdown.css";
+@import "../../../../components/voice-session/voice-session.css";
+@import "../../../../components/thinking-block/thinking-block.css";
+@import "../../../../components/prompt-suggestions/prompt-suggestions.css";
+@import "../../../../components/file-attachment/file-attachment.css";
+
+/* ═══ TAILWIND (must come after all CSS imports) ═══ */
+@import "tailwindcss";
+
+/* ═══ TAILWIND THEME BRIDGE ═══ */
+@theme inline {
+  --font-sans: var(--sk-font-sans);
+  --font-mono: var(--sk-font-mono);
+  --color-background: hsl(var(--sk-background));
+  --color-foreground: hsl(var(--sk-foreground));
+  --color-surface: hsl(var(--sk-surface));
+  --color-primary: hsl(var(--sk-primary));
+  --color-primary-fg: hsl(var(--sk-primary-fg));
+  --color-muted: hsl(var(--sk-muted));
+  --color-muted-fg: hsl(var(--sk-muted-foreground));
+  --color-border: hsl(var(--sk-border-color));
+  --color-accent: hsl(var(--sk-accent));
+  --color-accent-fg: hsl(var(--sk-accent-foreground));
+}
+
+/* ═══ DARK MODE ═══ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+  }
+}
+[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+/* ═══ CRT SCANLINE OVERLAY — DARK MODE ═══ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+}
+[data-theme="dark"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::after { display: none !important; }
+}
+
+/* ═══ SCROLLBAR ═══ */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: hsl(var(--sk-background)); }
+::-webkit-scrollbar-thumb { background: hsl(var(--sk-border-color)); }
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--sk-muted-foreground)); }
+
+/* ═══ SELECTION ═══ */
+::selection {
+  background: hsl(var(--sk-primary));
+  color: hsl(var(--sk-primary-fg, var(--sk-background)));
+}
+
+/* ═══ SMOOTH SCROLL ═══ */
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}

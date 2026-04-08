@@ -2,7 +2,7 @@
  * skeehn — Design Tokens
  * Swiss technical minimal. Light by default. Dither as accent.
  */
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100;200;300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap');
+/* Font: load Geist via next/font, CDN link, or self-host. Do NOT use @import here — it breaks CSS bundlers. */
 
 :root {
   /* ═══ COLORS (HSL tuples — use with hsl()) ═══ */

@@ -1,7 +1,59 @@
-/* skeehn — Print: Newsprint Halftone */
+/*
+ * skeehn — Print Theme: Newsprint Halftone
+ *
+ * Warm newsprint feel with halftone dot patterns.
+ * Optimized for readability in print contexts.
+ * Signature: warm paper tone, halftone dots, serif-friendly spacing.
+ */
 :root[data-theme="print"] {
-  --sk-background: 40 50% 96%; --sk-foreground: 30 20% 12%; --sk-primary: 30 25% 15%;
-  --sk-secondary: 40 25% 91%; --sk-muted: 40 20% 92%; --sk-muted-foreground: 30 15% 42%;
-  --sk-accent: 35 40% 86%; --sk-accent-foreground: 30 25% 15%; --sk-border-color: 30 20% 78%;
-  --sk-ring: 30 25% 15%; --sk-dither-pattern: var(--sk-dither-bayer); --sk-dither-opacity: 0.08;
+  /* ═══ COLORS ═══ */
+  --sk-background:         40 50% 96%;
+  --sk-foreground:         30 20% 12%;
+  --sk-surface:            40 40% 94%;
+  --sk-primary:            30 25% 15%;
+  --sk-primary-fg:         40 50% 96%;
+  --sk-secondary:          40 25% 91%;
+  --sk-secondary-fg:       30 25% 15%;
+  --sk-muted:              40 20% 92%;
+  --sk-muted-foreground:   30 15% 42%;
+  --sk-accent:             35 40% 86%;
+  --sk-accent-foreground:  30 25% 15%;
+  --sk-border-color:       30 20% 78%;
+  --sk-ring:               30 25% 15%;
+  --sk-success:            142 40% 36%;
+  --sk-warning:            38 60% 50%;
+  --sk-info:               217 50% 50%;
+  --sk-destructive:        0 60% 50%;
+
+  /* ═══ DITHER ═══ */
+  --sk-dither-pattern:     var(--sk-dither-dots);
+  --sk-dither-opacity:     0.06;
+}
+
+/* Signature: Halftone dot texture overlay */
+:root[data-theme="print"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: var(--sk-dither-dots);
+  background-size: 12px 12px;
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: multiply;
+}
+
+/* Slightly wider letter-spacing for readability */
+:root[data-theme="print"] {
+  --sk-letter-spacing-normal: 0.01em;
+}
+
+/* Print: remove all decorative elements */
+@media print {
+  :root[data-theme="print"] body::after { display: none; }
+  :root[data-theme="print"] {
+    --sk-background: 0 0% 100%;
+    --sk-foreground: 0 0% 0%;
+    --sk-border-color: 0 0% 60%;
+  }
 }

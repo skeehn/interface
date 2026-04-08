@@ -1,7 +1,56 @@
-/* skeehn — Default: Technical Minimalist */
+/*
+ * skeehn — Default Theme: Technical Minimalist
+ *
+ * Clean Swiss design with subtle paper texture.
+ * Uses Floyd-Steinberg organic dither for natural feel.
+ * Signature: ultra-fine grain texture on surfaces.
+ */
 :root[data-theme="default"] {
-  --sk-background: 0 0% 100%; --sk-foreground: 0 0% 3.9%; --sk-primary: 0 0% 9%;
-  --sk-secondary: 0 0% 96.1%; --sk-muted: 0 0% 96.1%; --sk-muted-foreground: 0 0% 45.1%;
-  --sk-accent: 0 0% 94%; --sk-accent-foreground: 0 0% 9%; --sk-border-color: 0 0% 85%;
-  --sk-ring: 0 0% 3.9%; --sk-dither-pattern: var(--sk-dither-floyd); --sk-dither-opacity: 0.12;
+  /* ═══ COLORS ═══ */
+  --sk-background:         0 0% 100%;
+  --sk-foreground:         0 0% 3.9%;
+  --sk-surface:            0 0% 98%;
+  --sk-primary:            0 0% 9%;
+  --sk-primary-fg:         0 0% 100%;
+  --sk-secondary:          0 0% 96.1%;
+  --sk-secondary-fg:       0 0% 9%;
+  --sk-muted:              0 0% 96.1%;
+  --sk-muted-foreground:   0 0% 45.1%;
+  --sk-accent:             0 0% 94%;
+  --sk-accent-foreground:  0 0% 9%;
+  --sk-border-color:       0 0% 85%;
+  --sk-ring:               0 0% 3.9%;
+  --sk-success:            142 72% 36%;
+  --sk-warning:            38 92% 50%;
+  --sk-info:               217 91% 60%;
+  --sk-destructive:        0 84% 60%;
+
+  /* ═══ DITHER ═══ */
+  --sk-dither-pattern:     var(--sk-dither-floyd);
+  --sk-dither-opacity:     0.04;
+
+  /* ═══ SIGNATURE: Paper texture ═══ */
+  --sk-theme-texture:      var(--sk-dither-grain);
+  --sk-theme-texture-size: 128px 128px;
+  --sk-theme-texture-opacity: 0.02;
+}
+
+/* Subtle paper texture on body */
+:root[data-theme="default"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: var(--sk-dither-grain);
+  background-size: 128px 128px;
+  opacity: 0.02;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: multiply;
+}
+
+@media print {
+  :root[data-theme="default"] body::after { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root[data-theme="default"] body::after { display: none; }
 }

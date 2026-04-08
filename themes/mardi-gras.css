@@ -1,31 +1,82 @@
-/* skeehn — Mardi Gras theme
+/*
+ * skeehn — Mardi Gras Theme
+ *
  * Purple, gold, and green. New Orleans forever.
  * Purple: #6B21A8 → hsl(270, 70%, 40%)
  * Gold:   #EAB308 → hsl(45, 96%, 48%)
  * Green:  #16A34A → hsl(142, 72%, 36%)
+ *
+ * Signature: gold sparkle dither, crosshatch pattern,
+ * warm cream text on deep aubergine.
  */
 
 [data-theme="mardi-gras"] {
   /* ═══ COLORS ═══ */
-  --sk-background:         270 30% 7%;        /* deep aubergine */
-  --sk-foreground:         45  60% 92%;        /* warm cream */
-  --sk-surface:            270 28% 11%;        /* slightly lighter */
-  --sk-primary:            45  96% 52%;        /* Mardi Gras gold */
-  --sk-primary-fg:         270 70% 10%;        /* dark on gold */
-  --sk-secondary:          142 50% 20%;        /* deep green */
-  --sk-secondary-fg:       45  60% 92%;        /* cream on green */
-  --sk-muted:              270 20% 16%;        /* muted purple */
-  --sk-muted-foreground:   45  30% 58%;        /* muted gold */
-  --sk-accent:             270 35% 16%;        /* purple accent */
+  --sk-background:         270 30% 7%;
+  --sk-foreground:         45  60% 92%;
+  --sk-surface:            270 28% 11%;
+  --sk-primary:            45  96% 52%;
+  --sk-primary-fg:         270 70% 10%;
+  --sk-secondary:          142 50% 20%;
+  --sk-secondary-fg:       45  60% 92%;
+  --sk-muted:              270 20% 16%;
+  --sk-muted-foreground:   45  30% 58%;
+  --sk-accent:             270 35% 16%;
   --sk-accent-foreground:  45  60% 92%;
-  --sk-border-color:       270 25% 22%;        /* purple border */
-  --sk-ring:               45  96% 52%;        /* gold focus ring */
-  --sk-success:            142 72% 40%;        /* Mardi Gras green */
+  --sk-border-color:       270 25% 22%;
+  --sk-ring:               45  96% 52%;
+  --sk-success:            142 72% 40%;
   --sk-destructive:        0   84% 60%;
-  --sk-warning:            45  96% 52%;        /* gold = warning */
-  --sk-info:               270 60% 60%;        /* light purple = info */
+  --sk-warning:            45  96% 52%;
+  --sk-info:               270 60% 60%;
 
   /* ═══ DITHER ═══ */
   --sk-dither-pattern:     var(--sk-dither-crosshatch);
   --sk-dither-opacity:     0.08;
+}
+
+/* Signature: Gold sparkle dither on primary buttons */
+[data-theme="mardi-gras"] .sk-btn[data-variant="dither"],
+[data-theme="mardi-gras"] .sk-btn[data-variant="solid"] {
+  text-shadow: 0 0 6px hsl(45 96% 52% / 0.3);
+}
+[data-theme="mardi-gras"] .sk-btn[data-variant="dither"]:hover,
+[data-theme="mardi-gras"] .sk-btn[data-variant="solid"]:hover {
+  text-shadow: 0 0 10px hsl(45 96% 52% / 0.5);
+  box-shadow: 0 0 14px hsl(45 96% 52% / 0.1);
+}
+
+/* Crosshatch texture overlay */
+[data-theme="mardi-gras"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: var(--sk-dither-crosshatch);
+  background-size: 16px 16px;
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: screen;
+}
+
+/* Purple-to-gold gradient accent on borders */
+[data-theme="mardi-gras"] .sk-card:hover {
+  border-image: linear-gradient(135deg, hsl(270 60% 50%), hsl(45 96% 52%), hsl(142 72% 40%)) 1;
+}
+
+/* Gold glow on chat bubbles */
+[data-theme="mardi-gras"] .sk-chat-bubble[data-role="user"] {
+  box-shadow: 0 0 8px hsl(45 96% 52% / 0.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="mardi-gras"] .sk-btn[data-variant="dither"]:hover,
+  [data-theme="mardi-gras"] .sk-btn[data-variant="solid"]:hover {
+    text-shadow: none;
+    box-shadow: none;
+  }
+}
+@media print {
+  [data-theme="mardi-gras"] body::after { display: none; }
+  [data-theme="mardi-gras"] .sk-btn { text-shadow: none; box-shadow: none; }
 }

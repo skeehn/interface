@@ -1,8 +1,103 @@
-/* skeehn — Brutal: Heavy ASCII Blocks */
+/*
+ * skeehn — Brutal Theme: Heavy ASCII Blocks
+ *
+ * High contrast, thick borders, raw pixel grid.
+ * No subtlety — everything is bold, loud, and intentional.
+ * Signature: 2px borders, hard shadows, accent yellow highlights.
+ */
 :root[data-theme="brutal"] {
-  --sk-background: 0 0% 98%; --sk-foreground: 0 0% 5%; --sk-primary: 0 0% 5%;
-  --sk-secondary: 0 0% 92%; --sk-muted: 0 0% 92%; --sk-muted-foreground: 0 0% 40%;
-  --sk-accent: 50 100% 50%; --sk-accent-foreground: 0 0% 5%; --sk-border-color: 0 0% 70%;
-  --sk-ring: 0 0% 5%; --sk-dither-pattern: var(--sk-dither-blocks-75); --sk-dither-opacity: 0.25;
-  --sk-border-width: 2px;
+  /* ═══ COLORS ═══ */
+  --sk-background:         0 0% 98%;
+  --sk-foreground:         0 0% 5%;
+  --sk-surface:            0 0% 95%;
+  --sk-primary:            0 0% 5%;
+  --sk-primary-fg:         0 0% 98%;
+  --sk-secondary:          0 0% 92%;
+  --sk-secondary-fg:       0 0% 5%;
+  --sk-muted:              0 0% 92%;
+  --sk-muted-foreground:   0 0% 40%;
+  --sk-accent:             50 100% 50%;
+  --sk-accent-foreground:  0 0% 5%;
+  --sk-border-color:       0 0% 5%;
+  --sk-ring:               0 0% 5%;
+  --sk-success:            142 72% 36%;
+  --sk-warning:            50 100% 50%;
+  --sk-info:               217 91% 55%;
+  --sk-destructive:        0 84% 55%;
+
+  /* ═══ DITHER ═══ */
+  --sk-dither-pattern:     var(--sk-dither-b12);
+  --sk-dither-opacity:     0.25;
+
+  /* ═══ BORDERS ═══ */
+  --sk-border-width:       2px;
+}
+
+/* Signature: Hard pixel shadow on all bordered elements */
+:root[data-theme="brutal"] .sk-btn {
+  border-width: 2px;
+  border-color: hsl(var(--sk-foreground));
+  box-shadow: 3px 3px 0 hsl(var(--sk-foreground));
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+:root[data-theme="brutal"] .sk-btn:hover {
+  box-shadow: 4px 4px 0 hsl(var(--sk-foreground));
+  transform: translate(-1px, -1px);
+}
+:root[data-theme="brutal"] .sk-btn:active {
+  box-shadow: 0 0 0 hsl(var(--sk-foreground));
+  transform: translate(3px, 3px);
+}
+
+/* Cards get hard shadow */
+:root[data-theme="brutal"] .sk-card {
+  border-width: 2px;
+  border-color: hsl(var(--sk-foreground));
+  box-shadow: 4px 4px 0 hsl(var(--sk-foreground));
+}
+:root[data-theme="brutal"] .sk-card:hover {
+  box-shadow: 6px 6px 0 hsl(var(--sk-foreground));
+  transform: translate(-2px, -2px);
+}
+
+/* Inputs: thick border */
+:root[data-theme="brutal"] input,
+:root[data-theme="brutal"] textarea,
+:root[data-theme="brutal"] select {
+  border-width: 2px;
+  border-color: hsl(var(--sk-foreground));
+}
+
+/* Badges: loud accent background */
+:root[data-theme="brutal"] .sk-badge {
+  border-width: 2px;
+  border-color: hsl(var(--sk-foreground));
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* Yellow accent highlight bar */
+:root[data-theme="brutal"] .sk-alert {
+  border-width: 2px;
+  border-left-width: 6px;
+}
+
+/* ASCII grid texture on body */
+:root[data-theme="brutal"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: var(--sk-dither-b4);
+  background-size: 16px 16px;
+  opacity: 0.02;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+@media print {
+  :root[data-theme="brutal"] body::after { display: none; }
+  :root[data-theme="brutal"] .sk-btn,
+  :root[data-theme="brutal"] .sk-card { box-shadow: none; transform: none; }
 }

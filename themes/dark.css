@@ -1,5 +1,57 @@
-/* skeehn — Dark: Clean dark mode with subtle Bayer dither */
+/*
+ * skeehn — Dark Theme: Midnight Glow
+ *
+ * Deep dark mode with subtle text glow on primary elements.
+ * Signature: phosphorescent text-shadow on interactive elements.
+ */
 [data-theme="dark"] {
-  --sk-dither-pattern:  var(--sk-dither-bayer);
-  --sk-dither-opacity:  0.06;
+  /* ═══ COLORS ═══ */
+  --sk-background:         0 0% 6%;
+  --sk-foreground:         0 0% 97%;
+  --sk-surface:            0 0% 9%;
+  --sk-primary:            0 0% 97%;
+  --sk-primary-fg:         0 0% 6%;
+  --sk-secondary:          0 0% 14%;
+  --sk-secondary-fg:       0 0% 97%;
+  --sk-muted:              0 0% 14%;
+  --sk-muted-foreground:   0 0% 55%;
+  --sk-accent:             0 0% 14%;
+  --sk-accent-foreground:  0 0% 97%;
+  --sk-border-color:       0 0% 18%;
+  --sk-ring:               0 0% 97%;
+  --sk-success:            142 72% 45%;
+  --sk-warning:            38 92% 55%;
+  --sk-info:               217 91% 65%;
+  --sk-destructive:        0 84% 60%;
+
+  /* ═══ DITHER ═══ */
+  --sk-dither-pattern:     var(--sk-dither-bayer);
+  --sk-dither-opacity:     0.06;
+}
+
+/* Signature: Glow on interactive elements */
+[data-theme="dark"] .sk-btn:hover,
+[data-theme="dark"] a:hover {
+  text-shadow: 0 0 8px hsl(0 0% 100% / 0.3);
+}
+
+[data-theme="dark"] .sk-btn[data-variant="dither"]:hover {
+  text-shadow: 0 0 12px hsl(0 0% 100% / 0.4);
+  box-shadow: 0 0 16px hsl(0 0% 100% / 0.06);
+}
+
+/* Subtle vignette on body */
+[data-theme="dark"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 50%, hsl(0 0% 0% / 0.3) 100%);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+@media print {
+  [data-theme="dark"] body::after { display: none; }
+  [data-theme="dark"] .sk-btn:hover,
+  [data-theme="dark"] a:hover { text-shadow: none; }
 }

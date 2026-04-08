@@ -1,6 +1,13 @@
-/*
+/**
  * skeehn — ChatBubble Component
- * Message bubble with ASCII dither fill, streaming states, and tool integration.
+ *
+ * @component sk-chat-bubble
+ * @roles     user | assistant | tool | system
+ * @states    [data-streaming] | [data-loading] | [data-skeleton]
+ * @slots     __tool-header | __tool-name | __tool-output | __cursor | __avatar | __timestamp
+ * @animations Streaming dither reveal, message slide-in, shimmer cursor
+ * @a11y      role="log" on container, aria-live for streaming
+ * @print     Static bubbles, no animations or streaming indicators
  */
 
 .sk-chat-bubble {
@@ -124,4 +131,149 @@
 @keyframes sk-ascii-blink {
   0%, 49% { opacity: 1; }
   50%, 100% { opacity: 0; }
+}
+
+/* ============================================================
+   STREAMING DITHER REVEAL
+   Progressive density increase as content streams in
+   ============================================================ */
+
+@keyframes sk-bubble-dither-reveal {
+  0%   { -webkit-mask-image: var(--sk-dither-b1); mask-image: var(--sk-dither-b1); }
+  25%  { -webkit-mask-image: var(--sk-dither-b4); mask-image: var(--sk-dither-b4); }
+  50%  { -webkit-mask-image: var(--sk-dither-b8); mask-image: var(--sk-dither-b8); }
+  75%  { -webkit-mask-image: var(--sk-dither-b12); mask-image: var(--sk-dither-b12); }
+  100% { -webkit-mask-image: none; mask-image: none; }
+}
+
+.sk-chat-bubble[data-streaming][data-effect="dither-reveal"] {
+  -webkit-mask-size: 16px 16px;
+  mask-size: 16px 16px;
+  -webkit-mask-repeat: repeat;
+  mask-repeat: repeat;
+  animation: sk-bubble-dither-reveal 0.8s steps(4) both;
+}
+
+/* ============================================================
+   MESSAGE SLIDE-IN
+   ============================================================ */
+
+@keyframes sk-bubble-slide-in-user {
+  from { transform: translateX(16px); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes sk-bubble-slide-in-assistant {
+  from { transform: translateX(-16px); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+
+.sk-chat-bubble[data-role="user"][data-animate] {
+  animation: sk-bubble-slide-in-user var(--sk-anim-normal, 300ms) var(--sk-ease-pixel, cubic-bezier(0.25, 0.46, 0.45, 0.94)) both;
+}
+
+.sk-chat-bubble[data-role="assistant"][data-animate] {
+  animation: sk-bubble-slide-in-assistant var(--sk-anim-normal, 300ms) var(--sk-ease-pixel, cubic-bezier(0.25, 0.46, 0.45, 0.94)) both;
+}
+
+/* ============================================================
+   AVATAR SLOT
+   ============================================================ */
+
+.sk-chat-bubble__avatar {
+  position: absolute;
+  top: var(--sk-space-2);
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: var(--sk-radius-full);
+  overflow: hidden;
+  border: 1px solid hsl(var(--sk-border-color));
+  flex-shrink: 0;
+}
+
+.sk-chat-bubble[data-role="user"] .sk-chat-bubble__avatar {
+  right: calc(-1.5rem - var(--sk-space-2));
+}
+
+.sk-chat-bubble[data-role="assistant"] .sk-chat-bubble__avatar {
+  left: calc(-1.5rem - var(--sk-space-2));
+}
+
+.sk-chat-bubble__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ============================================================
+   TIMESTAMP
+   ============================================================ */
+
+.sk-chat-bubble__timestamp {
+  display: block;
+  margin-top: var(--sk-space-1);
+  font-size: 0.6rem;
+  color: hsl(var(--sk-muted-foreground) / 0.5);
+  letter-spacing: 0.04em;
+}
+
+.sk-chat-bubble[data-role="user"] .sk-chat-bubble__timestamp {
+  text-align: right;
+}
+
+/* ============================================================
+   LOADING & SKELETON
+   ============================================================ */
+
+.sk-chat-bubble[data-loading] {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.sk-chat-bubble[data-loading]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--sk-dither-pattern);
+  background-repeat: repeat;
+  opacity: 0.08;
+  animation: sk-pulse-dither 1.5s ease-in-out infinite;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+@keyframes sk-bubble-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.sk-chat-bubble[data-skeleton] {
+  pointer-events: none;
+  color: transparent;
+  border-color: hsl(var(--sk-border-color));
+  background:
+    linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-accent)) 50%, hsl(var(--sk-muted)) 75%);
+  background-size: 200% 100%;
+  animation: sk-bubble-shimmer 1.8s ease-in-out infinite;
+  min-height: 3rem;
+}
+
+.sk-chat-bubble[data-skeleton]::before,
+.sk-chat-bubble[data-skeleton]::after { display: none; }
+
+@media print {
+  .sk-chat-bubble { box-shadow: none; border: 1px solid hsl(var(--sk-foreground)); max-width: 100%; margin-left: 0; margin-right: 0; }
+  .sk-chat-bubble::before, .sk-chat-bubble::after { display: none; }
+  .sk-chat-bubble__cursor { display: none; }
+  .sk-chat-bubble[data-streaming]::after { display: none; }
+  .sk-chat-bubble[data-skeleton] { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-chat-bubble[data-role="user"][data-animate],
+  .sk-chat-bubble[data-role="assistant"][data-animate] { animation: none; }
+  .sk-chat-bubble[data-streaming]::after { animation: none; }
+  .sk-chat-bubble__cursor { animation: none; opacity: 1; }
+  .sk-chat-bubble[data-skeleton] { animation: none; background: hsl(var(--sk-muted)); }
+  .sk-chat-bubble[data-loading]::after { animation: none; }
 }

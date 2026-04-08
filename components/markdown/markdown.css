@@ -1,6 +1,12 @@
-/*
- * skeehn — Markdown Renderer Styles
- * Styles for AI-generated markdown content within chat bubbles and panels.
+/**
+ * skeehn — Markdown Component
+ *
+ * @component sk-markdown
+ * @elements  h1-h6 | p | a | code | pre | ul/ol | li | blockquote | hr | table | img
+ * @states    [data-loading] | [data-skeleton]
+ * @features  Styled prose for AI output, list markers, code blocks with dither, tables
+ * @a11y      Semantic HTML elements, link underlines, sufficient contrast
+ * @print     Full content visible, links show URLs
  */
 
 .sk-markdown {
@@ -135,4 +141,34 @@
   max-width: 100%;
   border-radius: var(--sk-radius);
   border: var(--sk-border);
+}
+
+/* Loading */
+.sk-markdown[data-loading] { position: relative; opacity: 0.6; }
+.sk-markdown[data-loading]::after {
+  content: ""; position: absolute; inset: 0;
+  background-image: var(--sk-dither-pattern); background-repeat: repeat;
+  opacity: 0.05; animation: sk-pulse-dither 1.5s ease-in-out infinite; pointer-events: none;
+}
+
+/* Skeleton */
+.sk-markdown[data-skeleton] > * {
+  color: transparent;
+  background: linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-accent)) 50%, hsl(var(--sk-muted)) 75%);
+  background-size: 200% 100%;
+  animation: sk-card-shimmer 1.8s ease-in-out infinite;
+  border-radius: var(--sk-radius);
+  min-height: 1rem;
+  margin: var(--sk-space-2) 0;
+}
+
+@media print {
+  .sk-markdown pre::before { display: none; }
+  .sk-markdown a::after { content: " (" attr(href) ")"; font-size: 0.7em; color: hsl(var(--sk-muted-foreground)); }
+  .sk-markdown[data-skeleton] { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-markdown[data-loading]::after { animation: none; }
+  .sk-markdown[data-skeleton] > * { animation: none; background: hsl(var(--sk-muted)); }
 }

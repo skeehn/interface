@@ -1,6 +1,12 @@
-/*
+/**
  * skeehn — CitationCard Component
- * Source reference with ASCII metadata display.
+ *
+ * @component sk-citation-card
+ * @variants  default | compact | inline
+ * @states    [data-loading] | [data-skeleton]
+ * @slots     __icon | __content | __source | __snippet | __meta
+ * @a11y      Link semantics, truncated text with title attribute
+ * @print     Inline citation with source text
  */
 
 .sk-citation-card { display: inline-flex; align-items: flex-start; gap: var(--sk-space-2); padding: var(--sk-space-2) var(--sk-space-3); border: var(--sk-border); border-radius: var(--sk-radius); background: hsl(var(--sk-muted) / 0.3); font-family: var(--sk-font-mono); font-size: var(--sk-font-size-xs); margin: var(--sk-space-1) 0; transition: background var(--sk-transition-fast); }
@@ -16,3 +22,34 @@
 .sk-citation-card[data-variant="inline"] .sk-citation-card__icon { width: 1rem; height: 1rem; font-size: 0.5rem; }
 .sk-citation-card[data-variant="inline"] .sk-citation-card__snippet,
 .sk-citation-card[data-variant="inline"] .sk-citation-card__meta { display: none; }
+
+/* Micro-interactions */
+.sk-citation-card { transition: background var(--sk-transition-fast), transform var(--sk-transition-fast); }
+.sk-citation-card:hover { transform: translateY(-1px); }
+.sk-citation-card:active { transform: translateY(1px); }
+.sk-citation-card:focus-visible { outline: 2px solid hsl(var(--sk-ring)); outline-offset: 2px; }
+
+/* Loading */
+.sk-citation-card[data-loading] { pointer-events: none; opacity: 0.6; }
+
+/* Skeleton */
+.sk-citation-card[data-skeleton] .sk-citation-card__source,
+.sk-citation-card[data-skeleton] .sk-citation-card__snippet {
+  color: transparent;
+  background: linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-accent)) 50%, hsl(var(--sk-muted)) 75%);
+  background-size: 200% 100%;
+  animation: sk-card-shimmer 1.8s ease-in-out infinite;
+  border-radius: var(--sk-radius);
+}
+
+@media print {
+  .sk-citation-card { border: 1px solid hsl(var(--sk-foreground)); }
+  .sk-citation-card[data-skeleton] { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-citation-card { transition: none; }
+  .sk-citation-card:hover { transform: none; }
+  .sk-citation-card[data-skeleton] .sk-citation-card__source,
+  .sk-citation-card[data-skeleton] .sk-citation-card__snippet { animation: none; background: hsl(var(--sk-muted)); }
+}

@@ -1,6 +1,13 @@
-/*
+/**
  * skeehn — ReasoningStep Component
- * Expandable reasoning trace with dither unfold animation.
+ *
+ * @component sk-reasoning-step
+ * @statuses  pending | active | completed | error
+ * @states    [data-expanded] | [data-loading] | [data-skeleton]
+ * @slots     __header | __indicator | __title | __chevron | __content | __step-number | __duration
+ * @features  Timeline connector, step numbers, duration badges
+ * @a11y      aria-expanded, keyboard navigation, status colors + text
+ * @print     All steps expanded, timeline visible
  */
 
 .sk-reasoning-step { margin-bottom: var(--sk-space-3); border: var(--sk-border); border-radius: var(--sk-radius); overflow: hidden; font-family: var(--sk-font-mono); }
@@ -18,3 +25,119 @@
 .sk-reasoning-step[data-expanded="true"] .sk-reasoning-step__content::before { content: ""; position: absolute; inset: 0; background-image: var(--sk-dither-pattern); background-repeat: repeat; opacity: calc(var(--sk-dither-opacity, 0.15) * 0.15); pointer-events: none; }
 .sk-reasoning-step__content > * { position: relative; z-index: 1; }
 .sk-reasoning-step[hidden] .sk-reasoning-step__content { display: none; }
+
+/* ============================================================
+   TIMELINE CONNECTOR
+   Vertical line between sequential reasoning steps
+   ============================================================ */
+
+.sk-reasoning-steps {
+  position: relative;
+  padding-left: var(--sk-space-6);
+}
+
+.sk-reasoning-steps::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--sk-space-3) - 1px);
+  top: var(--sk-space-4);
+  bottom: var(--sk-space-4);
+  width: 2px;
+  background: hsl(var(--sk-border-color));
+}
+
+.sk-reasoning-steps .sk-reasoning-step {
+  position: relative;
+}
+
+/* ============================================================
+   STEP NUMBERS
+   ============================================================ */
+
+.sk-reasoning-step__step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  font-family: var(--sk-font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  border-radius: var(--sk-radius-full);
+  background: hsl(var(--sk-muted));
+  color: hsl(var(--sk-muted-foreground));
+  flex-shrink: 0;
+}
+
+.sk-reasoning-step[data-status="completed"] .sk-reasoning-step__step-number {
+  background: hsl(var(--sk-success) / 0.15);
+  color: hsl(var(--sk-success));
+}
+
+.sk-reasoning-step[data-status="active"] .sk-reasoning-step__step-number {
+  background: hsl(var(--sk-info) / 0.15);
+  color: hsl(var(--sk-info));
+}
+
+.sk-reasoning-step[data-status="error"] .sk-reasoning-step__step-number {
+  background: hsl(var(--sk-destructive) / 0.15);
+  color: hsl(var(--sk-destructive));
+}
+
+/* ============================================================
+   DURATION BADGE
+   ============================================================ */
+
+.sk-reasoning-step__duration {
+  font-family: var(--sk-font-mono);
+  font-size: 0.55rem;
+  color: hsl(var(--sk-muted-foreground) / 0.5);
+  letter-spacing: 0.04em;
+  margin-left: auto;
+  padding-left: var(--sk-space-2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   LOADING & SKELETON
+   ============================================================ */
+
+.sk-reasoning-step[data-loading] .sk-reasoning-step__content {
+  position: relative;
+  opacity: 0.5;
+}
+
+.sk-reasoning-step[data-loading] .sk-reasoning-step__content::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--sk-dither-pattern);
+  background-repeat: repeat;
+  opacity: 0.06;
+  animation: sk-pulse-dither 1.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.sk-reasoning-step[data-skeleton] .sk-reasoning-step__title {
+  color: transparent;
+  background: linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-accent)) 50%, hsl(var(--sk-muted)) 75%);
+  background-size: 200% 100%;
+  animation: sk-card-shimmer 1.8s ease-in-out infinite;
+  border-radius: var(--sk-radius);
+}
+
+@media print {
+  .sk-reasoning-step { border: 1px solid hsl(var(--sk-foreground)); break-inside: avoid; }
+  .sk-reasoning-step__content { display: block; }
+  .sk-reasoning-step__chevron { display: none; }
+  .sk-reasoning-step[data-skeleton] { display: none; }
+  .sk-reasoning-steps::before { background: hsl(var(--sk-foreground)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-reasoning-step__header { transition: none; }
+  .sk-reasoning-step__chevron { transition: none; }
+  .sk-reasoning-step[data-status="active"] .sk-reasoning-step__indicator { animation: none; }
+  .sk-reasoning-step[data-loading] .sk-reasoning-step__content::after { animation: none; }
+  .sk-reasoning-step[data-skeleton] .sk-reasoning-step__title { animation: none; background: hsl(var(--sk-muted)); }
+}

@@ -1,6 +1,13 @@
-/*
+/**
  * skeehn — TerminalPanel Component
- * Code execution panel with ASCII borders.
+ *
+ * @component sk-terminal-panel
+ * @themes    default | terminal | brutal
+ * @states    [data-loading] | [data-skeleton]
+ * @slots     __header | __title | __actions | __action | __body | __prompt | __command | __output | __input | __input-field
+ * @features  Traffic light buttons, scanline overlay, command prompt, scrollable output
+ * @a11y      Semantic output regions, keyboard input, focus management
+ * @print     Output visible with borders
  */
 
 .sk-terminal-panel { border: 2px solid hsl(var(--sk-border)); border-radius: var(--sk-radius); overflow: hidden; font-family: var(--sk-font-mono); margin-bottom: var(--sk-space-3); }
@@ -24,3 +31,35 @@
 .sk-terminal-panel[data-theme="terminal"] .sk-terminal-panel__body { background: hsl(var(--sk-background)); }
 .sk-terminal-panel[data-theme="terminal"] .sk-terminal-panel__prompt { color: hsl(var(--sk-success)); }
 .sk-terminal-panel[data-theme="brutal"] { border-width: 3px; }
+
+/* Loading */
+.sk-terminal-panel[data-loading] .sk-terminal-panel__body { position: relative; opacity: 0.5; }
+.sk-terminal-panel[data-loading] .sk-terminal-panel__body::after {
+  content: ""; position: absolute; inset: 0;
+  background-image: var(--sk-dither-pattern); background-repeat: repeat;
+  opacity: 0.06; animation: sk-pulse-dither 1.5s ease-in-out infinite; pointer-events: none;
+}
+
+/* Skeleton */
+.sk-terminal-panel[data-skeleton] .sk-terminal-panel__body {
+  min-height: 4rem;
+  background: linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-accent)) 50%, hsl(var(--sk-muted)) 75%);
+  background-size: 200% 100%;
+  animation: sk-card-shimmer 1.8s ease-in-out infinite;
+}
+.sk-terminal-panel[data-skeleton] .sk-terminal-panel__body > * { visibility: hidden; }
+.sk-terminal-panel[data-skeleton] .sk-terminal-panel__body::before { display: none; }
+
+@media print {
+  .sk-terminal-panel { border: 1px solid hsl(var(--sk-foreground)); break-inside: avoid; }
+  .sk-terminal-panel__actions { display: none; }
+  .sk-terminal-panel__body::before { display: none; }
+  .sk-terminal-panel__input { display: none; }
+  .sk-terminal-panel[data-skeleton] { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-terminal-panel__action { transition: none; }
+  .sk-terminal-panel[data-loading] .sk-terminal-panel__body::after { animation: none; }
+  .sk-terminal-panel[data-skeleton] .sk-terminal-panel__body { animation: none; background: hsl(var(--sk-muted)); }
+}

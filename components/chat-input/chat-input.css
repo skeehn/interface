@@ -1,6 +1,13 @@
-/*
- * skeehn — ChatInput
- * Textarea-based prompt input with auto-resize, mic button, and streaming/recording states.
+/**
+ * skeehn — ChatInput Component
+ *
+ * @component sk-chat-input
+ * @variants  default | compact
+ * @states    [data-state="streaming"] | [data-state="recording"] | [data-loading] | [data-skeleton]
+ * @slots     __wrapper | __field | __actions | __mic | __hint | __dropzone | __char-count
+ * @features  File drop zone, character count, mention styling, auto-resize via field-sizing
+ * @a11y      Label association, focus-within border, disabled states
+ * @print     Hidden (interactive input)
  */
 
 .sk-chat-input {
@@ -111,4 +118,106 @@
 }
 .sk-chat-input[data-variant="compact"] .sk-chat-input__hint {
   display: none;
+}
+
+/* ============================================================
+   FILE DROP ZONE
+   ============================================================ */
+
+.sk-chat-input__dropzone {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: hsl(var(--sk-primary) / 0.05);
+  border: 2px dashed hsl(var(--sk-primary) / 0.3);
+  font-family: var(--sk-font-mono);
+  font-size: var(--sk-font-size-xs);
+  color: hsl(var(--sk-primary));
+  letter-spacing: 0.04em;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.sk-chat-input__wrapper[data-dragover] .sk-chat-input__dropzone {
+  display: flex;
+}
+
+.sk-chat-input__wrapper[data-dragover] {
+  border-color: hsl(var(--sk-primary));
+  border-style: dashed;
+}
+
+/* ============================================================
+   CHARACTER COUNT
+   ============================================================ */
+
+.sk-chat-input__char-count {
+  font-family: var(--sk-font-mono);
+  font-size: 0.6rem;
+  color: hsl(var(--sk-muted-foreground) / 0.4);
+  letter-spacing: 0.05em;
+  text-align: right;
+  padding-right: var(--sk-space-2);
+}
+
+.sk-chat-input__char-count[data-over-limit] {
+  color: hsl(var(--sk-destructive));
+}
+
+/* ============================================================
+   MENTION STYLING
+   ============================================================ */
+
+.sk-chat-input__mention {
+  display: inline;
+  background: hsl(var(--sk-primary) / 0.08);
+  color: hsl(var(--sk-primary));
+  padding: 0.05em 0.25em;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* ============================================================
+   LOADING & SKELETON
+   ============================================================ */
+
+.sk-chat-input[data-loading] .sk-chat-input__wrapper {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.sk-chat-input[data-loading] .sk-chat-input__wrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--sk-dither-pattern);
+  background-repeat: repeat;
+  opacity: 0.05;
+  animation: sk-pulse-dither 1.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes sk-input-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.sk-chat-input[data-skeleton] .sk-chat-input__wrapper {
+  pointer-events: none;
+  background: linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-accent)) 50%, hsl(var(--sk-muted)) 75%);
+  background-size: 200% 100%;
+  animation: sk-input-shimmer 1.8s ease-in-out infinite;
+}
+
+.sk-chat-input[data-skeleton] .sk-chat-input__field { visibility: hidden; }
+.sk-chat-input[data-skeleton] .sk-chat-input__actions { visibility: hidden; }
+
+@media print { .sk-chat-input { display: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-chat-input__wrapper { transition: none; }
+  .sk-chat-input[data-loading] .sk-chat-input__wrapper::after { animation: none; }
+  .sk-chat-input[data-skeleton] .sk-chat-input__wrapper { animation: none; background: hsl(var(--sk-muted)); }
 }

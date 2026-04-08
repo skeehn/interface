@@ -1,6 +1,13 @@
-/*
- * skeehn — PromptSuggestions
- * Starter prompts for empty AI chat state.
+/**
+ * skeehn — PromptSuggestions Component
+ *
+ * @component sk-prompt-suggestions
+ * @variants  default | chips
+ * @states    [data-loading] | [data-skeleton]
+ * @slots     __label | __grid | __group | sk-prompt-suggestion | __icon | __text
+ * @features  Categorized groups, animated entrance, keyboard navigation, dither hover
+ * @a11y      Keyboard navigable, focus-visible rings, button semantics
+ * @print     Hidden (interactive suggestions)
  */
 
 .sk-prompt-suggestions {
@@ -88,7 +95,89 @@
   display: none;
 }
 
+/* ============================================================
+   CATEGORIZED GROUPS
+   ============================================================ */
+
+.sk-prompt-suggestions__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-space-2);
+}
+
+.sk-prompt-suggestions__group-label {
+  font-family: var(--sk-font-mono);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: hsl(var(--sk-muted-foreground) / 0.5);
+  padding-bottom: var(--sk-space-1);
+  border-bottom: 1px dashed hsl(var(--sk-border-color));
+}
+
+/* ============================================================
+   ANIMATED ENTRANCE — staggered slide-in
+   ============================================================ */
+
+@keyframes sk-suggestion-enter {
+  from { transform: translateY(8px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+.sk-prompt-suggestions[data-animate] .sk-prompt-suggestion {
+  opacity: 0;
+  animation: sk-suggestion-enter var(--sk-anim-normal, 300ms) var(--sk-ease-pixel, cubic-bezier(0.25, 0.46, 0.45, 0.94)) both;
+}
+
+.sk-prompt-suggestions[data-animate] .sk-prompt-suggestion:nth-child(1)  { animation-delay: 0ms; }
+.sk-prompt-suggestions[data-animate] .sk-prompt-suggestion:nth-child(2)  { animation-delay: 60ms; }
+.sk-prompt-suggestions[data-animate] .sk-prompt-suggestion:nth-child(3)  { animation-delay: 120ms; }
+.sk-prompt-suggestions[data-animate] .sk-prompt-suggestion:nth-child(4)  { animation-delay: 180ms; }
+.sk-prompt-suggestions[data-animate] .sk-prompt-suggestion:nth-child(5)  { animation-delay: 240ms; }
+.sk-prompt-suggestions[data-animate] .sk-prompt-suggestion:nth-child(6)  { animation-delay: 300ms; }
+.sk-prompt-suggestions[data-animate] .sk-prompt-suggestion:nth-child(7)  { animation-delay: 360ms; }
+.sk-prompt-suggestions[data-animate] .sk-prompt-suggestion:nth-child(8)  { animation-delay: 420ms; }
+
+/* ============================================================
+   KEYBOARD NAVIGATION
+   ============================================================ */
+
+.sk-prompt-suggestion[data-focused] {
+  border-color: hsl(var(--sk-foreground));
+  background: hsl(var(--sk-accent));
+  color: hsl(var(--sk-foreground));
+}
+
+/* Micro-interactions */
+.sk-prompt-suggestion:active { transform: translateY(1px); }
+
+/* ============================================================
+   LOADING & SKELETON
+   ============================================================ */
+
+.sk-prompt-suggestions[data-loading] .sk-prompt-suggestion {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.sk-prompt-suggestions[data-skeleton] .sk-prompt-suggestion {
+  pointer-events: none;
+  color: transparent;
+  background: linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-accent)) 50%, hsl(var(--sk-muted)) 75%);
+  background-size: 200% 100%;
+  animation: sk-card-shimmer 1.8s ease-in-out infinite;
+  min-height: 3rem;
+}
+
+.sk-prompt-suggestions[data-skeleton] .sk-prompt-suggestion::before { display: none; }
+
+@media print { .sk-prompt-suggestions { display: none; } }
+
 @media (prefers-reduced-motion: reduce) {
   .sk-prompt-suggestion { transition: none; }
   .sk-prompt-suggestion::before { transition: none; }
+  .sk-prompt-suggestion:active { transform: none; }
+  .sk-prompt-suggestions[data-animate] .sk-prompt-suggestion { animation: none; opacity: 1; }
+  .sk-prompt-suggestions[data-skeleton] .sk-prompt-suggestion { animation: none; background: hsl(var(--sk-muted)); }
 }

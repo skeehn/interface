@@ -1,6 +1,13 @@
-/*
- * skeehn — Voice Session Styles
- * Realtime voice session with waveform, transcript, and state indicators.
+/**
+ * skeehn — VoiceSession Component
+ *
+ * @component sk-voice-session
+ * @statuses  idle | listening | transcribing | speaking | handoff
+ * @states    [data-loading] | [data-skeleton]
+ * @slots     __clock | __waveform | __waveform-bar | __transcript | __turn | __controls
+ * @features  Waveform visualization, live transcript, status border, role-based turn styling
+ * @a11y      aria-live on transcript, status communicated via text + color
+ * @print     Transcript visible, controls hidden
  */
 
 .sk-voice-session {
@@ -78,9 +85,36 @@
   align-items: center;
 }
 
+/* Loading */
+.sk-voice-session[data-loading] { pointer-events: none; opacity: 0.6; }
+.sk-voice-session[data-loading] .sk-voice-session__waveform { opacity: 0.3; }
+
+/* Skeleton */
+.sk-voice-session[data-skeleton] .sk-voice-session__waveform,
+.sk-voice-session[data-skeleton] .sk-voice-session__transcript,
+.sk-voice-session[data-skeleton] .sk-voice-session__clock {
+  background: linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-accent)) 50%, hsl(var(--sk-muted)) 75%);
+  background-size: 200% 100%;
+  animation: sk-card-shimmer 1.8s ease-in-out infinite;
+  border-radius: var(--sk-radius);
+  color: transparent;
+}
+
+.sk-voice-session[data-skeleton] .sk-voice-session__waveform-bar { display: none; }
+.sk-voice-session[data-skeleton] .sk-voice-session__turn { visibility: hidden; }
+
+@media print {
+  .sk-voice-session { border: 1px solid hsl(var(--sk-foreground)); }
+  .sk-voice-session__waveform { display: none; }
+  .sk-voice-session__controls { display: none; }
+  .sk-voice-session__clock { display: none; }
+  .sk-voice-session[data-skeleton] { display: none; }
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .sk-voice-session__waveform-bar {
-    transition: none;
-  }
+  .sk-voice-session__waveform-bar { transition: none; }
+  .sk-voice-session[data-skeleton] .sk-voice-session__waveform,
+  .sk-voice-session[data-skeleton] .sk-voice-session__transcript,
+  .sk-voice-session[data-skeleton] .sk-voice-session__clock { animation: none; background: hsl(var(--sk-muted)); }
 }

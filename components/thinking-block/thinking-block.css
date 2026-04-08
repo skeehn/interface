@@ -1,9 +1,12 @@
-/*
- * skeehn — ThinkingBlock
- * AI extended thinking with pulse animation. Distinct from reasoning-step:
- * this is a live process (pulsing while active), reasoning-step is a completed trace.
+/**
+ * skeehn — ThinkingBlock Component
  *
- * States: thinking (pulsing, auto-expanded) | done (collapsed) | error
+ * @component sk-thinking-block
+ * @states    [data-state="thinking"] | [data-state="done"] | [data-state="error"] | [data-expanded]
+ * @slots     __header | __dot | __label | __meta | __chevron | __content | __token-count
+ * @features  Progressive disclosure, nested thinking, live token count, scanline overlay
+ * @a11y      Button trigger, aria-expanded, focus-visible, reduced motion
+ * @print     Expanded content visible, animations disabled
  */
 
 .sk-thinking-block {
@@ -125,9 +128,65 @@
   50%       { opacity: 0; }
 }
 
+/* ── Progressive disclosure — nested thinking ── */
+.sk-thinking-block .sk-thinking-block {
+  margin: var(--sk-space-2) 0;
+  margin-left: var(--sk-space-3);
+  border-left: 2px solid hsl(var(--sk-border-color));
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+}
+
+.sk-thinking-block .sk-thinking-block .sk-thinking-block__header {
+  font-size: 0.6rem;
+  padding: var(--sk-space-1) var(--sk-space-2);
+}
+
+/* ── Live token count ── */
+.sk-thinking-block__token-count {
+  font-family: var(--sk-font-mono);
+  font-size: 0.55rem;
+  color: hsl(var(--sk-muted-foreground) / 0.4);
+  letter-spacing: 0.05em;
+  margin-left: auto;
+  padding-left: var(--sk-space-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.sk-thinking-block[data-state="thinking"] .sk-thinking-block__token-count {
+  animation: sk-thinking-pulse 1.2s steps(2) infinite;
+}
+
+/* ── Dither fill while thinking ── */
+@keyframes sk-thinking-dither-fill {
+  0%   { background-image: var(--sk-dither-b2); opacity: 0.02; }
+  50%  { background-image: var(--sk-dither-b6); opacity: 0.05; }
+  100% { background-image: var(--sk-dither-b2); opacity: 0.02; }
+}
+
+.sk-thinking-block[data-state="thinking"] .sk-thinking-block__content::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-repeat: repeat;
+  animation: sk-thinking-dither-fill 3s steps(4) infinite;
+  pointer-events: none;
+}
+
+@media print {
+  .sk-thinking-block { border: 1px solid hsl(var(--sk-foreground)); }
+  .sk-thinking-block__content { display: block; max-height: none; }
+  .sk-thinking-block__content::before,
+  .sk-thinking-block__content::after { display: none; }
+  .sk-thinking-block__dot { animation: none; }
+  .sk-thinking-block__chevron { display: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .sk-thinking-block__dot                { animation: none; }
   .sk-thinking-block__content::after     { animation: none; content: ""; }
   .sk-thinking-block__chevron            { transition: none; }
   .sk-thinking-block__header             { transition: none; }
+  .sk-thinking-block__token-count        { animation: none; }
 }

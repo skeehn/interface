@@ -1,6 +1,13 @@
-/*
+/**
  * skeehn — CodeBlock Component
- * Syntax-highlighted code display with copy button and line numbers.
+ *
+ * @component sk-code-block
+ * @variants  default | [data-variant="terminal"] | [data-variant="diff"]
+ * @states    [data-line-numbers] | [data-loading] | [data-skeleton]
+ * @slots     __header | __lang | __copy | __body | __lines | __annotations
+ * @features  Diff highlighting, line annotations, terminal variant, copy button
+ * @a11y      Preformatted text, copy button focus, reduced motion
+ * @print     Visible with borders, no copy button
  */
 
 .sk-code-block {
@@ -122,6 +129,110 @@
   border-radius: var(--sk-radius);
 }
 
+/* ============================================================
+   DIFF HIGHLIGHTING
+   ============================================================ */
+
+.sk-code-block[data-variant="diff"] .sk-code-line--added {
+  background: hsl(var(--sk-success) / 0.08);
+  border-left: 3px solid hsl(var(--sk-success));
+  padding-left: var(--sk-space-2);
+}
+
+.sk-code-block[data-variant="diff"] .sk-code-line--removed {
+  background: hsl(var(--sk-destructive) / 0.08);
+  border-left: 3px solid hsl(var(--sk-destructive));
+  padding-left: var(--sk-space-2);
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.sk-code-block[data-variant="diff"] .sk-code-line--context {
+  padding-left: calc(var(--sk-space-2) + 3px);
+  opacity: 0.6;
+}
+
+/* ============================================================
+   LINE ANNOTATIONS
+   ============================================================ */
+
+.sk-code-block__annotation {
+  display: block;
+  padding: var(--sk-space-1) var(--sk-space-3);
+  font-size: 0.6rem;
+  color: hsl(var(--sk-info));
+  background: hsl(var(--sk-info) / 0.05);
+  border-left: 2px solid hsl(var(--sk-info));
+  margin: var(--sk-space-1) 0;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   TERMINAL VARIANT
+   ============================================================ */
+
+.sk-code-block[data-variant="terminal"] {
+  border-color: hsl(var(--sk-success) / 0.3);
+}
+
+.sk-code-block[data-variant="terminal"] .sk-code-block__header {
+  background: hsl(var(--sk-foreground) / 0.05);
+}
+
+.sk-code-block[data-variant="terminal"] .sk-code-block__body {
+  background: hsl(0 0% 6%);
+}
+
+.sk-code-block[data-variant="terminal"] pre {
+  color: hsl(var(--sk-success));
+}
+
+.sk-code-block[data-variant="terminal"] .sk-code-block__body::before {
+  background-image: var(--sk-dither-scanlines);
+  background-size: 100% 4px;
+  opacity: 0.06;
+}
+
+/* ============================================================
+   LOADING & SKELETON
+   ============================================================ */
+
+.sk-code-block[data-loading] .sk-code-block__body {
+  position: relative;
+  opacity: 0.5;
+}
+
+.sk-code-block[data-loading] .sk-code-block__body::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--sk-dither-pattern);
+  background-repeat: repeat;
+  opacity: 0.06;
+  animation: sk-pulse-dither 1.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.sk-code-block[data-skeleton] pre {
+  color: transparent;
+}
+
+.sk-code-block[data-skeleton] .sk-code-block__body {
+  background: linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-accent)) 50%, hsl(var(--sk-muted)) 75%);
+  background-size: 200% 100%;
+  animation: sk-card-shimmer 1.8s ease-in-out infinite;
+  min-height: 4rem;
+}
+
+@media print {
+  .sk-code-block { border: 1px solid hsl(var(--sk-foreground)); break-inside: avoid; }
+  .sk-code-block__copy { display: none; }
+  .sk-code-block__body::before { display: none; }
+  .sk-code-block[data-skeleton] { display: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .sk-code-block__copy { transition: none; }
+  .sk-code-block[data-loading] .sk-code-block__body::after { animation: none; }
+  .sk-code-block[data-skeleton] .sk-code-block__body { animation: none; background: hsl(var(--sk-muted)); }
 }

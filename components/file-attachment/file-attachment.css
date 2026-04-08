@@ -1,6 +1,13 @@
-/*
- * skeehn — FileAttachment
- * File pill for chat input with upload progress and remove button.
+/**
+ * skeehn — FileAttachment Component
+ *
+ * @component sk-file-attachment
+ * @states    [data-state="uploading"] | [data-state="error"] | [data-state="done"] | [data-skeleton]
+ * @slots     __progress | __icon | __name | __size | __remove
+ * @container sk-file-attachments (flex wrapper for multiple files)
+ * @features  Upload progress bar, state variants, remove button, truncated name
+ * @a11y      Focus-visible on remove, state conveyed by border color + text
+ * @print     Hidden (interactive file controls)
  */
 
 .sk-file-attachment {
@@ -93,7 +100,31 @@
   padding: var(--sk-space-2) 0;
 }
 
+/* Micro-interactions */
+.sk-file-attachment { transition: transform var(--sk-transition-fast), border-color var(--sk-transition-fast); }
+.sk-file-attachment:hover { transform: translateY(-1px); }
+
+/* Skeleton */
+.sk-file-attachment[data-skeleton] {
+  pointer-events: none;
+  color: transparent;
+  background: linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-accent)) 50%, hsl(var(--sk-muted)) 75%);
+  background-size: 200% 100%;
+  animation: sk-card-shimmer 1.8s ease-in-out infinite;
+  border-color: transparent;
+  min-width: 8rem;
+  min-height: 1.5rem;
+}
+
+.sk-file-attachment[data-skeleton] .sk-file-attachment__remove { display: none; }
+.sk-file-attachment[data-skeleton] .sk-file-attachment__progress { display: none; }
+
+@media print { .sk-file-attachment { display: none; } .sk-file-attachments { display: none; } }
+
 @media (prefers-reduced-motion: reduce) {
   .sk-file-attachment__progress { animation: none; }
   .sk-file-attachment__remove   { transition: none; }
+  .sk-file-attachment { transition: none; }
+  .sk-file-attachment:hover { transform: none; }
+  .sk-file-attachment[data-skeleton] { animation: none; background: hsl(var(--sk-muted)); }
 }

@@ -8,30 +8,30 @@ export default function DocsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col min-h-dvh">
+    <div className="flex flex-col min-h-dvh bg-neutral-950 text-neutral-100">
       {/* Top bar */}
-      <header className="sticky top-0 z-50 flex items-center justify-between px-6 h-14 border-b border-border bg-background/80 backdrop-blur-sm">
+      <header className="sticky top-0 z-50 flex items-center justify-between px-6 h-14 border-b border-neutral-800 bg-neutral-950/80 backdrop-blur-md">
         <div className="flex items-center gap-4">
-          <Link href="/" className="text-sm font-medium tracking-wide">
-            <span className="text-muted-fg mr-1">&gt;</span>
+          <Link href="/" className="text-sm font-mono font-medium tracking-wide text-white">
+            <span className="text-neutral-600 mr-1">&gt;</span>
             skeehn
           </Link>
-          <span className="text-muted-fg/30 text-xs hidden sm:inline">/</span>
-          <span className="text-xs text-muted-fg hidden sm:inline">docs</span>
+          <span className="text-neutral-700 text-xs hidden sm:inline">/</span>
+          <span className="text-xs text-neutral-500 font-mono hidden sm:inline">docs</span>
         </div>
-        <div className="flex items-center gap-6 text-xs text-muted-fg">
-          <Link href="/docs" className="hover:text-foreground transition-colors">
+        <div className="flex items-center gap-6 text-xs font-mono text-neutral-500">
+          <Link href="/docs" className="hover:text-white transition-colors">
             Docs
           </Link>
           <Link
-            href="/docs/components/button"
-            className="hover:text-foreground transition-colors"
+            href="/docs/components"
+            className="hover:text-white transition-colors"
           >
             Components
           </Link>
           <a
             href="https://github.com/skeehn/skeehn"
-            className="hover:text-foreground transition-colors"
+            className="hover:text-white transition-colors"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -45,10 +45,10 @@ export default function DocsLayout({
         <Sidebar />
 
         {/* Main content */}
-        <main className="flex-1 min-w-0 lg:pl-0">
-          <div className="max-w-3xl mx-auto px-6 py-10">
+        <main className="flex-1 min-w-0">
+          <div className="max-w-4xl mx-auto px-8 py-12">
             <Breadcrumb />
-            <article className="prose prose-sm max-w-none">{children}</article>
+            <article>{children}</article>
           </div>
         </main>
       </div>

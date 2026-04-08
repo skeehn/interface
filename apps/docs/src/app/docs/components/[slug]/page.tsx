@@ -21,11 +21,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
-  core: 'bg-primary/10 text-primary border-primary/20',
-  ai: 'bg-accent/10 text-accent border-accent/20',
-  layout: 'bg-muted/30 text-muted-fg border-muted/40',
-  dataviz: 'bg-primary/10 text-primary border-primary/20',
-  motion: 'bg-accent/10 text-accent border-accent/20',
+  core: 'text-blue-400 border-blue-400/30',
+  ai: 'text-violet-400 border-violet-400/30',
+  layout: 'text-neutral-400 border-neutral-600',
+  dataviz: 'text-cyan-400 border-cyan-400/30',
+  motion: 'text-orange-400 border-orange-400/30',
 };
 
 export default async function ComponentPage({
@@ -44,25 +44,27 @@ export default async function ComponentPage({
   const codeExample = getCodeExample(slug);
 
   return (
-    <>
+    <div className="space-y-12">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight mb-3">
+      <div>
+        <h1 className="text-3xl font-mono font-bold tracking-tight mb-3">
           {component.name}
         </h1>
 
-        <p className="text-muted-fg text-base mb-4">{component.description}</p>
+        <p className="text-neutral-400 text-base leading-relaxed mb-5">
+          {component.description}
+        </p>
 
         <div className="flex gap-2 flex-wrap">
           <span
-            className={`text-xs font-mono px-2 py-1 rounded border ${CATEGORY_COLORS[component.category] ?? 'bg-muted/20 text-muted-fg border-muted/30'}`}
+            className={`px-2 py-0.5 text-xs font-mono uppercase tracking-wider border ${CATEGORY_COLORS[component.category] ?? 'text-neutral-400 border-neutral-600'}`}
           >
             {getCategoryLabel(component.category)}
           </span>
           {component.files.map((f) => (
             <span
               key={f}
-              className="text-xs font-mono px-2 py-1 rounded border border-border bg-muted/10 text-muted-fg"
+              className="px-2 py-0.5 text-xs font-mono text-neutral-500 border border-neutral-800"
             >
               {f}
             </span>
@@ -71,32 +73,34 @@ export default async function ComponentPage({
       </div>
 
       {/* Install */}
-      <section className="mb-10">
-        <h2 className="text-lg font-semibold mb-3">Installation</h2>
-        <div className="flex items-center gap-3 bg-surface/50 border border-border rounded px-4 py-3 font-mono text-sm">
-          <span className="text-muted-fg select-none">$</span>
-          <code className="flex-1 min-w-0 truncate">{installCmd}</code>
+      <section>
+        <h2 className="text-2xl font-mono font-bold mb-6">Installation</h2>
+        <div className="bg-neutral-900 border border-neutral-800 p-4 font-mono text-sm flex justify-between items-center">
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="text-neutral-600 select-none">$</span>
+            <code className="text-neutral-200 truncate">{installCmd}</code>
+          </div>
           <CopyButton text={installCmd} />
         </div>
       </section>
 
       {/* Preview */}
-      <section className="mb-10">
-        <h2 className="text-lg font-semibold mb-3">Preview</h2>
+      <section>
+        <h2 className="text-2xl font-mono font-bold mb-6">Preview</h2>
         <ComponentPreview slug={slug} />
       </section>
 
       {/* Props */}
-      <section className="mb-10">
-        <h2 className="text-lg font-semibold mb-3">Props</h2>
+      <section>
+        <h2 className="text-2xl font-mono font-bold mb-6">Props</h2>
         <PropsTable slug={slug} />
       </section>
 
       {/* Code Example */}
-      <section className="mb-10">
-        <h2 className="text-lg font-semibold mb-1">Usage</h2>
+      <section>
+        <h2 className="text-2xl font-mono font-bold mb-6">Usage</h2>
         <CodeBlock code={codeExample} language="tsx" filename={`${component.name}.tsx`} />
       </section>
-    </>
+    </div>
   );
 }

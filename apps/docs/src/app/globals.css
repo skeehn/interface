@@ -129,3 +129,8 @@ html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
+
+/* ═══ DOCS UTILITY STYLES ═══ */
+.docs-section { margin-bottom: 4rem; }
+.docs-heading { font-family: var(--sk-font-mono); font-weight: 700; letter-spacing: -0.02em; }
+.docs-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2em; opacity: 0.4; }

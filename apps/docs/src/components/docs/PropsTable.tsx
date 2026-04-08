@@ -176,36 +176,44 @@ export function PropsTable({ slug }: { slug: string }) {
 
   if (props.length === 0) {
     return (
-      <p className="text-muted-fg text-sm italic">
+      <p className="text-neutral-500 text-sm italic">
         No documented props for this component yet.
       </p>
     );
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-border">
-      <table className="w-full text-sm">
+    <div className="overflow-x-auto border border-neutral-800">
+      <table className="w-full text-sm border-collapse">
         <thead>
-          <tr className="border-b border-border bg-surface/50">
-            <th className="px-4 py-3 text-left font-medium text-foreground">Prop</th>
-            <th className="px-4 py-3 text-left font-medium text-foreground">Type</th>
-            <th className="px-4 py-3 text-left font-medium text-foreground">Default</th>
-            <th className="px-4 py-3 text-left font-medium text-foreground">Description</th>
+          <tr className="border-b border-neutral-700">
+            <th className="py-3 px-4 text-left text-xs uppercase tracking-wider text-neutral-400 font-mono font-normal">
+              Prop
+            </th>
+            <th className="py-3 px-4 text-left text-xs uppercase tracking-wider text-neutral-400 font-mono font-normal">
+              Type
+            </th>
+            <th className="py-3 px-4 text-left text-xs uppercase tracking-wider text-neutral-400 font-mono font-normal">
+              Default
+            </th>
+            <th className="py-3 px-4 text-left text-xs uppercase tracking-wider text-neutral-400 font-mono font-normal">
+              Description
+            </th>
           </tr>
         </thead>
         <tbody>
           {props.map((p) => (
-            <tr key={p.attr} className="border-b border-border/50 last:border-0">
-              <td className="px-4 py-3 font-mono text-xs text-primary whitespace-nowrap">
+            <tr key={p.attr} className="border-b border-neutral-800 last:border-0">
+              <td className="py-3 px-4 font-mono text-sm text-white whitespace-nowrap">
                 {p.attr}
               </td>
-              <td className="px-4 py-3 font-mono text-xs text-muted-fg whitespace-nowrap max-w-64 overflow-hidden text-ellipsis">
+              <td className="py-3 px-4 font-mono text-sm text-emerald-400 whitespace-nowrap max-w-72 overflow-hidden text-ellipsis">
                 {p.type}
               </td>
-              <td className="px-4 py-3 font-mono text-xs text-muted-fg whitespace-nowrap">
+              <td className="py-3 px-4 font-mono text-sm text-amber-400 whitespace-nowrap">
                 {p.default}
               </td>
-              <td className="px-4 py-3 text-foreground">
+              <td className="py-3 px-4 text-sm text-neutral-300">
                 {p.description}
               </td>
             </tr>

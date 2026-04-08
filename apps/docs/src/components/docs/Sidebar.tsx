@@ -116,10 +116,10 @@ export function Sidebar() {
   }, []);
 
   const sidebarContent = (
-    <nav className="flex flex-col gap-6 py-6 px-4" aria-label="Documentation">
+    <nav className="flex flex-col gap-8 py-6 px-4" aria-label="Documentation">
       {NAV_GROUPS.map((group) => (
         <div key={group.title}>
-          <h4 className="text-xs font-medium text-muted-fg uppercase tracking-widest mb-2 px-2">
+          <h4 className="text-xs uppercase tracking-widest text-neutral-500 px-3 mb-2 font-mono">
             {group.title}
           </h4>
           <ul className="flex flex-col gap-0.5">
@@ -130,10 +130,10 @@ export function Sidebar() {
                   <Link
                     href={item.href}
                     onClick={closeMobile}
-                    className={`block px-2 py-1.5 text-sm transition-colors ${
+                    className={`block px-3 py-1.5 text-sm font-mono transition-colors ${
                       isActive
-                        ? "text-foreground font-medium bg-accent"
-                        : "text-muted-fg hover:text-foreground hover:bg-accent/50"
+                        ? "text-white bg-neutral-800/50 border-l-2 border-white"
+                        : "text-neutral-400 hover:text-white hover:bg-neutral-800/50 border-l-2 border-transparent"
                     }`}
                   >
                     {item.title}
@@ -152,7 +152,7 @@ export function Sidebar() {
       {/* Mobile hamburger */}
       <button
         onClick={toggleMobile}
-        className="fixed top-3.5 left-16 z-50 lg:hidden p-1.5 text-muted-fg hover:text-foreground transition-colors"
+        className="fixed top-3.5 left-16 z-50 lg:hidden p-1.5 text-neutral-500 hover:text-white transition-colors"
         aria-label="Toggle navigation"
         aria-expanded={mobileOpen}
       >
@@ -183,17 +183,17 @@ export function Sidebar() {
       {/* Mobile overlay */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          className="fixed inset-0 z-40 bg-black/60 lg:hidden"
           onClick={closeMobile}
           aria-hidden="true"
         />
       )}
 
-      {/* Sidebar — desktop: static, mobile: slide-in */}
+      {/* Sidebar -- desktop: static, mobile: slide-in */}
       <aside
-        className={`fixed top-14 bottom-0 left-0 z-40 w-64 bg-background border-r border-border overflow-y-auto transition-transform duration-200 lg:translate-x-0 ${
+        className={`fixed top-14 bottom-0 left-0 z-40 w-64 bg-neutral-950 border-r border-neutral-800 overflow-y-auto transition-transform duration-200 lg:translate-x-0 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:sticky lg:top-14 lg:h-[calc(100dvh-3.5rem)]`}
+        } lg:sticky lg:top-14 lg:h-[calc(100dvh-3.5rem)] scrollbar-thin scrollbar-thumb-neutral-800 scrollbar-track-transparent`}
       >
         {sidebarContent}
       </aside>

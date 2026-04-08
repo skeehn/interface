@@ -458,7 +458,6 @@ export default function EnginePage() {
       className="min-h-screen"
       style={{
         fontFamily: 'var(--sk-font-mono)',
-        /* Break out of the max-w-3xl prose container */
         width: '100vw',
         maxWidth: '100vw',
         marginLeft: 'calc(-50vw + 50%)',
@@ -466,30 +465,29 @@ export default function EnginePage() {
       }}
     >
       {/* Header */}
-      <div className="border-b border-border px-6 py-4">
-        <h1
-          className="text-2xl font-bold tracking-tight"
-          style={{ fontFamily: 'var(--sk-font-sans)' }}
-        >
+      <div className="border-b border-border px-8 py-6">
+        <h1 className="docs-heading text-2xl tracking-tight mb-1"
+          style={{ fontFamily: 'var(--sk-font-sans)' }}>
           ASCII Engine Playground
         </h1>
-        <p className="text-sm text-muted-fg mt-1">
+        <p className="text-sm text-muted-fg max-w-xl">
           Real-time image-to-ASCII dithering. Upload an image, use your webcam,
-          or tweak the demo scene.
+          or tweak the demo scene below.
         </p>
       </div>
 
       <div className="flex flex-col lg:flex-row">
-        {/* ── Left: Controls ── */}
-        <div className="w-full lg:w-80 shrink-0 border-r border-border p-5 space-y-5 overflow-y-auto lg:max-h-[calc(100vh-80px)]">
-          {/* Image upload */}
+        {/* ── Left: Controls Sidebar ── */}
+        <div className="w-full lg:w-80 shrink-0 bg-neutral-900 border-r border-neutral-800 p-6 space-y-6 overflow-y-auto lg:max-h-[calc(100vh-100px)]">
+
+          {/* Image upload / drop zone */}
           <section>
-            <Label>Source Image</Label>
+            <SidebarLabel>Source Image</SidebarLabel>
             <div
-              className={`mt-2 border-2 border-dashed rounded p-6 text-center cursor-pointer transition-colors ${
+              className={`mt-2 border-2 border-dashed rounded-sm p-12 text-center cursor-pointer transition-colors ${
                 isDragging
-                  ? 'border-primary bg-primary/5'
-                  : 'border-border hover:border-muted-fg'
+                  ? 'border-neutral-500 bg-neutral-800/50'
+                  : 'border-neutral-700 hover:border-neutral-500'
               }`}
               onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
               onDragLeave={() => setIsDragging(false)}
@@ -503,46 +501,45 @@ export default function EnginePage() {
                 className="hidden"
                 onChange={handleFileInput}
               />
-              <div className="text-xs text-muted-fg">
-                {isDragging ? '[ DROP IMAGE ]' : fileName ? `[ ${fileName} ]` : '[ DRAG & DROP or CLICK ]'}
+              <div className="text-neutral-500 text-xs tracking-wide">
+                {isDragging
+                  ? 'DROP IMAGE HERE'
+                  : fileName
+                    ? fileName
+                    : 'DRAG & DROP or CLICK'}
               </div>
+              {!fileName && !isDragging && (
+                <div className="text-neutral-600 text-[10px] mt-2">
+                  PNG, JPG, GIF, WebP
+                </div>
+              )}
             </div>
           </section>
 
-          {/* Webcam */}
+          {/* Webcam button */}
           <section>
             <button
               onClick={toggleWebcam}
-              className="sk-button w-full"
-              data-variant={webcamActive ? 'destructive' : 'default'}
-              style={{
-                padding: 'var(--sk-space-2) var(--sk-space-4)',
-                border: 'var(--sk-border)',
-                fontFamily: 'var(--sk-font-mono)',
-                fontSize: 'var(--sk-font-size-sm)',
-                cursor: 'pointer',
-                width: '100%',
-                background: webcamActive
-                  ? 'hsl(var(--sk-destructive))'
-                  : 'hsl(var(--sk-surface))',
-                color: webcamActive
-                  ? 'hsl(var(--sk-background))'
-                  : 'hsl(var(--sk-foreground))',
-              }}
+              className={`w-full py-3 px-4 text-xs font-bold tracking-widest uppercase border transition-colors cursor-pointer ${
+                webcamActive
+                  ? 'bg-red-900/50 border-red-700 text-red-300 hover:bg-red-900/70'
+                  : 'bg-neutral-800 border-neutral-700 text-neutral-300 hover:bg-neutral-700 hover:border-neutral-600'
+              }`}
+              style={{ fontFamily: 'var(--sk-font-mono)' }}
             >
-              {webcamActive ? '[ STOP WEBCAM ]' : '[ USE WEBCAM ]'}
+              {webcamActive ? 'STOP WEBCAM' : 'USE WEBCAM'}
             </button>
           </section>
 
-          <Hr />
+          <SidebarDivider />
 
           {/* Algorithm */}
           <section>
-            <Label>Algorithm</Label>
-            <div className="space-y-1 mt-2">
+            <SidebarLabel>Algorithm</SidebarLabel>
+            <div className="space-y-1.5 mt-3">
               {(['bayer', 'floyd-steinberg', 'atkinson'] as Algorithm[]).map(
                 (alg) => (
-                  <RadioRow
+                  <SidebarRadio
                     key={alg}
                     name="algorithm"
                     value={alg}
@@ -564,27 +561,17 @@ export default function EnginePage() {
           {/* Bayer size */}
           {algorithm === 'bayer' && (
             <section>
-              <Label>Bayer Matrix Size</Label>
-              <div className="flex gap-2 mt-2">
+              <SidebarLabel>Bayer Matrix Size</SidebarLabel>
+              <div className="flex gap-2 mt-3">
                 {([2, 4, 8] as BayerSize[]).map((s) => (
                   <button
                     key={s}
                     onClick={() => setBayerSize(s)}
-                    style={{
-                      padding: 'var(--sk-space-1) var(--sk-space-3)',
-                      border: 'var(--sk-border)',
-                      background:
-                        bayerSize === s
-                          ? 'hsl(var(--sk-foreground))'
-                          : 'transparent',
-                      color:
-                        bayerSize === s
-                          ? 'hsl(var(--sk-background))'
-                          : 'hsl(var(--sk-foreground))',
-                      fontFamily: 'var(--sk-font-mono)',
-                      fontSize: 'var(--sk-font-size-xs)',
-                      cursor: 'pointer',
-                    }}
+                    className={`flex-1 py-1.5 text-xs font-mono border transition-colors cursor-pointer ${
+                      bayerSize === s
+                        ? 'bg-white text-black border-white'
+                        : 'bg-transparent text-neutral-400 border-neutral-700 hover:border-neutral-500'
+                    }`}
                   >
                     {s}x{s}
                   </button>
@@ -593,14 +580,14 @@ export default function EnginePage() {
             </section>
           )}
 
-          <Hr />
+          <SidebarDivider />
 
           {/* Palette */}
           <section>
-            <Label>Character Palette</Label>
-            <div className="space-y-1 mt-2">
+            <SidebarLabel>Character Palette</SidebarLabel>
+            <div className="space-y-1.5 mt-3">
               {(Object.keys(PALETTES) as Palette[]).map((p) => (
-                <RadioRow
+                <SidebarRadio
                   key={p}
                   name="palette"
                   value={p}
@@ -612,50 +599,56 @@ export default function EnginePage() {
             </div>
           </section>
 
-          <Hr />
+          <SidebarDivider />
 
-          {/* Resolution */}
+          {/* Resolution slider */}
           <section>
-            <Label>
-              Resolution: <span className="text-foreground">{resolution} chars</span>
-            </Label>
+            <SidebarLabel>
+              Resolution <span className="text-neutral-300 ml-1">{resolution} chars</span>
+            </SidebarLabel>
             <input
               type="range"
               min={40}
               max={200}
               value={resolution}
               onChange={(e) => setResolution(Number(e.target.value))}
-              className="w-full mt-2"
-              style={{ accentColor: 'hsl(var(--sk-primary))' }}
+              className="w-full mt-3 accent-white"
             />
+            <div className="flex justify-between text-[10px] text-neutral-600 mt-1">
+              <span>40</span>
+              <span>200</span>
+            </div>
           </section>
 
-          {/* Contrast */}
+          {/* Contrast slider */}
           <section>
-            <Label>
-              Contrast: <span className="text-foreground">{contrast}</span>
-            </Label>
+            <SidebarLabel>
+              Contrast <span className="text-neutral-300 ml-1">{contrast}</span>
+            </SidebarLabel>
             <input
               type="range"
               min={-128}
               max={128}
               value={contrast}
               onChange={(e) => setContrast(Number(e.target.value))}
-              className="w-full mt-2"
-              style={{ accentColor: 'hsl(var(--sk-primary))' }}
+              className="w-full mt-3 accent-white"
             />
+            <div className="flex justify-between text-[10px] text-neutral-600 mt-1">
+              <span>-128</span>
+              <span>+128</span>
+            </div>
           </section>
 
-          <Hr />
+          <SidebarDivider />
 
           {/* Toggles */}
-          <section className="space-y-3">
-            <ToggleRow
+          <section className="space-y-4">
+            <SidebarToggle
               label="Invert"
               checked={invert}
               onChange={setInvert}
             />
-            <ToggleRow
+            <SidebarToggle
               label="Preserve Colors"
               checked={colorMode}
               onChange={setColorMode}
@@ -663,52 +656,46 @@ export default function EnginePage() {
           </section>
         </div>
 
-        {/* ── Right: Output ── */}
-        <div className="flex-1 overflow-auto p-4 lg:p-6 lg:max-h-[calc(100vh-80px)]">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs text-muted-fg" style={{ fontFamily: 'var(--sk-font-mono)' }}>
+        {/* ── Right: Output Area ── */}
+        <div className="flex-1 flex flex-col overflow-hidden lg:max-h-[calc(100vh-100px)]">
+          {/* Output toolbar */}
+          <div className="flex items-center justify-between px-6 py-3 border-b border-neutral-800 bg-black/50">
+            <span className="text-[11px] text-neutral-500 font-mono tracking-wide">
               {output
-                ? `${output[0]?.length ?? 0}x${output.length} characters`
+                ? `${output[0]?.length ?? 0} x ${output.length} characters`
                 : 'No output'}
             </span>
             <button
               onClick={copyAscii}
               disabled={!output}
-              style={{
-                padding: 'var(--sk-space-1) var(--sk-space-3)',
-                border: 'var(--sk-border)',
-                fontFamily: 'var(--sk-font-mono)',
-                fontSize: 'var(--sk-font-size-xs)',
-                cursor: output ? 'pointer' : 'default',
-                background: copied
-                  ? 'hsl(var(--sk-success) / 0.15)'
-                  : 'hsl(var(--sk-surface))',
-                color: copied
-                  ? 'hsl(var(--sk-success))'
-                  : 'hsl(var(--sk-foreground))',
-                opacity: output ? 1 : 0.4,
-              }}
+              className={`px-3 py-1 text-[11px] font-mono border transition-colors cursor-pointer ${
+                copied
+                  ? 'border-green-800 bg-green-900/30 text-green-400'
+                  : output
+                    ? 'border-neutral-700 text-neutral-400 hover:text-white hover:border-neutral-500'
+                    : 'border-neutral-800 text-neutral-700 cursor-default'
+              }`}
             >
-              {copied ? '[ COPIED ]' : '[ COPY ASCII ]'}
+              {copied ? 'COPIED' : 'COPY ASCII'}
             </button>
           </div>
 
-          <pre
-            style={{
-              fontFamily: 'var(--sk-font-mono)',
-              fontSize: `clamp(3px, ${Math.max(3, 10 - resolution * 0.04)}px, 10px)`,
-              lineHeight: 1.0,
-              letterSpacing: '0.05em',
-              whiteSpace: 'pre',
-              overflow: 'auto',
-              background: colorMode ? 'hsl(var(--sk-background))' : undefined,
-              border: 'var(--sk-border)',
-              padding: 'var(--sk-space-3)',
-              borderRadius: 'var(--sk-radius)',
-            }}
-          >
-            {output ? renderOutput(output, colorMode) : 'Waiting for image...'}
-          </pre>
+          {/* ASCII output */}
+          <div className="flex-1 overflow-auto p-4 bg-black">
+            <pre
+              className="font-mono text-xs leading-none p-4 border border-neutral-800 overflow-auto"
+              style={{
+                fontSize: `clamp(3px, ${Math.max(3, 10 - resolution * 0.04)}px, 10px)`,
+                lineHeight: 1.0,
+                letterSpacing: '0.05em',
+                whiteSpace: 'pre',
+                background: colorMode ? '#000' : undefined,
+                color: colorMode ? undefined : 'hsl(var(--sk-foreground))',
+              }}
+            >
+              {output ? renderOutput(output, colorMode) : 'Waiting for image...'}
+            </pre>
+          </div>
         </div>
       </div>
 
@@ -720,38 +707,23 @@ export default function EnginePage() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   HELPER UI COMPONENTS
+   SIDEBAR UI COMPONENTS
    ═══════════════════════════════════════════════════════════════ */
 
-function Label({ children }: { children: React.ReactNode }) {
+function SidebarLabel({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      style={{
-        fontFamily: 'var(--sk-font-mono)',
-        fontSize: '9px',
-        fontWeight: 700,
-        letterSpacing: '0.12em',
-        textTransform: 'uppercase',
-        color: 'hsl(var(--sk-muted-foreground))',
-      }}
-    >
+    <div className="text-xs uppercase tracking-widest text-neutral-500 font-bold"
+      style={{ fontSize: '9px', letterSpacing: '0.15em' }}>
       {children}
     </div>
   );
 }
 
-function Hr() {
-  return (
-    <div
-      style={{
-        borderTop: '1px solid hsl(var(--sk-border-color))',
-        margin: 'var(--sk-space-2) 0',
-      }}
-    />
-  );
+function SidebarDivider() {
+  return <div className="border-t border-neutral-800" />;
 }
 
-function RadioRow({
+function SidebarRadio({
   name,
   value,
   checked,
@@ -766,31 +738,31 @@ function RadioRow({
 }) {
   return (
     <label
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 'var(--sk-space-2)',
-        fontFamily: 'var(--sk-font-mono)',
-        fontSize: 'var(--sk-font-size-xs)',
-        cursor: 'pointer',
-        padding: '2px 0',
-        color: checked ? 'hsl(var(--sk-foreground))' : 'hsl(var(--sk-muted-foreground))',
-      }}
+      className={`flex items-center gap-2.5 py-1 cursor-pointer text-xs font-mono transition-colors ${
+        checked ? 'text-white' : 'text-neutral-500 hover:text-neutral-300'
+      }`}
     >
+      <span
+        className={`w-3 h-3 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
+          checked ? 'border-white' : 'border-neutral-600'
+        }`}
+      >
+        {checked && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
+      </span>
       <input
         type="radio"
         name={name}
         value={value}
         checked={checked}
         onChange={onChange}
-        style={{ accentColor: 'hsl(var(--sk-primary))' }}
+        className="hidden"
       />
       {label}
     </label>
   );
 }
 
-function ToggleRow({
+function SidebarToggle({
   label,
   checked,
   onChange,
@@ -800,46 +772,27 @@ function ToggleRow({
   onChange: (v: boolean) => void;
 }) {
   return (
-    <label
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        fontFamily: 'var(--sk-font-mono)',
-        fontSize: 'var(--sk-font-size-xs)',
-        cursor: 'pointer',
-        color: 'hsl(var(--sk-muted-foreground))',
-      }}
-    >
-      {label}
+    <label className="flex items-center justify-between cursor-pointer group">
+      <span className="text-xs font-mono text-neutral-400 group-hover:text-neutral-300 transition-colors">
+        {label}
+      </span>
       <button
         onClick={(e) => {
           e.preventDefault();
           onChange(!checked);
         }}
-        style={{
-          width: '2rem',
-          height: '1rem',
-          border: 'var(--sk-border)',
-          background: checked ? 'hsl(var(--sk-foreground))' : 'transparent',
-          position: 'relative',
-          cursor: 'pointer',
-          borderRadius: '2px',
-        }}
+        className={`w-9 h-5 rounded-full border-2 relative transition-colors cursor-pointer ${
+          checked
+            ? 'bg-white border-white'
+            : 'bg-transparent border-neutral-600 hover:border-neutral-500'
+        }`}
       >
         <span
-          style={{
-            position: 'absolute',
-            top: '1px',
-            left: checked ? 'calc(100% - 13px)' : '1px',
-            width: '10px',
-            height: 'calc(100% - 2px)',
-            background: checked
-              ? 'hsl(var(--sk-background))'
-              : 'hsl(var(--sk-muted-foreground))',
-            transition: 'left 0.15s',
-            borderRadius: '1px',
-          }}
+          className={`absolute top-0.5 w-3 h-3 rounded-full transition-all ${
+            checked
+              ? 'left-[18px] bg-black'
+              : 'left-0.5 bg-neutral-500'
+          }`}
         />
       </button>
     </label>

@@ -21,11 +21,22 @@ interface ChatMessage {
    ═══════════════════════════════════════════════════════════════ */
 
 const SUGGESTIONS = [
-  { icon: '>', text: 'What is the weather in New Orleans?' },
-  { icon: '#', text: 'Show me a code example' },
-  { icon: '?', text: 'What components are available?' },
-  { icon: '/', text: 'Search the documentation' },
+  { icon: '>', text: 'What is the weather in New Orleans?', sub: 'Tool call demo' },
+  { icon: '#', text: 'Show me a code example', sub: 'Syntax highlighting' },
+  { icon: '?', text: 'What components are available?', sub: 'Component catalog' },
+  { icon: '/', text: 'Search the documentation', sub: 'Semantic search' },
 ];
+
+/* ═══════════════════════════════════════════════════════════════
+   AGENT STATUS DISPLAY
+   ═══════════════════════════════════════════════════════════════ */
+
+const STATUS_CONFIG: Record<AgentStatus, { label: string; color: string; pulse: boolean }> = {
+  idle: { label: 'Ready', color: 'bg-neutral-500', pulse: false },
+  thinking: { label: 'Thinking...', color: 'bg-amber-400', pulse: true },
+  acting: { label: 'Using tool...', color: 'bg-blue-400', pulse: true },
+  done: { label: 'Done', color: 'bg-green-400', pulse: false },
+};
 
 /* ═══════════════════════════════════════════════════════════════
    AI CHAT DEMO
@@ -203,13 +214,13 @@ export default function AIChatPage() {
   };
 
   const isEmpty = messages.length === 0;
+  const statusCfg = STATUS_CONFIG[agentStatus];
 
   return (
     <div
-      className="flex flex-col h-screen"
+      className="flex flex-col h-[calc(100vh-3.5rem)]"
       style={{
         fontFamily: 'var(--sk-font-mono)',
-        /* Break out of the max-w-3xl prose container */
         width: '100vw',
         maxWidth: '100vw',
         marginLeft: 'calc(-50vw + 50%)',
@@ -217,143 +228,141 @@ export default function AIChatPage() {
       }}
     >
       {/* ── Header ── */}
-      <div
-        className="flex items-center justify-between px-6 py-3 border-b"
-        style={{ borderColor: 'hsl(var(--sk-border-color))' }}
-      >
+      <div className="flex items-center justify-between px-8 py-4 border-b border-neutral-800 bg-neutral-900/50 shrink-0">
         <div>
-          <h1
-            className="text-lg font-bold tracking-tight"
-            style={{ fontFamily: 'var(--sk-font-sans)' }}
-          >
+          <h1 className="docs-heading text-lg tracking-tight"
+            style={{ fontFamily: 'var(--sk-font-sans)' }}>
             AI Chat Demo
           </h1>
-          <p
-            className="text-xs mt-0.5"
-            style={{ color: 'hsl(var(--sk-muted-foreground))' }}
-          >
-            Full chat interface with streaming, reasoning, and tool calls
+          <p className="text-xs mt-0.5 text-neutral-500">
+            Streaming, reasoning traces, and tool calls
           </p>
         </div>
-        {/* Agent status */}
-        <div className="sk-agent-status" data-status={agentStatus} data-pulse="true">
-          <span className="sk-agent-status__indicator" />
-          <span className="sk-agent-status__text">
-            {agentStatus === 'idle'
-              ? 'Ready'
-              : agentStatus === 'thinking'
-                ? 'Thinking...'
-                : agentStatus === 'acting'
-                  ? 'Using tool...'
-                  : 'Done'}
+        {/* Agent status badge */}
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-neutral-800 bg-neutral-900">
+          <span className="relative flex h-2 w-2">
+            {statusCfg.pulse && (
+              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${statusCfg.color}`} />
+            )}
+            <span className={`relative inline-flex rounded-full h-2 w-2 ${statusCfg.color}`} />
           </span>
+          <span className="text-[11px] text-neutral-400">{statusCfg.label}</span>
         </div>
       </div>
 
-      {/* ── Messages ── */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 py-6">
+      {/* ── Messages area ── */}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto">
         {isEmpty ? (
-          <div className="flex flex-col items-center justify-center h-full">
-            <div
-              className="text-center mb-8"
-              style={{ color: 'hsl(var(--sk-muted-foreground))' }}
-            >
-              <div className="text-4xl mb-4" style={{ fontFamily: 'var(--sk-font-mono)' }}>
+          <div className="flex flex-col items-center justify-center h-full px-6">
+            <div className="text-center mb-10">
+              <div className="text-5xl mb-4 text-neutral-700 font-mono font-bold">
                 {'>>>'}
               </div>
-              <div className="text-sm">Ask me anything to see the demo in action</div>
+              <div className="text-sm text-neutral-500">
+                Ask me anything to see the demo in action
+              </div>
             </div>
 
-            {/* Prompt suggestions */}
-            <div className="sk-prompt-suggestions" style={{ maxWidth: '600px', width: '100%' }}>
-              <div className="sk-prompt-suggestions__label">Try one of these</div>
-              <div className="sk-prompt-suggestions__grid">
-                {SUGGESTIONS.map((s, i) => (
-                  <button
-                    key={i}
-                    className="sk-prompt-suggestion"
-                    onClick={() => sendMessage(s.text)}
-                  >
-                    <span className="sk-prompt-suggestion__icon">{s.icon}</span>
-                    <span className="sk-prompt-suggestion__text">{s.text}</span>
-                  </button>
-                ))}
-              </div>
+            {/* Prompt suggestions grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl w-full">
+              {SUGGESTIONS.map((s, i) => (
+                <button
+                  key={i}
+                  onClick={() => sendMessage(s.text)}
+                  className="border border-neutral-800 p-4 text-left hover:bg-neutral-800/50 cursor-pointer transition-colors group"
+                >
+                  <div className="flex items-start gap-3">
+                    <span className="text-neutral-600 text-lg font-mono mt-0.5 group-hover:text-neutral-400 transition-colors">
+                      {s.icon}
+                    </span>
+                    <div>
+                      <div className="text-sm text-neutral-300 group-hover:text-white transition-colors">
+                        {s.text}
+                      </div>
+                      <div className="text-[11px] text-neutral-600 mt-1">
+                        {s.sub}
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              ))}
             </div>
           </div>
         ) : (
-          <div className="max-w-3xl mx-auto space-y-1" role="log" aria-live="polite">
+          <div className="max-w-3xl mx-auto px-6 py-6 space-y-1" role="log" aria-live="polite">
             {messages.map((msg) => (
               <div key={msg.id}>
                 {/* Chat bubble */}
-                <div className="sk-chat-bubble" data-role={msg.role}>
-                  {msg.role === 'assistant' && !msg.content && isStreaming && msg.id === messages[messages.length - 1]?.id ? (
-                    <span
-                      style={{
-                        display: 'inline-block',
-                        width: '0.6em',
-                        height: '1em',
-                        background: 'hsl(var(--sk-foreground))',
-                        animation: 'sk-blink 1s step-end infinite',
-                      }}
-                    />
-                  ) : (
-                    <MessageContent content={msg.content} />
-                  )}
+                <div
+                  className={`mb-3 ${
+                    msg.role === 'user'
+                      ? 'flex justify-end'
+                      : 'flex justify-start'
+                  }`}
+                >
+                  <div
+                    className={`max-w-[80%] px-4 py-3 text-sm font-mono ${
+                      msg.role === 'user'
+                        ? 'bg-white text-black rounded-2xl rounded-br-sm'
+                        : 'bg-neutral-900 border border-neutral-800 text-neutral-200 rounded-2xl rounded-bl-sm'
+                    }`}
+                  >
+                    {msg.role === 'assistant' && !msg.content && isStreaming && msg.id === messages[messages.length - 1]?.id ? (
+                      <span className="inline-block w-[2px] h-4 bg-neutral-400 animate-pulse" />
+                    ) : (
+                      <MessageContent content={msg.content} />
+                    )}
+                  </div>
                 </div>
 
                 {/* Reasoning step */}
                 {msg.reasoning && (
-                  <div
-                    className="sk-reasoning-step"
-                    data-status="completed"
-                    data-expanded={expandedReasoning.has(msg.id) ? 'true' : 'false'}
-                    style={{ maxWidth: '80%', marginBottom: 'var(--sk-space-3)' }}
-                  >
+                  <div className="max-w-[80%] mb-3">
                     <button
-                      className="sk-reasoning-step__header"
                       onClick={() => toggleReasoning(msg.id)}
+                      className="flex items-center gap-2 text-[11px] text-neutral-500 hover:text-neutral-300 transition-colors cursor-pointer"
                     >
-                      <span className="sk-reasoning-step__indicator" />
-                      <span className="sk-reasoning-step__title">Reasoning</span>
-                      <span className="sk-reasoning-step__chevron">
-                        {expandedReasoning.has(msg.id) ? '>' : '>'}
+                      <span className={`inline-block transition-transform ${expandedReasoning.has(msg.id) ? 'rotate-90' : ''}`}>
+                        &rsaquo;
                       </span>
+                      <span className="uppercase tracking-widest">Reasoning</span>
                     </button>
                     {expandedReasoning.has(msg.id) && (
-                      <div className="sk-reasoning-step__content">{msg.reasoning}</div>
+                      <div className="mt-2 pl-4 border-l-2 border-neutral-800 text-xs text-neutral-500 leading-relaxed">
+                        {msg.reasoning}
+                      </div>
                     )}
                   </div>
                 )}
 
                 {/* Tool card */}
                 {msg.tool && (
-                  <div
-                    className="sk-tool-card"
-                    data-status={msg.tool.status}
-                    data-expanded={expandedTools.has(msg.id) ? 'true' : 'false'}
-                    style={{ maxWidth: '80%', marginBottom: 'var(--sk-space-3)' }}
-                  >
+                  <div className="max-w-[80%] mb-3 border border-neutral-800 bg-neutral-900/50 overflow-hidden">
                     <div
-                      className="sk-tool-card__header"
                       onClick={() => toggleTool(msg.id)}
-                      style={{ cursor: 'pointer' }}
+                      className="flex items-center justify-between px-4 py-2.5 cursor-pointer hover:bg-neutral-800/30 transition-colors"
                     >
-                      <span className="sk-tool-card__name">{msg.tool.name}</span>
-                      <span className="sk-tool-card__status">
+                      <span className="text-xs font-mono text-neutral-400">{msg.tool.name}</span>
+                      <span className={`text-[10px] uppercase tracking-widest ${
+                        msg.tool.status === 'running' ? 'text-amber-400' : 'text-green-400'
+                      }`}>
                         {msg.tool.status === 'running' ? 'Running' : 'Success'}
                       </span>
                     </div>
                     {expandedTools.has(msg.id) && (
-                      <div className="sk-tool-card__body">
-                        <div className="sk-tool-card__input">
-                          <div className="sk-tool-card__label">Input</div>
-                          <pre className="sk-tool-card__code">{msg.tool.input}</pre>
+                      <div className="border-t border-neutral-800">
+                        <div className="px-4 py-3">
+                          <div className="text-[10px] uppercase tracking-widest text-neutral-600 mb-1.5">Input</div>
+                          <pre className="text-xs text-neutral-400 font-mono overflow-auto bg-black/50 p-2 border border-neutral-800">
+                            {msg.tool.input}
+                          </pre>
                         </div>
                         {msg.tool.output && (
-                          <div className="sk-tool-card__output">
-                            <div className="sk-tool-card__label">Output</div>
-                            <pre className="sk-tool-card__code">{msg.tool.output}</pre>
+                          <div className="px-4 py-3 border-t border-neutral-800">
+                            <div className="text-[10px] uppercase tracking-widest text-neutral-600 mb-1.5">Output</div>
+                            <pre className="text-xs text-neutral-400 font-mono overflow-auto bg-black/50 p-2 border border-neutral-800">
+                              {msg.tool.output}
+                            </pre>
                           </div>
                         )}
                       </div>
@@ -366,58 +375,35 @@ export default function AIChatPage() {
         )}
       </div>
 
-      {/* ── Chat Input ── */}
-      <div
-        className="border-t px-6 py-3"
-        style={{ borderColor: 'hsl(var(--sk-border-color))' }}
-      >
+      {/* ── Chat Input — pinned to bottom ── */}
+      <div className="shrink-0 border-t border-neutral-800 bg-neutral-900/80 backdrop-blur-sm px-6 py-4">
         <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
-          <div className="sk-chat-input">
-            <div className="sk-chat-input__wrapper">
-              <textarea
-                ref={inputRef}
-                className="sk-chat-input__field"
-                placeholder="Type a message..."
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                rows={1}
-                disabled={isStreaming}
-                style={{
-                  resize: 'none',
-                  minHeight: '1.5rem',
-                  maxHeight: '8rem',
-                  background: 'transparent',
-                  color: 'hsl(var(--sk-foreground))',
-                  fontFamily: 'var(--sk-font-mono)',
-                  fontSize: 'var(--sk-font-size-sm)',
-                }}
-              />
-              <div className="sk-chat-input__actions">
-                <button
-                  type="submit"
-                  disabled={!input.trim() || isStreaming}
-                  style={{
-                    padding: 'var(--sk-space-1) var(--sk-space-3)',
-                    border: 'var(--sk-border)',
-                    fontFamily: 'var(--sk-font-mono)',
-                    fontSize: 'var(--sk-font-size-xs)',
-                    cursor: input.trim() && !isStreaming ? 'pointer' : 'default',
-                    background:
-                      input.trim() && !isStreaming
-                        ? 'hsl(var(--sk-foreground))'
-                        : 'transparent',
-                    color:
-                      input.trim() && !isStreaming
-                        ? 'hsl(var(--sk-background))'
-                        : 'hsl(var(--sk-muted-foreground))',
-                    opacity: input.trim() && !isStreaming ? 1 : 0.4,
-                  }}
-                >
-                  Send
-                </button>
-              </div>
-            </div>
+          <div className="flex items-end gap-3 border border-neutral-700 bg-neutral-900 px-4 py-3 focus-within:border-neutral-500 transition-colors">
+            <textarea
+              ref={inputRef}
+              placeholder="Type a message..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              rows={1}
+              disabled={isStreaming}
+              className="flex-1 bg-transparent text-sm text-neutral-200 placeholder:text-neutral-600 font-mono resize-none outline-none"
+              style={{
+                minHeight: '1.5rem',
+                maxHeight: '8rem',
+              }}
+            />
+            <button
+              type="submit"
+              disabled={!input.trim() || isStreaming}
+              className={`shrink-0 px-4 py-1.5 text-xs font-mono font-bold uppercase tracking-wider border transition-all cursor-pointer ${
+                input.trim() && !isStreaming
+                  ? 'bg-white text-black border-white hover:bg-neutral-200'
+                  : 'bg-transparent text-neutral-600 border-neutral-700 cursor-default'
+              }`}
+            >
+              Send
+            </button>
           </div>
         </form>
       </div>
@@ -445,30 +431,14 @@ function MessageContent({ content }: { content: string }) {
           return (
             <pre
               key={i}
-              style={{
-                background: 'hsl(var(--sk-muted) / 0.3)',
-                border: 'var(--sk-border)',
-                borderRadius: 'var(--sk-radius)',
-                padding: 'var(--sk-space-3)',
-                margin: 'var(--sk-space-2) 0',
-                overflow: 'auto',
-                fontSize: 'var(--sk-font-size-xs)',
-              }}
+              className="my-3 p-3 bg-black/60 border border-neutral-800 overflow-auto text-xs"
             >
               {lang && (
-                <div
-                  style={{
-                    fontSize: '0.6rem',
-                    color: 'hsl(var(--sk-muted-foreground))',
-                    marginBottom: 'var(--sk-space-2)',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.1em',
-                  }}
-                >
+                <div className="text-[10px] text-neutral-600 uppercase tracking-widest mb-2">
                   {lang}
                 </div>
               )}
-              <code>{code}</code>
+              <code className="text-neutral-300">{code}</code>
             </pre>
           );
         }
@@ -497,7 +467,7 @@ function InlineLine({ text }: { text: string }) {
       {parts.map((part, i) => {
         if (part.startsWith('**') && part.endsWith('**')) {
           return (
-            <strong key={i} style={{ fontWeight: 700 }}>
+            <strong key={i} className="font-bold text-white">
               {part.slice(2, -2)}
             </strong>
           );
@@ -509,18 +479,12 @@ function InlineLine({ text }: { text: string }) {
             return (
               <code
                 key={`${i}-${j}`}
-                style={{
-                  background: 'hsl(var(--sk-muted) / 0.4)',
-                  padding: '0 0.3em',
-                  borderRadius: '2px',
-                  fontSize: '0.9em',
-                }}
+                className="bg-neutral-800 px-1.5 py-0.5 rounded text-[0.9em] text-neutral-300"
               >
                 {cp.slice(1, -1)}
               </code>
             );
           }
-          // Handle -- as em dash
           return <span key={`${i}-${j}`}>{cp.replace(/--/g, '\u2014')}</span>;
         });
       })}

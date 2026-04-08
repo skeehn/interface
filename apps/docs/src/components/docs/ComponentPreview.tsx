@@ -317,13 +317,13 @@ $ npx skeehn add card
   ),
 
   'voice-session': () => (
-    <p className="text-muted-fg text-sm italic">
+    <p className="text-neutral-500 text-sm italic">
       Voice session requires microphone access. See the component docs for integration details.
     </p>
   ),
 
   markdown: () => (
-    <p className="text-muted-fg text-sm italic">
+    <p className="text-neutral-500 text-sm italic">
       The Markdown component renders markdown strings as styled HTML. Import and pass content as a prop.
     </p>
   ),
@@ -339,14 +339,14 @@ $ npx skeehn add card
   layout: () => (
     <div className="flex flex-col gap-4">
       <Grid cols={3}>
-        <GridCell><div className="p-4 border border-border rounded text-center text-sm">1</div></GridCell>
-        <GridCell><div className="p-4 border border-border rounded text-center text-sm">2</div></GridCell>
-        <GridCell><div className="p-4 border border-border rounded text-center text-sm">3</div></GridCell>
+        <GridCell><div className="p-4 border border-neutral-800 text-center text-sm">1</div></GridCell>
+        <GridCell><div className="p-4 border border-neutral-800 text-center text-sm">2</div></GridCell>
+        <GridCell><div className="p-4 border border-neutral-800 text-center text-sm">3</div></GridCell>
       </Grid>
       <Stack direction="row" gap="sm">
-        <div className="p-3 border border-border rounded text-sm">Stack item</div>
-        <div className="p-3 border border-border rounded text-sm">Stack item</div>
-        <div className="p-3 border border-border rounded text-sm">Stack item</div>
+        <div className="p-3 border border-neutral-800 text-sm">Stack item</div>
+        <div className="p-3 border border-neutral-800 text-sm">Stack item</div>
+        <div className="p-3 border border-neutral-800 text-sm">Stack item</div>
       </Stack>
       <Divider />
       <div className="flex gap-3">
@@ -381,15 +381,17 @@ export function ComponentPreview({ slug }: { slug: string }) {
 
   if (!render) {
     return (
-      <div className="flex items-center justify-center py-12 text-muted-fg text-sm italic border border-dashed border-border rounded-lg">
+      <div className="flex items-center justify-center py-16 text-neutral-600 text-sm font-mono border border-dashed border-neutral-800">
         Preview not yet available for this component.
       </div>
     );
   }
 
   return (
-    <div className="p-6 border border-border rounded-lg bg-background">
-      {render()}
+    <div className="border border-neutral-800 bg-neutral-900/50 p-8 flex items-center justify-center">
+      <div className="w-full">
+        {render()}
+      </div>
     </div>
   );
 }

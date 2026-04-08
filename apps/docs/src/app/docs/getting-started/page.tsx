@@ -84,27 +84,19 @@ const VANILLA_EXAMPLE = `<!-- No JavaScript required for basic components -->
 
 export default function GettingStartedPage() {
   return (
-    <div
-      className="min-h-screen"
-      style={{ fontFamily: 'var(--sk-font-mono)' }}
-    >
+    <div className="min-h-screen py-2" style={{ fontFamily: 'var(--sk-font-mono)' }}>
       {/* Header */}
-      <h1
-        className="text-3xl font-bold tracking-tight mb-2"
-        style={{ fontFamily: 'var(--sk-font-sans)' }}
-      >
+      <h1 className="docs-heading text-3xl tracking-tight mb-3"
+        style={{ fontFamily: 'var(--sk-font-sans)' }}>
         Getting Started
       </h1>
-      <p
-        className="text-sm mb-10"
-        style={{ color: 'hsl(var(--sk-muted-foreground))' }}
-      >
+      <p className="text-sm text-neutral-500 mb-16 max-w-lg">
         Get skeehn running in your project in under 2 minutes.
       </p>
 
       {/* Step 1: Install */}
       <Step number={1} title="Install">
-        <p className="mb-4" style={{ color: 'hsl(var(--sk-muted-foreground))', fontSize: 'var(--sk-font-size-sm)' }}>
+        <p className="text-sm text-neutral-500 mb-5 leading-relaxed">
           The CLI is the fastest way to get started. It scaffolds config, imports
           your theme, and sets up CSS.
         </p>
@@ -113,7 +105,7 @@ export default function GettingStartedPage() {
 
       {/* Step 2: Add components */}
       <Step number={2} title="Add Components">
-        <p className="mb-4" style={{ color: 'hsl(var(--sk-muted-foreground))', fontSize: 'var(--sk-font-size-sm)' }}>
+        <p className="text-sm text-neutral-500 mb-5 leading-relaxed">
           Pick the components you need. Each one is a standalone CSS file with
           optional React wrappers.
         </p>
@@ -122,7 +114,7 @@ export default function GettingStartedPage() {
 
       {/* Step 3: Import CSS */}
       <Step number={3} title="Import CSS">
-        <p className="mb-4" style={{ color: 'hsl(var(--sk-muted-foreground))', fontSize: 'var(--sk-font-size-sm)' }}>
+        <p className="text-sm text-neutral-500 mb-5 leading-relaxed">
           Import the engine foundation and component styles in your global
           stylesheet.
         </p>
@@ -131,11 +123,10 @@ export default function GettingStartedPage() {
 
       {/* Step 4: Use */}
       <Step number={4} title="Use Components">
-        <p className="mb-4" style={{ color: 'hsl(var(--sk-muted-foreground))', fontSize: 'var(--sk-font-size-sm)' }}>
+        <p className="text-sm text-neutral-500 mb-5 leading-relaxed">
           Import React wrappers or use the CSS classes directly. Every component
           works with or without JavaScript.
         </p>
-
         <SubTabs
           tabs={[
             { label: 'React', content: <CodeBlock code={USAGE_EXAMPLE} /> },
@@ -146,7 +137,7 @@ export default function GettingStartedPage() {
 
       {/* Step 5: Themes */}
       <Step number={5} title="Switch Themes" isLast>
-        <p className="mb-4" style={{ color: 'hsl(var(--sk-muted-foreground))', fontSize: 'var(--sk-font-size-sm)' }}>
+        <p className="text-sm text-neutral-500 mb-5 leading-relaxed">
           Swap the entire visual identity with a single CSS import or data
           attribute.
         </p>
@@ -154,17 +145,12 @@ export default function GettingStartedPage() {
       </Step>
 
       {/* Next steps */}
-      <div
-        className="mt-12 pt-8"
-        style={{ borderTop: '1px solid hsl(var(--sk-border-color))' }}
-      >
-        <h2
-          className="text-lg font-bold mb-4"
-          style={{ fontFamily: 'var(--sk-font-sans)' }}
-        >
+      <div className="mt-20 pt-10 border-t border-neutral-800">
+        <h2 className="docs-heading text-lg mb-6"
+          style={{ fontFamily: 'var(--sk-font-sans)' }}>
           Next Steps
         </h2>
-        <div className="space-y-2">
+        <div className="space-y-3">
           <NextLink href="/docs/engine" label="Engine Playground" description="See the ASCII dithering engine in action" />
           <NextLink href="/docs/ai-chat" label="AI Chat Demo" description="Full chat interface with streaming and tool calls" />
           <NextLink href="/docs/themes" label="Theme Gallery" description="Preview all 7 themes with live switching" />
@@ -193,39 +179,37 @@ function Step({
     <div
       className="relative"
       style={{
-        paddingLeft: 'var(--sk-space-8)',
-        paddingBottom: isLast ? 0 : 'var(--sk-space-8)',
-        borderLeft: isLast ? 'none' : '1px solid hsl(var(--sk-border-color))',
-        marginLeft: '0.75rem',
+        paddingLeft: '4.5rem',
+        paddingBottom: isLast ? 0 : '4rem',
+        borderLeft: isLast ? 'none' : '1px solid #333',
+        marginLeft: '1.25rem',
       }}
     >
-      {/* Step number circle */}
+      {/* Step number — large circle */}
       <div
+        className="absolute flex items-center justify-center"
         style={{
-          position: 'absolute',
-          left: '-0.85rem',
-          top: 0,
-          width: '1.5rem',
-          height: '1.5rem',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          border: 'var(--sk-border)',
-          background: 'hsl(var(--sk-background))',
+          left: '-1.25rem',
+          top: '-4px',
+          width: '2.5rem',
+          height: '2.5rem',
+          border: '2px solid #555',
+          borderRadius: '50%',
+          background: '#111',
           fontFamily: 'var(--sk-font-mono)',
-          fontSize: 'var(--sk-font-size-xs)',
-          fontWeight: 700,
-          color: 'hsl(var(--sk-foreground))',
+          fontSize: '1rem',
+          fontWeight: 800,
+          color: '#fff',
         }}
       >
         {number}
       </div>
 
       <h2
-        className="text-lg font-bold mb-3"
+        className="docs-heading text-xl mb-4"
         style={{
           fontFamily: 'var(--sk-font-sans)',
-          marginTop: '-2px',
+          marginTop: '0',
         }}
       >
         {title}
@@ -240,7 +224,7 @@ function InstallTabs() {
 
   return (
     <div>
-      <div style={{ display: 'flex', gap: 0, marginBottom: '-1px' }}>
+      <div className="flex">
         <TabButton active={tab === 'cli'} onClick={() => setTab('cli')}>
           CLI (Recommended)
         </TabButton>
@@ -248,7 +232,7 @@ function InstallTabs() {
           Manual
         </TabButton>
       </div>
-      <CodeBlock code={tab === 'cli' ? INSTALL_CLI : INSTALL_MANUAL} />
+      <CodeBlock code={tab === 'cli' ? INSTALL_CLI : INSTALL_MANUAL} connected />
     </div>
   );
 }
@@ -262,14 +246,16 @@ function SubTabs({
 
   return (
     <div>
-      <div style={{ display: 'flex', gap: 0, marginBottom: '-1px' }}>
+      <div className="flex">
         {tabs.map((t, i) => (
           <TabButton key={i} active={active === i} onClick={() => setActive(i)}>
             {t.label}
           </TabButton>
         ))}
       </div>
-      {tabs[active].content}
+      <div className="[&>div>pre]:rounded-tl-none">
+        {tabs[active].content}
+      </div>
     </div>
   );
 }
@@ -286,17 +272,14 @@ function TabButton({
   return (
     <button
       onClick={onClick}
+      className={`px-5 py-2.5 text-xs font-mono font-bold uppercase tracking-wider border-t border-l border-r cursor-pointer transition-colors ${
+        active
+          ? 'bg-neutral-900 text-white border-neutral-700 relative z-10'
+          : 'bg-neutral-800/50 text-neutral-500 border-neutral-800 hover:text-neutral-300'
+      }`}
       style={{
-        padding: 'var(--sk-space-2) var(--sk-space-4)',
-        border: 'var(--sk-border)',
-        borderBottom: active ? '1px solid hsl(var(--sk-background))' : 'var(--sk-border)',
-        background: active ? 'hsl(var(--sk-background))' : 'hsl(var(--sk-muted) / 0.3)',
-        color: active ? 'hsl(var(--sk-foreground))' : 'hsl(var(--sk-muted-foreground))',
-        fontFamily: 'var(--sk-font-mono)',
-        fontSize: 'var(--sk-font-size-xs)',
-        cursor: 'pointer',
-        position: 'relative',
-        zIndex: active ? 1 : 0,
+        borderBottom: active ? '1px solid #111' : '1px solid #333',
+        marginBottom: '-1px',
       }}
     >
       {children}
@@ -304,7 +287,7 @@ function TabButton({
   );
 }
 
-function CodeBlock({ code }: { code: string }) {
+function CodeBlock({ code, connected }: { code: string; connected?: boolean }) {
   const [copied, setCopied] = useState(false);
 
   const copy = () => {
@@ -314,36 +297,21 @@ function CodeBlock({ code }: { code: string }) {
   };
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div className="relative">
       <pre
-        style={{
-          background: 'hsl(var(--sk-muted) / 0.3)',
-          border: 'var(--sk-border)',
-          borderRadius: 'var(--sk-radius)',
-          padding: 'var(--sk-space-4)',
-          overflow: 'auto',
-          fontFamily: 'var(--sk-font-mono)',
-          fontSize: 'var(--sk-font-size-xs)',
-          lineHeight: 1.6,
-          color: 'hsl(var(--sk-foreground))',
-        }}
+        className={`bg-black border border-neutral-800 p-5 overflow-auto font-mono text-xs leading-relaxed text-neutral-300 ${
+          connected ? 'rounded-tl-none' : ''
+        }`}
       >
         <code>{code}</code>
       </pre>
       <button
         onClick={copy}
-        style={{
-          position: 'absolute',
-          top: 'var(--sk-space-2)',
-          right: 'var(--sk-space-2)',
-          padding: '2px var(--sk-space-2)',
-          border: 'var(--sk-border)',
-          background: 'hsl(var(--sk-background))',
-          fontFamily: 'var(--sk-font-mono)',
-          fontSize: '0.6rem',
-          cursor: 'pointer',
-          color: copied ? 'hsl(var(--sk-success))' : 'hsl(var(--sk-muted-foreground))',
-        }}
+        className={`absolute top-3 right-3 px-2 py-0.5 text-[10px] font-mono border cursor-pointer transition-colors ${
+          copied
+            ? 'border-green-800 text-green-400 bg-green-900/20'
+            : 'border-neutral-700 text-neutral-500 hover:text-neutral-300 bg-black'
+        }`}
       >
         {copied ? 'Copied' : 'Copy'}
       </button>
@@ -363,39 +331,13 @@ function NextLink({
   return (
     <a
       href={href}
-      style={{
-        display: 'block',
-        padding: 'var(--sk-space-3) var(--sk-space-4)',
-        border: 'var(--sk-border)',
-        borderRadius: 'var(--sk-radius)',
-        textDecoration: 'none',
-        color: 'inherit',
-        transition: 'border-color 0.2s',
-      }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.borderColor = 'hsl(var(--sk-foreground))';
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.borderColor = '';
-      }}
+      className="block p-4 border border-neutral-800 no-underline text-inherit hover:border-neutral-600 hover:bg-neutral-900/50 transition-all group"
     >
-      <div
-        style={{
-          fontFamily: 'var(--sk-font-sans)',
-          fontSize: 'var(--sk-font-size-sm)',
-          fontWeight: 600,
-          marginBottom: '2px',
-        }}
-      >
+      <div className="text-sm font-semibold mb-1 group-hover:text-white transition-colors"
+        style={{ fontFamily: 'var(--sk-font-sans)' }}>
         {label} &rarr;
       </div>
-      <div
-        style={{
-          fontFamily: 'var(--sk-font-mono)',
-          fontSize: 'var(--sk-font-size-xs)',
-          color: 'hsl(var(--sk-muted-foreground))',
-        }}
-      >
+      <div className="text-xs text-neutral-500 font-mono">
         {description}
       </div>
     </a>

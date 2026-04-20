@@ -3,7 +3,10 @@
 <!-- Basic code block -->
 <div class="sk-code-block">
   <div class="sk-code-block__header">
-    <span class="sk-code-block__lang">javascript</span>
+    <div class="sk-code-block__header-main">
+      <span class="sk-code-block__lang">javascript</span>
+      <span class="sk-code-block__meta">app/chat.ts · 12 lines</span>
+    </div>
     <button class="sk-code-block__copy" aria-label="Copy code">Copy</button>
   </div>
   <div class="sk-code-block__body">
@@ -12,10 +15,13 @@ console.log(greeting);</code></pre>
   </div>
 </div>
 
-<!-- With line numbers -->
-<div class="sk-code-block" data-line-numbers>
+<!-- With line numbers + highlighted lines -->
+<div class="sk-code-block" data-line-numbers data-highlight-lines="2-4">
   <div class="sk-code-block__header">
-    <span class="sk-code-block__lang">typescript</span>
+    <div class="sk-code-block__header-main">
+      <span class="sk-code-block__lang">typescript</span>
+      <span class="sk-code-block__meta">engine/render.ts</span>
+    </div>
     <button class="sk-code-block__copy" aria-label="Copy code">Copy</button>
   </div>
   <div class="sk-code-block__body">
@@ -28,12 +34,21 @@ const ascii = dither.dither1D(luminance, 80, 40);</code></pre>
   </div>
 </div>
 
-<!-- No header (inline style) -->
-<div class="sk-code-block">
+<!-- Terminal variant -->
+<div class="sk-code-block" data-variant="terminal" data-wrap>
+  <div class="sk-code-block__header">
+    <div class="sk-code-block__header-main">
+      <span class="sk-code-block__lang">terminal</span>
+      <span class="sk-code-block__meta">local</span>
+    </div>
+    <button class="sk-code-block__copy" aria-label="Copy code">Copy</button>
+  </div>
   <div class="sk-code-block__body">
-    <pre><code>npx skeehn init && npx skeehn add all</code></pre>
+    <pre><code>$ npx skeehn init --template dashboard
+$ npx skeehn add card
+$ npx skeehn add code-block</code></pre>
   </div>
 </div>
 
 <!-- Inline code -->
-<p>Use the <code class="sk-code-inline">sk-btn</code> class with <code class="sk-code-inline">data-variant="dither"</code> for dithered buttons.</p>
+<p>Use <code class="sk-code-inline">data-highlight-lines="2-4"</code> to emphasize key lines.</p>

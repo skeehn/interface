@@ -28,20 +28,17 @@
 ## Quickstart
 
 ```bash
-npx skeehn init
-npx skeehn add chat-bubble button
+npm install @skeehn/core @skeehn/react
+npx skeehn init --starter agent-operator-shell
+npx skeehn doctor
 bun run dev
 ```
 
-Or install as a package:
-
-```bash
-bun add @skeehn/core @skeehn/react
-```
+Then import the package bundle and typed React primitives:
 
 ```tsx
 import { ChatBubble, useChat } from '@skeehn/react';
-import '@skeehn/core/css';
+import '@skeehn/core/bundles/agent.css';
 
 export function Chat() {
   const { messages, input, setInput, append } = useChat({ api: '/api/chat' });
@@ -113,12 +110,12 @@ import { DitherBackground, AsciiImage, AsciiVideo } from '@skeehn/react/gl';
 ### CLI (shadcn-style)
 
 ```bash
-npx skeehn init                    # Set up in your project
-npx skeehn add button              # Copy component source (you own it)
-npx skeehn add chat-bubble         # Add AI components
+npx skeehn init --starter agent-operator-shell # Wire package-first starter
+npx skeehn doctor --fix            # Validate and repair safe setup issues
+npx skeehn add button              # Optional copy-own component source
 npx skeehn add --all               # Add everything
 npx skeehn theme terminal          # Switch themes
-npx skeehn doctor                  # Validate setup
+npx skeehn doctor                  # Validate package-first setup
 ```
 
 ## Architecture
@@ -142,6 +139,44 @@ npx skeehn doctor                  # Validate setup
 - **Styling:** CSS custom properties (no Tailwind required)
 - **Rendering:** Canvas2D + WebGL (optional Three.js for premium effects)
 - **Streaming:** fetch + ReadableStream (Vercel AI SDK compatible)
+
+## Quick Drop-In (Card + CodeBlock)
+
+Use the upgraded components immediately:
+
+```html
+<link rel="stylesheet" href="engine/reset.css">
+<link rel="stylesheet" href="engine/tokens.css">
+<link rel="stylesheet" href="engine/dither.css">
+<link rel="stylesheet" href="components/card/card.css">
+<link rel="stylesheet" href="components/code-block/code-block.css">
+<link rel="stylesheet" href="themes/default.css">
+
+<article class="sk-card" data-variant="solid" data-interactive="true">
+  <header class="sk-card__header">
+    <h3 class="sk-card__title">Shadcn-grade card surface</h3>
+  </header>
+  <div class="sk-card__body">
+    <p>High-clarity typography, depth, and interaction states.</p>
+  </div>
+</article>
+
+<div class="sk-code-block" data-line-numbers data-highlight-lines="2-3">
+  <div class="sk-code-block__header">
+    <div class="sk-code-block__header-main">
+      <span class="sk-code-block__lang">typescript</span>
+      <span class="sk-code-block__meta">src/app.ts</span>
+    </div>
+    <button class="sk-code-block__copy">Copy</button>
+  </div>
+  <div class="sk-code-block__body">
+    <pre><code>const api = '/v1/chat';
+const model = 'gpt-5.4';
+startSession(api, model);</code></pre>
+  </div>
+</div>
+<script type="module" src="components/code-block/code-block.js"></script>
+```
 
 ## Development
 

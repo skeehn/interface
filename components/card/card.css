@@ -3,276 +3,356 @@
  *
  * @component sk-card
  * @variants  solid | dither | outline | ghost | inverted | pixel | retro | ascii
- * @states    :hover | [data-loading] | [data-skeleton]
- * @slots     __header | __title | __body | __footer | __footer-text
- * @a11y      Semantic structure with header/body/footer regions
- * @print     Flat borders, no shadows or overlays
+ * @states    :hover | :focus-within | [data-loading] | [data-skeleton] | [data-interactive]
+ * @slots     __header | __title | __eyebrow | __meta | __body | __footer | __footer-text
+ * @a11y      Semantic section with clear focus ring + reduced-motion fallback
+ * @print     Flat borders, no overlays or glows
  */
 
-/* Base */
 .sk-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow: clip;
   border: var(--sk-border);
-  border-radius: var(--sk-radius);
-  overflow: hidden;
-  transition: box-shadow var(--sk-transition), transform var(--sk-transition);
+  border-radius: var(--sk-radius-panel);
+  background: var(--sk-panel-gradient);
+  color: hsl(var(--sk-foreground));
+  box-shadow: var(--sk-panel-shadow);
+  isolation: isolate;
+  transition:
+    box-shadow var(--sk-transition-slow),
+    transform var(--sk-transition),
+    border-color var(--sk-transition-fast),
+    background-color var(--sk-transition-fast);
 }
 
-/* Default hover — lift with more prominent shadow */
-.sk-card:not([data-variant]):hover {
-  box-shadow: var(--sk-shadow-md);
-  transform: translateY(-1px);
+.sk-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at top right, hsl(var(--sk-foreground) / 0.045), transparent 42%),
+    linear-gradient(180deg, hsl(var(--sk-background) / 0.32), transparent 42%);
+  opacity: 0.8;
+  z-index: 0;
 }
 
-/* Header — with subtle CRT scanline texture */
+.sk-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.sk-card:hover,
+.sk-card:focus-within,
+.sk-card[data-interactive="true"]:hover,
+.sk-card[data-interactive="true"]:focus-within {
+  transform: translateY(-2px);
+  border-color: hsl(var(--sk-foreground) / 0.25);
+  box-shadow:
+    0 24px 46px hsl(0 0% 0% / 0.16),
+    inset 0 1px 0 hsl(0 0% 100% / 0.5);
+}
+
 .sk-card__header {
-  padding: var(--sk-space-3) var(--sk-space-4);
-  border-bottom: var(--sk-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: relative;
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0px,
-    transparent 3px,
-    hsl(var(--sk-foreground) / 0.03) 3px,
-    hsl(var(--sk-foreground) / 0.03) 4px
-  );
+  gap: var(--sk-space-2);
+  padding: var(--sk-space-4) var(--sk-space-5) var(--sk-space-3);
+  border-bottom: var(--sk-border);
+  background:
+    linear-gradient(180deg, hsl(var(--sk-accent) / 0.5), transparent),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 3px,
+      hsl(var(--sk-foreground) / 0.025) 3px,
+      hsl(var(--sk-foreground) / 0.025) 4px
+    );
+}
+
+.sk-card__eyebrow {
+  margin: 0;
+  font-family: var(--sk-font-mono);
+  font-size: var(--sk-font-size-xs);
+  color: hsl(var(--sk-muted-foreground));
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .sk-card__title {
   margin: 0;
-  font-family: var(--sk-font-mono);
-  font-size: var(--sk-font-size-sm);
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
+  font-family: var(--sk-font-sans);
+  font-size: var(--sk-font-size-lg);
+  font-weight: var(--sk-font-weight-semi);
+  letter-spacing: var(--sk-letter-spacing-tight);
+  line-height: var(--sk-line-height-tight);
 }
-.sk-card__body { padding: var(--sk-space-4); }
-.sk-card__body p {
+
+.sk-card__meta {
   margin: 0;
-  font-size: var(--sk-font-size-sm);
+  font-family: var(--sk-font-mono);
+  font-size: var(--sk-font-size-xs);
   color: hsl(var(--sk-muted-foreground));
-  line-height: var(--sk-line-height);
+  white-space: nowrap;
 }
+
+.sk-card__body,
+.sk-card__content {
+  padding: var(--sk-space-5);
+}
+
+.sk-card__body > :first-child,
+.sk-card__content > :first-child {
+  margin-top: 0;
+}
+
+.sk-card__body > :last-child,
+.sk-card__content > :last-child {
+  margin-bottom: 0;
+}
+
+.sk-card__body p,
+.sk-card__content p {
+  margin: 0;
+  color: hsl(var(--sk-muted-foreground));
+  font-size: var(--sk-font-size-sm);
+  line-height: 1.7;
+}
+
 .sk-card__footer {
-  padding: var(--sk-space-2) var(--sk-space-4);
-  border-top: var(--sk-border);
-  background: hsl(var(--sk-muted) / 0.3);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--sk-space-2);
+  padding: var(--sk-space-3) var(--sk-space-5) var(--sk-space-4);
+  border-top: var(--sk-border);
+  background: hsl(var(--sk-muted) / 0.35);
 }
+
 .sk-card__footer-text {
+  margin: 0;
   font-family: var(--sk-font-mono);
   font-size: var(--sk-font-size-xs);
   color: hsl(var(--sk-muted-foreground));
   letter-spacing: 0.02em;
 }
 
-/* Solid */
-.sk-card[data-variant="solid"] { background: hsl(var(--sk-background)); }
+.sk-card[data-variant="solid"] {
+  background: hsl(var(--sk-background));
+}
 
-/* Dither — grain texture with depth shadow */
 .sk-card[data-variant="dither"] {
   background: hsl(var(--sk-background));
-  position: relative;
 }
-/* Grain overlay */
-.sk-card[data-variant="dither"]::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  /* fine grain: SVG noise via data URI */
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='128' height='128' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E"),
-    var(--sk-dither-grain, var(--sk-dither-pattern));
-  background-repeat: repeat;
-  background-size: 128px 128px, auto;
-  opacity: 0.06;
-  mix-blend-mode: multiply;
-  pointer-events: none;
-  z-index: 0;
-  border-radius: inherit;
-}
-/* Depth shadow — absolute positioned bottom-right decorative accent */
+
 .sk-card[data-variant="dither"]::after {
   content: "";
   position: absolute;
-  bottom: -3px;
-  right: -3px;
-  width: 100%;
-  height: 100%;
-  background: hsl(var(--sk-foreground) / 0.06);
-  border-radius: inherit;
-  z-index: -1;
+  inset: 0;
+  background-image:
+    var(--sk-dither-pattern),
+    radial-gradient(circle at 10% 0%, hsl(var(--sk-foreground) / 0.05), transparent 36%);
+  background-size: 32px 32px, auto;
+  opacity: 0.18;
+  mix-blend-mode: multiply;
   pointer-events: none;
+  z-index: 0;
 }
-.sk-card[data-variant="dither"] > * { position: relative; z-index: 1; }
 
-/* Outline */
-.sk-card[data-variant="outline"] { background: transparent; border: 2px solid hsl(var(--sk-border)); }
+.sk-card[data-variant="outline"] {
+  background: transparent;
+  border-width: 2px;
+}
 
-/* Ghost */
-.sk-card[data-variant="ghost"] { background: hsl(var(--sk-accent)); border-color: transparent; }
+.sk-card[data-variant="ghost"] {
+  background: hsl(var(--sk-accent));
+  border-color: transparent;
+  box-shadow: none;
+}
 
-/* Inverted */
-.sk-card[data-variant="inverted"] { background: hsl(var(--sk-foreground)); color: hsl(var(--sk-background)); border-color: transparent; }
-.sk-card[data-variant="inverted"] .sk-card__title { color: hsl(var(--sk-background)); }
-.sk-card[data-variant="inverted"] .sk-card__body p { color: hsl(var(--sk-background) / 0.7); }
+.sk-card[data-variant="ghost"]::before {
+  opacity: 0.45;
+}
 
-/* Pixel — flat bevel with 4px offset hard shadow */
+.sk-card[data-variant="inverted"] {
+  border-color: transparent;
+  background: hsl(var(--sk-foreground));
+  color: hsl(var(--sk-background));
+}
+
+.sk-card[data-variant="inverted"]::before {
+  background: linear-gradient(180deg, hsl(var(--sk-background) / 0.09), transparent 46%);
+}
+
+.sk-card[data-variant="inverted"] .sk-card__title,
+.sk-card[data-variant="inverted"] .sk-card__footer-text {
+  color: hsl(var(--sk-background));
+}
+
+.sk-card[data-variant="inverted"] .sk-card__eyebrow,
+.sk-card[data-variant="inverted"] .sk-card__meta,
+.sk-card[data-variant="inverted"] .sk-card__body p,
+.sk-card[data-variant="inverted"] .sk-card__content p {
+  color: hsl(var(--sk-background) / 0.72);
+}
+
+.sk-card[data-variant="inverted"] .sk-card__header,
+.sk-card[data-variant="inverted"] .sk-card__footer {
+  border-color: hsl(var(--sk-background) / 0.12);
+}
+
 .sk-card[data-variant="pixel"] {
-  background: hsl(var(--sk-background));
   border: 2px solid hsl(var(--sk-foreground));
-  box-shadow: 4px 4px 0 hsl(var(--sk-foreground));
-  transition: box-shadow var(--sk-transition), transform var(--sk-transition);
-}
-.sk-card[data-variant="pixel"]:hover {
   box-shadow: 6px 6px 0 hsl(var(--sk-foreground));
-  transform: translate(-1px, -1px);
 }
 
-/* Retro — CRT glow + scanline texture */
+.sk-card[data-variant="pixel"]:hover,
+.sk-card[data-variant="pixel"]:focus-within {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 hsl(var(--sk-foreground));
+}
+
 .sk-card[data-variant="retro"] {
-  background: hsl(var(--sk-background));
   border: 2px solid hsl(var(--sk-foreground));
   box-shadow:
-    0 0 8px hsl(var(--sk-foreground) / 0.08),
-    inset 0 0 20px hsl(var(--sk-foreground) / 0.02);
-  position: relative;
+    0 0 0 1px hsl(var(--sk-foreground) / 0.1),
+    0 0 20px hsl(var(--sk-foreground) / 0.08),
+    inset 0 0 24px hsl(var(--sk-foreground) / 0.04);
 }
 
-.sk-card[data-variant="retro"]::before {
+.sk-card[data-variant="retro"]::after {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: repeating-linear-gradient(
+  background: repeating-linear-gradient(
     to bottom,
-    transparent 0px,
+    transparent 0,
     transparent 2px,
     hsl(var(--sk-foreground) / 0.04) 2px,
     hsl(var(--sk-foreground) / 0.04) 3px
   );
   pointer-events: none;
-  border-radius: inherit;
   z-index: 0;
 }
 
-.sk-card[data-variant="retro"] > * {
-  position: relative;
-  z-index: 1;
-}
-
-.sk-card[data-variant="retro"]:hover {
-  box-shadow:
-    0 0 14px hsl(var(--sk-foreground) / 0.12),
-    inset 0 0 24px hsl(var(--sk-foreground) / 0.03);
-}
-
-/* ASCII — box-drawing border card */
 .sk-card[data-variant="ascii"] {
   border: none;
   background: transparent;
+  box-shadow: none;
+  padding: var(--sk-space-2) 0;
+}
+
+.sk-card[data-variant="ascii"]::before,
+.sk-card[data-variant="ascii"]::after {
+  position: static;
+  display: block;
   font-family: var(--sk-font-mono);
-  position: relative;
-  padding-top: var(--sk-space-3);
-  padding-bottom: var(--sk-space-3);
+  font-size: 0.5rem;
+  line-height: 1;
+  letter-spacing: 0;
+  color: hsl(var(--sk-border-color));
+  background: none;
+  opacity: 1;
 }
 
 .sk-card[data-variant="ascii"]::before {
   content: "┌──────────────────────────────┐";
-  display: block;
-  font-size: 0.5rem;
-  line-height: 1;
-  color: hsl(var(--sk-border-color));
-  letter-spacing: 0;
-  padding: 0 var(--sk-space-2);
 }
 
 .sk-card[data-variant="ascii"]::after {
   content: "└──────────────────────────────┘";
-  display: block;
-  font-size: 0.5rem;
-  line-height: 1;
-  color: hsl(var(--sk-border-color));
-  letter-spacing: 0;
-  padding: 0 var(--sk-space-2);
 }
 
-/* ============================================================
-   LOADING STATE
-   ============================================================ */
+.sk-card[data-variant="ascii"] .sk-card__header,
+.sk-card[data-variant="ascii"] .sk-card__footer {
+  border: none;
+  background: transparent;
+  padding-inline: var(--sk-space-2);
+}
 
 @keyframes sk-card-dither-fill {
-  0%   { background-image: var(--sk-dither-b2); opacity: 0.05; }
-  50%  { background-image: var(--sk-dither-b8); opacity: 0.12; }
-  100% { background-image: var(--sk-dither-b2); opacity: 0.05; }
+  0% {
+    background-image: var(--sk-dither-b2);
+    opacity: 0.05;
+  }
+  50% {
+    background-image: var(--sk-dither-b8);
+    opacity: 0.12;
+  }
+  100% {
+    background-image: var(--sk-dither-b2);
+    opacity: 0.05;
+  }
+}
+
+@keyframes sk-card-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 .sk-card[data-loading] {
   pointer-events: none;
 }
 
-.sk-card[data-loading] .sk-card__body::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: var(--sk-dither-pattern);
-  background-repeat: repeat;
-  animation: sk-card-dither-fill 2s steps(4) infinite;
-  pointer-events: none;
-  border-radius: inherit;
-}
-
-.sk-card[data-loading] .sk-card__body {
+.sk-card[data-loading] .sk-card__body,
+.sk-card[data-loading] .sk-card__content {
   position: relative;
 }
 
-/* ============================================================
-   SKELETON STATE
-   ============================================================ */
-
-@keyframes sk-card-shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+.sk-card[data-loading] .sk-card__body::after,
+.sk-card[data-loading] .sk-card__content::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: var(--sk-dither-pattern);
+  background-repeat: repeat;
+  animation: sk-card-dither-fill 1.6s steps(4) infinite;
+  pointer-events: none;
 }
 
 .sk-card[data-skeleton] {
   pointer-events: none;
-  border-color: hsl(var(--sk-border-color));
 }
 
 .sk-card[data-skeleton] .sk-card__title,
+.sk-card[data-skeleton] .sk-card__eyebrow,
 .sk-card[data-skeleton] .sk-card__body p,
+.sk-card[data-skeleton] .sk-card__content p,
 .sk-card[data-skeleton] .sk-card__footer-text {
   color: transparent;
-  background:
-    linear-gradient(
-      90deg,
-      hsl(var(--sk-muted)) 25%,
-      hsl(var(--sk-accent)) 50%,
-      hsl(var(--sk-muted)) 75%
-    );
+  border-radius: var(--sk-radius-control);
+  background: linear-gradient(
+    90deg,
+    hsl(var(--sk-muted)) 20%,
+    hsl(var(--sk-accent)) 50%,
+    hsl(var(--sk-muted)) 80%
+  );
   background-size: 200% 100%;
-  animation: sk-card-shimmer 1.8s ease-in-out infinite;
-  border-radius: var(--sk-radius);
+  animation: sk-card-shimmer 1.5s ease-in-out infinite;
 }
-
-/* ============================================================
-   PRINT & MOTION
-   ============================================================ */
 
 @media print {
   .sk-card {
     box-shadow: none;
     border: 1px solid hsl(var(--sk-foreground));
     break-inside: avoid;
+    transform: none;
   }
+
   .sk-card::before,
   .sk-card::after {
     display: none;
   }
+
   .sk-card[data-skeleton],
   .sk-card[data-loading] {
     display: none;
@@ -280,13 +360,30 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sk-card { transition: none; }
-  .sk-card:not([data-variant]):hover { transform: none; }
+  .sk-card {
+    transition: none;
+  }
+
+  .sk-card:hover,
+  .sk-card:focus-within,
+  .sk-card[data-interactive="true"]:hover,
+  .sk-card[data-interactive="true"]:focus-within,
+  .sk-card[data-variant="pixel"]:hover,
+  .sk-card[data-variant="pixel"]:focus-within {
+    transform: none;
+  }
+
   .sk-card[data-skeleton] .sk-card__title,
+  .sk-card[data-skeleton] .sk-card__eyebrow,
   .sk-card[data-skeleton] .sk-card__body p,
+  .sk-card[data-skeleton] .sk-card__content p,
   .sk-card[data-skeleton] .sk-card__footer-text {
     animation: none;
     background: hsl(var(--sk-muted));
   }
-  .sk-card[data-loading] .sk-card__body::after { animation: none; }
+
+  .sk-card[data-loading] .sk-card__body::after,
+  .sk-card[data-loading] .sk-card__content::after {
+    animation: none;
+  }
 }

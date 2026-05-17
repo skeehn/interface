@@ -5,6 +5,7 @@ import {
   DitherWebGL,
   type DitherWebGLAlgorithm,
   type DitherWebGLHandle,
+  type DitherWebGLMask,
   type DitherWebGLMatrix,
 } from '@skeehn/react/gl';
 
@@ -16,6 +17,13 @@ const ALGORITHMS: { value: DitherWebGLAlgorithm; label: string }[] = [
 ];
 
 const MATRICES: DitherWebGLMatrix[] = [2, 4, 8];
+
+const MASKS: { value: DitherWebGLMask; label: string }[] = [
+  { value: 'none', label: 'None (full bleed)' },
+  { value: 'radial', label: 'Radial (blob)' },
+  { value: 'linear', label: 'Linear (fade along axis)' },
+  { value: 'vignette', label: 'Vignette (framed photo)' },
+];
 
 const PRESETS: {
   name: string;
@@ -82,14 +90,23 @@ export default function DitherOverlayPage() {
   const [speed, setSpeed] = useState(1);
   const [presetIdx, setPresetIdx] = useState(2);
   const [overlayChildren, setOverlayChildren] = useState(true);
+  const [mask, setMask] = useState<DitherWebGLMask>('none');
+  const [maskFade, setMaskFade] = useState(0.4);
+  const [maskAngle, setMaskAngle] = useState(90);
 
   const handleRef = useRef<DitherWebGLHandle | null>(null);
 
   const preset = PRESETS[presetIdx];
 
   const snippet = useMemo(
-    () =>
-      `import { DitherWebGL } from '@skeehn/react/gl';
+    () => {
+      const maskBlock =
+        mask === 'none'
+          ? ''
+          : `\n  mask="${mask}"\n  maskFade={${maskFade.toFixed(2)}}${
+              mask === 'linear' ? `\n  maskAngle={${maskAngle}}` : ''
+            }`;
+      return `import { DitherWebGL } from '@skeehn/react/gl';
 
 <DitherWebGL
   algorithm="${algorithm}"${algorithm === 'bayer' ? `\n  matrix={${matrix}}` : ''}
@@ -100,11 +117,12 @@ export default function DitherOverlayPage() {
     type: '${preset.gradient.type}',
     angle: ${preset.gradient.angle},
     stops: ${JSON.stringify(preset.gradient.stops)},
-  }}${animate ? `\n  animate\n  speed={${speed}}` : ''}
+  }}${animate ? `\n  animate\n  speed={${speed}}` : ''}${maskBlock}
 >
   {/* your content */}
-</DitherWebGL>`,
-    [algorithm, matrix, cellSize, threshold, animate, speed, preset],
+</DitherWebGL>`;
+    },
+    [algorithm, matrix, cellSize, threshold, animate, speed, preset, mask, maskFade, maskAngle],
   );
 
   const downloadPng = () => {
@@ -141,7 +159,10 @@ export default function DitherOverlayPage() {
           gradient={preset.gradient}
           animate={animate}
           speed={speed}
-          style={{ width: '100%', height: 360 }}
+          mask={mask}
+          maskFade={maskFade}
+          maskAngle={maskAngle}
+          style={{ width: '100%', height: 360, background: '#0a0a0a' }}
         >
           {overlayChildren && (
             <div className="flex flex-col items-center justify-center h-[360px] text-center px-6">
@@ -261,6 +282,40 @@ export default function DitherOverlayPage() {
           >
             Export current frame · PNG
           </button>
+        </Panel>
+
+        <Panel title="Mask (compose with whitespace)">
+          <div className="grid grid-cols-2 gap-2">
+            {MASKS.map(({ value, label }) => (
+              <button
+                key={value}
+                onClick={() => setMask(value)}
+                className={`text-xs px-3 py-2 border transition-colors cursor-pointer ${
+                  mask === value
+                    ? 'bg-white text-black border-white'
+                    : 'border-neutral-700 text-neutral-300 hover:border-neutral-500'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          {mask !== 'none' && (
+            <div className="mt-4">
+              <Label>Fade width</Label>
+              <Slider value={maskFade} min={0} max={1} step={0.01} onChange={setMaskFade} />
+              {mask === 'linear' && (
+                <>
+                  <Label>Angle</Label>
+                  <Slider value={maskAngle} min={0} max={360} step={1} onChange={setMaskAngle} unit="°" />
+                </>
+              )}
+            </div>
+          )}
+          <p className="mt-3 text-[11px] leading-relaxed text-neutral-500">
+            Fades the dither into transparent at the edges so it can sit
+            inside a card or hero with proper whitespace, not just full-bleed.
+          </p>
         </Panel>
       </div>
 

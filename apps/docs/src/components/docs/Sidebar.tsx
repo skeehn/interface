@@ -89,6 +89,7 @@ const NAV_GROUPS: NavGroup[] = [
     title: "Engine",
     items: [
       { title: "Playground", href: "/docs/engine" },
+      { title: "Dither Overlay (WebGL)", href: "/docs/engine/dither-overlay" },
       { title: "Dither Patterns", href: "/docs/engine/dither" },
       { title: "Animations", href: "/docs/engine/animation" },
       { title: "Tokens", href: "/docs/engine/tokens" },

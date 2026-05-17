@@ -8,6 +8,17 @@
 export { DitherBackground } from './DitherBackground';
 export type { DitherBackgroundProps, DitherAlgorithm } from './DitherBackground';
 
+export { DitherWebGL } from './DitherWebGL';
+export type {
+  DitherWebGLProps,
+  DitherWebGLAlgorithm,
+  DitherWebGLMatrix,
+  DitherWebGLHandle,
+  DitherGradient,
+  DitherGradientStop,
+  DitherSource,
+} from './DitherWebGL';
+
 export { AsciiImage } from './AsciiImage';
 export type { AsciiImageProps, AsciiImageAlgorithm, AsciiImagePalette } from './AsciiImage';
 

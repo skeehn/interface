@@ -315,12 +315,12 @@
    9. ANIMATIONS
    ═══════════════════════════════════════════════════════════ */
 
-@keyframes sk-pulse-dither {
+@keyframes sk-dither-pulse {
   0%, 100% { opacity: var(--sk-dither-opacity, 0.12); }
   50%       { opacity: calc(var(--sk-dither-opacity, 0.12) * 2.5); }
 }
 
-@keyframes sk-morph-dither {
+@keyframes sk-dither-morph {
   0%   { background-image: var(--sk-dither-b2); }
   25%  { background-image: var(--sk-dither-b6); }
   50%  { background-image: var(--sk-dither-b8); }
@@ -328,20 +328,41 @@
   100% { background-image: var(--sk-dither-b2); }
 }
 
-@keyframes sk-scan-down {
+@keyframes sk-dither-scan {
   0%   { background-position: 0 0; }
   100% { background-position: 0 16px; }
 }
 
+@keyframes sk-ascii-blink {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* Legacy aliases — kept until every consumer migrates. */
+@keyframes sk-pulse-dither {
+  0%, 100% { opacity: var(--sk-dither-opacity, 0.12); }
+  50%       { opacity: calc(var(--sk-dither-opacity, 0.12) * 2.5); }
+}
+@keyframes sk-morph-dither {
+  0%   { background-image: var(--sk-dither-b2); }
+  25%  { background-image: var(--sk-dither-b6); }
+  50%  { background-image: var(--sk-dither-b8); }
+  75%  { background-image: var(--sk-dither-b10); }
+  100% { background-image: var(--sk-dither-b2); }
+}
+@keyframes sk-scan-down {
+  0%   { background-position: 0 0; }
+  100% { background-position: 0 16px; }
+}
 @keyframes sk-blink-block {
   0%, 49%   { opacity: 1; }
   50%, 100% { opacity: 0; }
 }
 
-.sk-animate-pulse { animation: sk-pulse-dither 2s ease-in-out infinite; }
-.sk-animate-morph { animation: sk-morph-dither 2s steps(4) infinite; }
-.sk-animate-scan  { animation: sk-scan-down 0.4s linear infinite; }
-.sk-animate-blink { animation: sk-blink-block 1s steps(2) infinite; }
+.sk-animate-pulse { animation: sk-dither-pulse 2s ease-in-out infinite; }
+.sk-animate-morph { animation: sk-dither-morph 2s steps(4) infinite; }
+.sk-animate-scan  { animation: sk-dither-scan 0.4s linear infinite; }
+.sk-animate-blink { animation: sk-ascii-blink 1s steps(2) infinite; }
 
 /* ═══════════════════════════════════════════════════════════
    10. ACCESSIBILITY

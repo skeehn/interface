@@ -87,10 +87,10 @@ describe("themes", () => {
 
 describe("components", () => {
   const reg = JSON.parse(readFileSync(join(ROOT, "registry.json"), "utf-8"));
-  test("29 components (14 core + 12 AI + 3 layout/dataviz/motion)", () => {
-    expect(reg.components.length).toBe(29);
+  test("32 components (14 core + 15 AI + 3 layout/dataviz/motion)", () => {
+    expect(reg.components.length).toBe(32);
     expect(reg.components.filter((c: any) => c.category === "core").length).toBe(14);
-    expect(reg.components.filter((c: any) => c.category === "ai").length).toBe(12);
+    expect(reg.components.filter((c: any) => c.category === "ai").length).toBe(15);
     expect(reg.components.filter((c: any) => c.category === "layout").length).toBe(1);
     expect(reg.components.filter((c: any) => c.category === "dataviz").length).toBe(1);
     expect(reg.components.filter((c: any) => c.category === "motion").length).toBe(1);
@@ -115,9 +115,9 @@ describe("demo", () => {
   });
   test("live controls", () => {
     const h = readFileSync(join(ROOT, "demo/index.html"), "utf-8");
-    expect(h).toContain('id="tp"');
-    expect(h).toContain('id="pp"');
-    expect(h).toContain('id="dp"');
+    expect(h).toContain('id="theme-sel"');
+    expect(h).toContain('id="search-input"');
+    expect(h).toContain('id="img-upload"');
   });
   test("ASCII art demo", () => {
     const h = readFileSync(join(ROOT, "demo/index.html"), "utf-8");

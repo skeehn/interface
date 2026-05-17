@@ -1,7 +1,15 @@
 import React from 'react';
 
 /** Variant styles for the Button component. */
-export type ButtonVariant = 'solid' | 'dither' | 'outline' | 'ghost' | 'inverted' | 'ascii' | 'pixel';
+export type ButtonVariant =
+  | 'solid'
+  | 'dither'
+  | 'outline'
+  | 'ghost'
+  | 'inverted'
+  | 'ascii'
+  | 'pixel'
+  | 'retro';
 
 /** Size options for the Button component. */
 export type ButtonSize = 'sm' | 'lg' | 'xl';

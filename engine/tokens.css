@@ -61,12 +61,38 @@
   --sk-space-24: 6rem;
   --sk-space-32: 8rem;
 
-  /* ═══ RADIUS (square by default) ═══ */
-  --sk-radius:      0px;
-  --sk-radius-sm:   0px;
-  --sk-radius-md:   0px;
-  --sk-radius-lg:   0px;
+  /* ═══ RADIUS (square by default — skeehn identity)
+     Default 0 reinforces the bitmap/CRT aesthetic. Opt-in scale stays
+     available for premium primitives (GlowCard, BentoCell, etc.) that
+     want a softer silhouette. */
+  --sk-radius: 0;
+  --sk-radius-xs: 2px;
+  --sk-radius-sm: 4px;
+  --sk-radius-md: 6px;
+  --sk-radius-lg: 10px;
+  --sk-radius-xl: 16px;
   --sk-radius-full: 9999px;
+
+  /* ═══ ELEVATION — real shadow ramp (was sm=none/md/lg) ═══ */
+  --sk-elevation-1: 0 1px 2px hsl(0 0% 0% / 0.04);
+  --sk-elevation-2: 0 2px 6px hsl(0 0% 0% / 0.06), 0 1px 2px hsl(0 0% 0% / 0.04);
+  --sk-elevation-3: 0 6px 18px hsl(0 0% 0% / 0.08), 0 2px 4px hsl(0 0% 0% / 0.04);
+  --sk-elevation-4: 0 18px 48px hsl(0 0% 0% / 0.14), 0 4px 12px hsl(0 0% 0% / 0.06);
+
+  /* ═══ PANEL SURFACES — referenced by card.css; previously undefined ═══ */
+  --sk-panel-gradient: linear-gradient(180deg, hsl(var(--sk-surface)) 0%, hsl(var(--sk-background)) 100%);
+  --sk-panel-shadow: var(--sk-elevation-2);
+
+  /* ═══ DITHER-SPECIFIC TOKENS ═══ */
+  --sk-dither-ink:       var(--sk-foreground);
+  --sk-dither-paper:     var(--sk-background);
+  --sk-dither-threshold: 0.5;
+  --sk-ascii-density:    0.5;
+  --sk-glyph-ramp:       " .:-=+*#%@";
+  --sk-text-cell:        1ch;       /* snaps layouts to the monospace grid */
+
+  /* ═══ GLOW (used by GlowCard, focus rings on premium primitives) ═══ */
+  --sk-glow-color: var(--sk-accent);
 
   /* ═══ BORDERS ═══ */
   --sk-border-width: 1px;
@@ -82,6 +108,10 @@
   --sk-transition:      100ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --sk-transition-fast:  60ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --sk-transition-slow: 180ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  /* ═══ MOTION EASING — for premium primitives ═══ */
+  --sk-motion-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --sk-motion-glide:  cubic-bezier(0.16, 1, 0.3, 1);
 
   /* ═══ Z-INDEX ═══ */
   --sk-z-dropdown: 50;

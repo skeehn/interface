@@ -1,7 +1,15 @@
 import React from 'react';
 
 /** Visual variant for the Card. */
-export type CardVariant = 'solid' | 'dither' | 'outline' | 'ghost' | 'inverted' | 'pixel';
+export type CardVariant =
+  | 'solid'
+  | 'dither'
+  | 'outline'
+  | 'ghost'
+  | 'inverted'
+  | 'pixel'
+  | 'retro'
+  | 'ascii';
 
 /** Props for the {@link Card} component. */
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {

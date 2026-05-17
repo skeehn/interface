@@ -1,0 +1,60 @@
+/*
+ * @skeehn/react — one-import stylesheet
+ * -------------------------------------
+ * Pull in the entire engine baseline (reset, tokens, dither, animations)
+ * plus every component CSS in one go. Build tooling resolves the @import
+ * tree; in production the bundler concatenates this into your build.
+ *
+ *   import '@skeehn/react/styles';
+ *
+ * Then drop in any component and you're done — no @import bookkeeping,
+ * no Tailwind required. Themes are applied via the data-theme attribute
+ * (or via <ThemeProvider> if you want runtime switching).
+ */
+
+/* ── Engine baseline ──────────────────────────────────────────── */
+@import url("../../../engine/reset.css");
+@import url("../../../engine/tokens.css");
+@import url("../../../engine/dither.css");
+@import url("../../../engine/animation.css");
+
+/* ── Default theme (override by setting data-theme="dark" etc.) ── */
+@import url("../../../themes/default.css");
+
+/* ── Core (14) ──────────────────────────────────────────────── */
+@import url("../../../components/accordion/accordion.css");
+@import url("../../../components/alert/alert.css");
+@import url("../../../components/avatar/avatar.css");
+@import url("../../../components/badge/badge.css");
+@import url("../../../components/button/button.css");
+@import url("../../../components/card/card.css");
+@import url("../../../components/dialog/dialog.css");
+@import url("../../../components/dropdown/dropdown.css");
+@import url("../../../components/input/input.css");
+@import url("../../../components/progress/progress.css");
+@import url("../../../components/table/table.css");
+@import url("../../../components/tabs/tabs.css");
+@import url("../../../components/toggle/toggle.css");
+@import url("../../../components/tooltip/tooltip.css");
+
+/* ── AI (15) ────────────────────────────────────────────────── */
+@import url("../../../components/agent-status/agent-status.css");
+@import url("../../../components/chat-bubble/chat-bubble.css");
+@import url("../../../components/chat-input/chat-input.css");
+@import url("../../../components/citation-card/citation-card.css");
+@import url("../../../components/code-block/code-block.css");
+@import url("../../../components/file-attachment/file-attachment.css");
+@import url("../../../components/markdown/markdown.css");
+@import url("../../../components/prompt-suggestions/prompt-suggestions.css");
+@import url("../../../components/reasoning-step/reasoning-step.css");
+@import url("../../../components/streaming-text/streaming-text.css");
+@import url("../../../components/terminal-panel/terminal-panel.css");
+@import url("../../../components/thinking-block/thinking-block.css");
+@import url("../../../components/tool-card/tool-card.css");
+@import url("../../../components/typing-indicator/typing-indicator.css");
+@import url("../../../components/voice-session/voice-session.css");
+
+/* ── Bundles (3) ────────────────────────────────────────────── */
+@import url("../../../components/dataviz/dataviz.css");
+@import url("../../../components/layout/layout.css");
+@import url("../../../components/motion/motion.css");

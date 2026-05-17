@@ -1,5 +1,15 @@
 // @skeehn/react — React component wrappers for skeehn CSS components
-// CSS is still imported separately from the engine + component CSS files
+// CSS: `import '@skeehn/react/styles'` for the full bundle, or import
+// engine + component CSS files individually as before.
+
+// ThemeProvider
+export { ThemeProvider, useTheme } from './ThemeProvider';
+export type {
+  ThemeProviderProps,
+  SkeehnTheme,
+  SkeehnDensity,
+  SkeehnThemePreference,
+} from './ThemeProvider';
 
 // Core components
 export { Button } from './components/Button';

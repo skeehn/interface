@@ -18,7 +18,9 @@
     "./gl": {
       "import": "./dist/gl/index.js",
       "types": "./dist/gl/index.d.ts"
-    }
+    },
+    "./styles": "./dist/styles.css",
+    "./styles.css": "./dist/styles.css"
   },
   "files": ["dist/"],
   "peerDependencies": {
@@ -31,7 +33,7 @@
     "three": { "optional": true }
   },
   "scripts": {
-    "build": "bun build ./src/index.tsx --outdir ./dist --target browser --external react --external react-dom"
+    "build": "bun run ./build.ts"
   },
   "keywords": ["skeehn", "react", "ai", "components", "dither", "ascii", "webgl"],
   "license": "MIT"

@@ -15,7 +15,7 @@ export default function DocsLayout({
             href="/"
             className="font-mono text-sm font-medium tracking-tight text-white flex items-center gap-2"
           >
-            <span className="text-white/35">›</span>
+            <img src="/icon.svg" alt="" width="22" height="22" />
             skeehn
           </Link>
           <span className="hidden sm:inline text-white/15 font-mono">/</span>

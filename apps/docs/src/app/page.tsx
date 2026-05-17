@@ -49,7 +49,7 @@ export default function HomePage() {
           href="/"
           className="font-mono text-sm font-medium tracking-tight flex items-center gap-2"
         >
-          <span className="text-white/35">›</span>
+          <img src="/icon.svg" alt="" width="22" height="22" className="-ml-1" />
           skeehn
         </Link>
         <div className="flex items-center gap-6 font-mono text-[11px] uppercase tracking-[0.18em] text-white/40">

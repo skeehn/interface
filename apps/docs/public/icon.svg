@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" shape-rendering="crispEdges">
+  <!--
+    skeehn favicon — pixel-art "s" with a Bayer 4×4 dither halo. Drawn at
+    32×32 with every cell crisp so it survives downscaling to 16×16.
+  -->
+  <rect width="32" height="32" fill="#000"/>
+
+  <!-- Bayer-style stipple noise around the glyph (alpha-blended white) -->
+  <g fill="#ffffff" fill-opacity="0.35">
+    <rect x="2"  y="2"  width="1" height="1"/>
+    <rect x="6"  y="3"  width="1" height="1"/>
+    <rect x="22" y="2"  width="1" height="1"/>
+    <rect x="28" y="4"  width="1" height="1"/>
+    <rect x="3"  y="29" width="1" height="1"/>
+    <rect x="10" y="28" width="1" height="1"/>
+    <rect x="25" y="29" width="1" height="1"/>
+    <rect x="29" y="27" width="1" height="1"/>
+    <rect x="0"  y="14" width="1" height="1"/>
+    <rect x="31" y="16" width="1" height="1"/>
+    <rect x="4"  y="11" width="1" height="1"/>
+    <rect x="28" y="19" width="1" height="1"/>
+  </g>
+
+  <!-- The "s" — pixel grid 8 cols × 7 rows, each cell 3×3 starting at (4,6) -->
+  <g fill="#fff">
+    <!-- Row 0: top bar -->
+    <rect x="7"  y="6"  width="3" height="3"/>
+    <rect x="10" y="6"  width="3" height="3"/>
+    <rect x="13" y="6"  width="3" height="3"/>
+    <rect x="16" y="6"  width="3" height="3"/>
+    <rect x="19" y="6"  width="3" height="3"/>
+    <rect x="22" y="6"  width="3" height="3"/>
+    <!-- Row 1: left stem -->
+    <rect x="7"  y="9"  width="3" height="3"/>
+    <!-- Row 2: left stem -->
+    <rect x="7"  y="12" width="3" height="3"/>
+    <!-- Row 3: middle bar -->
+    <rect x="7"  y="15" width="3" height="3"/>
+    <rect x="10" y="15" width="3" height="3"/>
+    <rect x="13" y="15" width="3" height="3"/>
+    <rect x="16" y="15" width="3" height="3"/>
+    <rect x="19" y="15" width="3" height="3"/>
+    <rect x="22" y="15" width="3" height="3"/>
+    <!-- Row 4: right stem -->
+    <rect x="22" y="18" width="3" height="3"/>
+    <!-- Row 5: right stem -->
+    <rect x="22" y="21" width="3" height="3"/>
+    <!-- Row 6: bottom bar -->
+    <rect x="7"  y="24" width="3" height="3"/>
+    <rect x="10" y="24" width="3" height="3"/>
+    <rect x="13" y="24" width="3" height="3"/>
+    <rect x="16" y="24" width="3" height="3"/>
+    <rect x="19" y="24" width="3" height="3"/>
+    <rect x="22" y="24" width="3" height="3"/>
+  </g>
+</svg>

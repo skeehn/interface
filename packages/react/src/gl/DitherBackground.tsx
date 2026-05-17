@@ -1,5 +1,8 @@
 import React, { useRef, useEffect, useCallback, useState } from 'react';
 
+import { parseCSSColorBytes } from '../../../../engine/color';
+import { BAYER_2, BAYER_4, BAYER_8 } from '../../../../engine/bayer';
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -29,46 +32,12 @@ export interface DitherBackgroundProps {
   children?: React.ReactNode;
 }
 
-// ---------------------------------------------------------------------------
-// Bayer matrices (normalized)
-// ---------------------------------------------------------------------------
+// Shared Bayer matrices live in engine/bayer.ts.
 
-const BAYER2 = [
-  [0, 2],
-  [3, 1],
-];
-const BAYER4 = [
-  [0, 8, 2, 10],
-  [12, 4, 14, 6],
-  [3, 11, 1, 9],
-  [15, 7, 13, 5],
-];
-const BAYER8 = [
-  [0, 32, 8, 40, 2, 34, 10, 42],
-  [48, 16, 56, 24, 50, 18, 58, 26],
-  [12, 44, 4, 36, 14, 46, 6, 38],
-  [60, 28, 52, 20, 62, 30, 54, 22],
-  [3, 35, 11, 43, 1, 33, 9, 41],
-  [51, 19, 59, 27, 49, 17, 57, 25],
-  [15, 47, 7, 39, 13, 45, 5, 37],
-  [63, 31, 55, 23, 61, 29, 53, 21],
-];
-
-function getBayerMatrix(size: 2 | 4 | 8) {
-  if (size === 2) return BAYER2;
-  if (size === 8) return BAYER8;
-  return BAYER4;
-}
-
-// ---------------------------------------------------------------------------
-// Color parsing helper — converts any CSS color to [r,g,b] via a temp canvas
-// ---------------------------------------------------------------------------
-
-function parseColor(color: string, ctx: CanvasRenderingContext2D): [number, number, number] {
-  ctx.fillStyle = color;
-  ctx.fillRect(0, 0, 1, 1);
-  const d = ctx.getImageData(0, 0, 1, 1).data;
-  return [d[0], d[1], d[2]];
+function getBayerMatrix(size: 2 | 4 | 8): ReadonlyArray<ReadonlyArray<number>> {
+  if (size === 2) return BAYER_2;
+  if (size === 8) return BAYER_8;
+  return BAYER_4;
 }
 
 function lerp(a: number, b: number, t: number): number {
@@ -83,7 +52,7 @@ function applyBayer(
   data: Uint8ClampedArray,
   width: number,
   height: number,
-  matrix: number[][],
+  matrix: ReadonlyArray<ReadonlyArray<number>>,
   intensity: number,
 ) {
   const size = matrix.length;
@@ -245,21 +214,12 @@ export const DitherBackground = React.forwardRef<HTMLDivElement, DitherBackgroun
       return () => mq.removeEventListener('change', handler);
     }, []);
 
-    // Parse colors once (or when they change)
-    const parseColors = useCallback(() => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d', { willReadFrequently: true });
-      if (!ctx) return;
+    useEffect(() => {
       colorsRef.current = {
-        a: parseColor(colorA, ctx),
-        b: parseColor(colorB, ctx),
+        a: parseCSSColorBytes(colorA) as [number, number, number],
+        b: parseCSSColorBytes(colorB) as [number, number, number],
       };
     }, [colorA, colorB]);
-
-    useEffect(() => {
-      parseColors();
-    }, [parseColors]);
 
     // Core render function
     const renderFrame = useCallback(

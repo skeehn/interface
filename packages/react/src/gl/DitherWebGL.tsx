@@ -7,6 +7,8 @@ import React, {
   useState,
 } from 'react';
 
+import { parseCSSColor as parseCSSColorShared, type RGBA } from '../../../../engine/color';
+
 /**
  * DitherWebGL — GPU-accelerated dither overlay
  * --------------------------------------------
@@ -343,20 +345,8 @@ function link(gl: WebGLRenderingContext, vs: WebGLShader, fs: WebGLShader) {
   return p;
 }
 
-let _colorCanvas: HTMLCanvasElement | null = null;
-function parseCSSColor(c: string): [number, number, number, number] {
-  if (typeof document === 'undefined') return [0, 0, 0, 1];
-  if (!_colorCanvas) {
-    _colorCanvas = document.createElement('canvas');
-    _colorCanvas.width = _colorCanvas.height = 1;
-  }
-  const ctx = _colorCanvas.getContext('2d', { willReadFrequently: true })!;
-  ctx.clearRect(0, 0, 1, 1);
-  ctx.fillStyle = '#000';
-  ctx.fillStyle = c;
-  ctx.fillRect(0, 0, 1, 1);
-  const d = ctx.getImageData(0, 0, 1, 1).data;
-  return [d[0] / 255, d[1] / 255, d[2] / 255, d[3] / 255];
+function parseCSSColor(c: string): RGBA {
+  return parseCSSColorShared(c);
 }
 
 function isMediaSource(s: unknown): s is HTMLImageElement | HTMLVideoElement | HTMLCanvasElement {
@@ -366,6 +356,58 @@ function isMediaSource(s: unknown): s is HTMLImageElement | HTMLVideoElement | H
     s instanceof HTMLVideoElement ||
     s instanceof HTMLCanvasElement
   );
+}
+
+/**
+ * All uniform names looked up at link time so `draw()` doesn't pay the
+ * `getUniformLocation` cost (≈ 20 calls × every frame) — the spec
+ * guarantees locations are stable across a program's lifetime.
+ */
+const UNIFORM_NAMES = [
+  'u_res',
+  'u_time',
+  'u_cellSize',
+  'u_threshold',
+  'u_algo',
+  'u_matrix',
+  'u_animate',
+  'u_speed',
+  'u_src',
+  'u_useSrc',
+  'u_grad_kind',
+  'u_grad_angle',
+  'u_grad_count',
+  'u_pal_count',
+  'u_grad_c0',
+  'u_grad_c1',
+  'u_grad_c2',
+  'u_grad_c3',
+  'u_grad_c4',
+  'u_grad_c5',
+  'u_grad_p0',
+  'u_grad_p1',
+  'u_grad_p2',
+  'u_grad_p3',
+  'u_grad_p4',
+  'u_grad_p5',
+  'u_pal[0]',
+  'u_pal[1]',
+  'u_pal[2]',
+  'u_pal[3]',
+  'u_pal[4]',
+  'u_pal[5]',
+  'u_pal[6]',
+  'u_pal[7]',
+] as const;
+
+type UniformMap = Map<string, WebGLUniformLocation | null>;
+
+function collectUniforms(gl: WebGLRenderingContext, program: WebGLProgram): UniformMap {
+  const map: UniformMap = new Map();
+  for (const name of UNIFORM_NAMES) {
+    map.set(name, gl.getUniformLocation(program, name));
+  }
+  return map;
 }
 
 // ---------------------------------------------------------------------------
@@ -396,9 +438,15 @@ export const DitherWebGL = React.forwardRef<DitherWebGLHandle, DitherWebGLProps>
     const glRef = useRef<WebGLRenderingContext | null>(null);
     const programRef = useRef<WebGLProgram | null>(null);
     const textureRef = useRef<WebGLTexture | null>(null);
+    const uniformsRef = useRef<UniformMap | null>(null);
     const startRef = useRef<number>(0);
     const rafRef = useRef<number>(0);
-    const loadedImageRef = useRef<HTMLImageElement | null>(null);
+    const rafActiveRef = useRef(false);
+    // Tracks whether the current `resolvedSource` has been uploaded to the
+    // texture at least once. Set false on source change, then flipped to
+    // true after a successful upload — videos/canvases re-upload every
+    // frame anyway, but static images only need to upload once.
+    const sourceUploadedRef = useRef(false);
     const reducedMotionRef = useRef(false);
 
     const [ready, setReady] = useState(false);
@@ -409,8 +457,8 @@ export const DitherWebGL = React.forwardRef<DitherWebGLHandle, DitherWebGLProps>
     >(null);
 
     useEffect(() => {
+      sourceUploadedRef.current = false;
       if (!source) {
-        loadedImageRef.current = null;
         setResolvedSource(null);
         return;
       }
@@ -418,17 +466,15 @@ export const DitherWebGL = React.forwardRef<DitherWebGLHandle, DitherWebGLProps>
         setResolvedSource(source);
         return;
       }
-      // string URL
+      // string URL — load internally; only commits when load fires
       const img = new Image();
       img.crossOrigin = 'anonymous';
       img.decoding = 'async';
-      img.src = source;
-      loadedImageRef.current = img;
       const onLoad = () => setResolvedSource(img);
       img.addEventListener('load', onLoad);
+      img.src = source;
       return () => {
         img.removeEventListener('load', onLoad);
-        loadedImageRef.current = null;
       };
     }, [source]);
 
@@ -444,13 +490,14 @@ export const DitherWebGL = React.forwardRef<DitherWebGLHandle, DitherWebGLProps>
       return () => mq.removeEventListener('change', fn);
     }, []);
 
-    // Normalised gradient (memoised so changes are detected by ref identity)
+    // Normalised gradient. The shader unrolls up to 6 stops (WebGL1 doesn't
+    // support dynamic uniform-array indexing reliably across drivers).
     const grad = useMemo<Required<DitherGradient>>(() => {
       const g = gradient ?? DEFAULT_GRADIENT;
       const stops = (g.stops && g.stops.length >= 2 ? g.stops : DEFAULT_GRADIENT.stops)
         .slice()
         .sort((a, b) => a.pos - b.pos)
-        .slice(0, 6); // shader supports up to 6 stops
+        .slice(0, 6);
       return {
         type: g.type ?? 'linear',
         angle: g.angle ?? 135,
@@ -458,7 +505,15 @@ export const DitherWebGL = React.forwardRef<DitherWebGLHandle, DitherWebGLProps>
       };
     }, [gradient]);
 
-    const paletteVec = useMemo(() => {
+    // Pre-parse gradient stop colors alongside the gradient itself so we
+    // don't pay the canvas-readback cost every frame.
+    const gradColors = useMemo<RGBA[]>(() => {
+      const padded = grad.stops.slice();
+      while (padded.length < 6) padded.push(padded[padded.length - 1]);
+      return padded.map((s) => parseCSSColor(s.color));
+    }, [grad]);
+
+    const paletteVec = useMemo<RGBA[]>(() => {
       const list = (palette && palette.length > 0 ? palette : DEFAULT_PALETTE).slice(0, 8);
       return list.map((c) => parseCSSColor(c));
     }, [palette]);
@@ -506,6 +561,7 @@ export const DitherWebGL = React.forwardRef<DitherWebGLHandle, DitherWebGLProps>
         glRef.current = gl;
         programRef.current = program;
         textureRef.current = tex;
+        uniformsRef.current = collectUniforms(gl, program);
         startRef.current = performance.now();
         setReady(true);
       } catch (err) {
@@ -515,6 +571,7 @@ export const DitherWebGL = React.forwardRef<DitherWebGLHandle, DitherWebGLProps>
 
       return () => {
         if (rafRef.current) cancelAnimationFrame(rafRef.current);
+        rafActiveRef.current = false;
         const g = glRef.current;
         if (g) {
           if (programRef.current) g.deleteProgram(programRef.current);
@@ -523,6 +580,7 @@ export const DitherWebGL = React.forwardRef<DitherWebGLHandle, DitherWebGLProps>
         glRef.current = null;
         programRef.current = null;
         textureRef.current = null;
+        uniformsRef.current = null;
       };
     }, []);
 
@@ -556,7 +614,8 @@ export const DitherWebGL = React.forwardRef<DitherWebGLHandle, DitherWebGLProps>
       const program = programRef.current;
       const canvas = canvasRef.current;
       const tex = textureRef.current;
-      if (!gl || !program || !canvas || !tex) return;
+      const uniforms = uniformsRef.current;
+      if (!gl || !program || !canvas || !tex || !uniforms) return;
 
       if (!resize()) return;
 
@@ -565,53 +624,60 @@ export const DitherWebGL = React.forwardRef<DitherWebGLHandle, DitherWebGLProps>
 
       const useSrc = !!resolvedSource;
       if (useSrc && resolvedSource) {
-        try {
-          // Video & canvas update every frame; image uploads once via state.
-          gl.texImage2D(
-            gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE,
-            resolvedSource as TexImageSource,
-          );
-        } catch {
-          // CORS or not yet decoded — silently skip this frame.
+        // Video & external canvas frames change every tick; HTMLImageElement
+        // is static so we only upload it once after it resolves.
+        const isLive =
+          resolvedSource instanceof HTMLVideoElement ||
+          resolvedSource instanceof HTMLCanvasElement;
+        if (isLive || !sourceUploadedRef.current) {
+          try {
+            gl.texImage2D(
+              gl.TEXTURE_2D,
+              0,
+              gl.RGBA,
+              gl.RGBA,
+              gl.UNSIGNED_BYTE,
+              resolvedSource as TexImageSource,
+            );
+            sourceUploadedRef.current = true;
+          } catch {
+            // CORS or not yet decoded — silently skip this frame.
+          }
         }
       }
 
       const t = (performance.now() - startRef.current) / 1000;
       const shouldAnimate = animate && !reducedMotionRef.current;
 
-      const u = (name: string) => gl.getUniformLocation(program, name);
-      gl.uniform2f(u('u_res'), canvas.width, canvas.height);
-      gl.uniform1f(u('u_time'), t);
-      gl.uniform1f(u('u_cellSize'), Math.max(1, cellSize));
-      gl.uniform1f(u('u_threshold'), threshold);
-      gl.uniform1i(u('u_algo'), ALGO_INDEX[algorithm] ?? 0);
-      gl.uniform1i(u('u_matrix'), matrix);
-      gl.uniform1f(u('u_animate'), shouldAnimate ? 1 : 0);
-      gl.uniform1f(u('u_speed'), speed);
-      gl.uniform1i(u('u_src'), 0);
-      gl.uniform1f(u('u_useSrc'), useSrc ? 1 : 0);
+      const loc = (name: string) => uniforms.get(name) ?? null;
+      gl.uniform2f(loc('u_res'), canvas.width, canvas.height);
+      gl.uniform1f(loc('u_time'), t);
+      gl.uniform1f(loc('u_cellSize'), Math.max(1, cellSize));
+      gl.uniform1f(loc('u_threshold'), threshold);
+      gl.uniform1i(loc('u_algo'), ALGO_INDEX[algorithm] ?? 0);
+      gl.uniform1i(loc('u_matrix'), matrix);
+      gl.uniform1f(loc('u_animate'), shouldAnimate ? 1 : 0);
+      gl.uniform1f(loc('u_speed'), speed);
+      gl.uniform1i(loc('u_src'), 0);
+      gl.uniform1f(loc('u_useSrc'), useSrc ? 1 : 0);
 
-      gl.uniform1f(u('u_grad_kind'), grad.type === 'radial' ? 1 : 0);
-      gl.uniform1f(u('u_grad_angle'), (grad.angle * Math.PI) / 180);
+      gl.uniform1f(loc('u_grad_kind'), grad.type === 'radial' ? 1 : 0);
+      gl.uniform1f(loc('u_grad_angle'), (grad.angle * Math.PI) / 180);
+      gl.uniform1i(loc('u_grad_count'), grad.stops.length);
 
-      // Pad stops to 6 entries (color & position arrays).
       const padded = grad.stops.slice();
-      while (padded.length < 6) {
-        padded.push(padded[padded.length - 1]);
-      }
-      gl.uniform1i(u('u_grad_count'), grad.stops.length);
+      while (padded.length < 6) padded.push(padded[padded.length - 1]);
       for (let i = 0; i < 6; i++) {
-        const [r, g, b, a] = parseCSSColor(padded[i].color);
-        gl.uniform4f(u(`u_grad_c${i}`), r, g, b, a);
-        gl.uniform1f(u(`u_grad_p${i}`), padded[i].pos);
+        const [r, g, b, a] = gradColors[i];
+        gl.uniform4f(loc(`u_grad_c${i}`), r, g, b, a);
+        gl.uniform1f(loc(`u_grad_p${i}`), padded[i].pos);
       }
 
-      // Palette: pad with the final color so quantize() is well-defined.
-      gl.uniform1i(u('u_pal_count'), paletteVec.length);
-      const tail = paletteVec[paletteVec.length - 1] ?? [0, 0, 0, 1];
+      gl.uniform1i(loc('u_pal_count'), paletteVec.length);
+      const tail = paletteVec[paletteVec.length - 1] ?? ([0, 0, 0, 1] as const);
       for (let i = 0; i < 8; i++) {
         const c = paletteVec[i] ?? tail;
-        gl.uniform4f(u(`u_pal[${i}]`), c[0], c[1], c[2], c[3]);
+        gl.uniform4f(loc(`u_pal[${i}]`), c[0], c[1], c[2], c[3]);
       }
 
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
@@ -622,6 +688,7 @@ export const DitherWebGL = React.forwardRef<DitherWebGLHandle, DitherWebGLProps>
       threshold,
       paletteVec,
       grad,
+      gradColors,
       animate,
       speed,
       resolvedSource,
@@ -635,31 +702,40 @@ export const DitherWebGL = React.forwardRef<DitherWebGLHandle, DitherWebGLProps>
       // Always draw at least one frame on every settings change.
       draw();
 
-      const isVideo =
+      const isLiveSource =
         typeof window !== 'undefined' &&
-        resolvedSource instanceof HTMLVideoElement;
+        (resolvedSource instanceof HTMLVideoElement ||
+          resolvedSource instanceof HTMLCanvasElement);
       const needsLoop =
-        (animate && !reducedMotionRef.current) || isVideo;
+        (animate && !reducedMotionRef.current) || isLiveSource;
 
-      if (!needsLoop) return;
+      if (!needsLoop) {
+        rafActiveRef.current = false;
+        return;
+      }
 
+      rafActiveRef.current = true;
       const tick = () => {
         draw();
         rafRef.current = requestAnimationFrame(tick);
       };
       rafRef.current = requestAnimationFrame(tick);
       return () => {
+        rafActiveRef.current = false;
         if (rafRef.current) cancelAnimationFrame(rafRef.current);
         rafRef.current = 0;
       };
     }, [ready, draw, animate, resolvedSource]);
 
-    // ---- Redraw on container resize ----------------------------------------
+    // ---- Redraw on container resize. Skip when the RAF loop is already
+    //      ticking — it will pick up the new size on its next frame.
     useEffect(() => {
       if (!ready) return;
       const wrapper = wrapperRef.current;
       if (!wrapper || typeof ResizeObserver === 'undefined') return;
-      const ro = new ResizeObserver(() => draw());
+      const ro = new ResizeObserver(() => {
+        if (!rafActiveRef.current) draw();
+      });
       ro.observe(wrapper);
       return () => ro.disconnect();
     }, [ready, draw]);

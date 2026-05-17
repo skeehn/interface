@@ -1,6 +1,9 @@
 import Link from "next/link";
 import DitherCanvas from "@/components/DitherCanvas";
 import { CodePreview } from "@/components/CodePreview";
+import { BentoHero } from "@/components/BentoHero";
+import { Reveal } from "@/components/Reveal";
+import { StaggerText } from "@/components/StaggerText";
 
 /* ───────────────────────────────────────────────────────────────────
  * skeehn marketing home — editorial brutalist
@@ -93,9 +96,11 @@ export default function HomePage() {
           {/* Left: monumental wordmark + tagline + CTAs */}
           <div className="lg:col-span-7 min-w-0 flex flex-col gap-10 lg:gap-14">
             <div className="min-w-0">
-              <h1 className="sk-hero-mark font-mono font-medium text-white">
-                skeehn
-              </h1>
+              <StaggerText
+                as="h1"
+                text="skeehn"
+                className="sk-hero-mark font-mono font-medium text-white"
+              />
               <p className="mt-6 max-w-xl font-sans text-xl md:text-2xl lg:text-3xl text-white/85 leading-[1.2] tracking-tight">
                 Build AI interfaces that mean it.
                 <br />
@@ -169,8 +174,16 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ═══ BENTO COMPONENT DOCK ═══ */}
+      <Reveal as="div" className="py-24 lg:py-32 border-t border-white/10">
+        <BentoHero />
+      </Reveal>
+
       {/* ═══ NUMBERED SECTIONS — editorial intro ═══ */}
-      <section className="px-6 lg:px-10 py-24 lg:py-40 border-t border-white/10">
+      <Reveal
+        as="section"
+        className="px-6 lg:px-10 py-24 lg:py-40 border-t border-white/10"
+      >
         <div className="grid grid-cols-12 gap-8 lg:gap-12">
           <div className="col-span-12 lg:col-span-4">
             <span className={META_LABEL}>What it is</span>
@@ -196,10 +209,13 @@ export default function HomePage() {
             ))}
           </ol>
         </div>
-      </section>
+      </Reveal>
 
       {/* ═══ INSTALL / CODE PREVIEW ═══ */}
-      <section className="px-6 lg:px-10 py-24 lg:py-40 border-t border-white/10">
+      <Reveal
+        as="section"
+        className="px-6 lg:px-10 py-24 lg:py-40 border-t border-white/10"
+      >
         <div className="grid grid-cols-12 gap-8 lg:gap-12 items-start">
           <div className="col-span-12 lg:col-span-5">
             <span className={META_LABEL}>Install</span>
@@ -223,7 +239,7 @@ export default function HomePage() {
             <CodePreview />
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* ═══ FOOTER ═══ */}
       <footer className="px-6 lg:px-10 py-12 border-t border-white/10">

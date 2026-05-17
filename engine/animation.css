@@ -414,6 +414,95 @@
 .sk-scale-up { animation: sk-scale-up var(--sk-anim-normal) var(--sk-ease-spring) both; }
 
 /* ============================================================
+   MOTION SYSTEM — used by editorial brutalist layouts
+   ============================================================
+   Convention:
+   - Add `.sk-reveal` to any element you want to animate-in on scroll.
+     It stays invisible until JS adds `.is-in` (see useReveal hook).
+   - Add `.sk-reveal--up` / `--down` / `--scale` to pick direction.
+   - Add `.sk-reveal-stagger > *` to cascade children with a default
+     50ms stagger (override with --sk-stagger style).
+   - Add `.sk-press` to any clickable for the press-and-spring feedback.
+   - Add `.sk-lift` to any card-shaped surface for hover lift. */
+
+.sk-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity var(--sk-dur-grand) var(--sk-motion-glide),
+    transform var(--sk-dur-grand) var(--sk-motion-glide);
+  will-change: opacity, transform;
+}
+.sk-reveal--down { transform: translateY(-20px); }
+.sk-reveal--left { transform: translateX(-30px); }
+.sk-reveal--right { transform: translateX(30px); }
+.sk-reveal--scale { transform: scale(0.94); }
+.sk-reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Cascade children using --sk-reveal-i custom property set via inline
+   style or JS. Each child waits its turn. */
+.sk-reveal-stagger > .sk-reveal {
+  transition-delay: calc(var(--sk-reveal-i, 0) * 60ms);
+}
+
+/* Press feedback — 1px scale down on :active, springs back on release */
+.sk-press {
+  transition: transform var(--sk-dur-quick) var(--sk-motion-spring);
+}
+.sk-press:active {
+  transform: scale(0.97);
+  transition-duration: var(--sk-dur-instant);
+}
+
+/* Hover lift — translates -2px on hover, with a tiny shadow grow on
+   light surfaces (no shadow on dark, brutalist policy) */
+.sk-lift {
+  transition:
+    transform var(--sk-dur-base) var(--sk-motion-lift),
+    border-color var(--sk-dur-base) var(--sk-motion-snap);
+}
+.sk-lift:hover {
+  transform: translateY(-2px);
+}
+
+/* Character stagger — wrap each glyph in a span and add this class to
+   the parent. Index lives on each child as --sk-i. */
+.sk-stagger-chars > span {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.35em);
+  animation: sk-stagger-in var(--sk-dur-grand) var(--sk-motion-glide) both;
+  animation-delay: calc(var(--sk-i, 0) * 28ms);
+}
+@keyframes sk-stagger-in {
+  from { opacity: 0; transform: translateY(0.35em); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Soft cursor blink — for terminal accents that should ALWAYS blink */
+@keyframes sk-cursor-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.sk-cursor-blink {
+  animation: sk-cursor-blink 1100ms steps(2) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-reveal, .sk-reveal--down, .sk-reveal--left, .sk-reveal--right,
+  .sk-reveal--scale, .sk-stagger-chars > span {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+  .sk-lift:hover { transform: none !important; }
+}
+
+/* ============================================================
    PRINT — disable all animations
    ============================================================ */
 

@@ -33,3 +33,6 @@ export type {
   UseAsciiStreamOptions,
   UseAsciiStreamReturn,
 } from './useAsciiStream';
+
+export { useReveal } from './useReveal';
+export type { UseRevealOptions } from './useReveal';

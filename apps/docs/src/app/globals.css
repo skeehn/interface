@@ -139,6 +139,55 @@ html { scroll-behavior: smooth; }
 .docs-heading { font-family: var(--sk-font-mono); font-weight: 700; letter-spacing: -0.02em; }
 .docs-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2em; opacity: 0.4; }
 
+/* ═══ MARKETING BENTO DOCK ═══
+   12-cell asymmetric grid; on mobile each cell is full width.
+   Cell sizes:
+     xl    — 2 cols × 2 rows  (ChatBubble)
+     md-r1 — 2 cols × 1 row, row 1 (DitherWebGL)
+     md-r2 — 2 cols × 1 row, row 2 (ToolCard)
+     sm    — 1 col  × 1 row, auto-flowed (variants)
+*/
+.sk-bento {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+.sk-bento-cell {
+  position: relative;
+  border: 1px solid hsl(0 0% 100% / 0.12);
+  background: hsl(0 0% 6%);
+  overflow: hidden;
+  transition:
+    border-color var(--sk-dur-base, 220ms) var(--sk-motion-snap, ease-out),
+    transform var(--sk-dur-base, 220ms) var(--sk-motion-lift, ease-out);
+}
+.sk-bento-cell::before {
+  /* 1px white top highlight — the tactile detail brutalist needs */
+  content: "";
+  position: absolute; inset: 0 0 auto 0; height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    hsl(0 0% 100% / 0.15) 20%,
+    hsl(0 0% 100% / 0.15) 80%,
+    transparent 100%);
+  pointer-events: none;
+}
+.sk-bento-cell:hover {
+  border-color: hsl(0 0% 100% / 0.28);
+  transform: translateY(-2px);
+}
+
+@media (min-width: 768px) {
+  .sk-bento { grid-template-columns: repeat(4, 1fr); }
+  .sk-bento-cell--xl    { grid-column: span 2; grid-row: span 2; }
+  .sk-bento-cell--md-r1 { grid-column: span 2; }
+  .sk-bento-cell--md-r2 { grid-column: span 2; }
+  .sk-bento-cell--sm    { grid-column: span 1; }
+}
+@media (min-width: 1024px) {
+  .sk-bento { grid-auto-rows: minmax(140px, auto); }
+}
+
 /* ═══ MARKETING HERO — survives Tailwind purge by living in CSS ═══ */
 .sk-hero {
   position: relative;

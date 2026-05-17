@@ -117,9 +117,26 @@
   --sk-transition-fast:  60ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --sk-transition-slow: 180ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
-  /* ═══ MOTION EASING — for premium primitives ═══ */
+  /* ═══ MOTION EASING — used by every interactive component ═══
+     Names map to *feel*, not duration:
+       spring  — overshoot bounce; for press-and-release feedback
+       glide   — silky exponential ease-out; for entrances + reveals
+       snap    — sharp linear-feeling; for clicks/state toggles
+       lift    — slow ease-in-out; for lifting cards on hover
+       drift   — gentle ease-out; for parallax & long ambient moves */
   --sk-motion-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --sk-motion-glide:  cubic-bezier(0.16, 1, 0.3, 1);
+  --sk-motion-snap:   cubic-bezier(0.4, 0, 0.2, 1);
+  --sk-motion-lift:   cubic-bezier(0.32, 0.72, 0, 1);
+  --sk-motion-drift:  cubic-bezier(0.25, 0.8, 0.25, 1);
+
+  /* Durations — explicit because lots of components reach for the same
+     few values. Keep the set small. */
+  --sk-dur-instant:  80ms;
+  --sk-dur-quick:   140ms;
+  --sk-dur-base:    220ms;
+  --sk-dur-slow:    380ms;
+  --sk-dur-grand:   620ms;
 
   /* ═══ Z-INDEX ═══ */
   --sk-z-dropdown: 50;

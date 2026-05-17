@@ -4,7 +4,7 @@ import { CodePreview } from "@/components/CodePreview";
 
 const STATS = [
   { value: "32", label: "Components" },
-  { value: "7", label: "Themes" },
+  { value: "11", label: "Themes" },
   { value: "0", label: "Dependencies" },
   { value: "AI", label: "Native" },
 ] as const;
@@ -86,7 +86,7 @@ export default function HomePage() {
             Build AI interfaces that mean it.
           </p>
           <p className="text-lg text-white/50 max-w-xl mx-auto mb-16 leading-relaxed">
-            32 components. 7 themes. Zero dependencies.
+            32 components. 11 themes. Zero dependencies.
             <br />
             Every surface a canvas for ASCII texture.
           </p>

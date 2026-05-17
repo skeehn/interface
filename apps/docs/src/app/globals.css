@@ -12,6 +12,10 @@
 @import "../../../../themes/print.css";
 @import "../../../../themes/grain.css";
 @import "../../../../themes/mardi-gras.css";
+@import "../../../../themes/phosphor.css";
+@import "../../../../themes/amber.css";
+@import "../../../../themes/risograph.css";
+@import "../../../../themes/newsprint.css";
 
 /* ═══ COMPONENT CSS ═══ */
 @import "../../../../components/button/button.css";

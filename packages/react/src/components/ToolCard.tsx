@@ -29,11 +29,24 @@ export const ToolCard = React.forwardRef<HTMLDivElement, ToolCardProps>(
       success: 'success',
       error: 'error',
     };
+    // Mirror tool-card status onto the canonical data-state so the
+    // shared CSS hooks (loading shimmer, error border) just work.
+    const dataState =
+      status === 'running'
+        ? 'loading'
+        : status === 'error'
+          ? 'error'
+          : status === 'success'
+            ? 'success'
+            : undefined;
     return (
       <div
         ref={ref}
         className={`sk-tool-card${className ? ` ${className}` : ''}`}
         data-status={status}
+        data-state={dataState}
+        aria-busy={status === 'running' || undefined}
+        aria-invalid={status === 'error' || undefined}
         {...rest}
       >
         <div className="sk-tool-card__header">

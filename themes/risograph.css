@@ -1,0 +1,52 @@
+/*
+ * skeehn — Risograph Theme
+ * ------------------------
+ * Two-ink risograph print look: warm paper background, single magenta
+ * primary used in long, flat fills. Halftone (dots) dither as the
+ * default texture — feels printed, not rendered.
+ */
+
+:root[data-theme="risograph"] {
+  /* ═══ COLORS ═══ */
+  --sk-background:         42 30% 94%;     /* warm paper */
+  --sk-foreground:        320 65% 28%;     /* magenta ink */
+  --sk-surface:            42 25% 90%;
+  --sk-primary:           320 75% 50%;
+  --sk-primary-fg:         42 30% 96%;
+  --sk-secondary:          42 20% 86%;
+  --sk-secondary-fg:      320 65% 28%;
+  --sk-muted:              42 18% 84%;
+  --sk-muted-foreground:  320 35% 45%;
+  --sk-accent:            210 60% 50%;     /* riso blue second ink */
+  --sk-accent-foreground:  42 30% 96%;
+  --sk-border-color:      320 50% 70%;
+  --sk-ring:              320 75% 50%;
+  --sk-success:           140 55% 40%;
+  --sk-warning:            38 90% 50%;
+  --sk-info:              210 60% 50%;
+  --sk-destructive:        12 85% 50%;
+
+  /* ═══ DITHER ═══ */
+  --sk-dither-pattern: var(--sk-dither-dots);
+  --sk-dither-size:    8px 8px;
+  --sk-dither-opacity: 0.18;
+  --sk-glow-color:    320 75% 50%;
+}
+
+/* Halftone grain over the whole surface — distinctive riso fingerprint. */
+:root[data-theme="risograph"] body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: var(--sk-dither-dots);
+  background-size: 6px 6px;
+  background-repeat: repeat;
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 9998;
+  mix-blend-mode: multiply;
+}
+
+@media print {
+  :root[data-theme="risograph"] body::before { display: none; }
+}

@@ -11,6 +11,10 @@ export type {
   SkeehnThemePreference,
 } from './ThemeProvider';
 
+// Shared types (canonical data-state convention)
+export { skStateAttrs } from './types';
+export type { SkState } from './types';
+
 // Core components
 export { Button } from './components/Button';
 export type { ButtonProps, ButtonVariant, ButtonSize } from './components/Button';

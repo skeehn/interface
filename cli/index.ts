@@ -24,7 +24,19 @@ const COMPONENTS = join(ROOT, "components");
 const REACT_COMPONENTS = join(ROOT, "packages", "react", "src", "components");
 const REGISTRY_PATH = join(ROOT, "registry.json");
 
-const ALL_THEMES = ["default", "dark", "brutal", "terminal", "print", "grain", "mardi-gras"];
+const ALL_THEMES = [
+  "default",
+  "dark",
+  "brutal",
+  "terminal",
+  "print",
+  "grain",
+  "mardi-gras",
+  "phosphor",
+  "amber",
+  "risograph",
+  "newsprint",
+];
 
 // ─── Logging ───────────────────────────────────────────────
 const log = (m: string) => console.log(`  ${m}`);

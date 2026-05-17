@@ -1,0 +1,50 @@
+/*
+ * skeehn — Newsprint Theme
+ * ------------------------
+ * Warm cream paper, black ink, halftone shadows. Inspired by mid-century
+ * newspaper print. Pair with serif-leaning content; the variable fonts
+ * stay system mono so headlines stay sharp.
+ */
+
+:root[data-theme="newsprint"] {
+  /* ═══ COLORS ═══ */
+  --sk-background:         42 35% 92%;
+  --sk-foreground:         24 18% 12%;
+  --sk-surface:            42 28% 88%;
+  --sk-primary:            24 22% 18%;
+  --sk-primary-fg:         42 30% 95%;
+  --sk-secondary:          42 20% 82%;
+  --sk-secondary-fg:       24 18% 12%;
+  --sk-muted:              42 18% 80%;
+  --sk-muted-foreground:   24 12% 38%;
+  --sk-accent:             18 75% 48%;     /* warm red accent */
+  --sk-accent-foreground:  42 30% 95%;
+  --sk-border-color:       24 16% 55%;
+  --sk-ring:               18 75% 48%;
+  --sk-success:           140 50% 35%;
+  --sk-warning:            38 90% 45%;
+  --sk-info:              210 50% 40%;
+  --sk-destructive:        12 80% 45%;
+
+  /* ═══ DITHER — halftone dots like newspaper photo plates ═══ */
+  --sk-dither-pattern: var(--sk-dither-dots);
+  --sk-dither-size:    6px 6px;
+  --sk-dither-opacity: 0.20;
+}
+
+/* Subtle paper grain on body — feels like uncoated stock. */
+:root[data-theme="newsprint"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: var(--sk-dither-grain);
+  background-size: 200px 200px;
+  opacity: 0.06;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: multiply;
+}
+
+@media print {
+  :root[data-theme="newsprint"] body::after { display: none; }
+}

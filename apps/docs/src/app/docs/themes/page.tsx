@@ -87,6 +87,46 @@ const THEMES: ThemeInfo[] = [
     bgPreview: '#1a0a2e',
     fgPreview: '#fbbf24',
   },
+  {
+    name: 'phosphor',
+    label: 'Phosphor',
+    description:
+      'Daylight-readable green-CRT lineage. Perceptually tuned lightness ramps for the chromatic palette.',
+    signature: 'Green phosphor primary, dimmer scanline texture',
+    accent: '#33d166',
+    bgPreview: '#0a1d10',
+    fgPreview: '#cae8c9',
+  },
+  {
+    name: 'amber',
+    label: 'Amber',
+    description:
+      'Amber-CRT lineage. Warm, lower contrast than phosphor; pairs well with mono content.',
+    signature: 'Amber primary, low-contrast warm surfaces',
+    accent: '#f0aa3d',
+    bgPreview: '#1c0e05',
+    fgPreview: '#f1cd9a',
+  },
+  {
+    name: 'risograph',
+    label: 'Risograph',
+    description:
+      'Two-ink riso print look. Warm paper, magenta primary, halftone dots as the default dither.',
+    signature: 'Paper surface, magenta ink, halftone grain',
+    accent: '#cf3ba1',
+    bgPreview: '#f0e9da',
+    fgPreview: '#7a2563',
+  },
+  {
+    name: 'newsprint',
+    label: 'Newsprint',
+    description:
+      'Mid-century newspaper feel — cream paper, black ink, halftone shadows, warm red accent.',
+    signature: 'Cream paper, halftone photo plates',
+    accent: '#cf4b1f',
+    bgPreview: '#ece3d0',
+    fgPreview: '#1f1a14',
+  },
 ];
 
 /* ═══════════════════════════════════════════════════════════════

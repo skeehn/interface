@@ -1,13 +1,14 @@
 import React from 'react';
+import { type SkState } from '../types';
 
-/** Validation state for the Input. */
-export type InputState = 'error';
+/** Validation / lifecycle state for the Input (canonical state union). */
+export type InputState = SkState;
 
 /** Props for the {@link Input} component. */
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   /** Apply a dither pattern on focus. */
   dither?: boolean;
-  /** Validation state. */
+  /** Validation / lifecycle state. */
   state?: InputState;
   /** Additional CSS class names. */
   className?: string;
@@ -18,12 +19,15 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
  * Renders an `<input>` with the `sk-input` class.
  */
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ dither, state, className, ...rest }, ref) => (
+  ({ dither, state, className, disabled, ...rest }, ref) => (
     <input
       ref={ref}
       className={`sk-input${className ? ` ${className}` : ''}`}
       data-dither={dither ? '' : undefined}
       data-state={state}
+      aria-busy={state === 'loading' || undefined}
+      aria-invalid={state === 'error' || undefined}
+      disabled={disabled || state === 'disabled'}
       {...rest}
     />
   ),

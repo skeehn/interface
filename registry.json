@@ -4,7 +4,7 @@
   "description": "ASCII as native rendering. The dither UI system.",
   "homepage": "https://skeehn.dev",
   "license": "MIT",
-  "themes": ["default", "dark", "brutal", "terminal", "print", "grain", "mardi-gras"],
+  "themes": ["default", "dark", "brutal", "terminal", "print", "grain", "mardi-gras", "phosphor", "amber", "risograph", "newsprint"],
   "components": [
     { "name": "button", "description": "Interactive button with ASCII dither", "files": ["button.css"], "category": "core" },
     { "name": "card", "description": "Elevated container with dither surface", "files": ["card.css"], "category": "core" },

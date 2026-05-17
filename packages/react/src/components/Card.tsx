@@ -1,4 +1,5 @@
 import React from 'react';
+import { type SkState, skStateAttrs } from '../types';
 
 /** Visual variant for the Card. */
 export type CardVariant =
@@ -15,6 +16,8 @@ export type CardVariant =
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Visual variant of the card surface. */
   variant?: CardVariant;
+  /** Lifecycle / interaction state — drives data-state and ARIA. */
+  state?: SkState;
   /** Additional CSS class names. */
   className?: string;
   children?: React.ReactNode;
@@ -25,11 +28,12 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
  * Renders a `<div>` with the `sk-card` class.
  */
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ variant, className, children, ...rest }, ref) => (
+  ({ variant, state, className, children, ...rest }, ref) => (
     <div
       ref={ref}
       className={`sk-card${className ? ` ${className}` : ''}`}
       data-variant={variant}
+      {...skStateAttrs(state)}
       {...rest}
     >
       {children}

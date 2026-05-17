@@ -1,0 +1,41 @@
+/*
+ * skeehn — Amber Theme
+ * --------------------
+ * Amber-CRT lineage. Warm, lower contrast than phosphor.
+ * Tuned so the warm hue doesn't crush form contrast.
+ */
+
+:root[data-theme="amber"] {
+  /* ═══ COLORS ═══ */
+  --sk-background:         28 80% 6%;
+  --sk-foreground:         38 95% 78%;
+  --sk-surface:            28 70% 9%;
+  --sk-primary:            38 95% 60%;
+  --sk-primary-fg:         28 90% 8%;
+  --sk-secondary:          28 50% 13%;
+  --sk-secondary-fg:       38 95% 78%;
+  --sk-muted:              28 40% 14%;
+  --sk-muted-foreground:   34 50% 52%;
+  --sk-accent:             32 70% 20%;
+  --sk-accent-foreground:  38 95% 88%;
+  --sk-border-color:       28 40% 22%;
+  --sk-ring:               38 95% 60%;
+  --sk-success:           140 70% 55%;
+  --sk-warning:            48 95% 60%;
+  --sk-info:              200 75% 60%;
+  --sk-destructive:        12 80% 58%;
+
+  /* ═══ DITHER ═══ */
+  --sk-dither-pattern: var(--sk-dither-b6);
+  --sk-dither-opacity: 0.09;
+  --sk-glow-color:      38 95% 60%;
+
+  /* ═══ TYPOGRAPHY ═══ */
+  --sk-font-sans: var(--sk-font-mono);
+}
+
+:root[data-theme="amber"] :focus-visible {
+  outline-color: hsl(var(--sk-ring));
+  outline-offset: 2px;
+  box-shadow: 0 0 12px hsl(38 95% 60% / 0.25);
+}

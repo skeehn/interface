@@ -1,4 +1,5 @@
 import React from 'react';
+import { type SkState, skStateAttrs } from '../types';
 
 /** Semantic type for the Alert. */
 export type AlertType = 'info' | 'success' | 'warning' | 'destructive';
@@ -13,6 +14,8 @@ export interface AlertProps extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;
   /** Alert description. */
   description?: string;
+  /** Lifecycle state \u2014 alerts that act on async work can render with loading. */
+  state?: SkState;
   /** Additional CSS class names. */
   className?: string;
   children?: React.ReactNode;
@@ -23,7 +26,7 @@ export interface AlertProps extends React.HTMLAttributes<HTMLDivElement> {
  * Renders a `<div>` with the `sk-alert` class.
  */
 export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
-  ({ type, icon, title, description, className, children, ...rest }, ref) => {
+  ({ type, icon, title, description, state, className, children, ...rest }, ref) => {
     const defaultIcons: Record<AlertType, string> = {
       info: 'i',
       success: '\u2713',
@@ -35,6 +38,8 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
         ref={ref}
         className={`sk-alert${className ? ` ${className}` : ''}`}
         data-type={type}
+        role={type === 'destructive' || type === 'warning' ? 'alert' : 'status'}
+        {...skStateAttrs(state)}
         {...rest}
       >
         {(icon || type) && (

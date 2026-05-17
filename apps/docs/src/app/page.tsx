@@ -2,58 +2,71 @@ import Link from "next/link";
 import DitherCanvas from "@/components/DitherCanvas";
 import { CodePreview } from "@/components/CodePreview";
 
-const STATS = [
-  { value: "32", label: "Components" },
-  { value: "11", label: "Themes" },
-  { value: "0", label: "Dependencies" },
-  { value: "AI", label: "Native" },
-] as const;
+/* ───────────────────────────────────────────────────────────────────
+ * skeehn marketing home — editorial brutalist
+ *
+ * Reference bar: rauno.se, vercel.com/design, paco.me
+ * Rules followed:
+ *  - One dither moment (a single 480px square on the right of the hero)
+ *  - Massive type anchored on the grid, never centered for vanity
+ *  - Hairline 1px borders, zero shadows / glows
+ *  - 8px rhythm (Tailwind defaults already match this)
+ *  - 10px uppercase meta labels carry all the secondary info
+ * ─────────────────────────────────────────────────────────────────── */
 
-const FEATURES = [
+const META_LABEL =
+  "font-mono text-[10px] uppercase tracking-[0.22em] text-white/45";
+
+const SECTIONS = [
   {
-    title: "ASCII Dither Engine",
-    description:
-      "Real-time Bayer, Floyd-Steinberg, and Atkinson dithering on images, video, and backgrounds.",
-    icon: "\u2591\u2592\u2593",
+    n: "01",
+    title: "Engine",
+    body: "GPU dithering on the entire viewport, on cards, on images, on video. Bayer · Floyd-Steinberg · Atkinson · Blue-noise · Halftone · Crosshatch. One drop-in component.",
   },
   {
-    title: "AI Chat Components",
-    description:
-      "14 purpose-built components for chat interfaces, streaming, reasoning traces, and tool calls.",
-    icon: ">>>",
+    n: "02",
+    title: "Components",
+    body: "32 primitives, 14 of them AI-shaped: ChatBubble, ChatInput, ThinkingBlock, ToolCard, StreamingText, CodeBlock, AgentStatus, VoiceSession. Built for chat surfaces from day one.",
   },
   {
-    title: "Copy-Paste Ownership",
-    description:
-      "Like shadcn \u2014 CLI copies source into your project. You own every line.",
-    icon: "cp/",
+    n: "03",
+    title: "Themes",
+    body: "11 presets — default, dark, brutal, terminal, print, grain, mardi-gras, phosphor, amber, risograph, newsprint. Switch via a single data attribute. Authored in OKLCH where it matters.",
   },
   {
-    title: "CRT / Retro Effects",
-    description:
-      "Scanlines, phosphor glow, flicker, terminal themes. Not decoration \u2014 identity.",
-    icon: "CRT",
+    n: "04",
+    title: "Ownership",
+    body: "Like shadcn: the CLI copies source into your project. No runtime dependency on skeehn. You read every line, you change every line.",
   },
 ] as const;
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col min-h-dvh bg-black text-white">
+    <div className="flex flex-col min-h-dvh bg-black text-white selection:bg-white selection:text-black">
       {/* ═══ NAV ═══ */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 h-14 border-b border-white/10 bg-black/80 backdrop-blur-md">
-        <Link href="/" className="text-sm font-mono font-medium tracking-wide">
-          <span className="text-white/40 mr-1">&gt;</span>
+      <nav className="fixed top-0 inset-x-0 z-50 flex items-center justify-between px-6 lg:px-10 h-14 border-b border-white/10 bg-black/85 backdrop-blur-md">
+        <Link
+          href="/"
+          className="font-mono text-sm font-medium tracking-tight flex items-center gap-2"
+        >
+          <span className="text-white/35">›</span>
           skeehn
         </Link>
-        <div className="flex items-center gap-6 text-xs text-white/50 font-mono">
+        <div className="flex items-center gap-6 font-mono text-[11px] uppercase tracking-[0.18em] text-white/40">
           <Link href="/docs" className="hover:text-white transition-colors">
             Docs
           </Link>
           <Link
-            href="/docs/components"
+            href="/docs/components/button"
             className="hover:text-white transition-colors"
           >
             Components
+          </Link>
+          <Link
+            href="/docs/themes"
+            className="hover:text-white transition-colors"
+          >
+            Themes
           </Link>
           <a
             href="https://github.com/skeehn/skeehn"
@@ -67,159 +80,183 @@ export default function HomePage() {
       </nav>
 
       {/* ═══ HERO ═══ */}
-      <section className="relative flex items-center justify-center min-h-screen overflow-hidden">
-        <DitherCanvas />
+      <section className="sk-hero">
+        {/* Top meta strip */}
+        <div className="flex items-baseline justify-between mb-10 lg:mb-16">
+          <span className={META_LABEL}>v1.0 · 2026.05</span>
+          <span className={`${META_LABEL} hidden md:inline`}>
+            32 components · 11 themes · 0 deps
+          </span>
+        </div>
 
-        {/* Content overlay */}
-        <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-4xl mx-auto">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 mb-10 border border-white/10 bg-white/5 backdrop-blur-sm text-xs font-mono text-white/70">
-            <span className="inline-block w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
-            v1.0 &mdash; Now available
-          </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+          {/* Left: monumental wordmark + tagline + CTAs */}
+          <div className="lg:col-span-7 min-w-0 flex flex-col gap-10 lg:gap-14">
+            <div className="min-w-0">
+              <h1 className="sk-hero-mark font-mono font-medium text-white">
+                skeehn
+              </h1>
+              <p className="mt-6 max-w-xl font-sans text-xl md:text-2xl lg:text-3xl text-white/85 leading-[1.2] tracking-tight">
+                Build AI interfaces that mean it.
+                <br />
+                <span className="text-white/45">
+                  Dither engine, 32 components, every theme yours.
+                </span>
+              </p>
+            </div>
 
-          {/* Title */}
-          <h1 className="text-7xl md:text-8xl font-mono font-bold tracking-tighter text-white leading-none mb-6">
-            skeehn
-          </h1>
-          <p className="text-3xl md:text-4xl font-mono font-light text-white/90 mb-4 leading-tight">
-            Build AI interfaces that mean it.
-          </p>
-          <p className="text-lg text-white/50 max-w-xl mx-auto mb-16 leading-relaxed">
-            32 components. 11 themes. Zero dependencies.
-            <br />
-            Every surface a canvas for ASCII texture.
-          </p>
-
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-center gap-4 mb-20">
-            <Link
-              href="/docs/getting-started"
-              className="inline-flex items-center justify-center px-8 py-3 text-sm font-mono font-bold bg-white hover:bg-white/90 transition-colors"
-              style={{ color: '#000' }}
-            >
-              Get Started &rarr;
-            </Link>
-            <Link
-              href="/docs/components"
-              className="inline-flex items-center justify-center px-8 py-3 text-sm font-mono font-medium border border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all"
-            >
-              Browse Components
-            </Link>
-            <a
-              href="https://github.com/skeehn/skeehn"
-              className="inline-flex items-center justify-center px-6 py-3 text-sm font-mono text-white/50 hover:text-white hover:underline underline-offset-4 transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              GitHub
-            </a>
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full max-w-2xl">
-            {STATS.map((stat) => (
-              <div
-                key={stat.label}
-                className="flex flex-col items-center justify-center p-6 border border-white/10 bg-white/5 backdrop-blur-sm"
+            <div className="flex flex-wrap items-center gap-3">
+              <Link
+                href="/docs/getting-started"
+                className="group inline-flex items-center gap-3 h-11 px-5 font-mono text-sm font-medium border border-white transition-colors"
+                style={{ background: "#fff", color: "#000" }}
               >
-                <span className="text-4xl font-bold font-mono text-white mb-2">
-                  {stat.value}
+                <span>Get started</span>
+                <span aria-hidden className="transition-transform group-hover:translate-x-1">
+                  →
                 </span>
-                <span className="text-xs uppercase tracking-widest text-white/50">
-                  {stat.label}
-                </span>
+              </Link>
+              <Link
+                href="/docs/components/button"
+                className="inline-flex items-center h-11 px-5 border border-white/20 hover:border-white text-white font-mono text-sm transition-colors"
+              >
+                Browse components
+              </Link>
+              <a
+                href="https://github.com/skeehn/skeehn"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center h-11 px-3 text-white/55 hover:text-white font-mono text-sm transition-colors"
+              >
+                GitHub →
+              </a>
+            </div>
+          </div>
+
+          {/* Right: single dither moment, framed with whitespace */}
+          <div className="lg:col-span-5 lg:pl-8">
+            <div className="border border-white/15">
+              <div className="relative aspect-square overflow-hidden bg-black">
+                <DitherCanvas />
+                {/* Bottom-left caption inside the frame */}
+                <div className="absolute inset-0 flex items-end justify-start p-5">
+                  <div className="flex flex-col gap-1">
+                    <span className={META_LABEL}>Fig.01 — Bayer 4×4</span>
+                    <span className="font-mono text-sm text-white">
+                      Every surface, a canvas.
+                    </span>
+                  </div>
+                </div>
               </div>
-            ))}
+              {/* Frame footer — gives it printed/specimen feel */}
+              <div className="flex items-center justify-between px-5 py-3 border-t border-white/15">
+                <span className={META_LABEL}>DitherWebGL · 60fps</span>
+                <Link
+                  href="/docs/engine/dither-overlay"
+                  className="font-mono text-[11px] text-white/65 hover:text-white"
+                >
+                  open playground →
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Bottom fade */}
-        <div
-          className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-black to-transparent z-10"
-          aria-hidden="true"
-        />
+        {/* Bottom marginalia */}
+        <div className="mt-16 lg:mt-20 flex items-baseline justify-between border-t border-white/10 pt-5">
+          <span className={META_LABEL}>Scroll for sections</span>
+          <span className={META_LABEL}>↓ 01–04</span>
+        </div>
       </section>
 
-      {/* ═══ FEATURES ═══ */}
-      <section className="relative py-32 md:py-40 px-6 bg-black">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-20">
-            <p className="text-xs uppercase tracking-[0.3em] text-white/40 mb-4">
-              Capabilities
-            </p>
-            <h2 className="text-4xl md:text-5xl font-mono font-bold text-white">
-              Every pixel deliberate
+      {/* ═══ NUMBERED SECTIONS — editorial intro ═══ */}
+      <section className="px-6 lg:px-10 py-24 lg:py-40 border-t border-white/10">
+        <div className="grid grid-cols-12 gap-8 lg:gap-12">
+          <div className="col-span-12 lg:col-span-4">
+            <span className={META_LABEL}>What it is</span>
+            <h2 className="mt-3 font-mono font-medium text-5xl md:text-6xl text-white leading-[0.95] tracking-tight">
+              A library
+              <br />
+              that owns
+              <br />
+              its surface.
             </h2>
           </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {FEATURES.map((feature) => (
-              <div
-                key={feature.title}
-                className="flex flex-col p-8 border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all group"
-              >
-                <span className="text-lg font-mono text-white/30 mb-4 group-hover:text-white/60 transition-colors">
-                  {feature.icon}
-                </span>
-                <h3 className="text-base font-mono font-medium text-white mb-2">
-                  {feature.title}
+          <ol className="col-span-12 lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-12">
+            {SECTIONS.map((s) => (
+              <li key={s.n} className="flex flex-col gap-3">
+                <span className={`${META_LABEL}`}>{s.n}</span>
+                <h3 className="font-mono font-medium text-xl text-white">
+                  {s.title}
                 </h3>
-                <p className="text-sm text-white/50 leading-relaxed">
-                  {feature.description}
+                <p className="text-[15px] text-white/65 leading-relaxed">
+                  {s.body}
                 </p>
-              </div>
+              </li>
             ))}
-          </div>
+          </ol>
         </div>
       </section>
 
-      {/* ═══ CODE PREVIEW ═══ */}
-      <section className="py-32 md:py-40 px-6 bg-black">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-16">
-            <p className="text-xs uppercase tracking-[0.3em] text-white/40 mb-4">
-              Developer Experience
-            </p>
-            <h2 className="text-4xl md:text-5xl font-mono font-bold text-white">
-              Ship in minutes
+      {/* ═══ INSTALL / CODE PREVIEW ═══ */}
+      <section className="px-6 lg:px-10 py-24 lg:py-40 border-t border-white/10">
+        <div className="grid grid-cols-12 gap-8 lg:gap-12 items-start">
+          <div className="col-span-12 lg:col-span-5">
+            <span className={META_LABEL}>Install</span>
+            <h2 className="mt-3 font-mono font-medium text-5xl md:text-6xl text-white leading-[0.95] tracking-tight">
+              One line.
+              <br />
+              You own
+              <br />
+              the source.
             </h2>
-            <p className="text-sm text-white/40 mt-4 max-w-md mx-auto leading-relaxed">
-              Import the component. Wire up the hook. Done.
+            <p className="mt-6 text-[15px] text-white/65 leading-relaxed max-w-md">
+              The CLI copies the component into your project. No runtime
+              package. Edit the source. Delete what you don&apos;t use.
             </p>
+            <div className="mt-8 inline-flex items-center gap-3 border border-white/20 px-4 py-3 font-mono text-sm">
+              <span className="text-white/45">$</span>
+              <span className="text-white">npx skeehn add chat-bubble</span>
+            </div>
           </div>
-
-          <CodePreview />
+          <div className="col-span-12 lg:col-span-7">
+            <CodePreview />
+          </div>
         </div>
       </section>
 
       {/* ═══ FOOTER ═══ */}
-      <footer className="py-16 px-6 border-t border-white/10 bg-black">
-        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-white/40">
-          <p>
-            Built by{" "}
-            <span className="text-white font-mono font-medium">skeehn</span>.
-            MIT License.
-          </p>
-          <div className="flex items-center gap-6 font-mono">
+      <footer className="px-6 lg:px-10 py-12 border-t border-white/10">
+        <div className="grid grid-cols-12 gap-8 items-baseline">
+          <div className="col-span-12 md:col-span-6 font-mono text-[12px] text-white/50">
+            <span className="text-white">skeehn</span> · MIT · built by
+            humans &amp; agents
+          </div>
+          <div className="col-span-12 md:col-span-6 flex flex-wrap items-baseline gap-6 md:justify-end font-mono text-[11px] uppercase tracking-[0.18em] text-white/40">
             <a
               href="https://github.com/skeehn/skeehn"
-              className="hover:text-white transition-colors"
               target="_blank"
               rel="noopener noreferrer"
+              className="hover:text-white transition-colors"
             >
               GitHub
             </a>
             <a
               href="https://www.npmjs.com/org/skeehn"
-              className="hover:text-white transition-colors"
               target="_blank"
               rel="noopener noreferrer"
+              className="hover:text-white transition-colors"
             >
               npm
             </a>
             <Link href="/docs" className="hover:text-white transition-colors">
               Docs
+            </Link>
+            <Link
+              href="/docs/themes"
+              className="hover:text-white transition-colors"
+            >
+              Themes
             </Link>
           </div>
         </div>

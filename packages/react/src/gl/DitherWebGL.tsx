@@ -58,6 +58,21 @@ export type DitherSource =
   | HTMLCanvasElement
   | string; // string = image URL (loaded internally)
 
+/**
+ * Mask shape — controls how the dithered surface is faded to transparency at
+ * its edges. Lets the dither sit inside whitespace rather than always being a
+ * full-bleed wall of texture. Default: 'none'.
+ *
+ * - `none`     — solid alpha everywhere (legacy behavior)
+ * - `radial`   — fades from center outward; combine with `maskFade` for the
+ *                width of the falloff (use case: dither blob with soft edges)
+ * - `linear`   — fades along `maskAngle`; useful for "dither at the top, clean
+ *                at the bottom" cards
+ * - `vignette` — opaque in the center, falls off near the rect borders
+ *                (use case: framed photograph feel)
+ */
+export type DitherWebGLMask = 'none' | 'radial' | 'linear' | 'vignette';
+
 export interface DitherWebGLProps {
   /** Algorithm used for thresholding. Default: 'bayer'. */
   algorithm?: DitherWebGLAlgorithm;
@@ -67,6 +82,23 @@ export interface DitherWebGLProps {
   cellSize?: number;
   /** Threshold spread; controls dither contrast. 0..1. Default: 0.5. */
   threshold?: number;
+  /**
+   * Mask shape controlling how alpha fades at the edges. Use to compose dither
+   * with whitespace — e.g. a circular dither blob in the corner of a card,
+   * a top-half-dithered hero, or a vignetted photograph. Default: 'none'.
+   */
+  mask?: DitherWebGLMask;
+  /**
+   * Fade width for radial / vignette / linear masks. 0 = sharp cutoff,
+   * 1 = the entire surface is the falloff. Default: 0.4.
+   */
+  maskFade?: number;
+  /**
+   * Angle (degrees) for the linear mask, measured from the +x axis going
+   * counter-clockwise. 0 = fade L→R, 90 = fade T→B, 180 = fade R→L.
+   * Ignored when `mask !== 'linear'`. Default: 90.
+   */
+  maskAngle?: number;
   /**
    * Color palette used to quantize the dithered luminance. Provide 2–8 colors;
    * pixels are mapped to the nearest entry by luma. Default: ['#000','#fff'].
@@ -155,6 +187,11 @@ uniform int   u_grad_count;
 // Palette (up to 8 entries) sampled into output colors.
 uniform vec4  u_pal[8];
 uniform int   u_pal_count;
+
+// Mask — controls per-pixel alpha to fade the dither into whitespace.
+uniform int   u_mask_kind;   // 0=none 1=radial 2=linear 3=vignette
+uniform float u_mask_fade;   // 0..1 width of falloff
+uniform float u_mask_angle;  // radians, linear only
 
 float luma(vec3 c) { return dot(c, vec3(0.2126, 0.7152, 0.0722)); }
 
@@ -295,7 +332,32 @@ void main() {
   adjusted = clamp(adjusted, 0.0, 1.0);
   vec3 outColor = quantize(adjusted);
 
-  gl_FragColor = vec4(outColor, 1.0);
+  // Mask / alpha
+  // Computed from the centered cell UV. All masks start fully opaque in
+  // the "primary" region and fall off to 0 across a band of width
+  // u_mask_fade (smoothstep falloff).
+  float maskAlpha = 1.0;
+  if (u_mask_kind == 1) {
+    // Radial — opaque at center, transparent at corners.
+    float r = length(cellUV - 0.5) * 1.4142; // 0 at center, 1 at corners
+    float fade = max(u_mask_fade, 1e-3);
+    maskAlpha = 1.0 - smoothstep(1.0 - fade, 1.0, r);
+  } else if (u_mask_kind == 2) {
+    // Linear — fade along u_mask_angle (0=L→R, 90°=T→B).
+    vec2 dir = vec2(cos(u_mask_angle), sin(u_mask_angle));
+    float t = dot(cellUV - 0.5, dir) + 0.5; // 0..1 along the axis
+    float fade = max(u_mask_fade, 1e-3);
+    // Opaque until (1 - fade), then ramps to 0 by 1.
+    maskAlpha = 1.0 - smoothstep(1.0 - fade, 1.0, t);
+  } else if (u_mask_kind == 3) {
+    // Vignette — opaque in the center, falloff near rect edges.
+    vec2 d2 = abs(cellUV - 0.5) * 2.0;  // 0 at center, 1 at edges
+    float edge = max(d2.x, d2.y);
+    float fade = max(u_mask_fade, 1e-3);
+    maskAlpha = 1.0 - smoothstep(1.0 - fade, 1.0, edge);
+  }
+
+  gl_FragColor = vec4(outColor, maskAlpha);
 }
 `;
 
@@ -398,6 +460,9 @@ const UNIFORM_NAMES = [
   'u_pal[5]',
   'u_pal[6]',
   'u_pal[7]',
+  'u_mask_kind',
+  'u_mask_fade',
+  'u_mask_angle',
 ] as const;
 
 type UniformMap = Map<string, WebGLUniformLocation | null>;
@@ -427,6 +492,9 @@ export const DitherWebGL = React.forwardRef<DitherWebGLHandle, DitherWebGLProps>
       animate = false,
       speed = 1,
       pixelRatio = true,
+      mask = 'none',
+      maskFade = 0.4,
+      maskAngle = 90,
       className,
       style,
       children,
@@ -545,6 +613,15 @@ export const DitherWebGL = React.forwardRef<DitherWebGLHandle, DitherWebGLProps>
         const posLoc = gl.getAttribLocation(program, 'a_pos');
         gl.enableVertexAttribArray(posLoc);
         gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+        // Enable alpha blending so the `mask` prop can fade the dither into
+        // transparent edges. With premultipliedAlpha:false, SRC_ALPHA blend
+        // is the correct compositing path against the wrapper background.
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        // Clear color must be transparent or the masked-out area shows
+        // the canvas clear, not the wrapper bg.
+        gl.clearColor(0, 0, 0, 0);
 
         const tex = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -680,6 +757,13 @@ export const DitherWebGL = React.forwardRef<DitherWebGLHandle, DitherWebGLProps>
         gl.uniform4f(loc(`u_pal[${i}]`), c[0], c[1], c[2], c[3]);
       }
 
+      // Mask uniforms — see shader for shape semantics.
+      const maskKind =
+        mask === 'radial' ? 1 : mask === 'linear' ? 2 : mask === 'vignette' ? 3 : 0;
+      gl.uniform1i(loc('u_mask_kind'), maskKind);
+      gl.uniform1f(loc('u_mask_fade'), Math.min(1, Math.max(0, maskFade)));
+      gl.uniform1f(loc('u_mask_angle'), (maskAngle * Math.PI) / 180);
+
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }, [
       algorithm,
@@ -693,6 +777,9 @@ export const DitherWebGL = React.forwardRef<DitherWebGLHandle, DitherWebGLProps>
       speed,
       resolvedSource,
       resize,
+      mask,
+      maskFade,
+      maskAngle,
     ]);
 
     // ---- Animation loop ----------------------------------------------------

@@ -138,3 +138,36 @@ html { scroll-behavior: smooth; }
 .docs-section { margin-bottom: 4rem; }
 .docs-heading { font-family: var(--sk-font-mono); font-weight: 700; letter-spacing: -0.02em; }
 .docs-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2em; opacity: 0.4; }
+
+/* ═══ MARKETING HERO — survives Tailwind purge by living in CSS ═══ */
+.sk-hero {
+  position: relative;
+  min-height: 100vh;
+  padding: 6rem 1.5rem 3rem;
+  display: flex;
+  flex-direction: column;
+}
+@media (min-width: 1024px) {
+  .sk-hero {
+    padding: 8rem 2.5rem 4rem;
+  }
+}
+.sk-hero-mark {
+  font-size: clamp(3rem, 9vw, 7.5rem);
+  line-height: 0.92;
+  letter-spacing: -0.05em;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  hyphens: none;
+}
+
+/* ═══ DOCS SHELL — icon-rail + main grid (lg+) ═══
+   The IconRail's <aside> is position: fixed so it doesn't reserve space.
+   We reserve it explicitly here by giving <main> a left padding equal
+   to the rail width. Pure CSS, survives Tailwind purge. */
+.sk-docs-header { padding-left: 1.5rem; }
+.sk-docs-main   { padding-left: 1.5rem; padding-right: 1.5rem; }
+@media (min-width: 1024px) {
+  .sk-docs-header { padding-left: calc(3.5rem + 1.5rem); }
+  .sk-docs-main   { padding-left: calc(3.5rem + 2rem); padding-right: 2.5rem; }
+}

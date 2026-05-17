@@ -13,6 +13,7 @@ export type {
   DitherWebGLProps,
   DitherWebGLAlgorithm,
   DitherWebGLMatrix,
+  DitherWebGLMask,
   DitherWebGLHandle,
   DitherGradient,
   DitherGradientStop,

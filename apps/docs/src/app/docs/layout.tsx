@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sidebar } from "@/components/docs/Sidebar";
+import { IconRail } from "@/components/docs/IconRail";
 import { Breadcrumb } from "@/components/docs/Breadcrumb";
 
 export default function DocsLayout({
@@ -8,50 +8,49 @@ export default function DocsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col min-h-dvh bg-neutral-950 text-neutral-100">
-      {/* Top bar */}
-      <header className="sticky top-0 z-50 flex items-center justify-between px-6 h-14 border-b border-neutral-800 bg-neutral-950/80 backdrop-blur-md">
+    <div className="flex flex-col min-h-dvh bg-black text-white">
+      <header className="sticky top-0 z-50 flex items-center justify-between h-14 border-b border-white/10 bg-black/85 backdrop-blur-md sk-docs-header">
         <div className="flex items-center gap-4">
-          <Link href="/" className="text-sm font-mono font-medium tracking-wide text-white">
-            <span className="text-neutral-600 mr-1">&gt;</span>
+          <Link
+            href="/"
+            className="font-mono text-sm font-medium tracking-tight text-white flex items-center gap-2"
+          >
+            <span className="text-white/35">›</span>
             skeehn
           </Link>
-          <span className="text-neutral-700 text-xs hidden sm:inline">/</span>
-          <span className="text-xs text-neutral-500 font-mono hidden sm:inline">docs</span>
+          <span className="hidden sm:inline text-white/15 font-mono">/</span>
+          <span className="hidden sm:inline font-mono text-[10px] uppercase tracking-[0.18em] text-white/40">
+            docs
+          </span>
         </div>
-        <div className="flex items-center gap-6 text-xs font-mono text-neutral-500">
+        <div className="flex items-center gap-5 pr-6 font-mono text-[11px] uppercase tracking-[0.15em] text-white/40">
           <Link href="/docs" className="hover:text-white transition-colors">
             Docs
           </Link>
-          <Link
-            href="/docs/components"
-            className="hover:text-white transition-colors"
-          >
+          <Link href="/docs/components/button" className="hover:text-white transition-colors">
             Components
           </Link>
           <a
             href="https://github.com/skeehn/skeehn"
-            className="hover:text-white transition-colors"
             target="_blank"
             rel="noopener noreferrer"
+            className="hover:text-white transition-colors"
           >
             GitHub
           </a>
         </div>
       </header>
 
-      <div className="flex flex-1">
-        {/* Sidebar */}
-        <Sidebar />
-
-        {/* Main content */}
-        <main className="flex-1 min-w-0">
-          <div className="max-w-4xl mx-auto px-8 py-12">
+      <div className="flex-1">
+        <IconRail />
+        <main className="min-w-0 sk-docs-main">
+          <div className="max-w-5xl mx-auto py-12">
             <Breadcrumb />
             <article>{children}</article>
           </div>
         </main>
       </div>
+
     </div>
   );
 }

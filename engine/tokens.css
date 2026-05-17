@@ -27,6 +27,7 @@
   /* ═══ TYPOGRAPHY ═══ */
   --sk-font-sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --sk-font-mono: "Geist Mono", "SF Mono", "JetBrains Mono", "IBM Plex Mono", monospace;
+  --sk-font-size-meta: 0.625rem;    /* 10px — uppercase meta labels (editorial signature) */
   --sk-font-size-xs:   0.6875rem;
   --sk-font-size-sm:   0.8125rem;
   --sk-font-size-base: 0.875rem;
@@ -36,15 +37,22 @@
   --sk-font-size-3xl:  1.75rem;
   --sk-font-size-4xl:  2.25rem;
   --sk-font-size-5xl:  3rem;
-  --sk-line-height:       1.5;
-  --sk-line-height-tight: 1.2;
+  --sk-font-size-6xl:  3.75rem;
+  --sk-font-size-7xl:  4.5rem;
+  --sk-font-size-8xl:  6rem;
+  --sk-font-size-display: clamp(4rem, 12vw, 11rem); /* hero / monumental headlines */
+  --sk-line-height:        1.5;
+  --sk-line-height-tight:  1.1;
+  --sk-line-height-display: 0.92;
   --sk-font-weight-thin:   200;
   --sk-font-weight-light:  300;
   --sk-font-weight-normal: 400;
   --sk-font-weight-medium: 500;
   --sk-font-weight-semi:   600;
-  --sk-letter-spacing-tight: -0.025em;
-  --sk-letter-spacing-wide:   0.06em;
+  --sk-letter-spacing-tight:   -0.025em;
+  --sk-letter-spacing-tighter: -0.05em;  /* display headlines */
+  --sk-letter-spacing-wide:     0.06em;
+  --sk-letter-spacing-meta:     0.12em;  /* 10px uppercase meta labels */
 
   /* ═══ SPACING (8px grid) ═══ */
   --sk-space-1:  0.25rem;

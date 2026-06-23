@@ -219,8 +219,7 @@ const PREVIEWS: Record<string, () => React.ReactNode> = {
     <CodeBlock
       code={`import { Button } from '@skeehn/react';\n\nexport function App() {\n  return (\n    <Button variant="dither">\n      Click me\n    </Button>\n  );\n}`}
       language="tsx"
-      showLineNumbers
-      copyable
+      lineNumbers
     />
   ),
 
@@ -240,28 +239,24 @@ const PREVIEWS: Record<string, () => React.ReactNode> = {
 
   'citation-card': () => (
     <div className="flex flex-col gap-3 max-w-md">
-      <CitationCard title="CSS Dither Patterns" url="https://example.com/dither">
-        An overview of halftone dither techniques using modern CSS.
-      </CitationCard>
-      <CitationCard title="MDN: Gradients" url="https://developer.mozilla.org" variant="compact">
-        Mozilla Developer Network reference.
-      </CitationCard>
+      <CitationCard index={1} source="CSS Dither Patterns" href="https://example.com/dither" snippet="An overview of halftone dither techniques using modern CSS." />
+      <CitationCard index={2} source="MDN: Gradients" href="https://developer.mozilla.org" variant="compact" snippet="Mozilla Developer Network reference." />
     </div>
   ),
 
   accordion: () => (
     <Accordion
       items={[
-        { title: 'What is skeehn?', content: 'An ASCII/dither component library for building AI interfaces.', defaultOpen: true },
-        { title: 'How do I install it?', content: 'Run npx skeehn add <component> to add individual components.' },
-        { title: 'Does it support dark mode?', content: 'Yes, all components support light and dark themes out of the box.' },
+        { value: 'what', label: 'What is skeehn?', content: 'An ASCII/dither component library for building AI interfaces.' },
+        { value: 'install', label: 'How do I install it?', content: 'Run npx skeehn add <component> to add individual components.' },
+        { value: 'dark', label: 'Does it support dark mode?', content: 'Yes, all components support light and dark themes out of the box.' },
       ]}
     />
   ),
 
   tabs: () => (
     <Tabs
-      items={[
+      tabs={[
         { label: 'Preview', value: 'preview', content: <p>Live preview of the component appears here.</p> },
         { label: 'Code', value: 'code', content: <pre className="text-sm font-mono">{'<Button variant="dither">Click</Button>'}</pre> },
         { label: 'API', value: 'api', content: <p>Props table and usage docs.</p> },
@@ -272,10 +267,10 @@ const PREVIEWS: Record<string, () => React.ReactNode> = {
 
   tooltip: () => (
     <div className="flex gap-6 items-center py-8">
-      <Tooltip content="Top tooltip">
+      <Tooltip text="Top tooltip">
         <Button variant="outline">Hover me (top)</Button>
       </Tooltip>
-      <Tooltip content="Bottom tooltip" position="bottom">
+      <Tooltip text="Bottom tooltip">
         <Button variant="outline">Hover me (bottom)</Button>
       </Tooltip>
     </div>
@@ -294,11 +289,9 @@ const PREVIEWS: Record<string, () => React.ReactNode> = {
 
   'streaming-text': () => (
     <div className="max-w-lg">
-      <StreamingText
-        text="This text streams in character by character, simulating real-time AI output with a typewriter effect."
-        effect="typewriter"
-        speed={40}
-      />
+      <StreamingText effect="scanline">
+        This text streams in character by character, simulating real-time AI output with a scanline effect.
+      </StreamingText>
     </div>
   ),
 
@@ -338,12 +331,12 @@ $ npx skeehn add card
 
   layout: () => (
     <div className="flex flex-col gap-4">
-      <Grid cols={3}>
+      <Grid cols="3">
         <GridCell><div className="p-4 border border-neutral-800 text-center text-sm">1</div></GridCell>
         <GridCell><div className="p-4 border border-neutral-800 text-center text-sm">2</div></GridCell>
         <GridCell><div className="p-4 border border-neutral-800 text-center text-sm">3</div></GridCell>
       </Grid>
-      <Stack direction="row" gap="sm">
+      <Stack direction="horizontal" gap="sm">
         <div className="p-3 border border-neutral-800 text-sm">Stack item</div>
         <div className="p-3 border border-neutral-800 text-sm">Stack item</div>
         <div className="p-3 border border-neutral-800 text-sm">Stack item</div>
@@ -369,7 +362,7 @@ $ npx skeehn add card
   motion: () => (
     <div className="flex gap-6 items-center">
       <DitherPulse effect="pulse" style={{ width: 80, height: 80 }} />
-      <Glitch intensity="medium">
+      <Glitch intensity="subtle">
         <span className="text-lg font-mono">GLITCH</span>
       </Glitch>
     </div>

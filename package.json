@@ -6,16 +6,16 @@
     "skeehn": "./cli/index.ts"
   },
   "scripts": {
-    "dev": "bun run demo/server.ts",
-    "demo": "bun run demo/server.ts",
-    "registry": "cd apps/registry-api && bun run index.ts",
+    "dev": "cd apps/docs && bun run dev",
+    "docs": "cd apps/docs && bun run dev",
     "test": "bun test",
     "build": "bun run build:core && bun run build:react",
-    "build:core": "bun run packages/core/build.ts",
+    "build:core": "cd packages/core && bun run build",
     "build:react": "cd packages/react && bun run build",
-    "build:all": "bun run build && bun run packages/api/package.json#build && bun run packages/mcp-server/package.json#build"
+    "build:all": "bun run build && bun run packages/mcp-server/package.json#build"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "tsdown": "^0.22.3"
   }
 }

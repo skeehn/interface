@@ -7,3 +7,4 @@ dist/
 .direnv/
 .env
 *.tsbuildinfo
+*.tgz

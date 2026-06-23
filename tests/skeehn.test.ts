@@ -27,7 +27,7 @@ describe("dither engine", () => {
   });
   test("animations", () => {
     const c = readFileSync(join(ROOT, "engine/dither.css"), "utf-8");
-    for (const a of ["sk-dither-pulse","sk-dither-morph","sk-dither-scan","sk-ascii-blink"])
+    for (const a of ["sk-pulse-dither","sk-morph-dither","sk-scan-down","sk-blink-block"])
       expect(c).toContain(`@keyframes ${a}`);
   });
 });
@@ -68,7 +68,7 @@ describe("tokens", () => {
     expect(c).toContain("--sk-border-width");
   });
   test("default radius is square", () => {
-    expect(readFileSync(join(ROOT, "engine/tokens.css"), "utf-8")).toContain("--sk-radius: 0;");
+    expect(readFileSync(join(ROOT, "engine/tokens.css"), "utf-8")).toMatch(/--sk-radius:\s+0px;/);
   });
 });
 
@@ -87,10 +87,10 @@ describe("themes", () => {
 
 describe("components", () => {
   const reg = JSON.parse(readFileSync(join(ROOT, "registry.json"), "utf-8"));
-  test("29 components (14 core + 12 AI + 3 layout/dataviz/motion)", () => {
-    expect(reg.components.length).toBe(29);
+  test("32 components (14 core + 15 AI + 3 layout/dataviz/motion)", () => {
+    expect(reg.components.length).toBe(32);
     expect(reg.components.filter((c: any) => c.category === "core").length).toBe(14);
-    expect(reg.components.filter((c: any) => c.category === "ai").length).toBe(12);
+    expect(reg.components.filter((c: any) => c.category === "ai").length).toBe(15);
     expect(reg.components.filter((c: any) => c.category === "layout").length).toBe(1);
     expect(reg.components.filter((c: any) => c.category === "dataviz").length).toBe(1);
     expect(reg.components.filter((c: any) => c.category === "motion").length).toBe(1);
@@ -106,27 +106,6 @@ describe("components", () => {
   }
 });
 
-describe("demo", () => {
-  test("index.html exists", () => expect(existsSync(join(ROOT, "demo/index.html"))).toBe(true));
-  test("loads all CSS", () => {
-    const h = readFileSync(join(ROOT, "demo/index.html"), "utf-8");
-    for (const c of ["button","card","input","badge","alert","dialog","tabs","toggle","progress","avatar","tooltip","dropdown","table","accordion"])
-      expect(h).toContain(`${c}.css`);
-  });
-  test("live controls", () => {
-    const h = readFileSync(join(ROOT, "demo/index.html"), "utf-8");
-    expect(h).toContain('id="tp"');
-    expect(h).toContain('id="pp"');
-    expect(h).toContain('id="dp"');
-  });
-  test("ASCII art demo", () => {
-    const h = readFileSync(join(ROOT, "demo/index.html"), "utf-8");
-    expect(h).toContain("img-upload");
-    expect(h).toContain("text-input");
-    expect(h).toContain("ascii-out");
-  });
-});
-
 describe("CLI", () => {
   test("init command exists", () => {
     const c = readFileSync(join(ROOT, "cli/index.ts"), "utf-8");
@@ -140,21 +119,9 @@ describe("CLI", () => {
     const c = readFileSync(join(ROOT, "cli/index.ts"), "utf-8");
     expect(c).toContain("async function theme");
   });
-  test("density command exists", () => {
+  test("doctor command exists", () => {
     const c = readFileSync(join(ROOT, "cli/index.ts"), "utf-8");
-    expect(c).toContain("async function density");
-  });
-  test("mcp command exists", () => {
-    const c = readFileSync(join(ROOT, "cli/index.ts"), "utf-8");
-    expect(c).toContain("async function mcp");
-  });
-  test("generate command exists", () => {
-    const c = readFileSync(join(ROOT, "cli/index.ts"), "utf-8");
-    expect(c).toContain("async function generate");
-  });
-  test("schema command exists", () => {
-    const c = readFileSync(join(ROOT, "cli/index.ts"), "utf-8");
-    expect(c).toContain("async function schema");
+    expect(c).toContain("async function doctor");
   });
   test("help text lists components", () => {
     const c = readFileSync(join(ROOT, "cli/index.ts"), "utf-8");
@@ -183,58 +150,24 @@ describe("MCP Server", () => {
   });
 });
 
-describe("loom API", () => {
-  test("index.ts exists", () => expect(existsSync(join(ROOT, "packages", "api", "src", "index.ts"))).toBe(true));
-  test("has Loom class", () => {
-    const c = readFileSync(join(ROOT, "packages", "api", "src", "index.ts"), "utf-8");
-    expect(c).toContain("export class Loom");
-  });
-  test("has MCP tool generation", () => {
-    const c = readFileSync(join(ROOT, "packages", "api", "src", "index.ts"), "utf-8");
-    expect(c).toContain("mcpTools");
-    expect(c).toContain("mcpTool");
-  });
-  test("has OpenAPI generation", () => {
-    const c = readFileSync(join(ROOT, "packages", "api", "src", "index.ts"), "utf-8");
-    expect(c).toContain("openapi");
-    expect(c).toContain("OpenAPI");
-  });
-  test("has streaming support", () => {
-    const c = readFileSync(join(ROOT, "packages", "api", "src", "index.ts"), "utf-8");
-    expect(c).toContain("handleStream");
-    expect(c).toContain("LoomStream");
-  });
-});
-
-describe("Registry API", () => {
-  test("index.ts exists", () => expect(existsSync(join(ROOT, "apps", "registry-api", "index.ts"))).toBe(true));
-  test("uses loom", () => {
-    const c = readFileSync(join(ROOT, "apps", "registry-api", "index.ts"), "utf-8");
-    expect(c).toContain("from \"../../packages/api/src/index.js\"");
-  });
-  test("has component endpoints", () => {
-    const c = readFileSync(join(ROOT, "apps", "registry-api", "index.ts"), "utf-8");
-    expect(c).toContain("/api/components");
-  });
-  test("has theme endpoints", () => {
-    const c = readFileSync(join(ROOT, "apps", "registry-api", "index.ts"), "utf-8");
-    expect(c).toContain("/api/themes");
-  });
-  test("has search endpoint", () => {
-    const c = readFileSync(join(ROOT, "apps", "registry-api", "index.ts"), "utf-8");
-    expect(c).toContain("/api/search");
-  });
-  test("has MCP tools endpoint", () => {
-    const c = readFileSync(join(ROOT, "apps", "registry-api", "index.ts"), "utf-8");
-    expect(c).toContain("/api/mcp/tools");
-  });
-});
-
 describe("No unused files", () => {
   test("no .godot directory (cleaned up)", () => {
     expect(existsSync(join(ROOT, ".godot"))).toBe(false);
   });
   test("no GoldenSpiral directory (cleaned up)", () => {
     expect(existsSync(join(ROOT, "GoldenSpiral"))).toBe(false);
+  });
+  // De-clutter guards (Milestone 1A): these were removed and must not return.
+  test("loom framework removed (packages/api)", () => {
+    expect(existsSync(join(ROOT, "packages", "api"))).toBe(false);
+  });
+  test("registry-api removed (folded into apps/docs)", () => {
+    expect(existsSync(join(ROOT, "apps", "registry-api"))).toBe(false);
+  });
+  test("static templates removed", () => {
+    expect(existsSync(join(ROOT, "templates"))).toBe(false);
+  });
+  test("demo removed (folded into apps/docs)", () => {
+    expect(existsSync(join(ROOT, "demo"))).toBe(false);
   });
 });

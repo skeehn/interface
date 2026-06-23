@@ -55,6 +55,18 @@ export default function MardiGrasChat() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const idRef = useRef(2);
 
+  // Apply the Mardi Gras theme to the document while this demo route is mounted,
+  // restoring the visitor's previous theme on unmount. (folded in from the
+  // standalone examples/mardi-gras app during Milestone 1A de-clutter.)
+  useEffect(() => {
+    const prev = document.documentElement.getAttribute('data-theme');
+    document.documentElement.setAttribute('data-theme', 'mardi-gras');
+    return () => {
+      if (prev) document.documentElement.setAttribute('data-theme', prev);
+      else document.documentElement.removeAttribute('data-theme');
+    };
+  }, []);
+
   useEffect(() => {
     if (threadRef.current) {
       threadRef.current.scrollTop = threadRef.current.scrollHeight;
@@ -94,7 +106,7 @@ export default function MardiGrasChat() {
   const isEmptyState = showSuggestions && messages.length === 1;
 
   return (
-    <div style={{
+    <div data-theme="mardi-gras" style={{
       display: 'grid',
       gridTemplateRows: '56px 1fr',
       height: '100dvh',

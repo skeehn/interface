@@ -7,8 +7,8 @@ describe("MCP Server Schema", () => {
       expect(componentSchema.version).toBe("0.3.0");
     });
 
-    test("has all 29 components", () => {
-      expect(componentSchema.components.length).toBe(29);
+    test("has all 32 components", () => {
+      expect(componentSchema.components.length).toBe(32);
     });
 
     test("all components have required fields", () => {
@@ -63,6 +63,9 @@ describe("MCP Server Schema", () => {
       expect(aiNames).toContain("StreamingText");
       expect(aiNames).toContain("TerminalPanel");
       expect(aiNames).toContain("AgentStatus");
+      expect(aiNames).toContain("ThinkingBlock");
+      expect(aiNames).toContain("PromptSuggestions");
+      expect(aiNames).toContain("FileAttachment");
     });
 
     test("ChatBubble has correct props", () => {

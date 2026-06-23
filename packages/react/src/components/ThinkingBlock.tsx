@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 
 /** State of the thinking block. */

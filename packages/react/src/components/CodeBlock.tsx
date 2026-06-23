@@ -1,7 +1,9 @@
+'use client';
+
 import React from 'react';
 
 /** Props for the {@link CodeBlock} component. */
-export interface CodeBlockProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface CodeBlockProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onCopy'> {
   /** Code string to display. */
   code: string;
   /** Programming language label. */

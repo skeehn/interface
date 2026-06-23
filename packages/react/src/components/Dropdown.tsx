@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 
 /** A single item in the dropdown menu. */
@@ -13,7 +15,7 @@ export interface DropdownItem {
 }
 
 /** Props for the {@link Dropdown} component. */
-export interface DropdownProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'> {
   /** Menu items. */
   items: DropdownItem[];
   /** Whether the dropdown is open (controlled). */

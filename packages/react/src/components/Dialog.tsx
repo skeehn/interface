@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 
 /** Props for the {@link Dialog} component. */

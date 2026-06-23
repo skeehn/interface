@@ -107,6 +107,12 @@
   display: block;
 }
 
+/* Dim live reasoning while actively thinking; settle to full muted on done. */
+.sk-thinking-block[data-state="thinking"] .sk-thinking-block__content {
+  opacity: 0.72;
+  transition: opacity var(--sk-transition-slow);
+}
+
 /* Scanline texture overlay */
 .sk-thinking-block__content::before {
   content: "";

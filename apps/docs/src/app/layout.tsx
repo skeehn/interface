@@ -54,19 +54,20 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-theme="brutal"
       className={`${geistSans.variable} ${geistMono.variable}`}
       suppressHydrationWarning
     >
       <head>
-        {/* System color scheme detection — prevents flash */}
+        {/* Theme init — docs dogfood the brutalist skin by default; localStorage overrides */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('sk-theme');if(t){document.documentElement.setAttribute('data-theme',t)}else if(window.matchMedia('(prefers-color-scheme:dark)').matches){document.documentElement.setAttribute('data-theme','dark')}}catch(e){}})()`,
+            __html: `(function(){try{var t=localStorage.getItem('sk-theme');document.documentElement.setAttribute('data-theme',t||'brutal')}catch(e){}})()`,
           }}
         />
-        <meta name="color-scheme" content="light dark" />
+        <meta name="color-scheme" content="dark" />
       </head>
-      <body className="min-h-dvh font-mono antialiased">
+      <body className="min-h-dvh bg-background text-foreground font-mono antialiased">
         {children}
       </body>
     </html>

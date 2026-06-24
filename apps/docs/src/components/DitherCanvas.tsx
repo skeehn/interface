@@ -120,16 +120,16 @@ export default function DitherCanvas() {
       // Slow hue shift: cycle through color stops over ~60 seconds
       const shift = reducedMotion.current ? 0 : (time * 0.0001) % 1;
 
-      // Color stops (HSL) — shift hue slowly
-      const hueOffset = shift * 40; // +-20 degrees oscillation
-      const color1 = hslToRgb(270 + hueOffset, 60, 12); // deep purple
-      const color2 = hslToRgb(240 + hueOffset * 0.5, 50, 15); // blue-purple mid
-      const color3 = hslToRgb(190 - hueOffset * 0.3, 55, 14); // deep teal
-      const color4 = hslToRgb(175 - hueOffset * 0.5, 50, 10); // darker teal edge
+      // Color stops (HSL) — mono + brutalist gold, subtle lightness drift
+      const drift = shift * 6;
+      const color1 = hslToRgb(0, 0, 4 + drift * 0.2); // near-black
+      const color2 = hslToRgb(0, 0, 7); // dark gray
+      const color3 = hslToRgb(45, 14, 7); // warm-dark toward gold
+      const color4 = hslToRgb(0, 0, 3); // black edge
 
-      // Two "light" colors for dither mixing
-      const light1 = hslToRgb(280 + hueOffset, 45, 22); // lighter purple
-      const light2 = hslToRgb(185 - hueOffset * 0.3, 40, 22); // lighter teal
+      // Two "light" colors for dither mixing — gray + muted gold glow
+      const light1 = hslToRgb(0, 0, 16 + drift); // mid gray
+      const light2 = hslToRgb(45, 78, 30 + drift); // muted gold
 
       for (let y = 0; y < height; y++) {
         const vy = y / height; // 0..1 vertical position

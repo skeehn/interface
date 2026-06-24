@@ -14,141 +14,90 @@ const FEATURES = [
     title: "ASCII Dither Engine",
     description:
       "Real-time Bayer, Floyd-Steinberg, and Atkinson dithering on images, video, and backgrounds.",
-    icon: "\u2591\u2592\u2593",
+    icon: "░▒▓",
   },
   {
     title: "AI Chat Components",
     description:
-      "14 purpose-built components for chat interfaces, streaming, reasoning traces, and tool calls.",
-    icon: ">>>",
+      "15 purpose-built components for chat, streaming, reasoning traces, tool calls, and citations.",
+    icon: ">_",
+  },
+  {
+    title: "One Core, Many Skins",
+    description:
+      "A complete token contract. Swap ~30 variables and the same components become a different product.",
+    icon: "[#]",
   },
   {
     title: "Copy-Paste Ownership",
     description:
-      "Like shadcn \u2014 CLI copies source into your project. You own every line.",
+      "Like shadcn — the CLI copies source into your project. You own every line. Zero lock-in.",
     icon: "cp/",
-  },
-  {
-    title: "CRT / Retro Effects",
-    description:
-      "Scanlines, phosphor glow, flicker, terminal themes. Not decoration \u2014 identity.",
-    icon: "CRT",
   },
 ] as const;
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col min-h-dvh bg-black text-white">
+    <div className="flex flex-col min-h-dvh bg-background text-foreground">
       {/* ═══ NAV ═══ */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 h-14 border-b border-white/10 bg-black/80 backdrop-blur-md">
-        <Link href="/" className="text-sm font-mono font-medium tracking-wide">
-          <span className="text-white/40 mr-1">&gt;</span>
+      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 h-14 border-b-2 border-foreground bg-background/90 backdrop-blur-md">
+        <Link href="/" className="text-sm font-mono font-bold tracking-wide flex items-center gap-2">
+          <span className="text-accent">&#9624;</span>
           skeehn
         </Link>
-        <div className="flex items-center gap-6 text-xs text-white/50 font-mono">
-          <Link href="/docs" className="hover:text-white transition-colors">
-            Docs
-          </Link>
-          <Link
-            href="/docs/components"
-            className="hover:text-white transition-colors"
-          >
-            Components
-          </Link>
-          <a
-            href="https://github.com/skeehn/skeehn"
-            className="hover:text-white transition-colors"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            GitHub
-          </a>
+        <div className="flex items-center gap-6 text-xs uppercase tracking-[0.15em] text-muted-fg font-mono">
+          <Link href="/docs" className="hover:text-accent transition-colors">Docs</Link>
+          <Link href="/docs/components" className="hover:text-accent transition-colors">Components</Link>
+          <a href="https://github.com/skeehn/skeehn" className="hover:text-accent transition-colors" target="_blank" rel="noopener noreferrer">GitHub</a>
         </div>
       </nav>
 
       {/* ═══ HERO ═══ */}
-      <section className="relative flex items-center justify-center min-h-screen overflow-hidden">
+      <section className="relative flex items-center justify-center min-h-screen overflow-hidden border-b-2 border-foreground">
         <DitherCanvas />
+        <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-5xl mx-auto">
+          <span className="sk-badge mb-10" data-variant="solid" style={{ background: "hsl(var(--sk-accent))", color: "hsl(var(--sk-accent-foreground))" }}>
+            v1.0 &mdash; now on npm
+          </span>
 
-        {/* Content overlay */}
-        <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-4xl mx-auto">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 mb-10 border border-white/10 bg-white/5 backdrop-blur-sm text-xs font-mono text-white/70">
-            <span className="inline-block w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
-            v1.0 &mdash; Now available
-          </div>
-
-          {/* Title */}
-          <h1 className="text-7xl md:text-8xl font-mono font-bold tracking-tighter text-white leading-none mb-6">
+          <h1 className="font-mono font-extrabold tracking-tighter leading-none text-foreground" style={{ fontSize: "clamp(3.5rem, 17vw, 11rem)" }}>
             skeehn
           </h1>
-          <p className="text-3xl md:text-4xl font-mono font-light text-white/90 mb-4 leading-tight">
-            Build AI interfaces that mean it.
+          <p className="mt-4 text-2xl md:text-4xl font-mono font-light text-foreground/90 leading-tight">
+            AI components that don&rsquo;t look<br />like every other chatbot.
           </p>
-          <p className="text-lg text-white/50 max-w-xl mx-auto mb-16 leading-relaxed">
-            32 components. 7 themes. Zero dependencies.
-            <br />
-            Every surface a canvas for ASCII texture.
+          <p className="mt-6 text-base md:text-lg text-muted-fg max-w-xl leading-relaxed">
+            32 components. 7 themes. Zero dependencies. Every surface a canvas for ASCII texture.
           </p>
 
           {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-center gap-4 mb-20">
-            <Link
-              href="/docs/getting-started"
-              className="inline-flex items-center justify-center px-8 py-3 text-sm font-mono font-bold bg-white hover:bg-white/90 transition-colors"
-              style={{ color: '#000' }}
-            >
+          <div className="flex flex-col sm:flex-row items-center gap-4 mt-12 mb-16">
+            <Link href="/docs/getting-started" className="sk-btn" data-variant="solid" data-size="lg">
               Get Started &rarr;
             </Link>
-            <Link
-              href="/docs/components"
-              className="inline-flex items-center justify-center px-8 py-3 text-sm font-mono font-medium border border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all"
-            >
+            <Link href="/docs/components" className="sk-btn" data-variant="outline" data-size="lg">
               Browse Components
             </Link>
-            <a
-              href="https://github.com/skeehn/skeehn"
-              className="inline-flex items-center justify-center px-6 py-3 text-sm font-mono text-white/50 hover:text-white hover:underline underline-offset-4 transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              GitHub
-            </a>
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full max-w-2xl">
+          {/* Stats — hard-bordered brutalist grid (gap shows the 2px rule) */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-[2px] w-full max-w-2xl border-2 border-foreground bg-foreground">
             {STATS.map((stat) => (
-              <div
-                key={stat.label}
-                className="flex flex-col items-center justify-center p-6 border border-white/10 bg-white/5 backdrop-blur-sm"
-              >
-                <span className="text-4xl font-bold font-mono text-white mb-2">
-                  {stat.value}
-                </span>
-                <span className="text-xs uppercase tracking-widest text-white/50">
-                  {stat.label}
-                </span>
+              <div key={stat.label} className="flex flex-col items-center justify-center p-6 bg-background">
+                <span className="text-4xl font-bold font-mono text-accent mb-1">{stat.value}</span>
+                <span className="text-[0.65rem] uppercase tracking-[0.2em] text-muted-fg">{stat.label}</span>
               </div>
             ))}
           </div>
         </div>
-
-        {/* Bottom fade */}
-        <div
-          className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-black to-transparent z-10"
-          aria-hidden="true"
-        />
       </section>
 
       {/* ═══ FEATURES ═══ */}
-      <section className="relative py-32 md:py-40 px-6 bg-black">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-20">
-            <p className="text-xs uppercase tracking-[0.3em] text-white/40 mb-4">
-              Capabilities
-            </p>
-            <h2 className="text-4xl md:text-5xl font-mono font-bold text-white">
+      <section className="relative py-28 md:py-36 px-6 bg-background">
+        <div className="max-w-5xl mx-auto">
+          <div className="mb-16">
+            <p className="text-xs uppercase tracking-[0.3em] text-accent mb-4 font-mono">// Capabilities</p>
+            <h2 className="font-mono font-extrabold tracking-tight text-foreground" style={{ fontSize: "clamp(2rem, 6vw, 3.75rem)" }}>
               Every pixel deliberate
             </h2>
           </div>
@@ -157,17 +106,12 @@ export default function HomePage() {
             {FEATURES.map((feature) => (
               <div
                 key={feature.title}
-                className="flex flex-col p-8 border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all group"
+                className="group flex flex-col p-7 border-2 border-foreground bg-background transition-transform hover:-translate-x-[2px] hover:-translate-y-[2px]"
+                style={{ boxShadow: "5px 5px 0 #1b1b1b" }}
               >
-                <span className="text-lg font-mono text-white/30 mb-4 group-hover:text-white/60 transition-colors">
-                  {feature.icon}
-                </span>
-                <h3 className="text-base font-mono font-medium text-white mb-2">
-                  {feature.title}
-                </h3>
-                <p className="text-sm text-white/50 leading-relaxed">
-                  {feature.description}
-                </p>
+                <span className="text-xl font-mono text-accent mb-5">{feature.icon}</span>
+                <h3 className="text-base font-mono font-bold uppercase tracking-wide text-foreground mb-2">{feature.title}</h3>
+                <p className="text-sm text-muted-fg leading-relaxed">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -175,52 +119,31 @@ export default function HomePage() {
       </section>
 
       {/* ═══ CODE PREVIEW ═══ */}
-      <section className="py-32 md:py-40 px-6 bg-black">
+      <section className="py-28 md:py-36 px-6 bg-background border-t-2 border-foreground">
         <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-16">
-            <p className="text-xs uppercase tracking-[0.3em] text-white/40 mb-4">
-              Developer Experience
-            </p>
-            <h2 className="text-4xl md:text-5xl font-mono font-bold text-white">
+          <div className="mb-12">
+            <p className="text-xs uppercase tracking-[0.3em] text-accent mb-4 font-mono">// Developer experience</p>
+            <h2 className="font-mono font-extrabold tracking-tight text-foreground" style={{ fontSize: "clamp(2rem, 6vw, 3.75rem)" }}>
               Ship in minutes
             </h2>
-            <p className="text-sm text-white/40 mt-4 max-w-md mx-auto leading-relaxed">
-              Import the component. Wire up the hook. Done.
+            <p className="text-sm text-muted-fg mt-4 max-w-md leading-relaxed">
+              Import the component. Wire the hook. Done. Or <code className="sk-code-inline">npx shadcn add</code> the source into your repo.
             </p>
           </div>
-
           <CodePreview />
         </div>
       </section>
 
       {/* ═══ FOOTER ═══ */}
-      <footer className="py-16 px-6 border-t border-white/10 bg-black">
-        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-white/40">
+      <footer className="py-12 px-6 border-t-2 border-foreground bg-background">
+        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-fg font-mono">
           <p>
-            Built by{" "}
-            <span className="text-white font-mono font-medium">skeehn</span>.
-            MIT License.
+            Built by <span className="text-foreground font-bold">skeehn</span>. MIT License.
           </p>
-          <div className="flex items-center gap-6 font-mono">
-            <a
-              href="https://github.com/skeehn/skeehn"
-              className="hover:text-white transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              GitHub
-            </a>
-            <a
-              href="https://www.npmjs.com/org/skeehn"
-              className="hover:text-white transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              npm
-            </a>
-            <Link href="/docs" className="hover:text-white transition-colors">
-              Docs
-            </Link>
+          <div className="flex items-center gap-6 uppercase tracking-[0.15em] text-xs">
+            <a href="https://github.com/skeehn/skeehn" className="hover:text-accent transition-colors" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="https://www.npmjs.com/org/skeehn" className="hover:text-accent transition-colors" target="_blank" rel="noopener noreferrer">npm</a>
+            <Link href="/docs" className="hover:text-accent transition-colors">Docs</Link>
           </div>
         </div>
       </footer>

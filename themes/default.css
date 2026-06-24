@@ -1,51 +1,69 @@
 /*
- * skeehn — Default Theme: Technical Minimalist
+ * skeehn — Default Theme: "Editorial · Mono" (dark, premium)
  *
- * Clean Swiss design with subtle paper texture.
- * Uses Floyd-Steinberg organic dither for natural feel.
- * Signature: ultra-fine grain texture on surfaces.
+ * The install default — the look every preview shows and most people ship.
+ * Dual-font: sans for prose, mono for chrome (routed in component CSS).
+ * Refined teal accent, warm near-black, committed-but-tasteful dither.
+ * The loud, brutalist look lives in brutal.css. This is the broad, premium one.
+ *
+ * One core, many skins: this file only remaps the --sk-* token contract.
  */
 :root[data-theme="default"] {
-  /* ═══ COLORS ═══ */
-  --sk-background:         0 0% 100%;
-  --sk-foreground:         0 0% 3.9%;
-  --sk-surface:            0 0% 98%;
-  --sk-primary:            0 0% 9%;
-  --sk-primary-fg:         0 0% 100%;
-  --sk-secondary:          0 0% 96.1%;
-  --sk-secondary-fg:       0 0% 9%;
-  --sk-muted:              0 0% 96.1%;
-  --sk-muted-foreground:   0 0% 45.1%;
-  --sk-accent:             0 0% 94%;
-  --sk-accent-foreground:  0 0% 9%;
-  --sk-border-color:       0 0% 85%;
-  --sk-ring:               0 0% 3.9%;
-  --sk-success:            142 72% 36%;
-  --sk-warning:            38 92% 50%;
-  --sk-info:               217 91% 60%;
-  --sk-destructive:        0 84% 60%;
+  /* ═══ COLORS (warm dark) ═══ */
+  --sk-background:         240 9% 6%;     /* #0f0f12 */
+  --sk-foreground:         40 9% 90%;     /* warm off-white #e9e7e3 */
+  --sk-surface:            240 8% 10%;    /* #16161b */
+  --sk-primary:            168 53% 59%;   /* teal — primary action */
+  --sk-primary-fg:         168 60% 8%;    /* dark ink on teal */
+  --sk-secondary:          240 6% 14%;
+  --sk-secondary-fg:       40 9% 90%;
+  --sk-muted:              240 6% 13%;    /* code / chip surface */
+  --sk-muted-foreground:   45 5% 58%;     /* readable metadata (≥ contrast) */
+  --sk-accent:             168 53% 59%;   /* refined teal */
+  --sk-accent-foreground:  168 60% 8%;
+  --sk-border-color:       240 6% 18%;    /* hairline on dark */
+  --sk-ring:               168 53% 59%;   /* focus = accent */
+  --sk-success:            150 55% 52%;
+  --sk-warning:            38 90% 60%;
+  --sk-info:               199 60% 62%;
+  --sk-destructive:        2 72% 62%;
 
-  /* ═══ DITHER ═══ */
-  --sk-dither-pattern:     var(--sk-dither-floyd);
-  --sk-dither-opacity:     0.04;
+  /* ═══ RADIUS: soft, premium (Brutalist resets to 0) ═══ */
+  --sk-radius:         6px;
+  --sk-radius-sm:      4px;
+  --sk-radius-md:      9px;
+  --sk-radius-lg:      13px;
+  --sk-radius-panel:   var(--sk-radius-md);
+  --sk-radius-control: var(--sk-radius-sm);
 
-  /* ═══ SIGNATURE: Paper texture ═══ */
-  --sk-theme-texture:      var(--sk-dither-grain);
-  --sk-theme-texture-size: 128px 128px;
-  --sk-theme-texture-opacity: 0.02;
+  /* ═══ BORDERS: hairline ═══ */
+  --sk-border-width: 1px;
+
+  /* ═══ ELEVATION: soft depth (kills the flat-card bug) ═══ */
+  --sk-panel-gradient: linear-gradient(180deg, hsl(0 0% 100% / 0.025), transparent);
+  --sk-panel-shadow:   var(--sk-shadow-md);
+
+  /* ═══ DITHER: committed, visible, tasteful ═══ */
+  --sk-dither-pattern: var(--sk-dither-b6);
+  --sk-dither-opacity: var(--sk-dither-opacity-normal);
+
+  /* ═══ SIGNATURE: faint grain on surfaces ═══ */
+  --sk-theme-texture:         var(--sk-dither-grain);
+  --sk-theme-texture-size:    160px 160px;
+  --sk-theme-texture-opacity: 0.025;
 }
 
-/* Subtle paper texture on body */
+/* Faint grain on body — screen blend reads on the dark ground */
 :root[data-theme="default"] body::after {
   content: "";
   position: fixed;
   inset: 0;
   background-image: var(--sk-dither-grain);
-  background-size: 128px 128px;
-  opacity: 0.02;
+  background-size: 160px 160px;
+  opacity: 0.025;
   pointer-events: none;
   z-index: 9999;
-  mix-blend-mode: multiply;
+  mix-blend-mode: screen;
 }
 
 @media print {

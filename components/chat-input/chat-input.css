@@ -3,11 +3,11 @@
  *
  * @component sk-chat-input
  * @variants  default | compact
- * @states    [data-state="streaming"] | [data-state="recording"] | [data-loading] | [data-skeleton]
- * @slots     __wrapper | __field | __actions | __mic | __hint | __dropzone | __char-count
- * @features  File drop zone, character count, mention styling, auto-resize via field-sizing
- * @a11y      Label association, focus-within border, disabled states
- * @print     Hidden (interactive input)
+ * @states    [data-state="streaming"|"recording"] | [data-loading] | [data-skeleton]
+ * @slots     __wrapper __field __actions __mic __hint __dropzone __char-count
+ * @a11y      aria-label on field, visible focus ring, disabled states
+ * @design    SANS prose field, visible focus ring, taller target, distinct
+ *            recording (pulsing red dot) vs streaming. Mono chrome (hint/count).
  */
 
 .sk-chat-input {
@@ -20,29 +20,34 @@
   align-items: flex-end;
   gap: var(--sk-space-2);
   padding: var(--sk-space-2);
-  border: 1px solid hsl(var(--sk-border-color, var(--sk-border)));
-  background: hsl(var(--sk-background));
+  border: var(--sk-border);
+  border-radius: var(--sk-radius-md);
+  background: hsl(var(--sk-surface));
   transition: border-color var(--sk-transition);
   position: relative;
 }
 
+/* Visible focus ring (a11y) */
 .sk-chat-input__wrapper:focus-within {
-  border-color: hsl(var(--sk-foreground));
+  border-color: hsl(var(--sk-accent));
+  outline: var(--sk-focus-ring);
+  outline-offset: var(--sk-focus-ring-offset);
 }
 
-/* Dither overlay on focus */
+/* Subtle dither texture on focus */
 .sk-chat-input__wrapper:focus-within::before {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: var(--sk-dither-pattern, var(--sk-dither-bayer));
+  background-image: var(--sk-dither-pattern);
   background-size: 32px 32px;
   background-repeat: repeat;
-  opacity: 0.04;
+  opacity: var(--sk-dither-opacity-subtle);
   pointer-events: none;
+  border-radius: inherit;
 }
 
-/* Textarea auto-resize */
+/* Field — SANS prose, comfortable target */
 .sk-chat-input__field {
   flex: 1;
   border: none;
@@ -50,21 +55,17 @@
   box-shadow: none;
   background: transparent;
   resize: none;
-  overflow: hidden;
-  min-height: 2rem;
+  min-height: 2.5rem;
   max-height: 12rem;
   overflow-y: auto;
-  padding: var(--sk-space-1) 0;
-  font-family: var(--sk-font-mono);
-  font-size: var(--sk-font-size-sm);
+  padding: var(--sk-space-2) var(--sk-space-1);
+  font-family: var(--sk-font-sans);
+  font-size: 0.9rem;
   line-height: 1.5;
   color: hsl(var(--sk-foreground));
-  field-sizing: content; /* modern: auto-size without JS */
+  field-sizing: content;
 }
-
-.sk-chat-input__field::placeholder {
-  color: hsl(var(--sk-muted-foreground, var(--sk-foreground)) / 0.4);
-}
+.sk-chat-input__field::placeholder { color: hsl(var(--sk-muted-foreground)); }
 
 .sk-chat-input__actions {
   display: flex;
@@ -73,151 +74,119 @@
   align-items: flex-end;
 }
 
-/* Mic button */
+/* Mic / action buttons */
 .sk-chat-input__mic {
   font-size: 1rem;
   line-height: 1;
   transition: color var(--sk-transition), transform var(--sk-transition);
 }
+.sk-chat-input__mic[data-mic-state="recording"] { color: hsl(var(--sk-destructive)); }
 
-.sk-chat-input__mic[data-mic-state="recording"] {
-  color: hsl(var(--sk-destructive));
-}
-
-/* Hint bar */
+/* Hint — readable mono chrome */
 .sk-chat-input__hint {
-  margin-top: var(--sk-space-1);
+  margin-top: var(--sk-space-2);
+  font-family: var(--sk-font-mono);
   font-size: var(--sk-font-size-xs);
-  color: hsl(var(--sk-muted-foreground, var(--sk-foreground)) / 0.4);
+  color: hsl(var(--sk-muted-foreground));
   text-align: center;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--sk-letter-spacing-wide);
 }
+.sk-chat-input__hint--recording { color: hsl(var(--sk-destructive)); }
 
-.sk-chat-input__hint--recording {
-  color: hsl(var(--sk-destructive));
-}
-
-/* Streaming state */
+/* Streaming — locked field, accent-tint border */
 .sk-chat-input[data-state="streaming"] .sk-chat-input__wrapper {
-  border-color: hsl(var(--sk-foreground) / 0.3);
-  background: hsl(var(--sk-foreground) / 0.04);
+  border-color: hsl(var(--sk-accent) / 0.5);
 }
+.sk-chat-input[data-state="streaming"] .sk-chat-input__field { opacity: 0.5; }
 
-.sk-chat-input[data-state="streaming"] .sk-chat-input__field {
-  opacity: 0.4;
-}
-
-/* Recording state */
-.sk-chat-input[data-state="recording"] .sk-chat-input__wrapper {
-  border-color: hsl(var(--sk-destructive) / 0.7);
+/* Recording — destructive border + pulsing red dot */
+.sk-chat-input[data-state="recording"] .sk-chat-input__wrapper { border-color: hsl(var(--sk-destructive) / 0.7); }
+.sk-chat-input[data-state="recording"] .sk-chat-input__wrapper::after {
+  content: "";
+  position: absolute;
+  top: var(--sk-space-2);
+  right: var(--sk-space-2);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: hsl(var(--sk-destructive));
+  box-shadow: 0 0 8px hsl(var(--sk-destructive) / 0.7);
+  animation: sk-blink 1s steps(2) infinite;
 }
 
 /* Compact variant */
-.sk-chat-input[data-variant="compact"] .sk-chat-input__wrapper {
-  padding: var(--sk-space-1);
-}
-.sk-chat-input[data-variant="compact"] .sk-chat-input__hint {
-  display: none;
-}
+.sk-chat-input[data-variant="compact"] .sk-chat-input__wrapper { padding: var(--sk-space-1); }
+.sk-chat-input[data-variant="compact"] .sk-chat-input__field { min-height: 2rem; }
+.sk-chat-input[data-variant="compact"] .sk-chat-input__hint { display: none; }
 
-/* ============================================================
-   FILE DROP ZONE
-   ============================================================ */
-
+/* File drop zone */
 .sk-chat-input__dropzone {
   position: absolute;
   inset: 0;
   display: none;
   align-items: center;
   justify-content: center;
-  background: hsl(var(--sk-primary) / 0.05);
-  border: 2px dashed hsl(var(--sk-primary) / 0.3);
+  background: hsl(var(--sk-accent) / 0.06);
+  border: 2px dashed hsl(var(--sk-accent) / 0.5);
+  border-radius: inherit;
   font-family: var(--sk-font-mono);
   font-size: var(--sk-font-size-xs);
-  color: hsl(var(--sk-primary));
-  letter-spacing: 0.04em;
+  letter-spacing: var(--sk-letter-spacing-wide);
+  color: hsl(var(--sk-accent));
   z-index: 10;
   pointer-events: none;
 }
+.sk-chat-input__wrapper[data-dragover] .sk-chat-input__dropzone { display: flex; }
+.sk-chat-input__wrapper[data-dragover] { border-color: hsl(var(--sk-accent)); border-style: dashed; }
 
-.sk-chat-input__wrapper[data-dragover] .sk-chat-input__dropzone {
-  display: flex;
-}
-
-.sk-chat-input__wrapper[data-dragover] {
-  border-color: hsl(var(--sk-primary));
-  border-style: dashed;
-}
-
-/* ============================================================
-   CHARACTER COUNT
-   ============================================================ */
-
+/* Character count — readable */
 .sk-chat-input__char-count {
   font-family: var(--sk-font-mono);
-  font-size: 0.6rem;
-  color: hsl(var(--sk-muted-foreground) / 0.4);
-  letter-spacing: 0.05em;
+  font-size: var(--sk-font-size-xs);
+  color: hsl(var(--sk-muted-foreground) / 0.7);
+  letter-spacing: var(--sk-letter-spacing-wide);
   text-align: right;
   padding-right: var(--sk-space-2);
+  font-variant-numeric: tabular-nums;
 }
+.sk-chat-input__char-count[data-over-limit] { color: hsl(var(--sk-destructive)); }
 
-.sk-chat-input__char-count[data-over-limit] {
-  color: hsl(var(--sk-destructive));
-}
-
-/* ============================================================
-   MENTION STYLING
-   ============================================================ */
-
+/* Mention styling */
 .sk-chat-input__mention {
   display: inline;
-  background: hsl(var(--sk-primary) / 0.08);
-  color: hsl(var(--sk-primary));
+  background: hsl(var(--sk-accent) / 0.15);
+  color: hsl(var(--sk-accent));
   padding: 0.05em 0.25em;
+  border-radius: var(--sk-radius-control);
   font-weight: 600;
-  letter-spacing: 0.01em;
 }
 
-/* ============================================================
-   LOADING & SKELETON
-   ============================================================ */
-
-.sk-chat-input[data-loading] .sk-chat-input__wrapper {
-  pointer-events: none;
-  opacity: 0.6;
-}
-
+/* Loading & skeleton (centralized keyframes) */
+.sk-chat-input[data-loading] .sk-chat-input__wrapper { pointer-events: none; opacity: 0.6; }
 .sk-chat-input[data-loading] .sk-chat-input__wrapper::after {
   content: "";
   position: absolute;
   inset: 0;
   background-image: var(--sk-dither-pattern);
   background-repeat: repeat;
-  opacity: 0.05;
+  opacity: var(--sk-dither-opacity-subtle);
   animation: sk-pulse-dither 1.5s ease-in-out infinite;
   pointer-events: none;
 }
-
-@keyframes sk-input-shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
 .sk-chat-input[data-skeleton] .sk-chat-input__wrapper {
   pointer-events: none;
-  background: linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-accent)) 50%, hsl(var(--sk-muted)) 75%);
+  background: linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-secondary)) 50%, hsl(var(--sk-muted)) 75%);
   background-size: 200% 100%;
-  animation: sk-input-shimmer 1.8s ease-in-out infinite;
+  animation: sk-shimmer 1.8s ease-in-out infinite;
 }
-
-.sk-chat-input[data-skeleton] .sk-chat-input__field { visibility: hidden; }
+.sk-chat-input[data-skeleton] .sk-chat-input__field,
 .sk-chat-input[data-skeleton] .sk-chat-input__actions { visibility: hidden; }
 
 @media print { .sk-chat-input { display: none; } }
 
 @media (prefers-reduced-motion: reduce) {
   .sk-chat-input__wrapper { transition: none; }
+  .sk-chat-input[data-state="recording"] .sk-chat-input__wrapper::after { animation: none; }
   .sk-chat-input[data-loading] .sk-chat-input__wrapper::after { animation: none; }
   .sk-chat-input[data-skeleton] .sk-chat-input__wrapper { animation: none; background: hsl(var(--sk-muted)); }
 }

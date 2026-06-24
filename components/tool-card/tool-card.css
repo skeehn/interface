@@ -4,73 +4,147 @@
  * @component sk-tool-card
  * @statuses  pending | running | success | error
  * @states    [data-loading] | [data-skeleton] | [data-expanded]
- * @slots     __header | __name | __status | __body | __input | __output | __label | __code | __timeline | __params
- * @features  Execution timeline, parameter table, expand/collapse, progress bar
- * @a11y      Status communicated via color + text, expandable sections
- * @print     Static card with visible content
+ * @slots     __header __name __status __body __input __output __label __code __timeline __params
+ * @a11y      Status via color + text + dot, expandable sections
+ * @design    1px frame + accent rail (brutal theme makes it a 2px box). Status dot +
+ *            name + duration. Readable code (≥13px). Subtle dither.
  */
 
-.sk-tool-card { border: 2px solid hsl(var(--sk-border)); border-radius: var(--sk-radius); overflow: hidden; font-family: var(--sk-font-mono); margin-bottom: var(--sk-space-3); }
-.sk-tool-card__header { display: flex; align-items: center; justify-content: space-between; padding: var(--sk-space-2) var(--sk-space-3); background: hsl(var(--sk-muted) / 0.5); border-bottom: var(--sk-border); position: relative; }
-.sk-tool-card__name { font-size: var(--sk-font-size-sm); font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; }
-.sk-tool-card__status { font-size: var(--sk-font-size-xs); padding: 0.1em var(--sk-space-2); border-radius: var(--sk-radius-full); letter-spacing: 0.02em; }
+.sk-tool-card {
+  border: var(--sk-border);
+  border-left: 3px solid hsl(var(--sk-accent));
+  border-radius: var(--sk-radius-sm);
+  overflow: hidden;
+  font-family: var(--sk-font-mono);
+  margin-bottom: var(--sk-space-3);
+  box-shadow: var(--sk-panel-shadow);
+}
+.sk-tool-card[data-status="success"] { border-left-color: hsl(var(--sk-success)); }
+.sk-tool-card[data-status="error"]   { border-left-color: hsl(var(--sk-destructive)); }
+.sk-tool-card[data-status="pending"] { border-left-color: hsl(var(--sk-muted-foreground)); }
+
+/* Header — status dot + name + duration/status */
+.sk-tool-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--sk-space-2);
+  padding: var(--sk-space-2) var(--sk-space-3);
+  background: hsl(var(--sk-muted));
+  border-bottom: var(--sk-border);
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  transition: background var(--sk-transition);
+}
+.sk-tool-card__header:hover { background: hsl(var(--sk-secondary)); }
+.sk-tool-card__header::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: hsl(var(--sk-muted-foreground));
+}
+.sk-tool-card[data-status="running"] .sk-tool-card__header::before { background: hsl(var(--sk-info)); box-shadow: 0 0 8px hsl(var(--sk-info) / 0.6); }
+.sk-tool-card[data-status="success"] .sk-tool-card__header::before { background: hsl(var(--sk-success)); }
+.sk-tool-card[data-status="error"]   .sk-tool-card__header::before { background: hsl(var(--sk-destructive)); }
+
+.sk-tool-card__name {
+  font-size: var(--sk-font-size-sm);
+  font-weight: 600;
+  letter-spacing: var(--sk-letter-spacing-wide);
+  text-transform: uppercase;
+  color: hsl(var(--sk-foreground));
+}
+.sk-tool-card__status {
+  margin-left: auto;
+  font-size: var(--sk-font-size-xs);
+  padding: 0.15em var(--sk-space-2);
+  border-radius: var(--sk-radius-full);
+  letter-spacing: var(--sk-letter-spacing-wide);
+}
 .sk-tool-card[data-status="pending"] .sk-tool-card__status { background: hsl(var(--sk-muted)); color: hsl(var(--sk-muted-foreground)); }
-.sk-tool-card[data-status="running"] .sk-tool-card__status { background: hsl(var(--sk-info) / 0.15); color: hsl(var(--sk-info)); }
-.sk-tool-card[data-status="success"] .sk-tool-card__status { background: hsl(var(--sk-success) / 0.15); color: hsl(var(--sk-success)); }
-.sk-tool-card[data-status="error"] .sk-tool-card__status { background: hsl(var(--sk-destructive) / 0.15); color: hsl(var(--sk-destructive)); }
-.sk-tool-card__body { padding: var(--sk-space-3); font-size: var(--sk-font-size-xs); position: relative; }
-.sk-tool-card__body::before { content: ""; position: absolute; inset: 0; background-image: var(--sk-dither-pattern); background-repeat: repeat; opacity: calc(var(--sk-dither-opacity, 0.15) * 0.1); pointer-events: none; }
-.sk-tool-card__body > * { position: relative; z-index: 1; }
-.sk-tool-card__input, .sk-tool-card__output { margin-bottom: var(--sk-space-2); }
-.sk-tool-card__label { font-size: var(--sk-font-size-xs); font-weight: 600; color: hsl(var(--sk-muted-foreground)); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: var(--sk-space-1); }
-.sk-tool-card__code { font-family: var(--sk-font-mono); font-size: var(--sk-font-size-xs); padding: var(--sk-space-2); background: hsl(var(--sk-muted) / 0.3); border: var(--sk-border); border-radius: var(--sk-radius); overflow-x: auto; white-space: pre-wrap; color: hsl(var(--sk-foreground)); }
-.sk-tool-card[data-status="running"] .sk-tool-card__header::after { content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: hsl(var(--sk-info)); animation: sk-progress-slide 1.5s ease-in-out infinite; }
+.sk-tool-card[data-status="running"] .sk-tool-card__status { background: hsl(var(--sk-info) / 0.14); color: hsl(var(--sk-info)); }
+.sk-tool-card[data-status="success"] .sk-tool-card__status { background: hsl(var(--sk-success) / 0.14); color: hsl(var(--sk-success)); }
+.sk-tool-card[data-status="error"]   .sk-tool-card__status { background: hsl(var(--sk-destructive) / 0.14); color: hsl(var(--sk-destructive)); }
+
+/* Running progress sweep */
+.sk-tool-card[data-status="running"] .sk-tool-card__header::after {
+  content: "";
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: hsl(var(--sk-info));
+  animation: sk-progress-slide 1.5s ease-in-out infinite;
+}
 @keyframes sk-progress-slide { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 
-/* ============================================================
-   EXECUTION TIMELINE
-   ============================================================ */
+/* Body (collapsed by default) */
+.sk-tool-card__body {
+  display: none;
+  padding: var(--sk-space-3);
+  font-size: var(--sk-font-size-sm);
+  position: relative;
+}
+.sk-tool-card[data-expanded] .sk-tool-card__body { display: block; }
+.sk-tool-card__body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--sk-dither-pattern);
+  background-repeat: repeat;
+  opacity: var(--sk-dither-opacity-subtle);
+  pointer-events: none;
+}
+.sk-tool-card__body > * { position: relative; z-index: 1; }
 
+.sk-tool-card__input, .sk-tool-card__output { margin-bottom: var(--sk-space-3); }
+.sk-tool-card__label {
+  font-size: var(--sk-font-size-xs);
+  font-weight: 600;
+  color: hsl(var(--sk-muted-foreground));
+  text-transform: uppercase;
+  letter-spacing: var(--sk-letter-spacing-wide);
+  margin-bottom: var(--sk-space-1);
+}
+.sk-tool-card__code {
+  font-family: var(--sk-font-mono);
+  font-size: var(--sk-font-size-sm);
+  line-height: var(--sk-line-height);
+  padding: var(--sk-space-2) var(--sk-space-3);
+  background: hsl(var(--sk-surface));
+  border: var(--sk-border);
+  border-radius: var(--sk-radius-control);
+  overflow-x: auto;
+  white-space: pre-wrap;
+  color: hsl(var(--sk-foreground));
+}
+
+/* Execution timeline — readable */
 .sk-tool-card__timeline {
   display: flex;
   align-items: center;
   gap: var(--sk-space-2);
   padding: var(--sk-space-1) var(--sk-space-3);
   border-top: var(--sk-border);
-  font-size: 0.55rem;
-  color: hsl(var(--sk-muted-foreground) / 0.5);
+  font-size: var(--sk-font-size-xs);
+  color: hsl(var(--sk-muted-foreground));
   font-family: var(--sk-font-mono);
-  letter-spacing: 0.04em;
+  letter-spacing: var(--sk-letter-spacing-wide);
   font-variant-numeric: tabular-nums;
 }
-
-.sk-tool-card__timeline-bar {
-  flex: 1;
-  height: 2px;
-  background: hsl(var(--sk-border-color));
-  position: relative;
-  overflow: hidden;
-}
-
+.sk-tool-card__timeline-bar { flex: 1; height: 3px; background: hsl(var(--sk-border-color)); position: relative; overflow: hidden; }
 .sk-tool-card__timeline-fill {
   position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  background: hsl(var(--sk-primary));
+  left: 0; top: 0; bottom: 0;
+  background: hsl(var(--sk-accent));
   width: var(--sk-tool-progress, 0%);
   transition: width var(--sk-transition-slow);
 }
+.sk-tool-card[data-status="running"] .sk-tool-card__timeline-fill { animation: sk-progress-slide 1.5s ease-in-out infinite; width: 40%; }
 
-.sk-tool-card[data-status="running"] .sk-tool-card__timeline-fill {
-  animation: sk-progress-slide 1.5s ease-in-out infinite;
-  width: 40%;
-}
-
-/* ============================================================
-   PARAMETER TABLE
-   ============================================================ */
-
+/* Parameter table — readable */
 .sk-tool-card__params {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -78,57 +152,33 @@
   font-size: var(--sk-font-size-xs);
   padding: var(--sk-space-2) 0;
 }
-
 .sk-tool-card__param-key {
   font-weight: 600;
   color: hsl(var(--sk-muted-foreground));
   text-transform: uppercase;
-  letter-spacing: 0.03em;
-  font-size: 0.6rem;
+  letter-spacing: var(--sk-letter-spacing-wide);
+  font-size: var(--sk-font-size-xs);
 }
+.sk-tool-card__param-value { color: hsl(var(--sk-foreground)); font-family: var(--sk-font-mono); word-break: break-word; }
 
-.sk-tool-card__param-value {
-  color: hsl(var(--sk-foreground));
-  font-family: var(--sk-font-mono);
-  word-break: break-word;
-}
-
-/* ============================================================
-   EXPAND / COLLAPSE
-   ============================================================ */
-
-.sk-tool-card__body { display: none; }
-.sk-tool-card[data-expanded] .sk-tool-card__body { display: block; }
-.sk-tool-card__header { cursor: pointer; user-select: none; }
-.sk-tool-card__header:hover { background: hsl(var(--sk-muted) / 0.7); }
-
-/* ============================================================
-   LOADING & SKELETON
-   ============================================================ */
-
-.sk-tool-card[data-loading] .sk-tool-card__body {
-  position: relative;
-  opacity: 0.5;
-}
-
+/* Loading & skeleton (centralized keyframes) */
+.sk-tool-card[data-loading] .sk-tool-card__body { position: relative; opacity: 0.5; }
 .sk-tool-card[data-loading] .sk-tool-card__body::after {
   content: "";
   position: absolute;
   inset: 0;
   background-image: var(--sk-dither-pattern);
-  background-repeat: repeat;
-  opacity: 0.06;
+  opacity: var(--sk-dither-opacity-normal);
   animation: sk-pulse-dither 1.5s ease-in-out infinite;
   pointer-events: none;
 }
-
 .sk-tool-card[data-skeleton] .sk-tool-card__name,
 .sk-tool-card[data-skeleton] .sk-tool-card__code {
   color: transparent;
-  background: linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-accent)) 50%, hsl(var(--sk-muted)) 75%);
+  background: linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-secondary)) 50%, hsl(var(--sk-muted)) 75%);
   background-size: 200% 100%;
-  animation: sk-card-shimmer 1.8s ease-in-out infinite;
-  border-radius: var(--sk-radius);
+  animation: sk-shimmer 1.8s ease-in-out infinite;
+  border-radius: var(--sk-radius-sm);
 }
 
 @media print {

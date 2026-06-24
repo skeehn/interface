@@ -37,6 +37,7 @@ export const CodeBlock = React.forwardRef<HTMLDivElement, CodeBlockProps>(
     }, [code, onCopy]);
 
     const lines = lineNumbers ? code.split('\n') : null;
+    const lineCount = code.split('\n').length;
 
     return (
       <div
@@ -46,13 +47,20 @@ export const CodeBlock = React.forwardRef<HTMLDivElement, CodeBlockProps>(
         {...rest}
       >
         <div className="sk-code-block__header">
-          {language && <span className="sk-code-block__lang">{language}</span>}
+          <div className="sk-code-block__header-main">
+            {language && <span className="sk-code-block__lang">{language}</span>}
+            <span className="sk-code-block__meta">
+              {lineCount} {lineCount === 1 ? 'line' : 'lines'}
+            </span>
+          </div>
           <button
             className="sk-code-block__copy"
+            type="button"
+            aria-label={copied ? 'Copied to clipboard' : 'Copy code'}
             data-copied={copied ? 'true' : undefined}
             onClick={handleCopy}
           >
-            {copied ? 'copied' : 'copy'}
+            {copied ? '✓ Copied' : '⧉ Copy'}
           </button>
         </div>
         <div className="sk-code-block__body">

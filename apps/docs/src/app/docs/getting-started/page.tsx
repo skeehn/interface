@@ -90,13 +90,13 @@ export default function GettingStartedPage() {
         style={{ fontFamily: 'var(--sk-font-sans)' }}>
         Getting Started
       </h1>
-      <p className="text-sm text-neutral-500 mb-16 max-w-lg">
+      <p className="text-sm text-muted-fg mb-16 max-w-lg">
         Get skeehn running in your project in under 2 minutes.
       </p>
 
       {/* Step 1: Install */}
       <Step number={1} title="Install">
-        <p className="text-sm text-neutral-500 mb-5 leading-relaxed">
+        <p className="text-sm text-muted-fg mb-5 leading-relaxed">
           The CLI is the fastest way to get started. It scaffolds config, imports
           your theme, and sets up CSS.
         </p>
@@ -105,7 +105,7 @@ export default function GettingStartedPage() {
 
       {/* Step 2: Add components */}
       <Step number={2} title="Add Components">
-        <p className="text-sm text-neutral-500 mb-5 leading-relaxed">
+        <p className="text-sm text-muted-fg mb-5 leading-relaxed">
           Pick the components you need. Each one is a standalone CSS file with
           optional React wrappers.
         </p>
@@ -114,7 +114,7 @@ export default function GettingStartedPage() {
 
       {/* Step 3: Import CSS */}
       <Step number={3} title="Import CSS">
-        <p className="text-sm text-neutral-500 mb-5 leading-relaxed">
+        <p className="text-sm text-muted-fg mb-5 leading-relaxed">
           Import the engine foundation and component styles in your global
           stylesheet.
         </p>
@@ -123,7 +123,7 @@ export default function GettingStartedPage() {
 
       {/* Step 4: Use */}
       <Step number={4} title="Use Components">
-        <p className="text-sm text-neutral-500 mb-5 leading-relaxed">
+        <p className="text-sm text-muted-fg mb-5 leading-relaxed">
           Import React wrappers or use the CSS classes directly. Every component
           works with or without JavaScript.
         </p>
@@ -137,7 +137,7 @@ export default function GettingStartedPage() {
 
       {/* Step 5: Themes */}
       <Step number={5} title="Switch Themes" isLast>
-        <p className="text-sm text-neutral-500 mb-5 leading-relaxed">
+        <p className="text-sm text-muted-fg mb-5 leading-relaxed">
           Swap the entire visual identity with a single CSS import or data
           attribute.
         </p>
@@ -145,7 +145,7 @@ export default function GettingStartedPage() {
       </Step>
 
       {/* Next steps */}
-      <div className="mt-20 pt-10 border-t border-neutral-800">
+      <div className="mt-20 pt-10 border-t border-border">
         <h2 className="docs-heading text-lg mb-6"
           style={{ fontFamily: 'var(--sk-font-sans)' }}>
           Next Steps
@@ -274,8 +274,8 @@ function TabButton({
       onClick={onClick}
       className={`px-5 py-2.5 text-xs font-mono font-bold uppercase tracking-wider border-t border-l border-r cursor-pointer transition-colors ${
         active
-          ? 'bg-neutral-900 text-white border-neutral-700 relative z-10'
-          : 'bg-neutral-800/50 text-neutral-500 border-neutral-800 hover:text-neutral-300'
+          ? 'bg-surface text-foreground border-border relative z-10'
+          : 'bg-muted/50 text-muted-fg border-border hover:text-foreground'
       }`}
       style={{
         borderBottom: active ? '1px solid #111' : '1px solid #333',
@@ -299,7 +299,7 @@ function CodeBlock({ code, connected }: { code: string; connected?: boolean }) {
   return (
     <div className="relative">
       <pre
-        className={`bg-black border border-neutral-800 p-5 overflow-auto font-mono text-xs leading-relaxed text-neutral-300 ${
+        className={`bg-background border border-border p-5 overflow-auto font-mono text-xs leading-relaxed text-foreground ${
           connected ? 'rounded-tl-none' : ''
         }`}
       >
@@ -310,7 +310,7 @@ function CodeBlock({ code, connected }: { code: string; connected?: boolean }) {
         className={`absolute top-3 right-3 px-2 py-0.5 text-[10px] font-mono border cursor-pointer transition-colors ${
           copied
             ? 'border-green-800 text-green-400 bg-green-900/20'
-            : 'border-neutral-700 text-neutral-500 hover:text-neutral-300 bg-black'
+            : 'border-border text-muted-fg hover:text-foreground bg-background'
         }`}
       >
         {copied ? 'Copied' : 'Copy'}
@@ -331,13 +331,13 @@ function NextLink({
   return (
     <a
       href={href}
-      className="block p-4 border border-neutral-800 no-underline text-inherit hover:border-neutral-600 hover:bg-neutral-900/50 transition-all group"
+      className="block p-4 border border-border no-underline text-inherit hover:border-border hover:bg-surface/50 transition-all group"
     >
-      <div className="text-sm font-semibold mb-1 group-hover:text-white transition-colors"
+      <div className="text-sm font-semibold mb-1 group-hover:text-foreground transition-colors"
         style={{ fontFamily: 'var(--sk-font-sans)' }}>
         {label} &rarr;
       </div>
-      <div className="text-xs text-neutral-500 font-mono">
+      <div className="text-xs text-muted-fg font-mono">
         {description}
       </div>
     </a>

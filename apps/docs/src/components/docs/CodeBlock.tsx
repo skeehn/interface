@@ -17,7 +17,7 @@ function tokenizeLine(line: string): React.ReactNode[] {
 
   const patterns: [RegExp, string][] = [
     // Comments
-    [/^(\/\/.*)/, 'text-neutral-500 italic'],
+    [/^(\/\/.*)/, 'text-muted-fg italic'],
     // Strings (double-quoted)
     [/^("[^"]*")/, 'text-amber-300'],
     // Strings (single-quoted)
@@ -35,13 +35,13 @@ function tokenizeLine(line: string): React.ReactNode[] {
     // Numbers
     [/^(\d+\.?\d*)/, 'text-cyan-400'],
     // Braces and parens
-    [/^([{}()\[\]])/, 'text-neutral-400'],
+    [/^([{}()\[\]])/, 'text-muted-fg'],
     // Operators and punctuation
-    [/^([=+\-*/<>!&|?:;,.]+)/, 'text-neutral-500'],
+    [/^([=+\-*/<>!&|?:;,.]+)/, 'text-muted-fg'],
     // Identifiers (prop names before =)
     [/^(\w+)(?==)/, 'text-cyan-300'],
     // Regular identifiers
-    [/^(\w+)/, 'text-neutral-200'],
+    [/^(\w+)/, 'text-foreground'],
     // Whitespace
     [/^(\s+)/, ''],
   ];
@@ -63,7 +63,7 @@ function tokenizeLine(line: string): React.ReactNode[] {
       }
     }
     if (!matched) {
-      tokens.push(<span key={key++} className="text-neutral-200">{remaining[0]}</span>);
+      tokens.push(<span key={key++} className="text-foreground">{remaining[0]}</span>);
       remaining = remaining.slice(1);
     }
   }
@@ -89,21 +89,21 @@ export function CodeBlock({
   const lines = code.split("\n");
 
   return (
-    <div className="bg-neutral-950 border border-neutral-800 overflow-hidden">
+    <div className="bg-background border border-border overflow-hidden">
       {/* Header */}
       {(filename || language) && (
-        <div className="flex items-center justify-between px-4 py-2 bg-neutral-900 border-b border-neutral-800">
+        <div className="flex items-center justify-between px-4 py-2 bg-surface border-b border-border">
           <div className="flex items-center gap-3">
             {filename && (
-              <span className="text-xs text-neutral-400 font-mono">{filename}</span>
+              <span className="text-xs text-muted-fg font-mono">{filename}</span>
             )}
             {!filename && language && (
-              <span className="text-xs text-neutral-500 font-mono">{language}</span>
+              <span className="text-xs text-muted-fg font-mono">{language}</span>
             )}
           </div>
           <button
             onClick={handleCopy}
-            className="text-xs text-neutral-500 hover:text-white transition-colors font-mono cursor-pointer"
+            className="text-xs text-muted-fg hover:text-foreground transition-colors font-mono cursor-pointer"
             aria-label="Copy code to clipboard"
           >
             {copied ? "copied!" : "copy"}
@@ -118,7 +118,7 @@ export function CodeBlock({
             {lines.map((line, i) => (
               <span key={i} className="block">
                 {showLineNumbers && (
-                  <span className="inline-block w-8 text-right mr-4 text-neutral-700 select-none">
+                  <span className="inline-block w-8 text-right mr-4 text-muted-fg select-none">
                     {i + 1}
                   </span>
                 )}

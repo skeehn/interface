@@ -478,7 +478,7 @@ export default function EnginePage() {
 
       <div className="flex flex-col lg:flex-row">
         {/* ── Left: Controls Sidebar ── */}
-        <div className="w-full lg:w-80 shrink-0 bg-neutral-900 border-r border-neutral-800 p-6 space-y-6 overflow-y-auto lg:max-h-[calc(100vh-100px)]">
+        <div className="w-full lg:w-80 shrink-0 bg-surface border-r border-border p-6 space-y-6 overflow-y-auto lg:max-h-[calc(100vh-100px)]">
 
           {/* Image upload / drop zone */}
           <section>
@@ -486,8 +486,8 @@ export default function EnginePage() {
             <div
               className={`mt-2 border-2 border-dashed rounded-sm p-12 text-center cursor-pointer transition-colors ${
                 isDragging
-                  ? 'border-neutral-500 bg-neutral-800/50'
-                  : 'border-neutral-700 hover:border-neutral-500'
+                  ? 'border-border bg-muted/50'
+                  : 'border-border hover:border-accent'
               }`}
               onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
               onDragLeave={() => setIsDragging(false)}
@@ -501,7 +501,7 @@ export default function EnginePage() {
                 className="hidden"
                 onChange={handleFileInput}
               />
-              <div className="text-neutral-500 text-xs tracking-wide">
+              <div className="text-muted-fg text-xs tracking-wide">
                 {isDragging
                   ? 'DROP IMAGE HERE'
                   : fileName
@@ -509,7 +509,7 @@ export default function EnginePage() {
                     : 'DRAG & DROP or CLICK'}
               </div>
               {!fileName && !isDragging && (
-                <div className="text-neutral-600 text-[10px] mt-2">
+                <div className="text-muted-fg text-[10px] mt-2">
                   PNG, JPG, GIF, WebP
                 </div>
               )}
@@ -523,7 +523,7 @@ export default function EnginePage() {
               className={`w-full py-3 px-4 text-xs font-bold tracking-widest uppercase border transition-colors cursor-pointer ${
                 webcamActive
                   ? 'bg-red-900/50 border-red-700 text-red-300 hover:bg-red-900/70'
-                  : 'bg-neutral-800 border-neutral-700 text-neutral-300 hover:bg-neutral-700 hover:border-neutral-600'
+                  : 'bg-muted border-border text-foreground hover:bg-muted hover:border-border'
               }`}
               style={{ fontFamily: 'var(--sk-font-mono)' }}
             >
@@ -570,7 +570,7 @@ export default function EnginePage() {
                     className={`flex-1 py-1.5 text-xs font-mono border transition-colors cursor-pointer ${
                       bayerSize === s
                         ? 'bg-white text-black border-white'
-                        : 'bg-transparent text-neutral-400 border-neutral-700 hover:border-neutral-500'
+                        : 'bg-transparent text-muted-fg border-border hover:border-accent'
                     }`}
                   >
                     {s}x{s}
@@ -604,7 +604,7 @@ export default function EnginePage() {
           {/* Resolution slider */}
           <section>
             <SidebarLabel>
-              Resolution <span className="text-neutral-300 ml-1">{resolution} chars</span>
+              Resolution <span className="text-foreground ml-1">{resolution} chars</span>
             </SidebarLabel>
             <input
               type="range"
@@ -614,7 +614,7 @@ export default function EnginePage() {
               onChange={(e) => setResolution(Number(e.target.value))}
               className="w-full mt-3 accent-white"
             />
-            <div className="flex justify-between text-[10px] text-neutral-600 mt-1">
+            <div className="flex justify-between text-[10px] text-muted-fg mt-1">
               <span>40</span>
               <span>200</span>
             </div>
@@ -623,7 +623,7 @@ export default function EnginePage() {
           {/* Contrast slider */}
           <section>
             <SidebarLabel>
-              Contrast <span className="text-neutral-300 ml-1">{contrast}</span>
+              Contrast <span className="text-foreground ml-1">{contrast}</span>
             </SidebarLabel>
             <input
               type="range"
@@ -633,7 +633,7 @@ export default function EnginePage() {
               onChange={(e) => setContrast(Number(e.target.value))}
               className="w-full mt-3 accent-white"
             />
-            <div className="flex justify-between text-[10px] text-neutral-600 mt-1">
+            <div className="flex justify-between text-[10px] text-muted-fg mt-1">
               <span>-128</span>
               <span>+128</span>
             </div>
@@ -659,8 +659,8 @@ export default function EnginePage() {
         {/* ── Right: Output Area ── */}
         <div className="flex-1 flex flex-col overflow-hidden lg:max-h-[calc(100vh-100px)]">
           {/* Output toolbar */}
-          <div className="flex items-center justify-between px-6 py-3 border-b border-neutral-800 bg-black/50">
-            <span className="text-[11px] text-neutral-500 font-mono tracking-wide">
+          <div className="flex items-center justify-between px-6 py-3 border-b border-border bg-background/50">
+            <span className="text-[11px] text-muted-fg font-mono tracking-wide">
               {output
                 ? `${output[0]?.length ?? 0} x ${output.length} characters`
                 : 'No output'}
@@ -672,8 +672,8 @@ export default function EnginePage() {
                 copied
                   ? 'border-green-800 bg-green-900/30 text-green-400'
                   : output
-                    ? 'border-neutral-700 text-neutral-400 hover:text-white hover:border-neutral-500'
-                    : 'border-neutral-800 text-neutral-700 cursor-default'
+                    ? 'border-border text-muted-fg hover:text-foreground hover:border-accent'
+                    : 'border-border text-muted-fg cursor-default'
               }`}
             >
               {copied ? 'COPIED' : 'COPY ASCII'}
@@ -681,9 +681,9 @@ export default function EnginePage() {
           </div>
 
           {/* ASCII output */}
-          <div className="flex-1 overflow-auto p-4 bg-black">
+          <div className="flex-1 overflow-auto p-4 bg-background">
             <pre
-              className="font-mono text-xs leading-none p-4 border border-neutral-800 overflow-auto"
+              className="font-mono text-xs leading-none p-4 border border-border overflow-auto"
               style={{
                 fontSize: `clamp(3px, ${Math.max(3, 10 - resolution * 0.04)}px, 10px)`,
                 lineHeight: 1.0,
@@ -712,7 +712,7 @@ export default function EnginePage() {
 
 function SidebarLabel({ children }: { children: React.ReactNode }) {
   return (
-    <div className="text-xs uppercase tracking-widest text-neutral-500 font-bold"
+    <div className="text-xs uppercase tracking-widest text-muted-fg font-bold"
       style={{ fontSize: '9px', letterSpacing: '0.15em' }}>
       {children}
     </div>
@@ -720,7 +720,7 @@ function SidebarLabel({ children }: { children: React.ReactNode }) {
 }
 
 function SidebarDivider() {
-  return <div className="border-t border-neutral-800" />;
+  return <div className="border-t border-border" />;
 }
 
 function SidebarRadio({
@@ -739,12 +739,12 @@ function SidebarRadio({
   return (
     <label
       className={`flex items-center gap-2.5 py-1 cursor-pointer text-xs font-mono transition-colors ${
-        checked ? 'text-white' : 'text-neutral-500 hover:text-neutral-300'
+        checked ? 'text-foreground' : 'text-muted-fg hover:text-foreground'
       }`}
     >
       <span
         className={`w-3 h-3 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
-          checked ? 'border-white' : 'border-neutral-600'
+          checked ? 'border-white' : 'border-border'
         }`}
       >
         {checked && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
@@ -773,7 +773,7 @@ function SidebarToggle({
 }) {
   return (
     <label className="flex items-center justify-between cursor-pointer group">
-      <span className="text-xs font-mono text-neutral-400 group-hover:text-neutral-300 transition-colors">
+      <span className="text-xs font-mono text-muted-fg group-hover:text-foreground transition-colors">
         {label}
       </span>
       <button
@@ -784,14 +784,14 @@ function SidebarToggle({
         className={`w-9 h-5 rounded-full border-2 relative transition-colors cursor-pointer ${
           checked
             ? 'bg-white border-white'
-            : 'bg-transparent border-neutral-600 hover:border-neutral-500'
+            : 'bg-transparent border-border hover:border-accent'
         }`}
       >
         <span
           className={`absolute top-0.5 w-3 h-3 rounded-full transition-all ${
             checked
-              ? 'left-[18px] bg-black'
-              : 'left-0.5 bg-neutral-500'
+              ? 'left-[18px] bg-background'
+              : 'left-0.5 bg-muted-fg'
           }`}
         />
       </button>

@@ -55,6 +55,12 @@ export default function HomePage() {
       {/* ═══ HERO ═══ */}
       <section className="relative flex items-center justify-center min-h-screen overflow-hidden border-b-2 border-foreground">
         <DitherCanvas />
+        {/* Vignette: fade the dither so the hero content reads cleanly */}
+        <div
+          className="absolute inset-0 pointer-events-none z-[1]"
+          style={{ background: "radial-gradient(ellipse 85% 70% at 50% 42%, transparent 0%, hsl(var(--sk-background) / 0.5) 52%, hsl(var(--sk-background)) 100%)" }}
+          aria-hidden="true"
+        />
         <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-5xl mx-auto">
           <span className="sk-badge mb-10" data-variant="solid" style={{ background: "hsl(var(--sk-accent))", color: "hsl(var(--sk-accent-foreground))" }}>
             v1.0 &mdash; now on npm
@@ -106,7 +112,7 @@ export default function HomePage() {
             {FEATURES.map((feature) => (
               <div
                 key={feature.title}
-                className="group flex flex-col p-7 border-2 border-foreground bg-background transition-transform hover:-translate-x-[2px] hover:-translate-y-[2px]"
+                className="group flex flex-col p-7 border-2 border-foreground bg-surface transition-all hover:-translate-x-[2px] hover:-translate-y-[2px] hover:border-accent"
                 style={{ boxShadow: "5px 5px 0 #1b1b1b" }}
               >
                 <span className="text-xl font-mono text-accent mb-5">{feature.icon}</span>

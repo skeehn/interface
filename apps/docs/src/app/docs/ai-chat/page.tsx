@@ -63,12 +63,12 @@ export default function AIChatPage() {
       }}
     >
       {/* ── Header ── */}
-      <div className="flex items-center justify-between px-8 py-4 border-b border-neutral-800 bg-neutral-900/50 shrink-0">
+      <div className="flex items-center justify-between px-8 py-4 border-b border-border bg-surface/50 shrink-0">
         <div>
           <h1 className="docs-heading text-lg tracking-tight" style={{ fontFamily: 'var(--sk-font-sans)' }}>
             AI Chat Demo
           </h1>
-          <p className="text-xs mt-0.5 text-neutral-500">Built entirely from skeehn components + hooks</p>
+          <p className="text-xs mt-0.5 text-muted-fg">Built entirely from skeehn components + hooks</p>
         </div>
         <AgentStatus status={isLoading ? 'thinking' : 'idle'} />
       </div>
@@ -77,7 +77,7 @@ export default function AIChatPage() {
       <div ref={scrollRef} className="flex-1 overflow-y-auto relative">
         {isEmpty ? (
           <div className="flex flex-col items-center justify-center h-full px-6">
-            <div className="text-5xl mb-8 text-neutral-700 font-mono font-bold select-none">▓▒░▒▓</div>
+            <div className="text-5xl mb-8 text-muted-fg font-mono font-bold select-none">▓▒░▒▓</div>
             <PromptSuggestions
               className="max-w-xl w-full"
               label="Ask me anything about skeehn"
@@ -128,7 +128,7 @@ export default function AIChatPage() {
         {!atBottom && !isEmpty && (
           <button
             onClick={() => scrollToBottom()}
-            className="absolute bottom-4 left-1/2 -translate-x-1/2 px-3 py-1.5 text-[11px] font-mono uppercase tracking-wider border border-neutral-700 bg-neutral-900 text-neutral-300 hover:bg-neutral-800 transition-colors cursor-pointer"
+            className="absolute bottom-4 left-1/2 -translate-x-1/2 px-3 py-1.5 text-[11px] font-mono uppercase tracking-wider border border-border bg-surface text-foreground hover:bg-muted transition-colors cursor-pointer"
           >
             ▼ jump to latest
           </button>
@@ -136,7 +136,7 @@ export default function AIChatPage() {
       </div>
 
       {/* ── Input ── */}
-      <div className="shrink-0 border-t border-neutral-800 bg-neutral-900/80 backdrop-blur-sm px-6 py-4">
+      <div className="shrink-0 border-t border-border bg-surface/80 backdrop-blur-sm px-6 py-4">
         <div className="max-w-3xl mx-auto">
           <ChatInput
             value={input}
@@ -189,14 +189,14 @@ function InlineMarkdown({ text }: { text: string }) {
           {line.split(/(\*\*.*?\*\*|`[^`]+`)/).map((seg, k) => {
             if (seg.startsWith('**') && seg.endsWith('**')) {
               return (
-                <strong key={k} className="font-bold text-white">
+                <strong key={k} className="font-bold text-foreground">
                   {seg.slice(2, -2)}
                 </strong>
               );
             }
             if (seg.startsWith('`') && seg.endsWith('`')) {
               return (
-                <code key={k} className="bg-neutral-800 px-1.5 py-0.5 rounded text-[0.9em]">
+                <code key={k} className="bg-muted px-1.5 py-0.5 rounded text-[0.9em]">
                   {seg.slice(1, -1)}
                 </code>
               );

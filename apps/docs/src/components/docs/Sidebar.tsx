@@ -183,7 +183,7 @@ export function Sidebar() {
       {/* Mobile overlay */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/60 lg:hidden"
+          className="fixed inset-0 z-40 bg-background/60 lg:hidden"
           onClick={closeMobile}
           aria-hidden="true"
         />

@@ -116,18 +116,18 @@ export default function ThemesPage() {
       }}
     >
       {/* Header */}
-      <div className="px-8 py-8 border-b border-neutral-800">
+      <div className="px-8 py-8 border-b border-border">
         <h1 className="docs-heading text-3xl tracking-tight mb-2"
           style={{ fontFamily: 'var(--sk-font-sans)' }}>
           Theme Gallery
         </h1>
-        <p className="text-sm text-neutral-500 max-w-lg">
+        <p className="text-sm text-muted-fg max-w-lg">
           7 themes, each with a distinct personality. Click any card to apply it
           site-wide and see the entire page transform.
         </p>
-        <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 border border-neutral-800 bg-neutral-900">
-          <span className="text-[10px] uppercase tracking-widest text-neutral-600">Active</span>
-          <span className="text-sm font-bold text-white">{activeTheme}</span>
+        <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 border border-border bg-surface">
+          <span className="text-[10px] uppercase tracking-widest text-muted-fg">Active</span>
+          <span className="text-sm font-bold text-foreground">{activeTheme}</span>
         </div>
       </div>
 
@@ -146,17 +146,17 @@ export default function ThemesPage() {
       </div>
 
       {/* Usage section */}
-      <div className="px-8 py-10 border-t border-neutral-800">
+      <div className="px-8 py-10 border-t border-border">
         <h2 className="docs-heading text-lg mb-6"
           style={{ fontFamily: 'var(--sk-font-sans)' }}>
           Usage
         </h2>
-        <div className="bg-black border border-neutral-800 p-5 font-mono text-sm max-w-2xl">
-          <div className="text-neutral-600 mb-2">// Import a theme CSS file:</div>
-          <div className="text-neutral-200">@import &quot;@skeehn/core/themes/terminal.css&quot;;</div>
+        <div className="bg-background border border-border p-5 font-mono text-sm max-w-2xl">
+          <div className="text-muted-fg mb-2">// Import a theme CSS file:</div>
+          <div className="text-foreground">@import &quot;@skeehn/core/themes/terminal.css&quot;;</div>
           <br />
-          <div className="text-neutral-600 mb-2">// Or apply dynamically with a data attribute:</div>
-          <div className="text-neutral-200">&lt;html data-theme=&quot;terminal&quot;&gt;</div>
+          <div className="text-muted-fg mb-2">// Or apply dynamically with a data attribute:</div>
+          <div className="text-foreground">&lt;html data-theme=&quot;terminal&quot;&gt;</div>
         </div>
       </div>
     </div>
@@ -278,11 +278,11 @@ function ThemeCard({
 
       {/* Description footer */}
       <div className="px-5 py-4 border-t" style={{ borderColor: '#333', background: '#111' }}>
-        <p className="text-sm leading-relaxed text-neutral-300 mb-2"
+        <p className="text-sm leading-relaxed text-foreground mb-2"
           style={{ fontFamily: 'var(--sk-font-sans)' }}>
           {theme.description}
         </p>
-        <p className="text-[11px] text-neutral-600 font-mono">
+        <p className="text-[11px] text-muted-fg font-mono">
           {theme.signature}
         </p>
       </div>

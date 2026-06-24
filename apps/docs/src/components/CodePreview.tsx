@@ -38,7 +38,7 @@ function highlightLine(line: string): React.ReactNode[] {
     className: string;
   }> = [
     // single-line comments
-    { regex: /^(\/\/.*)/, className: "text-white/30" },
+    { regex: /^(\/\/.*)/, className: "text-foreground/30" },
     // strings (single or double quoted)
     { regex: /^('[^']*'|"[^"]*"|`[^`]*`)/, className: "text-green-400" },
     // JSX tags like <ChatBubble, </div>, />
@@ -56,13 +56,13 @@ function highlightLine(line: string): React.ReactNode[] {
     // JSX attributes like key=, role=
     { regex: /^([a-zA-Z_$][a-zA-Z0-9_$]*)(?=\s*=)/, className: "text-sky-300" },
     // regular identifiers
-    { regex: /^([a-zA-Z_$][a-zA-Z0-9_$]*)/, className: "text-white/80" },
+    { regex: /^([a-zA-Z_$][a-zA-Z0-9_$]*)/, className: "text-foreground/80" },
     // braces, parens, operators, punctuation
-    { regex: /^([{}()[\];,=>.!?:&|+\-*/%]+)/, className: "text-white/40" },
+    { regex: /^([{}()[\];,=>.!?:&|+\-*/%]+)/, className: "text-foreground/40" },
     // whitespace
     { regex: /^(\s+)/, className: "" },
     // anything else (single char fallback)
-    { regex: /^(.)/, className: "text-white/60" },
+    { regex: /^(.)/, className: "text-foreground/60" },
   ];
 
   while (remaining.length > 0) {
@@ -107,7 +107,7 @@ export function CodePreview() {
   const lines = CODE.split("\n");
 
   return (
-    <div className="bg-black/60 border border-white/10 overflow-hidden">
+    <div className="bg-background/60 border border-white/10 overflow-hidden">
       {/* Header bar */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-white/5">
         <div className="flex items-center gap-3">
@@ -116,11 +116,11 @@ export function CodePreview() {
             <span className="w-2.5 h-2.5 rounded-full bg-white/10" />
             <span className="w-2.5 h-2.5 rounded-full bg-white/10" />
           </div>
-          <span className="text-xs text-white/40 font-mono">chat.tsx</span>
+          <span className="text-xs text-foreground/40 font-mono">chat.tsx</span>
         </div>
         <button
           onClick={handleCopy}
-          className="text-xs text-white/40 hover:text-white transition-colors font-mono cursor-pointer px-2 py-1 hover:bg-white/10"
+          className="text-xs text-foreground/40 hover:text-foreground transition-colors font-mono cursor-pointer px-2 py-1 hover:bg-white/10"
           aria-label="Copy code"
         >
           {copied ? "copied!" : "copy"}
@@ -133,7 +133,7 @@ export function CodePreview() {
           <code>
             {lines.map((line, i) => (
               <span key={i} className="block">
-                <span className="inline-block w-8 text-right mr-6 text-white/20 select-none text-xs">
+                <span className="inline-block w-8 text-right mr-6 text-foreground/20 select-none text-xs">
                   {i + 1}
                 </span>
                 {highlightLine(line)}

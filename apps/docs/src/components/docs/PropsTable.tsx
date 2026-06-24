@@ -176,35 +176,35 @@ export function PropsTable({ slug }: { slug: string }) {
 
   if (props.length === 0) {
     return (
-      <p className="text-neutral-500 text-sm italic">
+      <p className="text-muted-fg text-sm italic">
         No documented props for this component yet.
       </p>
     );
   }
 
   return (
-    <div className="overflow-x-auto border border-neutral-800">
+    <div className="overflow-x-auto border border-border">
       <table className="w-full text-sm border-collapse">
         <thead>
-          <tr className="border-b border-neutral-700">
-            <th className="py-3 px-4 text-left text-xs uppercase tracking-wider text-neutral-400 font-mono font-normal">
+          <tr className="border-b border-border">
+            <th className="py-3 px-4 text-left text-xs uppercase tracking-wider text-muted-fg font-mono font-normal">
               Prop
             </th>
-            <th className="py-3 px-4 text-left text-xs uppercase tracking-wider text-neutral-400 font-mono font-normal">
+            <th className="py-3 px-4 text-left text-xs uppercase tracking-wider text-muted-fg font-mono font-normal">
               Type
             </th>
-            <th className="py-3 px-4 text-left text-xs uppercase tracking-wider text-neutral-400 font-mono font-normal">
+            <th className="py-3 px-4 text-left text-xs uppercase tracking-wider text-muted-fg font-mono font-normal">
               Default
             </th>
-            <th className="py-3 px-4 text-left text-xs uppercase tracking-wider text-neutral-400 font-mono font-normal">
+            <th className="py-3 px-4 text-left text-xs uppercase tracking-wider text-muted-fg font-mono font-normal">
               Description
             </th>
           </tr>
         </thead>
         <tbody>
           {props.map((p) => (
-            <tr key={p.attr} className="border-b border-neutral-800 last:border-0">
-              <td className="py-3 px-4 font-mono text-sm text-white whitespace-nowrap">
+            <tr key={p.attr} className="border-b border-border last:border-0">
+              <td className="py-3 px-4 font-mono text-sm text-foreground whitespace-nowrap">
                 {p.attr}
               </td>
               <td className="py-3 px-4 font-mono text-sm text-emerald-400 whitespace-nowrap max-w-72 overflow-hidden text-ellipsis">
@@ -213,7 +213,7 @@ export function PropsTable({ slug }: { slug: string }) {
               <td className="py-3 px-4 font-mono text-sm text-amber-400 whitespace-nowrap">
                 {p.default}
               </td>
-              <td className="py-3 px-4 text-sm text-neutral-300">
+              <td className="py-3 px-4 text-sm text-foreground">
                 {p.description}
               </td>
             </tr>

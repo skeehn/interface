@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 const CATEGORY_COLORS: Record<string, string> = {
   core: 'text-blue-400 border-blue-400/30',
   ai: 'text-violet-400 border-violet-400/30',
-  layout: 'text-neutral-400 border-neutral-600',
+  layout: 'text-muted-fg border-border',
   dataviz: 'text-cyan-400 border-cyan-400/30',
   motion: 'text-orange-400 border-orange-400/30',
 };
@@ -51,20 +51,20 @@ export default async function ComponentPage({
           {component.name}
         </h1>
 
-        <p className="text-neutral-400 text-base leading-relaxed mb-5">
+        <p className="text-muted-fg text-base leading-relaxed mb-5">
           {component.description}
         </p>
 
         <div className="flex gap-2 flex-wrap">
           <span
-            className={`px-2 py-0.5 text-xs font-mono uppercase tracking-wider border ${CATEGORY_COLORS[component.category] ?? 'text-neutral-400 border-neutral-600'}`}
+            className={`px-2 py-0.5 text-xs font-mono uppercase tracking-wider border ${CATEGORY_COLORS[component.category] ?? 'text-muted-fg border-border'}`}
           >
             {getCategoryLabel(component.category)}
           </span>
           {component.files.map((f) => (
             <span
               key={f}
-              className="px-2 py-0.5 text-xs font-mono text-neutral-500 border border-neutral-800"
+              className="px-2 py-0.5 text-xs font-mono text-muted-fg border border-border"
             >
               {f}
             </span>
@@ -75,10 +75,10 @@ export default async function ComponentPage({
       {/* Install */}
       <section>
         <h2 className="text-2xl font-mono font-bold mb-6">Installation</h2>
-        <div className="bg-neutral-900 border border-neutral-800 p-4 font-mono text-sm flex justify-between items-center">
+        <div className="bg-surface border border-border p-4 font-mono text-sm flex justify-between items-center">
           <div className="flex items-center gap-3 min-w-0">
-            <span className="text-neutral-600 select-none">$</span>
-            <code className="text-neutral-200 truncate">{installCmd}</code>
+            <span className="text-muted-fg select-none">$</span>
+            <code className="text-foreground truncate">{installCmd}</code>
           </div>
           <CopyButton text={installCmd} />
         </div>

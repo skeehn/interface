@@ -311,13 +311,13 @@ $ npx skeehn add card
   ),
 
   'voice-session': () => (
-    <p className="text-neutral-500 text-sm italic">
+    <p className="text-muted-fg text-sm italic">
       Voice session requires microphone access. See the component docs for integration details.
     </p>
   ),
 
   markdown: () => (
-    <p className="text-neutral-500 text-sm italic">
+    <p className="text-muted-fg text-sm italic">
       The Markdown component renders markdown strings as styled HTML. Import and pass content as a prop.
     </p>
   ),
@@ -333,14 +333,14 @@ $ npx skeehn add card
   layout: () => (
     <div className="flex flex-col gap-4">
       <Grid cols="3">
-        <GridCell><div className="p-4 border border-neutral-800 text-center text-sm">1</div></GridCell>
-        <GridCell><div className="p-4 border border-neutral-800 text-center text-sm">2</div></GridCell>
-        <GridCell><div className="p-4 border border-neutral-800 text-center text-sm">3</div></GridCell>
+        <GridCell><div className="p-4 border border-border text-center text-sm">1</div></GridCell>
+        <GridCell><div className="p-4 border border-border text-center text-sm">2</div></GridCell>
+        <GridCell><div className="p-4 border border-border text-center text-sm">3</div></GridCell>
       </Grid>
       <Stack direction="horizontal" gap="sm">
-        <div className="p-3 border border-neutral-800 text-sm">Stack item</div>
-        <div className="p-3 border border-neutral-800 text-sm">Stack item</div>
-        <div className="p-3 border border-neutral-800 text-sm">Stack item</div>
+        <div className="p-3 border border-border text-sm">Stack item</div>
+        <div className="p-3 border border-border text-sm">Stack item</div>
+        <div className="p-3 border border-border text-sm">Stack item</div>
       </Stack>
       <Divider />
       <div className="flex gap-3">

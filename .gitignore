@@ -8,3 +8,5 @@ dist/
 .env
 *.tsbuildinfo
 *.tgz
+.vercel
+.gstack/

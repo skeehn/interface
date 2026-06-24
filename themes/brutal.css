@@ -1,87 +1,114 @@
 /*
- * skeehn — Brutal Theme: Heavy ASCII Blocks
+ * skeehn — Brutalist Theme: "Brutal · Gold" (dark)
  *
- * High contrast, thick borders, raw pixel grid.
- * No subtlety — everything is bold, loud, and intentional.
- * Signature: 2px borders, hard shadows, accent yellow highlights.
+ * Loud, high-contrast, raw. 2px borders, hard offset shadows, warm gold accent.
+ * Dresses the docs site. Same components as Default — only the token layer changes.
+ * One core, many skins.
  */
 :root[data-theme="brutal"] {
-  /* ═══ COLORS ═══ */
-  --sk-background:         0 0% 98%;
-  --sk-foreground:         0 0% 5%;
-  --sk-surface:            0 0% 95%;
-  --sk-primary:            0 0% 5%;
-  --sk-primary-fg:         0 0% 98%;
-  --sk-secondary:          0 0% 92%;
-  --sk-secondary-fg:       0 0% 5%;
-  --sk-muted:              0 0% 92%;
-  --sk-muted-foreground:   0 0% 40%;
-  --sk-accent:             50 100% 50%;
-  --sk-accent-foreground:  0 0% 5%;
-  --sk-border-color:       0 0% 5%;
-  --sk-ring:               0 0% 5%;
-  --sk-success:            142 72% 36%;
-  --sk-warning:            50 100% 50%;
-  --sk-info:               217 91% 55%;
-  --sk-destructive:        0 84% 55%;
+  /* ═══ COLORS (dark) ═══ */
+  --sk-background:         0 0% 5%;       /* #0d0d0d */
+  --sk-foreground:         0 0% 96%;      /* #f4f4f4 */
+  --sk-surface:            0 0% 8%;
+  --sk-primary:            45 100% 62%;   /* gold */
+  --sk-primary-fg:         48 100% 6%;
+  --sk-secondary:          0 0% 12%;
+  --sk-secondary-fg:       0 0% 96%;
+  --sk-muted:              0 0% 10%;
+  --sk-muted-foreground:   0 0% 62%;
+  --sk-accent:             45 100% 62%;   /* warm gold #FFD23F */
+  --sk-accent-foreground:  48 100% 6%;
+  --sk-border-color:       0 0% 94%;      /* near-white 2px borders */
+  --sk-ring:               45 100% 62%;
+  --sk-success:            142 65% 45%;
+  --sk-warning:            45 100% 62%;
+  --sk-info:               210 90% 62%;
+  --sk-destructive:        0 80% 60%;
 
-  /* ═══ DITHER ═══ */
+  /* ═══ DITHER (strong, visible) ═══ */
   --sk-dither-pattern:     var(--sk-dither-b12);
-  --sk-dither-opacity:     0.25;
+  --sk-dither-opacity:     var(--sk-dither-opacity-strong);
 
-  /* ═══ BORDERS ═══ */
-  --sk-border-width:       2px;
+  /* ═══ SQUARE — no radius ═══ */
+  --sk-radius:         0px;
+  --sk-radius-sm:      0px;
+  --sk-radius-md:      0px;
+  --sk-radius-lg:      0px;
+  --sk-radius-panel:   0px;
+  --sk-radius-control: 0px;
+
+  /* ═══ BORDERS — thick ═══ */
+  --sk-border-width:   2px;
+
+  /* ═══ ELEVATION — hard offset (no blur) ═══ */
+  --sk-panel-gradient: none;
+  --sk-panel-shadow:   4px 4px 0 hsl(0 0% 11%);
 }
 
-/* Signature: Hard pixel shadow on all bordered elements */
+/* Signature: hard pixel shadow on bordered elements */
 :root[data-theme="brutal"] .sk-btn {
   border-width: 2px;
-  border-color: hsl(var(--sk-foreground));
-  box-shadow: 3px 3px 0 hsl(var(--sk-foreground));
+  border-color: hsl(var(--sk-border-color));
+  box-shadow: 3px 3px 0 hsl(0 0% 11%);
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--sk-letter-spacing-wide);
 }
 :root[data-theme="brutal"] .sk-btn:hover {
-  box-shadow: 4px 4px 0 hsl(var(--sk-foreground));
+  box-shadow: 4px 4px 0 hsl(0 0% 11%);
   transform: translate(-1px, -1px);
 }
 :root[data-theme="brutal"] .sk-btn:active {
-  box-shadow: 0 0 0 hsl(var(--sk-foreground));
+  box-shadow: 0 0 0 hsl(0 0% 11%);
   transform: translate(3px, 3px);
 }
 
 /* Cards get hard shadow */
 :root[data-theme="brutal"] .sk-card {
   border-width: 2px;
-  border-color: hsl(var(--sk-foreground));
-  box-shadow: 4px 4px 0 hsl(var(--sk-foreground));
+  border-color: hsl(var(--sk-border-color));
+  box-shadow: 4px 4px 0 hsl(0 0% 11%);
 }
 :root[data-theme="brutal"] .sk-card:hover {
-  box-shadow: 6px 6px 0 hsl(var(--sk-foreground));
+  box-shadow: 6px 6px 0 hsl(0 0% 11%);
   transform: translate(-2px, -2px);
 }
 
 /* Inputs: thick border */
 :root[data-theme="brutal"] input,
 :root[data-theme="brutal"] textarea,
-:root[data-theme="brutal"] select {
+:root[data-theme="brutal"] select,
+:root[data-theme="brutal"] .sk-chat-input {
   border-width: 2px;
-  border-color: hsl(var(--sk-foreground));
+  border-color: hsl(var(--sk-border-color));
 }
 
-/* Badges: loud accent background */
+/* Badges: loud */
 :root[data-theme="brutal"] .sk-badge {
   border-width: 2px;
-  border-color: hsl(var(--sk-foreground));
+  border-color: hsl(var(--sk-border-color));
   font-weight: 700;
   text-transform: uppercase;
 }
 
-/* Yellow accent highlight bar */
+/* Accent highlight bar */
 :root[data-theme="brutal"] .sk-alert {
   border-width: 2px;
   border-left-width: 6px;
+}
+
+/* Chat: user bubble is filled gold (vs surfaced in Default) */
+:root[data-theme="brutal"] .sk-chat-bubble[data-role="user"] {
+  background: hsl(var(--sk-accent));
+  color: hsl(var(--sk-accent-foreground));
+  border-color: hsl(var(--sk-accent));
+  font-weight: 500;
+}
+:root[data-theme="brutal"] .sk-chat-bubble[data-role="tool"],
+:root[data-theme="brutal"] .sk-tool-card,
+:root[data-theme="brutal"] .sk-code-block {
+  border-width: 2px;
+  box-shadow: 4px 4px 0 hsl(0 0% 11%);
 }
 
 /* ASCII grid texture on body */
@@ -91,7 +118,7 @@
   inset: 0;
   background-image: var(--sk-dither-b4);
   background-size: 16px 16px;
-  opacity: 0.02;
+  opacity: 0.05;
   pointer-events: none;
   z-index: 9999;
 }

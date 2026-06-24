@@ -3,181 +3,81 @@
  *
  * @component sk-prompt-suggestions
  * @variants  default | chips
- * @states    [data-loading] | [data-skeleton]
- * @slots     __label | __grid | __group | sk-prompt-suggestion | __icon | __text
- * @features  Categorized groups, animated entrance, keyboard navigation, dither hover
- * @a11y      Keyboard navigable, focus-visible rings, button semantics
- * @print     Hidden (interactive suggestions)
+ * @slots     __label __grid __group __icon __text (+ sk-prompt-suggestion)
+ * @a11y      Keyboard navigable, focus rings, button semantics
+ * @design    2-3 col grid, readable label, prominent icons, lift-on-hover.
  */
 
-.sk-prompt-suggestions {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sk-space-3);
-  padding: var(--sk-space-6) 0;
-}
-
+.sk-prompt-suggestions { display: flex; flex-direction: column; gap: var(--sk-space-3); padding: var(--sk-space-6) 0; }
 .sk-prompt-suggestions__label {
-  font-family: var(--sk-font-mono);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-family: var(--sk-font-mono); font-size: var(--sk-font-size-xs); font-weight: 700;
+  letter-spacing: var(--sk-letter-spacing-xwide); text-transform: uppercase;
   color: hsl(var(--sk-muted-foreground));
 }
-
-.sk-prompt-suggestions__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: var(--sk-space-2);
-}
+.sk-prompt-suggestions__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--sk-space-2); }
 
 .sk-prompt-suggestion {
-  border: 1px solid hsl(var(--sk-border-color));
+  border: var(--sk-border); border-radius: var(--sk-radius-md);
   padding: var(--sk-space-3) var(--sk-space-4);
-  font-family: var(--sk-font-sans);
-  font-size: var(--sk-font-size-sm);
-  color: hsl(var(--sk-muted-foreground));
-  background: transparent;
-  cursor: pointer;
-  text-align: left;
-  transition: border-color var(--sk-transition), color var(--sk-transition), background var(--sk-transition);
-  position: relative;
-  overflow: hidden;
-  line-height: 1.4;
+  font-family: var(--sk-font-sans); font-size: var(--sk-font-size-sm);
+  color: hsl(var(--sk-foreground)); background: hsl(var(--sk-surface));
+  cursor: pointer; text-align: left; line-height: var(--sk-line-height);
+  transition: border-color var(--sk-transition), background var(--sk-transition), transform var(--sk-transition-fast);
+  position: relative; overflow: hidden;
 }
-
 .sk-prompt-suggestion::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: var(--sk-dither-bayer);
-  background-size: 8px 8px;
-  opacity: 0;
-  transition: opacity var(--sk-transition);
-  pointer-events: none;
+  content: ""; position: absolute; inset: 0;
+  background-image: var(--sk-dither-pattern); background-size: 8px 8px;
+  opacity: 0; transition: opacity var(--sk-transition); pointer-events: none;
 }
+.sk-prompt-suggestion:hover { border-color: hsl(var(--sk-accent)); background: hsl(var(--sk-secondary)); transform: translateY(-1px); }
+.sk-prompt-suggestion:hover::before { opacity: var(--sk-dither-opacity-subtle); }
+.sk-prompt-suggestion:active { transform: translateY(0); }
+.sk-prompt-suggestion:focus-visible { outline: var(--sk-focus-ring); outline-offset: var(--sk-focus-ring-offset); }
 
-.sk-prompt-suggestion:hover {
-  border-color: hsl(var(--sk-foreground));
-  color: hsl(var(--sk-foreground));
-  background: hsl(var(--sk-accent));
-}
-.sk-prompt-suggestion:hover::before { opacity: 0.05; }
+.sk-prompt-suggestion__icon { display: block; font-family: var(--sk-font-mono); font-size: 1.1rem; margin-bottom: var(--sk-space-2); color: hsl(var(--sk-accent)); }
+.sk-prompt-suggestion__text { display: block; position: relative; z-index: 1; }
 
-.sk-prompt-suggestion:focus-visible {
-  outline: 2px solid hsl(var(--sk-ring));
-  outline-offset: 2px;
-}
+/* Chips variant */
+.sk-prompt-suggestions[data-variant="chips"] .sk-prompt-suggestions__grid { grid-template-columns: none; display: flex; flex-wrap: wrap; }
+.sk-prompt-suggestions[data-variant="chips"] .sk-prompt-suggestion { padding: var(--sk-space-1) var(--sk-space-3); font-size: var(--sk-font-size-xs); font-family: var(--sk-font-mono); border-radius: var(--sk-radius-full); }
+.sk-prompt-suggestions[data-variant="chips"] .sk-prompt-suggestion__icon { display: none; }
 
-.sk-prompt-suggestion__icon {
-  display: block;
-  font-family: var(--sk-font-mono);
-  font-size: 1rem;
-  margin-bottom: var(--sk-space-2);
-  opacity: 0.5;
-}
-
-.sk-prompt-suggestion__text { display: block; }
-
-/* Chips variant — compact inline pills */
-.sk-prompt-suggestions[data-variant="chips"] .sk-prompt-suggestions__grid {
-  grid-template-columns: none;
-  display: flex;
-  flex-wrap: wrap;
-}
-.sk-prompt-suggestions[data-variant="chips"] .sk-prompt-suggestion {
-  padding: var(--sk-space-1) var(--sk-space-3);
-  font-size: var(--sk-font-size-xs);
-  font-family: var(--sk-font-mono);
-}
-.sk-prompt-suggestions[data-variant="chips"] .sk-prompt-suggestion__icon {
-  display: none;
-}
-
-/* ============================================================
-   CATEGORIZED GROUPS
-   ============================================================ */
-
-.sk-prompt-suggestions__group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sk-space-2);
-}
-
+/* Categorized groups */
+.sk-prompt-suggestions__group { display: flex; flex-direction: column; gap: var(--sk-space-2); }
 .sk-prompt-suggestions__group-label {
-  font-family: var(--sk-font-mono);
-  font-size: 0.55rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: hsl(var(--sk-muted-foreground) / 0.5);
-  padding-bottom: var(--sk-space-1);
-  border-bottom: 1px dashed hsl(var(--sk-border-color));
+  font-family: var(--sk-font-mono); font-size: var(--sk-font-size-xs); font-weight: 700;
+  letter-spacing: var(--sk-letter-spacing-wide); text-transform: uppercase;
+  color: hsl(var(--sk-muted-foreground) / 0.75);
+  padding-bottom: var(--sk-space-1); border-bottom: 1px dashed hsl(var(--sk-border-color));
 }
 
-/* ============================================================
-   ANIMATED ENTRANCE — staggered slide-in
-   ============================================================ */
+/* Staggered entrance */
+@keyframes sk-suggestion-enter { from { transform: translateY(8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.sk-prompt-suggestions[data-animate] .sk-prompt-suggestion { opacity: 0; animation: sk-suggestion-enter var(--sk-anim-normal, 300ms) var(--sk-ease-pixel) both; }
+.sk-prompt-suggestions[data-animate] .sk-prompt-suggestion:nth-child(1) { animation-delay: 0ms; }
+.sk-prompt-suggestions[data-animate] .sk-prompt-suggestion:nth-child(2) { animation-delay: 60ms; }
+.sk-prompt-suggestions[data-animate] .sk-prompt-suggestion:nth-child(3) { animation-delay: 120ms; }
+.sk-prompt-suggestions[data-animate] .sk-prompt-suggestion:nth-child(4) { animation-delay: 180ms; }
+.sk-prompt-suggestions[data-animate] .sk-prompt-suggestion:nth-child(5) { animation-delay: 240ms; }
+.sk-prompt-suggestions[data-animate] .sk-prompt-suggestion:nth-child(6) { animation-delay: 300ms; }
 
-@keyframes sk-suggestion-enter {
-  from { transform: translateY(8px); opacity: 0; }
-  to   { transform: translateY(0); opacity: 1; }
-}
+/* Keyboard focus */
+.sk-prompt-suggestion[data-focused] { border-color: hsl(var(--sk-accent)); background: hsl(var(--sk-secondary)); }
 
-.sk-prompt-suggestions[data-animate] .sk-prompt-suggestion {
-  opacity: 0;
-  animation: sk-suggestion-enter var(--sk-anim-normal, 300ms) var(--sk-ease-pixel, cubic-bezier(0.25, 0.46, 0.45, 0.94)) both;
-}
-
-.sk-prompt-suggestions[data-animate] .sk-prompt-suggestion:nth-child(1)  { animation-delay: 0ms; }
-.sk-prompt-suggestions[data-animate] .sk-prompt-suggestion:nth-child(2)  { animation-delay: 60ms; }
-.sk-prompt-suggestions[data-animate] .sk-prompt-suggestion:nth-child(3)  { animation-delay: 120ms; }
-.sk-prompt-suggestions[data-animate] .sk-prompt-suggestion:nth-child(4)  { animation-delay: 180ms; }
-.sk-prompt-suggestions[data-animate] .sk-prompt-suggestion:nth-child(5)  { animation-delay: 240ms; }
-.sk-prompt-suggestions[data-animate] .sk-prompt-suggestion:nth-child(6)  { animation-delay: 300ms; }
-.sk-prompt-suggestions[data-animate] .sk-prompt-suggestion:nth-child(7)  { animation-delay: 360ms; }
-.sk-prompt-suggestions[data-animate] .sk-prompt-suggestion:nth-child(8)  { animation-delay: 420ms; }
-
-/* ============================================================
-   KEYBOARD NAVIGATION
-   ============================================================ */
-
-.sk-prompt-suggestion[data-focused] {
-  border-color: hsl(var(--sk-foreground));
-  background: hsl(var(--sk-accent));
-  color: hsl(var(--sk-foreground));
-}
-
-/* Micro-interactions */
-.sk-prompt-suggestion:active { transform: translateY(1px); }
-
-/* ============================================================
-   LOADING & SKELETON
-   ============================================================ */
-
-.sk-prompt-suggestions[data-loading] .sk-prompt-suggestion {
-  pointer-events: none;
-  opacity: 0.5;
-}
-
+/* Loading & skeleton */
+.sk-prompt-suggestions[data-loading] .sk-prompt-suggestion { pointer-events: none; opacity: 0.5; }
 .sk-prompt-suggestions[data-skeleton] .sk-prompt-suggestion {
-  pointer-events: none;
-  color: transparent;
-  background: linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-accent)) 50%, hsl(var(--sk-muted)) 75%);
-  background-size: 200% 100%;
-  animation: sk-card-shimmer 1.8s ease-in-out infinite;
-  min-height: 3rem;
+  pointer-events: none; color: transparent;
+  background: linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-secondary)) 50%, hsl(var(--sk-muted)) 75%);
+  background-size: 200% 100%; animation: sk-shimmer 1.8s ease-in-out infinite; min-height: 3rem;
 }
-
 .sk-prompt-suggestions[data-skeleton] .sk-prompt-suggestion::before { display: none; }
 
 @media print { .sk-prompt-suggestions { display: none; } }
-
 @media (prefers-reduced-motion: reduce) {
-  .sk-prompt-suggestion { transition: none; }
-  .sk-prompt-suggestion::before { transition: none; }
-  .sk-prompt-suggestion:active { transform: none; }
+  .sk-prompt-suggestion, .sk-prompt-suggestion::before { transition: none; }
+  .sk-prompt-suggestion:active, .sk-prompt-suggestion:hover { transform: none; }
   .sk-prompt-suggestions[data-animate] .sk-prompt-suggestion { animation: none; opacity: 1; }
   .sk-prompt-suggestions[data-skeleton] .sk-prompt-suggestion { animation: none; background: hsl(var(--sk-muted)); }
 }

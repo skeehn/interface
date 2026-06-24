@@ -409,6 +409,13 @@
   to   { transform: scale(1); opacity: 1; }
 }
 
+/* Shimmer — skeleton/streaming sweep (centralized; was duplicated per-component) */
+@keyframes sk-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.sk-shimmer { animation: sk-shimmer 1.8s ease-in-out infinite; }
+
 .sk-pop-in  { animation: sk-pop-in  var(--sk-anim-normal) var(--sk-ease-spring) both; }
 .sk-pop-out { animation: sk-pop-out var(--sk-anim-fast)   var(--sk-ease-sharp)  both; }
 .sk-scale-up { animation: sk-scale-up var(--sk-anim-normal) var(--sk-ease-spring) both; }

@@ -88,6 +88,7 @@ export const ChatInput = React.forwardRef<HTMLDivElement, ChatInputProps>(
           <textarea
             className="sk-chat-input__field"
             placeholder={placeholder}
+            aria-label={placeholder}
             value={text}
             onChange={handleChange}
             onKeyDown={handleKeyDown}

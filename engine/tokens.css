@@ -83,6 +83,38 @@
   --sk-transition-fast:  60ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --sk-transition-slow: 180ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
+  /* ═══ CONTRACT ADDITIONS (redesign — theme-agnostic) ═══ */
+  /* Line-height + letter-spacing (extend the existing scale) */
+  --sk-line-height-relaxed:   1.64;
+  --sk-letter-spacing-normal: 0em;
+  --sk-letter-spacing-xwide:  0.18em;
+
+  /* Density — padding multiplier; a compact theme may lower this */
+  --sk-density: 1;
+
+  /* Dither opacity tiers — use deliberately (no more 0.04 ghosts) */
+  --sk-dither-opacity-subtle: 0.04;
+  --sk-dither-opacity-normal: 0.12;
+  --sk-dither-opacity-strong: 0.20;
+
+  /* Focus ring — apply to EVERY interactive element */
+  --sk-focus-ring-width:  2px;
+  --sk-focus-ring-offset: 2px;
+  --sk-focus-ring: var(--sk-focus-ring-width) solid hsl(var(--sk-ring));
+
+  /* Avatar / control sizes (was hardcoded per-component) */
+  --sk-size-avatar-xs: 1.25rem;
+  --sk-size-avatar-sm: 1.75rem;
+  --sk-size-avatar-md: 1.875rem;   /* 30px — chat avatar */
+  --sk-size-avatar-lg: 3rem;
+  --sk-size-avatar-xl: 4rem;
+
+  /* Panel tokens — were referenced-but-undefined → Cards rendered flat */
+  --sk-radius-panel:   var(--sk-radius);
+  --sk-radius-control: var(--sk-radius);
+  --sk-panel-gradient: none;
+  --sk-panel-shadow:   var(--sk-shadow-sm);
+
   /* ═══ Z-INDEX ═══ */
   --sk-z-dropdown: 50;
   --sk-z-sticky:   100;

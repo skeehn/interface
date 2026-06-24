@@ -3,115 +3,62 @@
  *
  * @component sk-voice-session
  * @statuses  idle | listening | transcribing | speaking | handoff
- * @states    [data-loading] | [data-skeleton]
- * @slots     __clock | __waveform | __waveform-bar | __transcript | __turn | __controls
- * @features  Waveform visualization, live transcript, status border, role-based turn styling
- * @a11y      aria-live on transcript, status communicated via text + color
- * @print     Transcript visible, controls hidden
+ * @slots     __clock __waveform __waveform-bar __transcript __turn __controls
+ * @a11y      aria-live transcript, status via text + color
+ * @design    Denser waveform, readable transcript turns w/ speaker tint, accent states.
  */
 
 .sk-voice-session {
-  font-family: var(--sk-font-mono);
-  font-size: var(--sk-font-size-sm);
-  line-height: var(--sk-line-height);
-  color: hsl(var(--sk-foreground));
-  background: hsl(var(--sk-background));
-  border: 1px solid hsl(var(--sk-border-color));
-  padding: var(--sk-space-4);
-  display: flex;
-  flex-direction: column;
-  gap: var(--sk-space-3);
+  font-family: var(--sk-font-mono); font-size: var(--sk-font-size-sm); line-height: var(--sk-line-height);
+  color: hsl(var(--sk-foreground)); background: hsl(var(--sk-surface));
+  border: var(--sk-border); border-radius: var(--sk-radius-md);
+  padding: var(--sk-space-4); display: flex; flex-direction: column; gap: var(--sk-space-3);
+  transition: border-color var(--sk-transition);
 }
+.sk-voice-session[data-status="idle"] { opacity: 0.75; }
+.sk-voice-session[data-status="listening"]    { border-color: hsl(var(--sk-accent)); }
+.sk-voice-session[data-status="transcribing"] { border-color: hsl(var(--sk-info)); }
+.sk-voice-session[data-status="speaking"]     { border-color: hsl(var(--sk-success)); }
+.sk-voice-session[data-status="handoff"]      { opacity: 0.5; }
 
-/* Status indicator */
-.sk-voice-session[data-status="idle"] { opacity: 0.7; }
-.sk-voice-session[data-status="listening"] { border-color: hsl(var(--sk-primary)); }
-.sk-voice-session[data-status="transcribing"] { border-color: hsl(var(--sk-accent, var(--sk-primary))); }
-.sk-voice-session[data-status="speaking"] { border-color: hsl(var(--sk-success, var(--sk-primary))); }
-.sk-voice-session[data-status="handoff"] { opacity: 0.5; }
+.sk-voice-session__clock { font-family: var(--sk-font-mono); font-size: var(--sk-font-size-xs); color: hsl(var(--sk-muted-foreground)); letter-spacing: var(--sk-letter-spacing-xwide); font-variant-numeric: tabular-nums; }
 
-/* Clock */
-.sk-voice-session__clock {
-  font-family: var(--sk-font-mono);
-  font-size: var(--sk-font-size-xs, var(--sk-font-size-sm));
-  color: hsl(var(--sk-muted, var(--sk-foreground)));
-  letter-spacing: 0.1em;
-}
-
-/* Waveform */
-.sk-voice-session__waveform {
-  display: flex;
-  align-items: center;
-  gap: var(--sk-space-1);
-  height: 2rem;
-}
-
-.sk-voice-session__waveform-bar {
-  width: 3px;
-  background: hsl(var(--sk-primary));
-  border-radius: 1px;
-  transition: height 0.1s ease;
-}
+/* Waveform — denser bars */
+.sk-voice-session__waveform { display: flex; align-items: center; gap: 2px; height: 2.25rem; }
+.sk-voice-session__waveform-bar { width: 3px; min-height: 2px; background: hsl(var(--sk-accent)); border-radius: 999px; transition: height 0.1s ease; }
+.sk-voice-session[data-status="speaking"] .sk-voice-session__waveform-bar { background: hsl(var(--sk-success)); }
 
 /* Transcript */
-.sk-voice-session__transcript {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sk-space-2);
-  max-height: 12rem;
-  overflow-y: auto;
-}
-
+.sk-voice-session__transcript { display: flex; flex-direction: column; gap: var(--sk-space-2); max-height: 12rem; overflow-y: auto; }
 .sk-voice-session__turn {
-  font-family: var(--sk-font-mono);
-  font-size: var(--sk-font-size-sm);
-  color: hsl(var(--sk-foreground));
-  padding: var(--sk-space-1) var(--sk-space-2);
-  border-left: 2px solid hsl(var(--sk-border-color));
+  font-family: var(--sk-font-sans); font-size: var(--sk-font-size-sm);
+  color: hsl(var(--sk-foreground)); line-height: var(--sk-line-height-relaxed);
+  padding: var(--sk-space-2) var(--sk-space-3); border-left: 2px solid hsl(var(--sk-border-color));
+  border-radius: 0 var(--sk-radius-sm) var(--sk-radius-sm) 0;
 }
+.sk-voice-session__turn[data-role="user"] { border-left-color: hsl(var(--sk-accent)); background: hsl(var(--sk-accent) / 0.06); }
+.sk-voice-session__turn[data-role="assistant"] { border-left-color: hsl(var(--sk-muted-foreground) / 0.4); background: hsl(var(--sk-muted) / 0.4); }
 
-.sk-voice-session__turn[data-role="user"] {
-  border-left-color: hsl(var(--sk-primary));
-}
+.sk-voice-session__controls { display: flex; gap: var(--sk-space-2); align-items: center; }
 
-.sk-voice-session__turn[data-role="assistant"] {
-  border-left-color: hsl(var(--sk-muted, var(--sk-border)));
-}
-
-/* Controls */
-.sk-voice-session__controls {
-  display: flex;
-  gap: var(--sk-space-2);
-  align-items: center;
-}
-
-/* Loading */
+/* Loading & skeleton */
 .sk-voice-session[data-loading] { pointer-events: none; opacity: 0.6; }
 .sk-voice-session[data-loading] .sk-voice-session__waveform { opacity: 0.3; }
-
-/* Skeleton */
 .sk-voice-session[data-skeleton] .sk-voice-session__waveform,
 .sk-voice-session[data-skeleton] .sk-voice-session__transcript,
 .sk-voice-session[data-skeleton] .sk-voice-session__clock {
-  background: linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-accent)) 50%, hsl(var(--sk-muted)) 75%);
-  background-size: 200% 100%;
-  animation: sk-card-shimmer 1.8s ease-in-out infinite;
-  border-radius: var(--sk-radius);
-  color: transparent;
+  background: linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-secondary)) 50%, hsl(var(--sk-muted)) 75%);
+  background-size: 200% 100%; animation: sk-shimmer 1.8s ease-in-out infinite;
+  border-radius: var(--sk-radius-sm); color: transparent;
 }
-
 .sk-voice-session[data-skeleton] .sk-voice-session__waveform-bar { display: none; }
 .sk-voice-session[data-skeleton] .sk-voice-session__turn { visibility: hidden; }
 
 @media print {
   .sk-voice-session { border: 1px solid hsl(var(--sk-foreground)); }
-  .sk-voice-session__waveform { display: none; }
-  .sk-voice-session__controls { display: none; }
-  .sk-voice-session__clock { display: none; }
+  .sk-voice-session__waveform, .sk-voice-session__controls, .sk-voice-session__clock { display: none; }
   .sk-voice-session[data-skeleton] { display: none; }
 }
-
-/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .sk-voice-session__waveform-bar { transition: none; }
   .sk-voice-session[data-skeleton] .sk-voice-session__waveform,

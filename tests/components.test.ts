@@ -173,9 +173,13 @@ describe("CSS token consistency", () => {
       expect(css).toMatch(/var\(--sk-/);
     });
 
-    test(`${comp.name} uses font-family: var(--sk-font-mono)`, () => {
+    test(`${comp.name} uses a font token (sans/mono) or inherits`, () => {
       const css = readFileSync(cssPath, "utf-8");
-      expect(css).toContain("var(--sk-font-mono");
+      // Dual-font system: chrome (labels/code/metadata) uses --sk-font-mono,
+      // prose surfaces (chat/markdown/reasoning) use --sk-font-sans, and
+      // transparent wrappers (e.g. streaming-text) inherit the surrounding font.
+      // The invariant is token discipline: never a hardcoded font stack.
+      expect(css).toMatch(/var\(--sk-font-(mono|sans)\b|font:\s*inherit/);
     });
   }
 });

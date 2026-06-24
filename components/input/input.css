@@ -2,113 +2,76 @@
  * skeehn — Input Component
  *
  * @component sk-input
- * @variants  default | [data-dither] | [data-variant="pixel"] | [data-variant="retro"] | [data-variant="ascii"]
+ * @variants  default | [data-dither] | pixel | retro | ascii
+ * @sizes     sm | md (default) | lg
  * @states    :hover | :focus | :disabled | [data-state="error"] | [data-loading] | [data-skeleton]
  * @slots     sk-input-group | sk-input-label | sk-input | sk-input-hint
- * @a11y      Focus ring, error state border, disabled opacity, aria-invalid support
- * @print     Renders as bordered box with visible value
+ * @a11y      Visible focus ring, error border, disabled opacity, aria-invalid
  */
 
 .sk-input-group { display: flex; flex-direction: column; gap: var(--sk-space-1); margin-bottom: var(--sk-space-3); }
-.sk-input-label { font-family: var(--sk-font-mono); font-size: var(--sk-font-size-xs); font-weight: 500; letter-spacing: 0.03em; text-transform: uppercase; }
-.sk-input { display: flex; width: 100%; height: 2rem; padding: var(--sk-space-2) var(--sk-space-3); font-family: var(--sk-font-mono); font-size: var(--sk-font-size-sm); line-height: 1; border: var(--sk-border); border-radius: var(--sk-radius); background: hsl(var(--sk-background)); transition: all var(--sk-transition); appearance: none; }
-.sk-input::placeholder { color: hsl(var(--sk-muted-foreground) / 0.5); }
-.sk-input:hover { border-color: hsl(var(--sk-foreground) / 0.3); }
-.sk-input:focus { outline: none; border-color: hsl(var(--sk-ring)); box-shadow: 0 0 0 1px hsl(var(--sk-ring) / 0.2); }
-.sk-input:disabled { opacity: 0.4; pointer-events: none; cursor: not-allowed; }
-.sk-input[data-dither]:focus { background-image: var(--sk-dither-pattern); background-repeat: repeat; background-blend-mode: overlay; }
-.sk-input[data-state="error"] { border-color: hsl(var(--sk-destructive)); }
-.sk-input[data-state="error"]:focus { box-shadow: 0 0 0 1px hsl(var(--sk-destructive) / 0.2); }
-.sk-input-hint { font-family: var(--sk-font-mono); font-size: var(--sk-font-size-xs); color: hsl(var(--sk-destructive)); letter-spacing: 0.02em; }
+.sk-input-label { font-family: var(--sk-font-mono); font-size: var(--sk-font-size-xs); font-weight: 500; letter-spacing: var(--sk-letter-spacing-wide); text-transform: uppercase; color: hsl(var(--sk-muted-foreground)); }
 
-/* Micro-interactions */
-.sk-input:focus { outline: none; border-color: hsl(var(--sk-ring)); box-shadow: 0 0 0 3px hsl(var(--sk-ring) / 0.12); }
+.sk-input {
+  display: flex; width: 100%; height: 2.5rem;
+  padding: var(--sk-space-2) var(--sk-space-3);
+  font-family: var(--sk-font-mono); font-size: var(--sk-font-size-sm); line-height: 1.4;
+  border: var(--sk-border); border-radius: var(--sk-radius-control);
+  background: hsl(var(--sk-surface)); color: hsl(var(--sk-foreground));
+  transition: border-color var(--sk-transition), box-shadow var(--sk-transition); appearance: none;
+}
+.sk-input::placeholder { color: hsl(var(--sk-muted-foreground)); }
+.sk-input:hover { border-color: hsl(var(--sk-foreground) / 0.3); }
+.sk-input:focus { outline: none; border-color: hsl(var(--sk-ring)); box-shadow: 0 0 0 3px hsl(var(--sk-ring) / 0.18); }
+.sk-input:disabled { opacity: 0.4; pointer-events: none; cursor: not-allowed; }
+
+/* Sizes */
+.sk-input[data-size="sm"] { height: 2rem; padding: var(--sk-space-1) var(--sk-space-2); font-size: var(--sk-font-size-xs); }
+.sk-input[data-size="lg"] { height: 3rem; padding: var(--sk-space-3) var(--sk-space-4); font-size: var(--sk-font-size-base); }
+
+/* Error */
+.sk-input[data-state="error"] { border-color: hsl(var(--sk-destructive)); }
+.sk-input[data-state="error"]:focus { box-shadow: 0 0 0 3px hsl(var(--sk-destructive) / 0.2); }
+.sk-input-hint { font-family: var(--sk-font-mono); font-size: var(--sk-font-size-xs); color: hsl(var(--sk-destructive)); letter-spacing: var(--sk-letter-spacing-wide); }
+
+.sk-input[data-dither]:focus { background-image: var(--sk-dither-pattern); background-repeat: repeat; background-blend-mode: overlay; }
 
 /* Pixel variant */
-.sk-input[data-variant="pixel"] {
-  border: 2px solid hsl(var(--sk-foreground));
-  box-shadow: 3px 3px 0 hsl(var(--sk-foreground));
-}
-.sk-input[data-variant="pixel"]:focus {
-  box-shadow: 3px 3px 0 hsl(var(--sk-foreground)), 0 0 0 2px hsl(var(--sk-ring) / 0.15);
-}
+.sk-input[data-variant="pixel"] { border: 2px solid hsl(var(--sk-foreground)); box-shadow: 3px 3px 0 hsl(var(--sk-foreground)); }
+.sk-input[data-variant="pixel"]:focus { box-shadow: 3px 3px 0 hsl(var(--sk-foreground)), 0 0 0 2px hsl(var(--sk-ring) / 0.15); }
 
 /* Retro variant — CRT glow */
-.sk-input[data-variant="retro"] {
-  border: 1px solid hsl(var(--sk-foreground) / 0.3);
-  box-shadow: inset 0 0 8px hsl(var(--sk-foreground) / 0.03);
-}
-.sk-input[data-variant="retro"]:focus {
-  border-color: hsl(var(--sk-primary));
-  box-shadow:
-    0 0 8px hsl(var(--sk-primary) / 0.15),
-    inset 0 0 8px hsl(var(--sk-primary) / 0.03);
-}
+.sk-input[data-variant="retro"] { border: 1px solid hsl(var(--sk-foreground) / 0.3); box-shadow: inset 0 0 8px hsl(var(--sk-foreground) / 0.03); }
+.sk-input[data-variant="retro"]:focus { border-color: hsl(var(--sk-primary)); box-shadow: 0 0 8px hsl(var(--sk-primary) / 0.15), inset 0 0 8px hsl(var(--sk-primary) / 0.03); }
 
 /* ASCII variant */
-.sk-input[data-variant="ascii"] {
-  border: none;
-  border-bottom: 1px dashed hsl(var(--sk-border-color));
-  background: transparent;
-}
-.sk-input[data-variant="ascii"]:focus {
-  border-bottom-style: solid;
-  border-bottom-color: hsl(var(--sk-foreground));
-  box-shadow: none;
-}
+.sk-input[data-variant="ascii"] { border: none; border-bottom: 1px dashed hsl(var(--sk-border-color)); background: transparent; border-radius: 0; }
+.sk-input[data-variant="ascii"]:focus { border-bottom-style: solid; border-bottom-color: hsl(var(--sk-foreground)); box-shadow: none; }
 
-/* Loading state */
-@keyframes sk-input-dither-pulse {
-  0%, 100% { opacity: 0.03; }
-  50%      { opacity: 0.08; }
-}
-
-.sk-input[data-loading] {
-  pointer-events: none;
-  position: relative;
-  color: hsl(var(--sk-muted-foreground));
-}
-
+/* Loading */
+@keyframes sk-input-dither-pulse { 0%, 100% { opacity: 0.03; } 50% { opacity: 0.08; } }
+.sk-input[data-loading] { pointer-events: none; position: relative; color: hsl(var(--sk-muted-foreground)); }
+.sk-input-group:has(.sk-input[data-loading]) { position: relative; }
 .sk-input-group:has(.sk-input[data-loading])::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: var(--sk-dither-pattern);
-  background-repeat: repeat;
-  animation: sk-input-dither-pulse 1.5s ease-in-out infinite;
-  pointer-events: none;
-  border-radius: inherit;
+  content: ""; position: absolute; inset: 0;
+  background-image: var(--sk-dither-pattern); background-repeat: repeat;
+  animation: sk-input-dither-pulse 1.5s ease-in-out infinite; pointer-events: none; border-radius: inherit;
 }
 
-/* Skeleton state */
-@keyframes sk-input-shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
+/* Skeleton (centralized keyframe) */
 .sk-input[data-skeleton] {
-  pointer-events: none;
-  color: transparent;
-  border-color: hsl(var(--sk-border-color));
-  background:
-    linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-accent)) 50%, hsl(var(--sk-muted)) 75%);
-  background-size: 200% 100%;
-  animation: sk-input-shimmer 1.8s ease-in-out infinite;
+  pointer-events: none; color: transparent; border-color: hsl(var(--sk-border-color));
+  background: linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-secondary)) 50%, hsl(var(--sk-muted)) 75%);
+  background-size: 200% 100%; animation: sk-shimmer 1.8s ease-in-out infinite;
 }
-
 .sk-input[data-skeleton]::placeholder { color: transparent; }
 
-/* Print */
 @media print {
-  .sk-input {
-    box-shadow: none;
-    border: 1px solid hsl(var(--sk-foreground));
-  }
+  .sk-input { box-shadow: none; border: 1px solid hsl(var(--sk-foreground)); }
   .sk-input[data-skeleton] { display: none; }
 }
-
 @media (prefers-reduced-motion: reduce) {
   .sk-input { transition: none; }
   .sk-input[data-skeleton] { animation: none; background: hsl(var(--sk-muted)); }
-  .sk-input[data-loading] { animation: none; }
+  .sk-input-group:has(.sk-input[data-loading])::after { animation: none; }
 }

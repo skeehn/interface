@@ -52,8 +52,12 @@
   transform: translateY(-2px);
   border-color: hsl(var(--sk-foreground) / 0.25);
   box-shadow:
-    0 24px 46px hsl(0 0% 0% / 0.16),
-    inset 0 1px 0 hsl(0 0% 100% / 0.5);
+    0 24px 46px hsl(0 0% 0% / 0.28),
+    inset 0 1px 0 hsl(0 0% 100% / 0.12);
+}
+.sk-card[data-interactive="true"]:focus-visible {
+  outline: var(--sk-focus-ring);
+  outline-offset: 2px;
 }
 
 .sk-card__header {
@@ -64,7 +68,7 @@
   padding: var(--sk-space-4) var(--sk-space-5) var(--sk-space-3);
   border-bottom: var(--sk-border);
   background:
-    linear-gradient(180deg, hsl(var(--sk-accent) / 0.5), transparent),
+    linear-gradient(180deg, hsl(var(--sk-muted) / 0.6), transparent),
     repeating-linear-gradient(
       to bottom,
       transparent 0,

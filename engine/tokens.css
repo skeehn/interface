@@ -105,7 +105,7 @@
   /* Avatar / control sizes (was hardcoded per-component) */
   --sk-size-avatar-xs: 1.25rem;
   --sk-size-avatar-sm: 1.75rem;
-  --sk-size-avatar-md: 1.875rem;   /* 30px — chat avatar */
+  --sk-size-avatar-md: 2.25rem;    /* 36px */
   --sk-size-avatar-lg: 3rem;
   --sk-size-avatar-xl: 4rem;
 

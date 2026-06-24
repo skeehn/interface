@@ -2,35 +2,36 @@
  * skeehn — Table Component
  *
  * @component sk-table
- * @variants  default | [data-variant="pixel"] | [data-variant="retro"] | [data-variant="ascii"]
+ * @variants  default | pixel | retro | ascii
  * @states    [data-loading] | [data-skeleton]
  * @slots     thead | th | tbody | td | __actions
- * @a11y      Semantic table structure, scope attributes on th
- * @print     Full borders, no hover effects
+ * @a11y      Semantic table, scope on th, keyboard row focus ring
+ * @design    Header treatment, toned row hover, row focus ring.
  */
 
 .sk-table { width: 100%; border-collapse: collapse; font-family: var(--sk-font-mono); font-size: var(--sk-font-size-sm); }
-.sk-table thead tr { border-bottom: 2px solid hsl(var(--sk-border)); }
-.sk-table th { padding: var(--sk-space-2) var(--sk-space-3); text-align: left; font-weight: 600; font-size: var(--sk-font-size-xs); letter-spacing: 0.03em; text-transform: uppercase; }
+.sk-table thead tr { border-bottom: 2px solid hsl(var(--sk-border-color)); }
+.sk-table th {
+  padding: var(--sk-space-2) var(--sk-space-3); text-align: left;
+  font-weight: 600; font-size: var(--sk-font-size-xs);
+  letter-spacing: var(--sk-letter-spacing-wide); text-transform: uppercase;
+  color: hsl(var(--sk-muted-foreground));
+}
 .sk-table td { padding: var(--sk-space-2) var(--sk-space-3); color: hsl(var(--sk-muted-foreground)); border-bottom: var(--sk-border); }
-.sk-table tbody tr { position: relative; }
+.sk-table tbody tr { position: relative; transition: background var(--sk-transition-fast); }
 .sk-table tbody tr::before { content: ""; position: absolute; inset: 0; background-image: var(--sk-dither-pattern); background-repeat: repeat; opacity: 0; pointer-events: none; transition: opacity var(--sk-transition-fast); }
-.sk-table tbody tr:hover::before { opacity: calc(var(--sk-dither-opacity, 0.15) * 0.3); }
+.sk-table tbody tr:hover { background: hsl(var(--sk-muted) / 0.6); }
+.sk-table tbody tr:hover::before { opacity: var(--sk-dither-opacity-subtle); }
+.sk-table tbody tr:active { background: hsl(var(--sk-muted)); }
+.sk-table tbody tr:focus-visible { outline: var(--sk-focus-ring); outline-offset: -2px; }
 .sk-table tbody tr:last-child td { border-bottom: none; }
 .sk-table__actions { text-align: right; }
-
-/* Micro-interactions */
-.sk-table tbody tr { transition: background var(--sk-transition-fast); }
-.sk-table tbody tr:hover { background: hsl(var(--sk-accent) / 0.5); }
-.sk-table tbody tr:active { background: hsl(var(--sk-accent)); }
 
 /* Pixel variant */
 .sk-table[data-variant="pixel"] { border: 2px solid hsl(var(--sk-foreground)); }
 .sk-table[data-variant="pixel"] th, .sk-table[data-variant="pixel"] td { border: 1px solid hsl(var(--sk-foreground)); }
-
 /* Retro variant */
 .sk-table[data-variant="retro"] thead tr { background-image: repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, hsl(var(--sk-foreground) / 0.03) 2px, hsl(var(--sk-foreground) / 0.03) 3px); }
-
 /* ASCII variant */
 .sk-table[data-variant="ascii"] { border-collapse: separate; border-spacing: 0; }
 .sk-table[data-variant="ascii"] thead tr { border-bottom: 1px dashed hsl(var(--sk-border-color)); }
@@ -38,18 +39,14 @@
 
 /* Loading */
 .sk-table[data-loading] tbody { position: relative; opacity: 0.5; pointer-events: none; }
-.sk-table[data-loading] tbody::after { content: ""; position: absolute; inset: 0; background-image: var(--sk-dither-pattern); background-repeat: repeat; opacity: 0.06; animation: sk-pulse-dither 2s ease-in-out infinite; pointer-events: none; }
+.sk-table[data-loading] tbody::after { content: ""; position: absolute; inset: 0; background-image: var(--sk-dither-pattern); background-repeat: repeat; opacity: var(--sk-dither-opacity-normal); animation: sk-pulse-dither 2s ease-in-out infinite; pointer-events: none; }
 
 /* Skeleton */
 .sk-table[data-skeleton] td { color: transparent; }
 .sk-table[data-skeleton] td::after {
-  content: "";
-  display: block;
-  height: 0.75rem;
-  background: linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-accent)) 50%, hsl(var(--sk-muted)) 75%);
-  background-size: 200% 100%;
-  animation: sk-card-shimmer 1.8s ease-in-out infinite;
-  border-radius: var(--sk-radius);
+  content: ""; display: block; height: 0.75rem;
+  background: linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-secondary)) 50%, hsl(var(--sk-muted)) 75%);
+  background-size: 200% 100%; animation: sk-shimmer 1.8s ease-in-out infinite; border-radius: var(--sk-radius-sm);
 }
 
 @media print {
@@ -59,7 +56,6 @@
   .sk-table tbody tr:hover { background: transparent; }
   .sk-table[data-skeleton] { display: none; }
 }
-
 @media (prefers-reduced-motion: reduce) {
   .sk-table tbody tr { transition: none; }
   .sk-table[data-loading] tbody::after { animation: none; }

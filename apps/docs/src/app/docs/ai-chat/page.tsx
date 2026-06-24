@@ -1,220 +1,55 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useChat, usePacedText, useStickyScroll } from '@skeehn/react/hooks';
+import {
+  AgentStatus,
+  ChatBubble,
+  ChatInput,
+  CodeBlock,
+  Markdown,
+  PromptSuggestions,
+  StreamingText,
+  ThinkingBlock,
+  closeOpenFences,
+} from '@skeehn/react';
 
 /* ═══════════════════════════════════════════════════════════════
-   TYPES
-   ═══════════════════════════════════════════════════════════════ */
-
-type AgentStatus = 'idle' | 'thinking' | 'acting' | 'done';
-
-interface ChatMessage {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  reasoning?: string;
-  tool?: { name: string; input: string; output: string; status: 'running' | 'success' };
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   PROMPT SUGGESTIONS
+   AI CHAT DEMO — built entirely from @skeehn/react components + hooks.
+   This page is the flagship dogfood: useChat streams from /api/chat
+   (real Claude with adaptive thinking, or a canned fallback), usePacedText
+   smooths the reveal, useStickyScroll keeps it pinned, and the UI is skeehn
+   ChatBubble / StreamingText / ThinkingBlock / ChatInput.
    ═══════════════════════════════════════════════════════════════ */
 
 const SUGGESTIONS = [
-  { icon: '>', text: 'What is the weather in New Orleans?', sub: 'Tool call demo' },
-  { icon: '#', text: 'Show me a code example', sub: 'Syntax highlighting' },
-  { icon: '?', text: 'What components are available?', sub: 'Component catalog' },
-  { icon: '/', text: 'Search the documentation', sub: 'Semantic search' },
+  { value: 'install', text: 'How do I install a skeehn component?', icon: '▦' },
+  { value: 'themes', text: 'What themes are available?', icon: '◑' },
+  { value: 'components', text: 'List the AI-native components', icon: '✦' },
+  { value: 'dither', text: 'How does the dither engine work?', icon: '░' },
 ];
 
-/* ═══════════════════════════════════════════════════════════════
-   AGENT STATUS DISPLAY
-   ═══════════════════════════════════════════════════════════════ */
-
-const STATUS_CONFIG: Record<AgentStatus, { label: string; color: string; pulse: boolean }> = {
-  idle: { label: 'Ready', color: 'bg-neutral-500', pulse: false },
-  thinking: { label: 'Thinking...', color: 'bg-amber-400', pulse: true },
-  acting: { label: 'Using tool...', color: 'bg-blue-400', pulse: true },
-  done: { label: 'Done', color: 'bg-green-400', pulse: false },
-};
-
-/* ═══════════════════════════════════════════════════════════════
-   AI CHAT DEMO
-   ═══════════════════════════════════════════════════════════════ */
-
 export default function AIChatPage() {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [input, setInput] = useState('');
-  const [isStreaming, setIsStreaming] = useState(false);
-  const [agentStatus, setAgentStatus] = useState<AgentStatus>('idle');
-  const [expandedReasoning, setExpandedReasoning] = useState<Set<string>>(new Set());
-  const [expandedTools, setExpandedTools] = useState<Set<string>>(new Set());
+  const { messages, input, setInput, append, isLoading } = useChat({ api: '/api/chat' });
 
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
-  const abortRef = useRef<AbortController | null>(null);
+  const last = messages[messages.length - 1];
+  const streaming = isLoading && last?.role === 'assistant';
 
-  // Auto-scroll on new content
-  useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
-  }, [messages]);
+  // Smooth, steady-cadence reveal of the in-flight assistant message — decoupled
+  // from bursty network chunks. (Hook must be called unconditionally.)
+  const paced = usePacedText(streaming ? last?.content ?? '' : '', { enabled: streaming });
 
-  const sendMessage = useCallback(
-    async (content: string) => {
-      if (!content.trim() || isStreaming) return;
+  // Follow new content while pinned to the bottom; break on manual scroll-up.
+  const scrollKey = streaming ? `${messages.length}:${paced.text.length}` : String(messages.length);
+  const { ref: scrollRef, atBottom, scrollToBottom } = useStickyScroll<HTMLDivElement>(scrollKey);
 
-      const userMsg: ChatMessage = {
-        id: `user-${Date.now()}`,
-        role: 'user',
-        content: content.trim(),
-      };
-
-      const assistantId = `assistant-${Date.now()}`;
-      const assistantMsg: ChatMessage = {
-        id: assistantId,
-        role: 'assistant',
-        content: '',
-      };
-
-      setMessages((prev) => [...prev, userMsg, assistantMsg]);
-      setInput('');
-      setIsStreaming(true);
-      setAgentStatus('thinking');
-
-      abortRef.current = new AbortController();
-
-      try {
-        const res = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            messages: [...messages, userMsg].map((m) => ({
-              role: m.role,
-              content: m.content,
-            })),
-          }),
-          signal: abortRef.current.signal,
-        });
-
-        if (!res.ok || !res.body) throw new Error('Failed to fetch');
-
-        const reader = res.body.getReader();
-        const decoder = new TextDecoder();
-        let buffer = '';
-
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-
-          buffer += decoder.decode(value, { stream: true });
-          const lines = buffer.split('\n');
-          buffer = lines.pop() ?? '';
-
-          for (const line of lines) {
-            if (!line.startsWith('data: ')) continue;
-            const data = line.slice(6);
-            if (data === '[DONE]') break;
-
-            try {
-              const parsed = JSON.parse(data);
-
-              if (parsed.type === 'reasoning') {
-                setMessages((prev) =>
-                  prev.map((m) =>
-                    m.id === assistantId ? { ...m, reasoning: parsed.content } : m
-                  )
-                );
-              } else if (parsed.type === 'tool_start') {
-                setAgentStatus('acting');
-                setMessages((prev) =>
-                  prev.map((m) =>
-                    m.id === assistantId
-                      ? {
-                          ...m,
-                          tool: {
-                            name: parsed.name,
-                            input: parsed.input,
-                            output: '',
-                            status: 'running' as const,
-                          },
-                        }
-                      : m
-                  )
-                );
-              } else if (parsed.type === 'tool_end') {
-                setMessages((prev) =>
-                  prev.map((m) =>
-                    m.id === assistantId && m.tool
-                      ? {
-                          ...m,
-                          tool: { ...m.tool, output: parsed.output, status: 'success' as const },
-                        }
-                      : m
-                  )
-                );
-                setAgentStatus('thinking');
-              } else if (parsed.type === 'text') {
-                setMessages((prev) =>
-                  prev.map((m) =>
-                    m.id === assistantId ? { ...m, content: m.content + parsed.content } : m
-                  )
-                );
-              }
-            } catch {
-              // Skip malformed JSON
-            }
-          }
-        }
-      } catch (err) {
-        if ((err as Error).name !== 'AbortError') {
-          setMessages((prev) =>
-            prev.map((m) =>
-              m.id === assistantId
-                ? { ...m, content: m.content || 'Sorry, something went wrong.' }
-                : m
-            )
-          );
-        }
-      } finally {
-        setIsStreaming(false);
-        setAgentStatus('idle');
-        abortRef.current = null;
-        inputRef.current?.focus();
-      }
-    },
-    [isStreaming, messages]
-  );
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    sendMessage(input);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage(input);
-    }
-  };
-
-  const toggleReasoning = (id: string) => {
-    setExpandedReasoning((prev) => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
-    });
-  };
-
-  const toggleTool = (id: string) => {
-    setExpandedTools((prev) => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
-    });
+  const send = (value: string) => {
+    const text = value.trim();
+    if (!text || isLoading) return;
+    void append(text);
+    setInput('');
   };
 
   const isEmpty = messages.length === 0;
-  const statusCfg = STATUS_CONFIG[agentStatus];
 
   return (
     <div
@@ -230,264 +65,146 @@ export default function AIChatPage() {
       {/* ── Header ── */}
       <div className="flex items-center justify-between px-8 py-4 border-b border-neutral-800 bg-neutral-900/50 shrink-0">
         <div>
-          <h1 className="docs-heading text-lg tracking-tight"
-            style={{ fontFamily: 'var(--sk-font-sans)' }}>
+          <h1 className="docs-heading text-lg tracking-tight" style={{ fontFamily: 'var(--sk-font-sans)' }}>
             AI Chat Demo
           </h1>
-          <p className="text-xs mt-0.5 text-neutral-500">
-            Streaming, reasoning traces, and tool calls
-          </p>
+          <p className="text-xs mt-0.5 text-neutral-500">Built entirely from skeehn components + hooks</p>
         </div>
-        {/* Agent status badge */}
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-neutral-800 bg-neutral-900">
-          <span className="relative flex h-2 w-2">
-            {statusCfg.pulse && (
-              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${statusCfg.color}`} />
-            )}
-            <span className={`relative inline-flex rounded-full h-2 w-2 ${statusCfg.color}`} />
-          </span>
-          <span className="text-[11px] text-neutral-400">{statusCfg.label}</span>
-        </div>
+        <AgentStatus status={isLoading ? 'thinking' : 'idle'} />
       </div>
 
-      {/* ── Messages area ── */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto">
+      {/* ── Messages ── */}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto relative">
         {isEmpty ? (
           <div className="flex flex-col items-center justify-center h-full px-6">
-            <div className="text-center mb-10">
-              <div className="text-5xl mb-4 text-neutral-700 font-mono font-bold">
-                {'>>>'}
-              </div>
-              <div className="text-sm text-neutral-500">
-                Ask me anything to see the demo in action
-              </div>
-            </div>
-
-            {/* Prompt suggestions grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl w-full">
-              {SUGGESTIONS.map((s, i) => (
-                <button
-                  key={i}
-                  onClick={() => sendMessage(s.text)}
-                  className="border border-neutral-800 p-4 text-left hover:bg-neutral-800/50 cursor-pointer transition-colors group"
-                >
-                  <div className="flex items-start gap-3">
-                    <span className="text-neutral-600 text-lg font-mono mt-0.5 group-hover:text-neutral-400 transition-colors">
-                      {s.icon}
-                    </span>
-                    <div>
-                      <div className="text-sm text-neutral-300 group-hover:text-white transition-colors">
-                        {s.text}
-                      </div>
-                      <div className="text-[11px] text-neutral-600 mt-1">
-                        {s.sub}
-                      </div>
-                    </div>
-                  </div>
-                </button>
-              ))}
-            </div>
+            <div className="text-5xl mb-8 text-neutral-700 font-mono font-bold select-none">▓▒░▒▓</div>
+            <PromptSuggestions
+              className="max-w-xl w-full"
+              label="Ask me anything about skeehn"
+              suggestions={SUGGESTIONS}
+              onSelect={(v) => send(SUGGESTIONS.find((s) => s.value === v)?.text ?? v)}
+            />
           </div>
         ) : (
-          <div className="max-w-3xl mx-auto px-6 py-6 space-y-1" role="log" aria-live="polite">
-            {messages.map((msg) => (
-              <div key={msg.id}>
-                {/* Chat bubble */}
-                <div
-                  className={`mb-3 ${
-                    msg.role === 'user'
-                      ? 'flex justify-end'
-                      : 'flex justify-start'
-                  }`}
-                >
-                  <div
-                    className={`max-w-[80%] px-4 py-3 text-sm font-mono ${
-                      msg.role === 'user'
-                        ? 'bg-white text-black rounded-2xl rounded-br-sm'
-                        : 'bg-neutral-900 border border-neutral-800 text-neutral-200 rounded-2xl rounded-bl-sm'
-                    }`}
-                  >
-                    {msg.role === 'assistant' && !msg.content && isStreaming && msg.id === messages[messages.length - 1]?.id ? (
-                      <span className="inline-block w-[2px] h-4 bg-neutral-400 animate-pulse" />
+          <div className="max-w-3xl mx-auto px-6 py-6 flex flex-col gap-4" role="log" aria-live="polite">
+            {messages.map((msg) => {
+              const isStreamingMsg = streaming && msg.id === last?.id;
+
+              if (msg.role === 'user') {
+                return (
+                  <div key={msg.id} className="flex justify-end">
+                    <ChatBubble role="user">{msg.content}</ChatBubble>
+                  </div>
+                );
+              }
+
+              return (
+                <div key={msg.id} className="flex flex-col items-start gap-2 max-w-[85%]">
+                  {msg.reasoning && (
+                    <ThinkingBlock
+                      className="w-full"
+                      state={isStreamingMsg ? 'thinking' : 'done'}
+                      label={isStreamingMsg ? 'Thinking…' : 'Thought process'}
+                    >
+                      <MessageContent content={msg.reasoning} />
+                    </ThinkingBlock>
+                  )}
+                  <ChatBubble role="assistant" streaming={isStreamingMsg}>
+                    {isStreamingMsg ? (
+                      <StreamingText caret={paced.isCatchingUp ? 'block' : false}>
+                        <MessageContent content={paced.text} />
+                      </StreamingText>
                     ) : (
                       <MessageContent content={msg.content} />
                     )}
-                  </div>
+                  </ChatBubble>
                 </div>
-
-                {/* Reasoning step */}
-                {msg.reasoning && (
-                  <div className="max-w-[80%] mb-3">
-                    <button
-                      onClick={() => toggleReasoning(msg.id)}
-                      className="flex items-center gap-2 text-[11px] text-neutral-500 hover:text-neutral-300 transition-colors cursor-pointer"
-                    >
-                      <span className={`inline-block transition-transform ${expandedReasoning.has(msg.id) ? 'rotate-90' : ''}`}>
-                        &rsaquo;
-                      </span>
-                      <span className="uppercase tracking-widest">Reasoning</span>
-                    </button>
-                    {expandedReasoning.has(msg.id) && (
-                      <div className="mt-2 pl-4 border-l-2 border-neutral-800 text-xs text-neutral-500 leading-relaxed">
-                        {msg.reasoning}
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* Tool card */}
-                {msg.tool && (
-                  <div className="max-w-[80%] mb-3 border border-neutral-800 bg-neutral-900/50 overflow-hidden">
-                    <div
-                      onClick={() => toggleTool(msg.id)}
-                      className="flex items-center justify-between px-4 py-2.5 cursor-pointer hover:bg-neutral-800/30 transition-colors"
-                    >
-                      <span className="text-xs font-mono text-neutral-400">{msg.tool.name}</span>
-                      <span className={`text-[10px] uppercase tracking-widest ${
-                        msg.tool.status === 'running' ? 'text-amber-400' : 'text-green-400'
-                      }`}>
-                        {msg.tool.status === 'running' ? 'Running' : 'Success'}
-                      </span>
-                    </div>
-                    {expandedTools.has(msg.id) && (
-                      <div className="border-t border-neutral-800">
-                        <div className="px-4 py-3">
-                          <div className="text-[10px] uppercase tracking-widest text-neutral-600 mb-1.5">Input</div>
-                          <pre className="text-xs text-neutral-400 font-mono overflow-auto bg-black/50 p-2 border border-neutral-800">
-                            {msg.tool.input}
-                          </pre>
-                        </div>
-                        {msg.tool.output && (
-                          <div className="px-4 py-3 border-t border-neutral-800">
-                            <div className="text-[10px] uppercase tracking-widest text-neutral-600 mb-1.5">Output</div>
-                            <pre className="text-xs text-neutral-400 font-mono overflow-auto bg-black/50 p-2 border border-neutral-800">
-                              {msg.tool.output}
-                            </pre>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            ))}
+              );
+            })}
           </div>
+        )}
+
+        {/* Jump-to-latest affordance (from useStickyScroll) */}
+        {!atBottom && !isEmpty && (
+          <button
+            onClick={() => scrollToBottom()}
+            className="absolute bottom-4 left-1/2 -translate-x-1/2 px-3 py-1.5 text-[11px] font-mono uppercase tracking-wider border border-neutral-700 bg-neutral-900 text-neutral-300 hover:bg-neutral-800 transition-colors cursor-pointer"
+          >
+            ▼ jump to latest
+          </button>
         )}
       </div>
 
-      {/* ── Chat Input — pinned to bottom ── */}
+      {/* ── Input ── */}
       <div className="shrink-0 border-t border-neutral-800 bg-neutral-900/80 backdrop-blur-sm px-6 py-4">
-        <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
-          <div className="flex items-end gap-3 border border-neutral-700 bg-neutral-900 px-4 py-3 focus-within:border-neutral-500 transition-colors">
-            <textarea
-              ref={inputRef}
-              placeholder="Type a message..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              rows={1}
-              disabled={isStreaming}
-              className="flex-1 bg-transparent text-sm text-neutral-200 placeholder:text-neutral-600 font-mono resize-none outline-none"
-              style={{
-                minHeight: '1.5rem',
-                maxHeight: '8rem',
-              }}
-            />
-            <button
-              type="submit"
-              disabled={!input.trim() || isStreaming}
-              className={`shrink-0 px-4 py-1.5 text-xs font-mono font-bold uppercase tracking-wider border transition-all cursor-pointer ${
-                input.trim() && !isStreaming
-                  ? 'bg-white text-black border-white hover:bg-neutral-200'
-                  : 'bg-transparent text-neutral-600 border-neutral-700 cursor-default'
-              }`}
-            >
-              Send
-            </button>
-          </div>
-        </form>
+        <div className="max-w-3xl mx-auto">
+          <ChatInput
+            value={input}
+            onValueChange={setInput}
+            onSubmit={send}
+            placeholder="Ask about skeehn…"
+            disabled={isLoading}
+            state={isLoading ? 'streaming' : undefined}
+            hint="Enter to send · Shift+Enter for newline"
+          />
+        </div>
       </div>
     </div>
   );
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   MESSAGE CONTENT — simple markdown-like rendering
+   MESSAGE CONTENT — streaming-tolerant markdown.
+   closeOpenFences() virtually closes an in-progress code fence so a
+   half-streamed block renders cleanly instead of flashing. Code blocks
+   render via skeehn's CodeBlock; the whole thing is styled by Markdown.
    ═══════════════════════════════════════════════════════════════ */
 
 function MessageContent({ content }: { content: string }) {
   if (!content) return null;
-
-  // Split by code blocks
-  const parts = content.split(/(```[\s\S]*?```)/);
+  const safe = closeOpenFences(content);
+  const parts = safe.split(/(```[\s\S]*?```)/);
 
   return (
-    <>
+    <Markdown>
       {parts.map((part, i) => {
         if (part.startsWith('```')) {
           const lines = part.split('\n');
-          const lang = lines[0].replace('```', '').trim();
+          const lang = lines[0].replace(/```/, '').trim();
           const code = lines.slice(1, -1).join('\n');
-          return (
-            <pre
-              key={i}
-              className="my-3 p-3 bg-black/60 border border-neutral-800 overflow-auto text-xs"
-            >
-              {lang && (
-                <div className="text-[10px] text-neutral-600 uppercase tracking-widest mb-2">
-                  {lang}
-                </div>
-              )}
-              <code className="text-neutral-300">{code}</code>
-            </pre>
-          );
+          return <CodeBlock key={i} code={code} language={lang || undefined} />;
         }
-
-        // Inline formatting
-        return (
-          <span key={i}>
-            {part.split('\n').map((line, j) => (
-              <span key={j}>
-                {j > 0 && <br />}
-                <InlineLine text={line} />
-              </span>
-            ))}
-          </span>
-        );
+        return <InlineMarkdown key={i} text={part} />;
       })}
-    </>
+    </Markdown>
   );
 }
 
-function InlineLine({ text }: { text: string }) {
-  // Bold
-  const parts = text.split(/(\*\*.*?\*\*)/);
+function InlineMarkdown({ text }: { text: string }) {
   return (
-    <>
-      {parts.map((part, i) => {
-        if (part.startsWith('**') && part.endsWith('**')) {
-          return (
-            <strong key={i} className="font-bold text-white">
-              {part.slice(2, -2)}
-            </strong>
-          );
-        }
-        // Inline code
-        const codeParts = part.split(/(`[^`]+`)/);
-        return codeParts.map((cp, j) => {
-          if (cp.startsWith('`') && cp.endsWith('`')) {
-            return (
-              <code
-                key={`${i}-${j}`}
-                className="bg-neutral-800 px-1.5 py-0.5 rounded text-[0.9em] text-neutral-300"
-              >
-                {cp.slice(1, -1)}
-              </code>
-            );
-          }
-          return <span key={`${i}-${j}`}>{cp.replace(/--/g, '\u2014')}</span>;
-        });
-      })}
-    </>
+    <span>
+      {text.split('\n').map((line, j) => (
+        <span key={j}>
+          {j > 0 && <br />}
+          {line.split(/(\*\*.*?\*\*|`[^`]+`)/).map((seg, k) => {
+            if (seg.startsWith('**') && seg.endsWith('**')) {
+              return (
+                <strong key={k} className="font-bold text-white">
+                  {seg.slice(2, -2)}
+                </strong>
+              );
+            }
+            if (seg.startsWith('`') && seg.endsWith('`')) {
+              return (
+                <code key={k} className="bg-neutral-800 px-1.5 py-0.5 rounded text-[0.9em]">
+                  {seg.slice(1, -1)}
+                </code>
+              );
+            }
+            return <span key={k}>{seg}</span>;
+          })}
+        </span>
+      ))}
+    </span>
   );
 }

@@ -1,101 +1,49 @@
-const RESPONSES: Record<string, { text: string; reasoning?: string; tool?: { name: string; input: string; output: string } }> = {
-  weather: {
-    text: 'The current weather in New Orleans is 78F with partly cloudy skies. Humidity is at 72%, which is typical for the Gulf Coast. There is a 20% chance of afternoon thunderstorms.',
-    reasoning: 'User asked about weather. Checking live weather data for the specified location.',
-    tool: {
-      name: 'get_weather',
-      input: '{ "location": "New Orleans, LA" }',
-      output: '{ "temp": 78, "condition": "Partly Cloudy", "humidity": "72%", "rain_chance": "20%" }',
-    },
-  },
-  search: {
-    text: 'Based on my search, skeehn is an ASCII/dither-first component library for building AI interfaces. It provides pre-built components like chat bubbles, streaming text, reasoning steps, and tool cards -- all styled with a distinctive dithered aesthetic.',
-    reasoning: 'Searching documentation to provide an accurate description of the skeehn library.',
-    tool: {
-      name: 'search_docs',
-      input: '{ "query": "what is skeehn" }',
-      output: '{ "results": [{ "title": "Introduction", "snippet": "ASCII/dither component library for AI interfaces" }] }',
-    },
-  },
-  code: {
-    text: "Here is a basic example of using the ChatBubble component:\n\n```tsx\nimport '@skeehn/core/chat-bubble.css';\n\nfunction Chat() {\n  return (\n    <div role=\"log\">\n      <div className=\"sk-chat-bubble\" data-role=\"user\">\n        Hello, how are you?\n      </div>\n      <div className=\"sk-chat-bubble\" data-role=\"assistant\">\n        I'm doing great! How can I help?\n      </div>\n    </div>\n  );\n}\n```\n\nThe `data-role` attribute controls alignment and styling. User messages appear on the right with a solid background, while assistant messages use the dither pattern overlay.",
-    reasoning: 'Generating a code example with the ChatBubble component from the skeehn library.',
-  },
-  help: {
-    text: 'I can help you with several things:\n\n- **Weather** -- Ask about weather in any city\n- **Search** -- Search the skeehn documentation\n- **Code** -- Get code examples and component usage\n- **Components** -- Learn about available UI components\n\nTry asking "What is the weather in New Orleans?" or "Show me a code example."',
-    reasoning: 'User needs guidance. Presenting available capabilities.',
-  },
-  components: {
-    text: 'skeehn ships with 30+ components organized into categories:\n\n**Core UI:** Button, Card, Badge, Input, Toggle, Tabs, Accordion\n**AI Chat:** ChatBubble, ChatInput, StreamingText, ThinkingBlock\n**Agent:** ReasoningStep, ToolCard, AgentStatus, PromptSuggestions\n**Data:** Table, DataViz, Progress, CodeBlock\n**Layout:** Dialog, Dropdown, Tooltip, Terminal Panel\n\nEach component uses CSS-only architecture with `data-*` attributes for state management. No JavaScript runtime required for basic usage.',
-    reasoning: 'Listing available components from the skeehn component library.',
-  },
-};
+import Anthropic from '@anthropic-ai/sdk';
 
-function getResponse(message: string) {
-  const lower = message.toLowerCase();
-  if (lower.includes('weather') || lower.includes('temperature') || lower.includes('forecast'))
-    return RESPONSES.weather;
-  if (lower.includes('search') || lower.includes('what is') || lower.includes('find'))
-    return RESPONSES.search;
-  if (lower.includes('code') || lower.includes('example') || lower.includes('how to') || lower.includes('show me'))
-    return RESPONSES.code;
-  if (lower.includes('component') || lower.includes('ui') || lower.includes('library'))
-    return RESPONSES.components;
-  if (lower.includes('help') || lower.includes('what can'))
-    return RESPONSES.help;
+// The Anthropic SDK needs the Node.js runtime (not Edge).
+export const runtime = 'nodejs';
 
-  // Default response
-  return {
-    text: `That is an interesting question! As a demo assistant, I can help with weather lookups, documentation searches, code examples, and component overviews. Try asking about one of those topics to see the full streaming experience with reasoning steps and tool calls.`,
-    reasoning: 'Processing user query and determining the best response path.',
-  };
+// Model is env-configurable; defaults to Sonnet 4.6 — fast + cost-appropriate
+// for a public docs demo. Adaptive thinking powers the live ThinkingBlock.
+const MODEL = process.env.CHAT_MODEL ?? 'claude-sonnet-4-6';
+
+const SYSTEM = `You are the skeehn assistant — a friendly, concise guide to skeehn, an
+ASCII-native AI component library for React. skeehn ships 32 components (14 core, 15 AI,
+3 bundles), 7 themes, a dither rendering engine, streaming hooks (useChat, usePacedText,
+useAsciiStream), an MCP server, and a shadcn-compatible registry. Developers install via
+\`npx shadcn add <url>\` or the \`npx skeehn add <name>\` CLI, and \`@skeehn/react\` on npm.
+Answer in a few short paragraphs. Use markdown, and fenced code blocks for code. If you
+are unsure of a specific detail, say so briefly rather than inventing it.`;
+
+const encoder = new TextEncoder();
+const sse = (obj: unknown) => encoder.encode(`data: ${JSON.stringify(obj)}\n\n`);
+const DONE = encoder.encode('data: [DONE]\n\n');
+
+interface ChatMessage {
+  role: string;
+  content: string;
 }
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
-  const lastMessage = messages[messages.length - 1]?.content ?? '';
-  const response = getResponse(lastMessage);
+  const { messages = [] } = (await req.json()) as { messages?: ChatMessage[] };
+  const apiKey = process.env.ANTHROPIC_API_KEY;
 
-  const encoder = new TextEncoder();
   const stream = new ReadableStream({
     async start(controller) {
-      // Send reasoning step
-      if (response.reasoning) {
-        controller.enqueue(
-          encoder.encode(`data: ${JSON.stringify({ type: 'reasoning', content: response.reasoning })}\n\n`)
-        );
-        await delay(300);
+      try {
+        if (apiKey) {
+          await streamClaude(controller, apiKey, messages);
+        } else {
+          // No key (contributors / CI): fall back to a canned, still-streaming reply.
+          await streamCanned(controller, messages);
+        }
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        controller.enqueue(sse({ type: 'text', text: `\n\n_[chat error: ${message}]_` }));
+      } finally {
+        controller.enqueue(DONE);
+        controller.close();
       }
-
-      // Send tool call
-      if (response.tool) {
-        controller.enqueue(
-          encoder.encode(
-            `data: ${JSON.stringify({ type: 'tool_start', name: response.tool.name, input: response.tool.input })}\n\n`
-          )
-        );
-        await delay(800);
-        controller.enqueue(
-          encoder.encode(
-            `data: ${JSON.stringify({ type: 'tool_end', name: response.tool.name, output: response.tool.output })}\n\n`
-          )
-        );
-        await delay(200);
-      }
-
-      // Stream text character by character
-      for (let i = 0; i < response.text.length; i++) {
-        controller.enqueue(
-          encoder.encode(`data: ${JSON.stringify({ type: 'text', content: response.text[i] })}\n\n`)
-        );
-        // Variable speed: faster for spaces, slower for punctuation
-        const ch = response.text[i];
-        const ms = ch === ' ' ? 10 : '.!?,\n'.includes(ch) ? 60 : 18;
-        await delay(ms);
-      }
-
-      controller.enqueue(encoder.encode('data: [DONE]\n\n'));
-      controller.close();
     },
   });
 
@@ -108,6 +56,81 @@ export async function POST(req: Request) {
   });
 }
 
-function delay(ms: number) {
-  return new Promise((r) => setTimeout(r, ms));
+// ─── Real Claude (adaptive thinking → reasoning + text deltas) ──────────────
+async function streamClaude(
+  controller: ReadableStreamDefaultController<Uint8Array>,
+  apiKey: string,
+  messages: ChatMessage[],
+) {
+  const client = new Anthropic({ apiKey });
+
+  const claude = client.messages.stream({
+    model: MODEL,
+    max_tokens: 16384,
+    system: SYSTEM,
+    // Adaptive thinking: Claude decides depth and streams reasoning blocks that
+    // drive the live ThinkingBlock in the demo. (budget_tokens is deprecated on 4.6.)
+    thinking: { type: 'adaptive' },
+    messages: messages
+      .filter((m) => m.role === 'user' || m.role === 'assistant')
+      .map((m) => ({ role: m.role as 'user' | 'assistant', content: String(m.content ?? '') })),
+  });
+
+  for await (const event of claude) {
+    if (event.type !== 'content_block_delta') continue;
+    if (event.delta.type === 'thinking_delta') {
+      controller.enqueue(sse({ type: 'reasoning', text: event.delta.thinking }));
+    } else if (event.delta.type === 'text_delta') {
+      controller.enqueue(sse({ type: 'text', text: event.delta.text }));
+    }
+  }
+}
+
+// ─── Canned fallback (keyword-matched, streamed word-by-word) ───────────────
+const RESPONSES: Record<string, { reasoning: string; text: string }> = {
+  install: {
+    reasoning: 'User is asking how to install skeehn. Surfacing both install paths.',
+    text: "Install a component two ways:\n\n```bash\n# shadcn registry (humans + agents)\nnpx shadcn@latest add https://ui.skeehn.com/r/chat-bubble.json\n\n# or the skeehn CLI\nnpx skeehn add chat-bubble\n```\n\nFor the typed React layer: `npm install @skeehn/react @skeehn/core`, then `import '@skeehn/core/styles.css'` once and import components from `@skeehn/react`.",
+  },
+  theme: {
+    reasoning: 'User asked about themes. skeehn ships 7.',
+    text: 'skeehn ships **7 themes** — `default`, `dark`, `terminal`, `brutal`, `print`, `grain`, and `mardi-gras`. Set one with `data-theme="terminal"` on a wrapping element (or `<html>`), or scaffold with `npx skeehn init --theme terminal`.',
+  },
+  component: {
+    reasoning: 'Listing the component catalog by category.',
+    text: 'There are **32 components**: 14 core (Button, Card, Input, Dialog, Tabs…), 15 AI-native (ChatBubble, StreamingText, ThinkingBlock, ToolCard, ReasoningStep, CitationCard…), and 3 bundles (Layout, Dataviz, Motion). All are CSS-first with `--sk-*` tokens and the dither engine.',
+  },
+};
+
+function pickCanned(message: string) {
+  const q = message.toLowerCase();
+  if (q.includes('install') || q.includes('add') || q.includes('setup') || q.includes('start'))
+    return RESPONSES.install;
+  if (q.includes('theme') || q.includes('dark') || q.includes('color')) return RESPONSES.theme;
+  if (q.includes('component') || q.includes('what') || q.includes('list')) return RESPONSES.component;
+  return {
+    reasoning: 'No live model key configured; returning a canned demo reply.',
+    text: "This is the **offline demo reply** — set `ANTHROPIC_API_KEY` to stream real Claude here. Meanwhile, try asking about *install*, *themes*, or *components* to see the dithered streaming UI in action.",
+  };
+}
+
+const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+async function streamCanned(
+  controller: ReadableStreamDefaultController<Uint8Array>,
+  messages: ChatMessage[],
+) {
+  const last = messages[messages.length - 1]?.content ?? '';
+  const { reasoning, text } = pickCanned(last);
+
+  // Stream the reasoning first (drives the ThinkingBlock), then the answer.
+  for (const chunk of reasoning.match(/\S+\s*/g) ?? []) {
+    controller.enqueue(sse({ type: 'reasoning', text: chunk }));
+    await delay(18);
+  }
+  await delay(250);
+  for (const chunk of text.match(/\S+\s*|\s+/g) ?? []) {
+    controller.enqueue(sse({ type: 'text', text: chunk }));
+    await delay(22);
+  }
 }

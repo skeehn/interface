@@ -10,6 +10,7 @@
     "registry": "bun run scripts/build-registry.ts && bunx shadcn@latest build registry.json -o public/r"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.104.1",
     "@skeehn/react": "workspace:*",
     "next": "16.2.2",
     "react": "19.2.4",

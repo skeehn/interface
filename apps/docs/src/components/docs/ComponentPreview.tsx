@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import {
   Button,
   Card, CardHeader, CardTitle, CardBody, CardFooter,
@@ -369,21 +370,46 @@ $ npx skeehn add card
   ),
 };
 
+const PREVIEW_THEMES = ['default', 'dark', 'terminal', 'brutal', 'grain'] as const;
+
 export function ComponentPreview({ slug }: { slug: string }) {
+  const [theme, setTheme] = useState<string>('default');
   const render = PREVIEWS[slug];
 
   if (!render) {
     return (
-      <div className="flex items-center justify-center py-16 text-neutral-600 text-sm font-mono border border-dashed border-neutral-800">
+      <div className="flex items-center justify-center py-16 text-muted-fg text-sm font-mono border-2 border-dashed border-foreground/30">
         Preview not yet available for this component.
       </div>
     );
   }
 
   return (
-    <div className="border border-neutral-800 bg-neutral-900/50 p-8 flex items-center justify-center">
-      <div className="w-full">
-        {render()}
+    <div className="border-2 border-foreground">
+      {/* Theme switcher — previews render in their OWN theme, not the brutal chrome */}
+      <div className="flex items-center gap-2 px-3 py-2 border-b-2 border-foreground bg-background flex-wrap">
+        <span className="text-[0.6rem] uppercase tracking-[0.2em] text-muted-fg font-mono mr-1">Theme</span>
+        {PREVIEW_THEMES.map((t) => (
+          <button
+            key={t}
+            type="button"
+            onClick={() => setTheme(t)}
+            className={`text-[0.7rem] font-mono uppercase tracking-wide px-2 py-0.5 border transition-colors ${
+              theme === t
+                ? 'bg-accent text-accent-fg border-accent'
+                : 'border-foreground/30 text-muted-fg hover:text-foreground'
+            }`}
+          >
+            {t}
+          </button>
+        ))}
+      </div>
+      <div
+        data-theme={theme}
+        className="p-8 flex items-center justify-center min-h-[8rem]"
+        style={{ background: 'hsl(var(--sk-background))', color: 'hsl(var(--sk-foreground))' }}
+      >
+        <div className="w-full">{render()}</div>
       </div>
     </div>
   );

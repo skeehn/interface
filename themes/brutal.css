@@ -5,7 +5,7 @@
  * Dresses the docs site. Same components as Default — only the token layer changes.
  * One core, many skins.
  */
-:root[data-theme="brutal"] {
+[data-theme="brutal"] {
   /* ═══ COLORS (dark) ═══ */
   --sk-background:         0 0% 5%;       /* #0d0d0d */
   --sk-foreground:         0 0% 96%;      /* #f4f4f4 */
@@ -46,7 +46,7 @@
 }
 
 /* Signature: hard pixel shadow on bordered elements */
-:root[data-theme="brutal"] .sk-btn {
+[data-theme="brutal"] .sk-btn {
   border-width: 2px;
   border-color: hsl(var(--sk-border-color));
   box-shadow: 3px 3px 0 hsl(0 0% 11%);
@@ -54,37 +54,37 @@
   text-transform: uppercase;
   letter-spacing: var(--sk-letter-spacing-wide);
 }
-:root[data-theme="brutal"] .sk-btn:hover {
+[data-theme="brutal"] .sk-btn:hover {
   box-shadow: 4px 4px 0 hsl(0 0% 11%);
   transform: translate(-1px, -1px);
 }
-:root[data-theme="brutal"] .sk-btn:active {
+[data-theme="brutal"] .sk-btn:active {
   box-shadow: 0 0 0 hsl(0 0% 11%);
   transform: translate(3px, 3px);
 }
 
 /* Cards get hard shadow */
-:root[data-theme="brutal"] .sk-card {
+[data-theme="brutal"] .sk-card {
   border-width: 2px;
   border-color: hsl(var(--sk-border-color));
   box-shadow: 4px 4px 0 hsl(0 0% 11%);
 }
-:root[data-theme="brutal"] .sk-card:hover {
+[data-theme="brutal"] .sk-card:hover {
   box-shadow: 6px 6px 0 hsl(0 0% 11%);
   transform: translate(-2px, -2px);
 }
 
 /* Inputs: thick border */
-:root[data-theme="brutal"] input,
-:root[data-theme="brutal"] textarea,
-:root[data-theme="brutal"] select,
-:root[data-theme="brutal"] .sk-chat-input {
+[data-theme="brutal"] input,
+[data-theme="brutal"] textarea,
+[data-theme="brutal"] select,
+[data-theme="brutal"] .sk-chat-input {
   border-width: 2px;
   border-color: hsl(var(--sk-border-color));
 }
 
 /* Badges: loud */
-:root[data-theme="brutal"] .sk-badge {
+[data-theme="brutal"] .sk-badge {
   border-width: 2px;
   border-color: hsl(var(--sk-border-color));
   font-weight: 700;
@@ -92,27 +92,27 @@
 }
 
 /* Accent highlight bar */
-:root[data-theme="brutal"] .sk-alert {
+[data-theme="brutal"] .sk-alert {
   border-width: 2px;
   border-left-width: 6px;
 }
 
 /* Chat: user bubble is filled gold (vs surfaced in Default) */
-:root[data-theme="brutal"] .sk-chat-bubble[data-role="user"] {
+[data-theme="brutal"] .sk-chat-bubble[data-role="user"] {
   background: hsl(var(--sk-accent));
   color: hsl(var(--sk-accent-foreground));
   border-color: hsl(var(--sk-accent));
   font-weight: 500;
 }
-:root[data-theme="brutal"] .sk-chat-bubble[data-role="tool"],
-:root[data-theme="brutal"] .sk-tool-card,
-:root[data-theme="brutal"] .sk-code-block {
+[data-theme="brutal"] .sk-chat-bubble[data-role="tool"],
+[data-theme="brutal"] .sk-tool-card,
+[data-theme="brutal"] .sk-code-block {
   border-width: 2px;
   box-shadow: 4px 4px 0 hsl(0 0% 11%);
 }
 
 /* ASCII grid texture on body */
-:root[data-theme="brutal"] body::after {
+[data-theme="brutal"] body::after {
   content: "";
   position: fixed;
   inset: 0;
@@ -124,7 +124,7 @@
 }
 
 @media print {
-  :root[data-theme="brutal"] body::after { display: none; }
-  :root[data-theme="brutal"] .sk-btn,
-  :root[data-theme="brutal"] .sk-card { box-shadow: none; transform: none; }
+  [data-theme="brutal"] body::after { display: none; }
+  [data-theme="brutal"] .sk-btn,
+  [data-theme="brutal"] .sk-card { box-shadow: none; transform: none; }
 }

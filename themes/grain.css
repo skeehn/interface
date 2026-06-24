@@ -5,7 +5,7 @@
  * Signature: time-animated noise texture, warm color temperature,
  * slightly desaturated tones like developed film stock.
  */
-:root[data-theme="grain"] {
+[data-theme="grain"] {
   /* ═══ COLORS ═══ */
   --sk-background:         30 10% 96%;
   --sk-foreground:         30 15% 15%;
@@ -42,7 +42,7 @@
   100% { transform: translate(0, 0); }
 }
 
-:root[data-theme="grain"] body::after {
+[data-theme="grain"] body::after {
   content: "";
   position: fixed;
   inset: -4px;
@@ -56,7 +56,7 @@
 }
 
 /* Warm vignette */
-:root[data-theme="grain"] body::before {
+[data-theme="grain"] body::before {
   content: "";
   position: fixed;
   inset: 0;
@@ -66,9 +66,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :root[data-theme="grain"] body::after { animation: none; }
+  [data-theme="grain"] body::after { animation: none; }
 }
 @media print {
-  :root[data-theme="grain"] body::after,
-  :root[data-theme="grain"] body::before { display: none; }
+  [data-theme="grain"] body::after,
+  [data-theme="grain"] body::before { display: none; }
 }

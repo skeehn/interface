@@ -5,7 +5,7 @@
  * Optimized for readability in print contexts.
  * Signature: warm paper tone, halftone dots, serif-friendly spacing.
  */
-:root[data-theme="print"] {
+[data-theme="print"] {
   /* ═══ COLORS ═══ */
   --sk-background:         40 50% 96%;
   --sk-foreground:         30 20% 12%;
@@ -31,7 +31,7 @@
 }
 
 /* Signature: Halftone dot texture overlay */
-:root[data-theme="print"] body::after {
+[data-theme="print"] body::after {
   content: "";
   position: fixed;
   inset: 0;
@@ -44,14 +44,14 @@
 }
 
 /* Slightly wider letter-spacing for readability */
-:root[data-theme="print"] {
+[data-theme="print"] {
   --sk-letter-spacing-normal: 0.01em;
 }
 
 /* Print: remove all decorative elements */
 @media print {
-  :root[data-theme="print"] body::after { display: none; }
-  :root[data-theme="print"] {
+  [data-theme="print"] body::after { display: none; }
+  [data-theme="print"] {
     --sk-background: 0 0% 100%;
     --sk-foreground: 0 0% 0%;
     --sk-border-color: 0 0% 60%;

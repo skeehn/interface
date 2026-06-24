@@ -8,7 +8,7 @@
  *
  * One core, many skins: this file only remaps the --sk-* token contract.
  */
-:root[data-theme="default"] {
+[data-theme="default"] {
   /* ═══ COLORS (warm dark) ═══ */
   --sk-background:         240 9% 6%;     /* #0f0f12 */
   --sk-foreground:         40 9% 90%;     /* warm off-white #e9e7e3 */
@@ -54,7 +54,7 @@
 }
 
 /* Faint grain on body — screen blend reads on the dark ground */
-:root[data-theme="default"] body::after {
+[data-theme="default"] body::after {
   content: "";
   position: fixed;
   inset: 0;
@@ -67,8 +67,8 @@
 }
 
 @media print {
-  :root[data-theme="default"] body::after { display: none; }
+  [data-theme="default"] body::after { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  :root[data-theme="default"] body::after { display: none; }
+  [data-theme="default"] body::after { display: none; }
 }

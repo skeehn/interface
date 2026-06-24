@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 
 /** Status of the reasoning step. */

@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 
 /** Upload state for a file attachment. */

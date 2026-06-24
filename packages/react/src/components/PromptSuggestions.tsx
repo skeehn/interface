@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 
 /** Visual variant for the PromptSuggestions container. */
@@ -14,7 +16,7 @@ export interface PromptSuggestionItem {
 }
 
 /** Props for the {@link PromptSuggestions} component. */
-export interface PromptSuggestionsProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface PromptSuggestionsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'> {
   /** Array of prompt suggestion items. */
   suggestions: PromptSuggestionItem[];
   /** Label text displayed above the grid. */

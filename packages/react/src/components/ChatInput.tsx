@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 
 /** Input state for the ChatInput. */
@@ -7,7 +9,7 @@ export type ChatInputState = 'streaming' | 'recording';
 export type ChatInputVariant = 'compact';
 
 /** Props for the {@link ChatInput} component. */
-export interface ChatInputProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface ChatInputProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onSubmit'> {
   /** Current state of the input. */
   state?: ChatInputState;
   /** Visual variant. */

@@ -8,30 +8,23 @@ When a user asks to "set up skeehn" or "add skeehn to my project":
 
 1. Check if skeehn engine files exist: look for `engine/tokens.css` or `styles/tokens.css`
 2. If not installed, copy engine + theme files from this repo to the user's project
-3. Choose a template based on user intent:
-   - "hello world" / "simple" / "minimal" → `templates/hello-world/`
-   - "dashboard" / "chat app" / "sidebar" / "3-panel" → `templates/dashboard/`
-   - "landing page" / "gradient" / "hero" / "marketing" → `templates/gradient/`
-4. Copy the template's `index.html`, rewriting relative paths for the target location
-5. Add requested components from `components/{name}/`
+3. Pick a theme based on user intent (`default` | `dark` | `terminal` | `brutal` | `print` | `grain` | `mardi-gras`)
+4. Add requested components from `components/{name}/` (or via `npx skeehn add <name>`)
 
 ## Installing via CLI (preferred)
 
 ```bash
-# Basic setup with hello-world template
+# Basic setup (engine CSS + default theme)
 npx skeehn init
 
-# Dashboard (3-panel AI app shell)
-npx skeehn init --template dashboard
-
-# Gradient hero landing page
-npx skeehn init --template gradient
+# Initialize with a specific theme
+npx skeehn init --theme terminal
 
 # Add individual components
 npx skeehn add chat-bubble
 npx skeehn add chat-input
 npx skeehn add reasoning-step
-npx skeehn add all   # all 29 components
+npx skeehn add all   # all 32 components
 
 # Switch theme
 npx skeehn theme dark
@@ -48,9 +41,6 @@ themes/{name}.css           Theme files
 components/{name}/{name}.css    Component styles
 components/{name}/{name}.js     Component JS (optional, for interactive)
 components/{name}/{name}.html   Component usage example
-templates/hello-world/      Minimal chat starter
-templates/dashboard/        3-panel AI app shell
-templates/gradient/         Hero-first landing page
 ```
 
 ## Required CSS Load Order
@@ -187,7 +177,7 @@ function applyTheme(theme) {
   document.getElementById('theme-link').href = `themes/${theme}.css`;
 }
 
-// Available: default | dark | terminal | brutal | print | grain
+// Available: default | dark | terminal | brutal | print | grain | mardi-gras
 applyTheme('dark');
 ```
 

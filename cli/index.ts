@@ -422,7 +422,7 @@ switch (cmd) {
     npx skeehn theme <name>            Switch theme
     npx skeehn doctor                  Validate setup
 
-  Components: 32 total (14 core + 13 AI + 3 bundles)
+  Components: 32 total (14 core + 15 AI + 3 bundles)
 
   Themes: ${ALL_THEMES.join(", ")}
 

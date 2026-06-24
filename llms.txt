@@ -2,18 +2,17 @@
 
 ## What is skeehn?
 skeehn is a zero-dependency CSS component library for AI interfaces.
-29 components. 5 themes. 8 dither patterns. Works with any stack.
+32 components. 7 themes. 8 dither patterns. Works with any stack.
 Swiss technical minimal aesthetic. Light + dark mode baseline. Dither as texture, not the whole aesthetic.
 
 ## Installation
 
 ```bash
 # Via CLI
-npx skeehn init                           # copy engine + hello-world template
-npx skeehn init --template dashboard     # 3-panel AI app shell
-npx skeehn init --template gradient      # gradient hero landing page
-npx skeehn add button                    # add individual component
-npx skeehn add all                       # add all 29 components
+npx skeehn init                          # set up engine CSS + theme in your project
+npx skeehn init --theme terminal         # use the terminal theme
+npx skeehn add button                    # add an individual component
+npx skeehn add all                       # add all 32 components
 npx skeehn theme dark                    # switch active theme
 ```
 
@@ -29,21 +28,21 @@ themes/terminal.css     Green phosphor CRT
 themes/brutal.css       Heavy ASCII block aesthetic
 themes/print.css        Newsprint halftone
 themes/grain.css        Warm film grain
-components/             29 component directories, each with .html/.css/.js
-templates/              Starter templates (hello-world, dashboard, gradient)
+themes/mardi-gras.css   Carnival accent theme
+components/             32 component directories, each with .html/.css/.js
 packages/react/         Typed React wrappers (@skeehn/react)
 ```
 
-## Components (29 total)
+## Components (32 total)
 
 ### Core (14)
 button, card, input, badge, alert, dialog, tabs, toggle, progress, avatar, tooltip, dropdown, table, accordion
 
-### AI-Native (11)
-chat-bubble, chat-input, reasoning-step, tool-card, citation-card, streaming-text, terminal-panel, agent-status, code-block, typing-indicator, voice-session
+### AI-Native (15)
+chat-bubble, chat-input, reasoning-step, tool-card, citation-card, streaming-text, terminal-panel, agent-status, code-block, typing-indicator, markdown, voice-session, thinking-block, prompt-suggestions, file-attachment
 
-### Bundles (4)
-markdown, layout, dataviz, motion
+### Bundles (3)
+layout, dataviz, motion
 
 ## Usage Example (Plain HTML)
 
@@ -83,7 +82,7 @@ export function Demo() {
       <AgentStatus status="thinking" />
       <ChatBubble role="assistant">Hello from skeehn</ChatBubble>
       <ReasoningStep status="completed" title="Checked registry">
-        Found 29 components
+        Found 32 components
       </ReasoningStep>
     </>
   );
@@ -149,7 +148,7 @@ document.documentElement.setAttribute('data-theme', 'dark');
 // Load theme CSS dynamically
 document.getElementById('theme-link').href = 'themes/dark.css';
 
-// Available themes: default | dark | terminal | brutal | print | grain
+// Available themes: default | dark | terminal | brutal | print | grain | mardi-gras
 ```
 
 ## Component HTML Patterns
@@ -209,15 +208,4 @@ Listen for user input: `document.addEventListener('sk:submit', e => console.log(
 bun run packages/mcp-server/src/index.ts
 
 # Available tools: add_component, set_theme, init_project, list_components
-```
-
-## Registry API
-
-```bash
-# Start registry server (port 3001)
-bun run registry
-
-GET /api/components         # list all 29 components
-GET /api/components/:name   # get component by slug
-GET /api/health             # {"status":"ok","version":"0.3.0"}
 ```

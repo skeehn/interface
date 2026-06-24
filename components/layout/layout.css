@@ -22,8 +22,8 @@
 .sk-stack[data-gap="sm"] { gap: var(--sk-space-2); }
 .sk-stack[data-gap="lg"] { gap: var(--sk-space-6); }
 .sk-stack__divider { flex-shrink: 0; }
-.sk-stack[data-direction="vertical"] .sk-stack__divider { width: 100%; height: 1px; background: hsl(var(--sk-border)); }
-.sk-stack[data-direction="horizontal"] .sk-stack__divider { width: 1px; background: hsl(var(--sk-border)); }
+.sk-stack[data-direction="vertical"] .sk-stack__divider { width: 100%; height: 1px; background: hsl(var(--sk-border-color)); }
+.sk-stack[data-direction="horizontal"] .sk-stack__divider { width: 1px; background: hsl(var(--sk-border-color)); }
 
 /* skeehn — Panel */
 .sk-panel { border: var(--sk-border); border-radius: var(--sk-radius); overflow: hidden; }
@@ -35,10 +35,10 @@
 
 /* skeehn — Divider */
 .sk-divider { border: none; margin: var(--sk-space-4) 0; }
-.sk-divider[data-variant="solid"] { border-top: 1px solid hsl(var(--sk-border)); }
-.sk-divider[data-variant="dashed"] { border-top: 1px dashed hsl(var(--sk-border)); }
+.sk-divider[data-variant="solid"] { border-top: 1px solid hsl(var(--sk-border-color)); }
+.sk-divider[data-variant="dashed"] { border-top: 1px dashed hsl(var(--sk-border-color)); }
 .sk-divider[data-variant="dither"] { border: none; height: 4px; background-image: var(--sk-dither-pattern); background-repeat: repeat; opacity: var(--sk-dither-opacity); border-radius: 2px; }
-.sk-divider[data-variant="ascii"] { border: none; text-align: center; font-family: var(--sk-font-mono); font-size: 0.5rem; color: hsl(var(--sk-border)); letter-spacing: 0.2em; }
+.sk-divider[data-variant="ascii"] { border: none; text-align: center; font-family: var(--sk-font-mono); font-size: 0.5rem; color: hsl(var(--sk-border-color)); letter-spacing: 0.2em; }
 .sk-divider[data-variant="ascii"]::after { content: "────────────────────────────────────────"; }
 
 /* skeehn — Skeleton */

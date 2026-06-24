@@ -66,7 +66,7 @@
 }
 
 /* Outline */
-.sk-btn[data-variant="outline"] { background: transparent; color: hsl(var(--sk-foreground)); border-color: hsl(var(--sk-border)); }
+.sk-btn[data-variant="outline"] { background: transparent; color: hsl(var(--sk-foreground)); border-color: hsl(var(--sk-border-color)); }
 .sk-btn[data-variant="outline"]:hover:not(:disabled) { background: hsl(var(--sk-accent)); border-color: hsl(var(--sk-foreground)); }
 
 /* Ghost */

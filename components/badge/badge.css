@@ -12,12 +12,12 @@
   display: inline-flex;
   align-items: center;
   /* slightly more substantial than before: taller line-height, snugger h-padding */
-  padding: 0.2em var(--sk-space-2);
+  padding: var(--sk-space-1) var(--sk-space-2);
   font-family: var(--sk-font-mono);
   font-size: var(--sk-font-size-xs);
   font-weight: 600;
   line-height: 1.4;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--sk-letter-spacing-wide);
   text-transform: uppercase;
   border-radius: var(--sk-radius);
   border: 1px solid transparent;
@@ -25,6 +25,7 @@
   position: relative;
   overflow: hidden;
 }
+.sk-badge:focus-visible { outline: var(--sk-focus-ring); outline-offset: 2px; }
 
 /* Solid */
 .sk-badge[data-variant="solid"] { background: hsl(var(--sk-secondary)); }
@@ -47,7 +48,7 @@
 }
 
 /* Outline */
-.sk-badge[data-variant="outline"] { background: transparent; border-color: hsl(var(--sk-border)); }
+.sk-badge[data-variant="outline"] { background: transparent; border-color: hsl(var(--sk-border-color)); }
 
 /* Ghost */
 .sk-badge[data-variant="ghost"] { background: hsl(var(--sk-accent)); }

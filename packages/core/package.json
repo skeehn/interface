@@ -3,14 +3,16 @@
   "version": "1.0.0",
   "description": "ASCII-native dither UI engine — CSS + JS. Zero dependencies.",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "sideEffects": ["**/*.css"],
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "import": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
+      "require": { "types": "./dist/index.d.cts", "default": "./dist/index.cjs" }
     },
+    "./styles.css": "./dist/styles.css",
     "./css": "./dist/skeehn.css",
     "./css/reset": "./dist/css/reset.css",
     "./css/tokens": "./dist/css/tokens.css",
@@ -18,14 +20,17 @@
     "./css/animation": "./dist/css/animation.css",
     "./components/*": "./dist/components/*",
     "./themes/*": "./dist/themes/*",
-    "./registry": "./dist/registry.json"
+    "./registry": "./dist/registry.json",
+    "./package.json": "./package.json"
   },
-  "files": [
-    "dist/"
-  ],
-  "sideEffects": [
-    "*.css"
-  ],
+  "files": ["dist/"],
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "build": "tsdown && bun run build.ts"
+  },
+  "devDependencies": {
+    "tsdown": "^0.22.3"
+  },
   "keywords": [
     "skeehn",
     "ascii",
@@ -38,6 +43,6 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/skeehn/skeehn"
+    "url": "git+https://github.com/skeehn/skeehn.git"
   }
 }

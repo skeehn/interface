@@ -1,10 +1,14 @@
 #!/usr/bin/env bun
 /**
- * @skeehn/core build script
+ * @skeehn/core asset pipeline.
  *
- * Bundles engine TypeScript into dist/index.js,
- * concatenates CSS into dist/skeehn.css,
- * and copies component/theme/registry files.
+ * Runs AFTER `tsdown` has emitted dist/index.{js,cjs} + dist/index.d.{ts,cts}.
+ * This step handles everything tsdown can't:
+ *   1. concatenate engine CSS            → dist/skeehn.css (+ dist/css/*.css)
+ *   2. build a batteries-included sheet  → dist/styles.css (engine + every
+ *      component + the default theme, so `import '@skeehn/core/styles.css'`
+ *      yields fully-styled components with zero Tailwind / build config)
+ *   3. copy components/ themes/ registry.json into dist/
  */
 
 import { existsSync, mkdirSync, cpSync, readFileSync, writeFileSync, readdirSync } from 'fs';
@@ -13,110 +17,58 @@ import { join, resolve } from 'path';
 const ROOT = resolve(import.meta.dir, '../..');
 const DIST = resolve(import.meta.dir, 'dist');
 
-// Clean dist
-if (existsSync(DIST)) {
-  cpSync(DIST, DIST, { recursive: true }); // no-op, but we'll overwrite
-}
-mkdirSync(DIST, { recursive: true });
 mkdirSync(join(DIST, 'css'), { recursive: true });
+console.log('▦ @skeehn/core assets...');
 
-console.log('▦ @skeehn/core build starting...\n');
-
-// ─── 1. Bundle engine TypeScript ──────────────────────────────────
-console.log('  → Bundling engine TypeScript...');
-const result = await Bun.build({
-  entrypoints: [resolve(import.meta.dir, 'src/index.ts')],
-  outdir: DIST,
-  target: 'browser',
-  format: 'esm',
-  minify: false,
-  splitting: false,
-  sourcemap: 'external',
-  external: [],
-});
-
-if (!result.success) {
-  console.error('  ✗ Build failed:');
-  for (const log of result.logs) {
-    console.error('   ', log.message);
-  }
-  process.exit(1);
-}
-console.log('  ✓ dist/index.js');
-
-// ─── 2. Generate type declarations ───────────────────────────────
-// For now, copy the source as a .d.ts hint file
-// In production, use dts-bundle-generator or tsc --declaration
-console.log('  → Generating type declarations...');
-try {
-  const proc = Bun.spawnSync(['bunx', 'tsc', '--declaration', '--emitDeclarationOnly', '--outDir', DIST, '--project', resolve(ROOT, 'tsconfig.json')], {
-    cwd: ROOT,
-    stdio: ['ignore', 'pipe', 'pipe'],
-  });
-  if (proc.exitCode === 0) {
-    console.log('  ✓ dist/*.d.ts');
-  } else {
-    // Fallback: copy source index.ts as index.d.ts placeholder
-    console.log('  ⚠ tsc declarations skipped (non-zero exit), using source as .d.ts');
-    const src = readFileSync(resolve(import.meta.dir, 'src/index.ts'), 'utf-8');
-    writeFileSync(join(DIST, 'index.d.ts'), src);
-  }
-} catch {
-  console.log('  ⚠ tsc not available, copying source as .d.ts placeholder');
-  const src = readFileSync(resolve(import.meta.dir, 'src/index.ts'), 'utf-8');
-  writeFileSync(join(DIST, 'index.d.ts'), src);
-}
-
-// ─── 3. Concatenate engine CSS → skeehn.css ──────────────────────
-console.log('  → Concatenating engine CSS...');
-const CSS_FILES = ['reset.css', 'tokens.css', 'dither.css', 'animation.css'];
-const cssBundle: string[] = [
-  '/* @skeehn/core — concatenated engine CSS */',
-  '/* Order: reset → tokens → dither → animation */',
+// ─── 1. Engine CSS → skeehn.css (+ individual files) ─────────────
+const ENGINE_CSS = ['reset.css', 'tokens.css', 'dither.css', 'animation.css'];
+const engineBundle: string[] = [
+  '/* @skeehn/core — engine CSS */',
+  '/* order: reset → tokens → dither → animation */',
   '',
 ];
-for (const file of CSS_FILES) {
+for (const file of ENGINE_CSS) {
   const path = join(ROOT, 'engine', file);
-  if (existsSync(path)) {
-    const content = readFileSync(path, 'utf-8');
-    cssBundle.push(`/* ═══ ${file} ═══ */`);
-    cssBundle.push(content);
-    cssBundle.push('');
-    // Also copy individual file
-    writeFileSync(join(DIST, 'css', file), content);
-    console.log(`  ✓ dist/css/${file}`);
+  if (!existsSync(path)) continue;
+  const content = readFileSync(path, 'utf-8');
+  engineBundle.push(`/* ═══ ${file} ═══ */`, content, '');
+  writeFileSync(join(DIST, 'css', file), content);
+}
+writeFileSync(join(DIST, 'skeehn.css'), engineBundle.join('\n'));
+console.log('  ✓ dist/skeehn.css + dist/css/*.css');
+
+// ─── 2. Copy components / themes / registry ──────────────────────
+const componentsDir = join(ROOT, 'components');
+if (existsSync(componentsDir)) cpSync(componentsDir, join(DIST, 'components'), { recursive: true });
+const themesDir = join(ROOT, 'themes');
+if (existsSync(themesDir)) cpSync(themesDir, join(DIST, 'themes'), { recursive: true });
+const registryPath = join(ROOT, 'registry.json');
+if (existsSync(registryPath)) cpSync(registryPath, join(DIST, 'registry.json'));
+console.log('  ✓ dist/components/ dist/themes/ dist/registry.json');
+
+// ─── 3. Batteries-included styles.css ────────────────────────────
+const all: string[] = [
+  '/* @skeehn/core — batteries-included stylesheet */',
+  '/* engine → every component → default theme. No Tailwind required. */',
+  '',
+  readFileSync(join(DIST, 'skeehn.css'), 'utf-8'),
+];
+let componentCount = 0;
+if (existsSync(componentsDir)) {
+  for (const entry of readdirSync(componentsDir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+    if (!entry.isDirectory()) continue;
+    const dir = join(componentsDir, entry.name);
+    for (const file of readdirSync(dir).filter((f) => f.endsWith('.css')).sort()) {
+      all.push(`/* ═══ component: ${entry.name}/${file} ═══ */`, readFileSync(join(dir, file), 'utf-8'), '');
+      componentCount++;
+    }
   }
 }
-writeFileSync(join(DIST, 'skeehn.css'), cssBundle.join('\n'));
-console.log('  ✓ dist/skeehn.css');
-
-// ─── 4. Copy components ──────────────────────────────────────────
-console.log('  → Copying components...');
-const componentsDir = join(ROOT, 'components');
-if (existsSync(componentsDir)) {
-  cpSync(componentsDir, join(DIST, 'components'), { recursive: true });
-  const count = readdirSync(componentsDir).filter(d => {
-    try { return Bun.file(join(componentsDir, d)).name !== undefined; } catch { return true; }
-  }).length;
-  console.log(`  ✓ dist/components/ (${count} components)`);
+const defaultTheme = join(ROOT, 'themes', 'default.css');
+if (existsSync(defaultTheme)) {
+  all.push('/* ═══ theme: default ═══ */', readFileSync(defaultTheme, 'utf-8'), '');
 }
+writeFileSync(join(DIST, 'styles.css'), all.join('\n'));
+console.log(`  ✓ dist/styles.css (engine + ${componentCount} component sheets + default theme)`);
 
-// ─── 5. Copy themes ─────────────────────────────────────────────
-console.log('  → Copying themes...');
-const themesDir = join(ROOT, 'themes');
-if (existsSync(themesDir)) {
-  cpSync(themesDir, join(DIST, 'themes'), { recursive: true });
-  const themeCount = readdirSync(themesDir).filter(f => f.endsWith('.css')).length;
-  console.log(`  ✓ dist/themes/ (${themeCount} themes)`);
-}
-
-// ─── 6. Copy registry.json ──────────────────────────────────────
-console.log('  → Copying registry.json...');
-const registryPath = join(ROOT, 'registry.json');
-if (existsSync(registryPath)) {
-  cpSync(registryPath, join(DIST, 'registry.json'));
-  console.log('  ✓ dist/registry.json');
-}
-
-// ─── Done ────────────────────────────────────────────────────────
-console.log('\n▦ @skeehn/core build complete!\n');
+console.log('▦ @skeehn/core assets complete.\n');

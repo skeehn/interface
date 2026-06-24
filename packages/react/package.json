@@ -3,24 +3,33 @@
   "version": "1.0.0",
   "description": "React 19 components, hooks, and WebGL effects for skeehn",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "sideEffects": false,
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "import": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
+      "require": { "types": "./dist/index.d.cts", "default": "./dist/index.cjs" }
     },
     "./hooks": {
-      "import": "./dist/hooks/index.js",
-      "types": "./dist/hooks/index.d.ts"
+      "import": { "types": "./dist/hooks/index.d.ts", "default": "./dist/hooks/index.js" },
+      "require": { "types": "./dist/hooks/index.d.cts", "default": "./dist/hooks/index.cjs" }
     },
     "./gl": {
-      "import": "./dist/gl/index.js",
-      "types": "./dist/gl/index.d.ts"
-    }
+      "import": { "types": "./dist/gl/index.d.ts", "default": "./dist/gl/index.js" },
+      "require": { "types": "./dist/gl/index.d.cts", "default": "./dist/gl/index.cjs" }
+    },
+    "./package.json": "./package.json"
   },
   "files": ["dist/"],
+  "engines": { "node": ">=18" },
+  "typesVersions": {
+    "*": {
+      "hooks": ["./dist/hooks/index.d.ts"],
+      "gl": ["./dist/gl/index.d.ts"]
+    }
+  },
   "peerDependencies": {
     "react": ">=18",
     "react-dom": ">=18"
@@ -31,7 +40,12 @@
     "three": { "optional": true }
   },
   "scripts": {
-    "build": "bun build ./src/index.tsx --outdir ./dist --target browser --external react --external react-dom"
+    "build": "tsdown"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "tsdown": "^0.22.3"
   },
   "keywords": ["skeehn", "react", "ai", "components", "dither", "ascii", "webgl"],
   "license": "MIT"

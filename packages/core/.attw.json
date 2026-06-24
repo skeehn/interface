@@ -1,0 +1,12 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/@arethetypeswrong/cli/config-schema.json",
+  "excludeEntrypoints": [
+    "./styles.css",
+    "./css",
+    "./css/reset",
+    "./css/tokens",
+    "./css/dither",
+    "./css/animation",
+    "./registry"
+  ]
+}

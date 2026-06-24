@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "registry": "bun run scripts/build-registry.ts && bunx shadcn@latest build registry.json -o public/r"
   },
   "dependencies": {
     "@skeehn/react": "workspace:*",

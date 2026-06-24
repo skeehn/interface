@@ -1,0 +1,808 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "skeehn",
+  "homepage": "https://ui.skeehn.com",
+  "items": [
+    {
+      "name": "skeehn-engine",
+      "type": "registry:style",
+      "title": "skeehn engine",
+      "description": "ASCII dither engine — CSS reset, design tokens, dither patterns, animations, and the default theme. Required by every skeehn component.",
+      "files": [
+        {
+          "path": "../../engine/reset.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/reset.css"
+        },
+        {
+          "path": "../../engine/tokens.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/tokens.css"
+        },
+        {
+          "path": "../../engine/dither.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/dither.css"
+        },
+        {
+          "path": "../../engine/animation.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/animation.css"
+        },
+        {
+          "path": "../../themes/default.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/theme.css"
+        }
+      ]
+    },
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "title": "Button",
+      "description": "Interactive button with ASCII dither",
+      "categories": [
+        "core"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/Button.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/Button.tsx"
+        },
+        {
+          "path": "../../components/button/button.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/button.css"
+        }
+      ]
+    },
+    {
+      "name": "card",
+      "type": "registry:ui",
+      "title": "Card",
+      "description": "Elevated container with dither surface",
+      "categories": [
+        "core"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/Card.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/Card.tsx"
+        },
+        {
+          "path": "../../components/card/card.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/card.css"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "type": "registry:ui",
+      "title": "Input",
+      "description": "Text input with dither focus",
+      "categories": [
+        "core"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/Input.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/Input.tsx"
+        },
+        {
+          "path": "../../components/input/input.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/input.css"
+        }
+      ]
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui",
+      "title": "Badge",
+      "description": "Status indicator with dither fill",
+      "categories": [
+        "core"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/Badge.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/Badge.tsx"
+        },
+        {
+          "path": "../../components/badge/badge.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/badge.css"
+        }
+      ]
+    },
+    {
+      "name": "alert",
+      "type": "registry:ui",
+      "title": "Alert",
+      "description": "Feedback message with dither border",
+      "categories": [
+        "core"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/Alert.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/Alert.tsx"
+        },
+        {
+          "path": "../../components/alert/alert.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/alert.css"
+        }
+      ]
+    },
+    {
+      "name": "dialog",
+      "type": "registry:ui",
+      "title": "Dialog",
+      "description": "Modal overlay with dither backdrop",
+      "categories": [
+        "core"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/Dialog.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/Dialog.tsx"
+        },
+        {
+          "path": "../../components/dialog/dialog.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/dialog.css"
+        }
+      ]
+    },
+    {
+      "name": "tabs",
+      "type": "registry:ui",
+      "title": "Tabs",
+      "description": "Tabbed navigation with dither tab",
+      "categories": [
+        "core"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/Tabs.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/Tabs.tsx"
+        },
+        {
+          "path": "../../components/tabs/tabs.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/tabs.css"
+        }
+      ]
+    },
+    {
+      "name": "toggle",
+      "type": "registry:ui",
+      "title": "Toggle",
+      "description": "Two-state switch with dither",
+      "categories": [
+        "core"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/Toggle.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/Toggle.tsx"
+        },
+        {
+          "path": "../../components/toggle/toggle.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/toggle.css"
+        }
+      ]
+    },
+    {
+      "name": "progress",
+      "type": "registry:ui",
+      "title": "Progress",
+      "description": "Loading indicator with dither fill",
+      "categories": [
+        "core"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/Progress.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/Progress.tsx"
+        },
+        {
+          "path": "../../components/progress/progress.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/progress.css"
+        }
+      ]
+    },
+    {
+      "name": "avatar",
+      "type": "registry:ui",
+      "title": "Avatar",
+      "description": "User image with dither fallback",
+      "categories": [
+        "core"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/Avatar.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/Avatar.tsx"
+        },
+        {
+          "path": "../../components/avatar/avatar.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/avatar.css"
+        }
+      ]
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:ui",
+      "title": "Tooltip",
+      "description": "Hover info with dither tooltip",
+      "categories": [
+        "core"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/Tooltip.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/Tooltip.tsx"
+        },
+        {
+          "path": "../../components/tooltip/tooltip.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/tooltip.css"
+        }
+      ]
+    },
+    {
+      "name": "dropdown",
+      "type": "registry:ui",
+      "title": "Dropdown",
+      "description": "Menu with dither items",
+      "categories": [
+        "core"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/Dropdown.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/Dropdown.tsx"
+        },
+        {
+          "path": "../../components/dropdown/dropdown.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/dropdown.css"
+        }
+      ]
+    },
+    {
+      "name": "table",
+      "type": "registry:ui",
+      "title": "Table",
+      "description": "Data table with dither rows",
+      "categories": [
+        "core"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/Table.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/Table.tsx"
+        },
+        {
+          "path": "../../components/table/table.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/table.css"
+        }
+      ]
+    },
+    {
+      "name": "accordion",
+      "type": "registry:ui",
+      "title": "Accordion",
+      "description": "Collapsible sections with dither",
+      "categories": [
+        "core"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/Accordion.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/Accordion.tsx"
+        },
+        {
+          "path": "../../components/accordion/accordion.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/accordion.css"
+        }
+      ]
+    },
+    {
+      "name": "chat-bubble",
+      "type": "registry:ui",
+      "title": "Chat Bubble",
+      "description": "AI message bubble with streaming",
+      "categories": [
+        "ai"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/ChatBubble.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/ChatBubble.tsx"
+        },
+        {
+          "path": "../../components/chat-bubble/chat-bubble.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/chat-bubble.css"
+        }
+      ]
+    },
+    {
+      "name": "chat-input",
+      "type": "registry:ui",
+      "title": "Chat Input",
+      "description": "AI prompt input with actions",
+      "categories": [
+        "ai"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/ChatInput.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/ChatInput.tsx"
+        },
+        {
+          "path": "../../components/chat-input/chat-input.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/chat-input.css"
+        }
+      ]
+    },
+    {
+      "name": "reasoning-step",
+      "type": "registry:ui",
+      "title": "Reasoning Step",
+      "description": "Expandable reasoning trace",
+      "categories": [
+        "ai"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/ReasoningStep.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/ReasoningStep.tsx"
+        },
+        {
+          "path": "../../components/reasoning-step/reasoning-step.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/reasoning-step.css"
+        }
+      ]
+    },
+    {
+      "name": "tool-card",
+      "type": "registry:ui",
+      "title": "Tool Card",
+      "description": "Tool execution result card",
+      "categories": [
+        "ai"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/ToolCard.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/ToolCard.tsx"
+        },
+        {
+          "path": "../../components/tool-card/tool-card.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/tool-card.css"
+        }
+      ]
+    },
+    {
+      "name": "citation-card",
+      "type": "registry:ui",
+      "title": "Citation Card",
+      "description": "Source reference card",
+      "categories": [
+        "ai"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/CitationCard.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/CitationCard.tsx"
+        },
+        {
+          "path": "../../components/citation-card/citation-card.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/citation-card.css"
+        }
+      ]
+    },
+    {
+      "name": "streaming-text",
+      "type": "registry:ui",
+      "title": "Streaming Text",
+      "description": "Streaming text animation",
+      "categories": [
+        "ai"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/StreamingText.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/StreamingText.tsx"
+        },
+        {
+          "path": "../../components/streaming-text/streaming-text.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/streaming-text.css"
+        }
+      ]
+    },
+    {
+      "name": "terminal-panel",
+      "type": "registry:ui",
+      "title": "Terminal Panel",
+      "description": "Code execution terminal",
+      "categories": [
+        "ai"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/TerminalPanel.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/TerminalPanel.tsx"
+        },
+        {
+          "path": "../../components/terminal-panel/terminal-panel.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/terminal-panel.css"
+        }
+      ]
+    },
+    {
+      "name": "agent-status",
+      "type": "registry:ui",
+      "title": "Agent Status",
+      "description": "Agent state indicator",
+      "categories": [
+        "ai"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/AgentStatus.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/AgentStatus.tsx"
+        },
+        {
+          "path": "../../components/agent-status/agent-status.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/agent-status.css"
+        }
+      ]
+    },
+    {
+      "name": "layout",
+      "type": "registry:ui",
+      "title": "Layout",
+      "description": "Container, Grid, Stack, Panel, Divider, Skeleton",
+      "categories": [
+        "layout"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/Layout.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/Layout.tsx"
+        },
+        {
+          "path": "../../components/layout/layout.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/layout.css"
+        }
+      ]
+    },
+    {
+      "name": "dataviz",
+      "type": "registry:ui",
+      "title": "Dataviz",
+      "description": "AsciiChart, Sparkline, Meter, Heatmap",
+      "categories": [
+        "dataviz"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/Dataviz.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/Dataviz.tsx"
+        },
+        {
+          "path": "../../components/dataviz/dataviz.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/dataviz.css"
+        }
+      ]
+    },
+    {
+      "name": "motion",
+      "type": "registry:ui",
+      "title": "Motion",
+      "description": "DitherPulse, AsciiRain, Glitch, TextureMask",
+      "categories": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/Motion.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/Motion.tsx"
+        },
+        {
+          "path": "../../components/motion/motion.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/motion.css"
+        }
+      ]
+    },
+    {
+      "name": "code-block",
+      "type": "registry:ui",
+      "title": "Code Block",
+      "description": "Code display with copy and line numbers",
+      "categories": [
+        "ai"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/CodeBlock.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/CodeBlock.tsx"
+        },
+        {
+          "path": "../../components/code-block/code-block.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/code-block.css"
+        }
+      ]
+    },
+    {
+      "name": "typing-indicator",
+      "type": "registry:ui",
+      "title": "Typing Indicator",
+      "description": "Animated typing indicator for AI chat",
+      "categories": [
+        "ai"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/TypingIndicator.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/TypingIndicator.tsx"
+        },
+        {
+          "path": "../../components/typing-indicator/typing-indicator.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/typing-indicator.css"
+        }
+      ]
+    },
+    {
+      "name": "markdown",
+      "type": "registry:ui",
+      "title": "Markdown",
+      "description": "Markdown renderer for AI chat content",
+      "categories": [
+        "ai"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/Markdown.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/Markdown.tsx"
+        },
+        {
+          "path": "../../components/markdown/markdown.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/markdown.css"
+        }
+      ]
+    },
+    {
+      "name": "voice-session",
+      "type": "registry:ui",
+      "title": "Voice Session",
+      "description": "Realtime voice session with waveform, transcript, and state indicators",
+      "categories": [
+        "ai"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/VoiceSession.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/VoiceSession.tsx"
+        },
+        {
+          "path": "../../components/voice-session/voice-session.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/voice-session.css"
+        }
+      ]
+    },
+    {
+      "name": "thinking-block",
+      "type": "registry:ui",
+      "title": "Thinking Block",
+      "description": "AI extended thinking with pulse animation and expand/collapse",
+      "categories": [
+        "ai"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/ThinkingBlock.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/ThinkingBlock.tsx"
+        },
+        {
+          "path": "../../components/thinking-block/thinking-block.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/thinking-block.css"
+        }
+      ]
+    },
+    {
+      "name": "prompt-suggestions",
+      "type": "registry:ui",
+      "title": "Prompt Suggestions",
+      "description": "Starter prompt suggestions for empty AI chat state",
+      "categories": [
+        "ai"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/PromptSuggestions.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/PromptSuggestions.tsx"
+        },
+        {
+          "path": "../../components/prompt-suggestions/prompt-suggestions.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/prompt-suggestions.css"
+        }
+      ]
+    },
+    {
+      "name": "file-attachment",
+      "type": "registry:ui",
+      "title": "File Attachment",
+      "description": "File upload pill with progress and remove for chat input",
+      "categories": [
+        "ai"
+      ],
+      "registryDependencies": [
+        "https://ui.skeehn.com/r/skeehn-engine.json"
+      ],
+      "files": [
+        {
+          "path": "../../packages/react/src/components/FileAttachment.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/FileAttachment.tsx"
+        },
+        {
+          "path": "../../components/file-attachment/file-attachment.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/components/file-attachment.css"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "avatar",
+  "title": "Avatar",
+  "description": "User image with dither fallback",
+  "registryDependencies": [
+    "https://ui.skeehn.com/r/skeehn-engine.json"
+  ],
+  "files": [
+    {
+      "path": "../../packages/react/src/components/Avatar.tsx",
+      "content": "import React from 'react';\n\n/** Size preset for the Avatar. */\nexport type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';\n\n/** Props for the {@link Avatar} component. */\nexport interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {\n  /** Image source URL. When absent, the fallback is rendered. */\n  src?: string;\n  /** Alt text for the image. */\n  alt?: string;\n  /** Fallback text (typically initials) shown when there is no image. */\n  fallback?: string;\n  /** Size preset. */\n  size?: AvatarSize;\n  /** Additional CSS class names. */\n  className?: string;\n}\n\n/**\n * User image with dither fallback.\n * Renders a `<div>` with the `sk-avatar` class, containing either an `<img>` or fallback text.\n */\nexport const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(\n  ({ src, alt, fallback, size = 'md', className, ...rest }, ref) => (\n    <div\n      ref={ref}\n      className={`sk-avatar${className ? ` ${className}` : ''}`}\n      data-size={size}\n      {...rest}\n    >\n      {src ? (\n        <img src={src} alt={alt ?? ''} />\n      ) : (\n        <span className=\"sk-avatar__fallback\">{fallback}</span>\n      )}\n    </div>\n  ),\n);\n\nAvatar.displayName = 'Avatar';\n",
+      "type": "registry:ui",
+      "target": "components/ui/Avatar.tsx"
+    },
+    {
+      "path": "../../components/avatar/avatar.css",
+      "content": "/**\n * skeehn — Avatar Component\n *\n * @component sk-avatar\n * @sizes     xs | sm | md | lg | xl\n * @variants  default | [data-variant=\"pixel\"] | [data-variant=\"retro\"] | [data-variant=\"ascii\"]\n * @states    [data-loading] | [data-skeleton]\n * @slots     img | __fallback\n * @a11y      alt text on img, fallback initials for screen readers\n * @print     Shows border and fallback text\n */\n\n.sk-avatar { position: relative; display: inline-flex; align-items: center; justify-content: center; overflow: hidden; border-radius: var(--sk-radius); border: 2px solid hsl(var(--sk-border)); font-family: var(--sk-font-mono); }\n.sk-avatar img { width: 100%; height: 100%; object-fit: cover; }\n.sk-avatar__fallback { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-weight: 600; color: hsl(var(--sk-foreground)); background: hsl(var(--sk-secondary)); position: relative; letter-spacing: 0.05em; }\n.sk-avatar__fallback::before { content: \"\"; position: absolute; inset: 0; background-image: var(--sk-dither-pattern); background-repeat: repeat; opacity: var(--sk-dither-opacity); pointer-events: none; }\n.sk-avatar[data-size=\"xs\"] { width: 1.25rem; height: 1.25rem; font-size: 0.5rem; }\n.sk-avatar[data-size=\"sm\"] { width: 1.75rem; height: 1.75rem; font-size: var(--sk-font-size-xs); }\n.sk-avatar[data-size=\"md\"] { width: 2.25rem; height: 2.25rem; font-size: var(--sk-font-size-sm); }\n.sk-avatar[data-size=\"lg\"] { width: 3rem; height: 3rem; font-size: var(--sk-font-size-base); }\n.sk-avatar[data-size=\"xl\"] { width: 4rem; height: 4rem; font-size: var(--sk-font-size-lg); }\n\n/* Micro-interactions */\n.sk-avatar { transition: transform var(--sk-transition), box-shadow var(--sk-transition); }\n.sk-avatar:hover { transform: translateY(-1px); box-shadow: 0 2px 4px hsl(var(--sk-foreground) / 0.1); }\n\n/* Pixel variant */\n.sk-avatar[data-variant=\"pixel\"] { border: 2px solid hsl(var(--sk-foreground)); box-shadow: 2px 2px 0 hsl(var(--sk-foreground)); border-radius: 0; }\n\n/* Retro variant */\n.sk-avatar[data-variant=\"retro\"] { box-shadow: 0 0 6px hsl(var(--sk-primary) / 0.2); }\n\n/* ASCII variant */\n.sk-avatar[data-variant=\"ascii\"] { border: none; background: transparent; }\n.sk-avatar[data-variant=\"ascii\"] .sk-avatar__fallback { background: transparent; border: 1px dashed hsl(var(--sk-border-color)); }\n\n/* Loading */\n@keyframes sk-avatar-dither { 0%, 100% { opacity: 0.1; } 50% { opacity: 0.25; } }\n.sk-avatar[data-loading] .sk-avatar__fallback::before { animation: sk-avatar-dither 1.5s ease-in-out infinite; }\n\n/* Skeleton */\n@keyframes sk-avatar-shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }\n.sk-avatar[data-skeleton] { border-color: hsl(var(--sk-border-color)); }\n.sk-avatar[data-skeleton] .sk-avatar__fallback {\n  color: transparent;\n  background: linear-gradient(90deg, hsl(var(--sk-muted)) 25%, hsl(var(--sk-accent)) 50%, hsl(var(--sk-muted)) 75%);\n  background-size: 200% 100%;\n  animation: sk-avatar-shimmer 1.8s ease-in-out infinite;\n}\n\n@media print {\n  .sk-avatar { box-shadow: none; border: 1px solid hsl(var(--sk-foreground)); }\n  .sk-avatar[data-skeleton] { display: none; }\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .sk-avatar { transition: none; }\n  .sk-avatar:hover { transform: none; }\n  .sk-avatar[data-loading] .sk-avatar__fallback::before { animation: none; }\n  .sk-avatar[data-skeleton] .sk-avatar__fallback { animation: none; background: hsl(var(--sk-muted)); }\n}\n",
+      "type": "registry:file",
+      "target": "styles/skeehn/components/avatar.css"
+    }
+  ],
+  "categories": [
+    "core"
+  ],
+  "type": "registry:ui"
+}

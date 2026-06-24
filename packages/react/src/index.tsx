@@ -64,7 +64,7 @@ export { CitationCard } from './components/CitationCard';
 export type { CitationCardProps, CitationCardVariant } from './components/CitationCard';
 
 export { StreamingText } from './components/StreamingText';
-export type { StreamingTextProps, StreamingTextEffect } from './components/StreamingText';
+export type { StreamingTextProps, StreamingTextEffect, StreamingTextCaret } from './components/StreamingText';
 
 export { TerminalPanel } from './components/TerminalPanel';
 export type { TerminalPanelProps, TerminalPanelTheme } from './components/TerminalPanel';
@@ -118,3 +118,6 @@ export type {
   GlitchProps, GlitchIntensity,
   TextureMaskProps, TextureMaskTrigger, TextureMaskDirection,
 } from './components/Motion';
+
+// Streaming-markdown utilities — make partial markdown safe to render mid-stream
+export { closeOpenFences, hasOpenFence } from './lib/streaming-markdown';

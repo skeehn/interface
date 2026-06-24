@@ -1,0 +1,55 @@
+name: Publish
+
+# Tag-gated release: push a tag like `v1.0.0` to build, validate, and publish
+# @skeehn/core and @skeehn/react to npm. Requires the NPM_TOKEN repo secret.
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # npm provenance
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: 'https://registry.npmjs.org'
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - run: bun install --frozen-lockfile
+
+      - name: Build packages (dist is gitignored)
+        run: bun run build
+
+      - name: Validate @skeehn/core
+        working-directory: packages/core
+        run: |
+          bunx publint
+          bunx --bun @arethetypeswrong/cli --pack .
+
+      - name: Validate @skeehn/react
+        working-directory: packages/react
+        run: |
+          bunx publint
+          bunx --bun @arethetypeswrong/cli --pack .
+
+      - name: Publish @skeehn/core
+        working-directory: packages/core
+        run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish @skeehn/react
+        working-directory: packages/react
+        run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

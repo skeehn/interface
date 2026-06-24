@@ -54,15 +54,15 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      data-theme="brutal"
+      data-theme="default"
       className={`${geistSans.variable} ${geistMono.variable}`}
       suppressHydrationWarning
     >
       <head>
-        {/* Theme init — docs dogfood the brutalist skin by default; localStorage overrides */}
+        {/* Theme init — docs dogfood the Editorial·Mono skin by default; localStorage overrides */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('sk-theme');document.documentElement.setAttribute('data-theme',t||'brutal')}catch(e){}})()`,
+            __html: `(function(){try{var t=localStorage.getItem('sk-theme');document.documentElement.setAttribute('data-theme',t||'default')}catch(e){}})()`,
           }}
         />
         <meta name="color-scheme" content="dark" />

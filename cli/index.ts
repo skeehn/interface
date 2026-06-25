@@ -23,8 +23,11 @@ const THEMES = join(ROOT, "themes");
 const COMPONENTS = join(ROOT, "components");
 const REACT_COMPONENTS = join(ROOT, "packages", "react", "src", "components");
 const REGISTRY_PATH = join(ROOT, "registry.json");
+/** Live shadcn registry — `add` fetches inline file content from here so it
+ *  works in ANY project, not just inside this repo. Override for local testing. */
+const REGISTRY_URL = process.env.SKEEHN_REGISTRY ?? "https://ui.skeehn.com";
 
-const ALL_THEMES = ["default", "dark", "brutal", "terminal", "print", "grain", "mardi-gras"];
+const ALL_THEMES = ["light", "dark", "default", "brutal", "terminal", "print", "grain", "mardi-gras"];
 
 // ─── Logging ───────────────────────────────────────────────
 const log = (m: string) => console.log(`  ${m}`);
@@ -99,7 +102,7 @@ function toPascalCase(name: string): string {
 async function init(args: string[]) {
   const f = parseFlags(args);
   const target = resolve(f.path || process.cwd());
-  const theme = f.theme || "default";
+  const theme = f.theme || "light";
   const framework = detectFramework(target);
 
   console.log("\n  ▦ skeehn init\n");
@@ -206,7 +209,7 @@ async function add(args: string[]) {
     console.log("\n  ▦ skeehn add --all\n");
     let count = 0;
     for (const c of reg.components) {
-      addSingleComponent(c, { target, cssDir, componentDir, framework, noCss: f.noCss === "true", cssOnly: f.cssOnly === "true" });
+      await addSingleComponent(c, { target, cssDir, componentDir, framework, noCss: f.noCss === "true", cssOnly: f.cssOnly === "true" });
       count++;
     }
     console.log(`\n  ✓ Added all ${count} components\n`);
@@ -222,7 +225,7 @@ async function add(args: string[]) {
   }
 
   console.log(`\n  ▦ skeehn add ${comp}\n`);
-  addSingleComponent(c, { target, cssDir, componentDir, framework, noCss: f.noCss === "true", cssOnly: f.cssOnly === "true" });
+  await addSingleComponent(c, { target, cssDir, componentDir, framework, noCss: f.noCss === "true", cssOnly: f.cssOnly === "true" });
 
   // Show next steps
   const pascal = toPascalCase(c.name);
@@ -241,11 +244,39 @@ async function add(args: string[]) {
   console.log();
 }
 
-function addSingleComponent(
+interface RegistryItemFile { content?: string; target?: string; type?: string }
+
+async function addSingleComponent(
   c: RegistryComponent,
   opts: { target: string; cssDir: string; componentDir: string; framework: Framework; noCss: boolean; cssOnly: boolean }
 ) {
-  // 1. Copy CSS files
+  // Registry-first: fetch the shadcn item (inline file content) from the live
+  // registry so `add` works in any project — not just inside this repo.
+  try {
+    const res = await fetch(`${REGISTRY_URL}/r/${c.name}.json`);
+    if (res.ok) {
+      const item = (await res.json()) as { files?: RegistryItemFile[] };
+      let wrote = 0;
+      for (const file of item.files ?? []) {
+        if (file.content == null || !file.target) continue;
+        const isCss = file.target.endsWith(".css");
+        const isTsx = file.target.endsWith(".tsx");
+        if (opts.noCss && isCss) continue;
+        if (opts.cssOnly && isTsx) continue;
+        if (isTsx && !(opts.framework === "next" || opts.framework === "react")) continue;
+        const dest = join(opts.target, file.target);
+        mkdirSync(dirname(dest), { recursive: true });
+        writeFileSync(dest, file.content);
+        ok(file.target);
+        wrote++;
+      }
+      if (wrote > 0) return;
+    }
+  } catch {
+    /* offline or registry unreachable — fall back to local copy below */
+  }
+
+  // Local fallback — running inside the skeehn repo (or offline).
   if (!opts.noCss) {
     mkdirSync(opts.cssDir, { recursive: true });
     for (const file of c.files.filter((f) => f.endsWith(".css"))) {
@@ -256,20 +287,15 @@ function addSingleComponent(
       }
     }
   }
-
-  // 2. Copy React wrapper (.tsx) if framework is React/Next
   if (!opts.cssOnly && (opts.framework === "next" || opts.framework === "react")) {
     const pascal = toPascalCase(c.name);
     const tsxSrc = join(REACT_COMPONENTS, `${pascal}.tsx`);
-
     if (existsSync(tsxSrc)) {
       mkdirSync(opts.componentDir, { recursive: true });
       copyFileSync(tsxSrc, join(opts.componentDir, `${pascal}.tsx`));
       ok(`components/ui/${pascal}.tsx`);
     }
   }
-
-  // 3. Copy JS files (for vanilla components with behavior)
   if (!opts.cssOnly) {
     for (const file of c.files.filter((f) => f.endsWith(".js"))) {
       const src = join(COMPONENTS, c.name, file);

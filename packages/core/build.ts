@@ -64,11 +64,15 @@ if (existsSync(componentsDir)) {
     }
   }
 }
-const defaultTheme = join(ROOT, 'themes', 'default.css');
-if (existsSync(defaultTheme)) {
-  all.push('/* ═══ theme: default ═══ */', readFileSync(defaultTheme, 'utf-8'), '');
+// Ship the neutral Light + Dark default (the Editorial/dither look is an opt-in
+// flagship; import themes/default.css for it).
+for (const t of ['light', 'dark']) {
+  const themeFile = join(ROOT, 'themes', `${t}.css`);
+  if (existsSync(themeFile)) {
+    all.push(`/* ═══ theme: ${t} (neutral default) ═══ */`, readFileSync(themeFile, 'utf-8'), '');
+  }
 }
 writeFileSync(join(DIST, 'styles.css'), all.join('\n'));
-console.log(`  ✓ dist/styles.css (engine + ${componentCount} component sheets + default theme)`);
+console.log(`  ✓ dist/styles.css (engine + ${componentCount} component sheets + neutral Light/Dark default)`);
 
 console.log('▦ @skeehn/core assets complete.\n');

@@ -41,10 +41,11 @@ const engineItem = {
   type: 'registry:style',
   title: 'skeehn engine',
   description:
-    'ASCII dither engine — CSS reset, design tokens, dither patterns, animations, and the default theme. Required by every skeehn component.',
+    'skeehn engine — CSS reset, design tokens, dither patterns, animations, and the neutral Light/Dark default theme. Required by every skeehn component. (The Editorial/dither look is the opt-in default.css flagship.)',
   files: [
     ...ENGINE.map((f) => ({ path: rel(`engine/${f}.css`), type: 'registry:file', target: `styles/skeehn/${f}.css` })),
-    { path: rel('themes/default.css'), type: 'registry:file', target: 'styles/skeehn/theme.css' },
+    { path: rel('themes/light.css'), type: 'registry:file', target: 'styles/skeehn/theme.css' },
+    { path: rel('themes/dark.css'), type: 'registry:file', target: 'styles/skeehn/theme.dark.css' },
   ],
 };
 

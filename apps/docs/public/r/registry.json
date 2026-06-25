@@ -7,7 +7,7 @@
       "name": "skeehn-engine",
       "type": "registry:style",
       "title": "skeehn engine",
-      "description": "ASCII dither engine — CSS reset, design tokens, dither patterns, animations, and the default theme. Required by every skeehn component.",
+      "description": "skeehn engine — CSS reset, design tokens, dither patterns, animations, and the neutral Light/Dark default theme. Required by every skeehn component. (The Editorial/dither look is the opt-in default.css flagship.)",
       "files": [
         {
           "path": "../../engine/reset.css",
@@ -30,9 +30,14 @@
           "target": "styles/skeehn/animation.css"
         },
         {
-          "path": "../../themes/default.css",
+          "path": "../../themes/light.css",
           "type": "registry:file",
           "target": "styles/skeehn/theme.css"
+        },
+        {
+          "path": "../../themes/dark.css",
+          "type": "registry:file",
+          "target": "styles/skeehn/theme.dark.css"
         }
       ]
     },

@@ -117,6 +117,20 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── AI SDK INTEROP BAND ── */}
+      <section className="border-y border-border bg-surface">
+        <div className="max-w-5xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-center gap-x-3 gap-y-1.5 text-center text-sm">
+          <span className="inline-flex items-center gap-2 text-foreground font-medium whitespace-nowrap">
+            <span className="text-accent font-mono">▚</span> A drop-in for the AI SDK.
+          </span>
+          <span className="text-muted-fg">
+            Render <code className="sk-code-inline">@ai-sdk/react</code> messages with{" "}
+            <code className="sk-code-inline">&lt;Conversation&gt;</code> — text, reasoning, tools &amp; sources, mapped for you.
+          </span>
+          <Link href="/docs/ai-sdk" className="text-accent hover:underline whitespace-nowrap font-medium">See the drop-in →</Link>
+        </div>
+      </section>
+
       {/* ── CAPABILITIES ── */}
       <section className="bg-surface border-y border-border">
         <div className="max-w-6xl mx-auto px-6 py-24">

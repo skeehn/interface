@@ -37,7 +37,7 @@
 .sk-typing-indicator[data-variant="ascii"] .sk-typing-indicator__dot:nth-child(3)::after { content: "▓"; }
 
 /* Dither variant — pulsing texture */
-.sk-typing-indicator[data-variant="dither"] { position: relative; padding: var(--sk-space-2) var(--sk-space-4); border: var(--sk-border); border-radius: var(--sk-radius-sm); }
+.sk-typing-indicator[data-variant="dither"] { position: relative; padding: var(--sk-space-2) var(--sk-space-4); border: var(--sk-border); border-radius: var(--sk-radius-sm); background: hsl(var(--sk-surface)); overflow: hidden; }
 .sk-typing-indicator[data-variant="dither"]::before { content: ""; position: absolute; inset: 0; background-image: var(--sk-dither-pattern); background-repeat: repeat; opacity: var(--sk-dither-opacity-subtle); animation: sk-dither-pulse 2s ease-in-out infinite; pointer-events: none; border-radius: inherit; }
 .sk-typing-indicator__text { position: relative; z-index: 1; letter-spacing: var(--sk-letter-spacing-wide); }
 

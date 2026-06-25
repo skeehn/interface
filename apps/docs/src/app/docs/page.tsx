@@ -19,8 +19,9 @@ export default function DocsPage() {
     <div>
       <h1 className="docs-heading text-4xl text-foreground mb-4">Documentation</h1>
       <p className="text-lg text-muted-fg leading-relaxed max-w-xl mb-14">
-        skeehn is an ASCII-native component library for building AI interfaces — 32 components,
-        7 themes, zero dependencies. Like shadcn, you own every line.
+        skeehn is the open-source component library for building AI interfaces — chat, streaming,
+        reasoning, tool calls, agents. Copy components into your project, theme them to your brand,
+        and own every line. 32 components, 7 themes, zero runtime dependencies.
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-16">

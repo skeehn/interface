@@ -78,7 +78,7 @@
 [data-theme="brutal"] input,
 [data-theme="brutal"] textarea,
 [data-theme="brutal"] select,
-[data-theme="brutal"] .sk-chat-input {
+[data-theme="brutal"] .sk-chat-input__wrapper {
   border-width: 2px;
   border-color: hsl(var(--sk-border-color));
 }

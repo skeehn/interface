@@ -10,6 +10,7 @@ dist/
 *.tgz
 .vercel
 .gstack/
+apps/docs/.visual-qa/
 
 # oath (local-dev package manager) — keep its lockfile/store out of the
 # bun-based CI; see CONTRIBUTING.md

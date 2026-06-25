@@ -27,7 +27,7 @@ import {
   TerminalPanel,
   FileAttachment,
   FileAttachments,
-  ChatInput, VoiceSession,
+  ChatInput, VoiceSession, Markdown,
   DialogContent, DialogHeader, DialogBody, DialogFooter,
   Table, TableHead, TableBody, TableRow, TableCell, TableHeaderCell,
   Container, Grid, GridCell, Stack, Divider, Skeleton,
@@ -320,9 +320,18 @@ $ npx skeehn add card
   ),
 
   markdown: () => (
-    <p className="text-muted-fg text-sm italic">
-      The Markdown component renders markdown strings as styled HTML. Import and pass content as a prop.
-    </p>
+    <div className="max-w-lg">
+      <Markdown>
+        <h2>Dithering</h2>
+        <p>Thresholds pixels against a <strong>Bayer matrix</strong> to fake more shades with fewer colors.</p>
+        <ul>
+          <li>Ordered (Bayer)</li>
+          <li>Floyd&ndash;Steinberg</li>
+          <li>Atkinson</li>
+        </ul>
+        <pre><code><span className="sk-md-tok-keyword">const</span> <span className="sk-md-tok-function">dither</span> = <span className="sk-md-tok-string">&apos;bayer&apos;</span>;</code></pre>
+      </Markdown>
+    </div>
   ),
 
   'file-attachment': () => (

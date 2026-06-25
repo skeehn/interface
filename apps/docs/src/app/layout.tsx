@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     template: "%s | skeehn",
   },
   description:
-    "32 components. 7 themes. Zero dependencies. Build AI interfaces with real ASCII dither texture, CRT effects, and copy-paste ownership.",
+    "The open-source React component library for AI products — chat, streaming, reasoning, tool calls, agents. Copy the components in, theme them to your brand, own every line. 32 components, 7 themes, zero dependencies.",
   keywords: [
     "AI components",
     "ASCII",

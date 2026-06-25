@@ -159,7 +159,7 @@
     var(--sk-dither-pattern),
     radial-gradient(circle at 10% 0%, hsl(var(--sk-foreground) / 0.05), transparent 36%);
   background-size: 32px 32px, auto;
-  opacity: 0.18;
+  opacity: 0.1;
   mix-blend-mode: multiply;
   pointer-events: none;
   z-index: 0;

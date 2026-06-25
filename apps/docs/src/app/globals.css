@@ -160,6 +160,8 @@ html { scroll-behavior: smooth; }
   --sk-panel-gradient: none;
   --sk-panel-shadow: 0 1px 2px hsl(220 18% 12% / 0.05), 0 10px 28px hsl(220 18% 12% / 0.05);
   --sk-dither-opacity: 0;
+  /* On a white ground the default 50% Bayer reads as a harsh checker — use a sparse pattern. */
+  --sk-dither-pattern: var(--sk-dither-b2);
 }
 [data-theme="light"] body::after { display: none !important; }
 
@@ -170,3 +172,14 @@ body { font-family: var(--sk-font-sans); }
 .docs-section { margin-bottom: 4rem; }
 .docs-heading { font-family: var(--sk-font-sans); font-weight: 600; letter-spacing: -0.025em; }
 .docs-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.16em; color: hsl(var(--sk-muted-foreground)); }
+
+/* Inline code chip (in prose) */
+.sk-code-inline {
+  font-family: var(--sk-font-mono);
+  font-size: 0.85em;
+  background: hsl(var(--sk-muted));
+  color: hsl(var(--sk-foreground));
+  border: 1px solid hsl(var(--sk-border-color));
+  border-radius: var(--sk-radius-sm, 5px);
+  padding: 0.1em 0.35em;
+}

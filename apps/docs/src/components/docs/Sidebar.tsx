@@ -78,6 +78,7 @@ const NAV_GROUPS: NavGroup[] = [
     title: "Themes",
     items: [
       { title: "Overview", href: "/docs/themes" },
+      { title: "Brand Generator", href: "/docs/theme-generator" },
       { title: "Default", href: "/docs/themes/default" },
       { title: "Dark", href: "/docs/themes/dark" },
       { title: "Terminal", href: "/docs/themes/terminal" },

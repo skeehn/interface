@@ -89,7 +89,7 @@ export function CodeBlock({
   const lines = code.split("\n");
 
   return (
-    <div className="bg-background border border-border overflow-hidden">
+    <div data-theme="default" className="bg-background border border-border rounded-xl overflow-hidden text-foreground">
       {/* Header */}
       {(filename || language) && (
         <div className="flex items-center justify-between px-4 py-2 bg-surface border-b border-border">

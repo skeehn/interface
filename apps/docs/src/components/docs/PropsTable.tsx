@@ -207,10 +207,10 @@ export function PropsTable({ slug }: { slug: string }) {
               <td className="py-3 px-4 font-mono text-sm text-foreground whitespace-nowrap">
                 {p.attr}
               </td>
-              <td className="py-3 px-4 font-mono text-sm text-emerald-400 whitespace-nowrap max-w-72 overflow-hidden text-ellipsis">
+              <td className="py-3 px-4 font-mono text-sm text-accent whitespace-nowrap max-w-72 overflow-hidden text-ellipsis">
                 {p.type}
               </td>
-              <td className="py-3 px-4 font-mono text-sm text-amber-400 whitespace-nowrap">
+              <td className="py-3 px-4 font-mono text-sm text-[hsl(var(--sk-warning))] whitespace-nowrap">
                 {p.default}
               </td>
               <td className="py-3 px-4 text-sm text-foreground">

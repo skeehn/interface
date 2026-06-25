@@ -7,95 +7,44 @@ export const metadata: Metadata = {
     "Get started with skeehn — ASCII native AI components. Installation, usage, and API reference.",
 };
 
+const CARDS = [
+  { href: "/docs/getting-started", n: "01", title: "Getting started", body: "Install via CLI or copy components directly into your project." },
+  { href: "/docs/usage", n: "02", title: "Usage", body: "Import components, wire the hooks, and start building." },
+  { href: "/docs/components", n: "03", title: "Components", body: "Browse 32 components across core, AI, layout and viz." },
+  { href: "/docs/themes", n: "04", title: "Themes", body: "Seven built-in skins — editorial, terminal, brutal and more." },
+];
+
 export default function DocsPage() {
   return (
     <div>
-      <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">
-        Documentation
-      </h1>
-      <p className="text-sm text-muted-fg mb-10 leading-relaxed max-w-lg">
-        skeehn is an ASCII-native component library for building AI interfaces.
-        32 components, 7 themes, zero dependencies. Like shadcn &mdash; you own
-        every line.
+      <h1 className="docs-heading text-4xl text-foreground mb-4">Documentation</h1>
+      <p className="text-lg text-muted-fg leading-relaxed max-w-xl mb-14">
+        skeehn is an ASCII-native component library for building AI interfaces — 32 components,
+        7 themes, zero dependencies. Like shadcn, you own every line.
       </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border mb-12">
-        <Link
-          href="/docs/installation"
-          className="flex flex-col p-6 bg-background hover:bg-accent/30 transition-colors group"
-        >
-          <span className="text-xs text-muted-fg uppercase tracking-widest mb-2">
-            01
-          </span>
-          <span className="text-sm font-medium text-foreground group-hover:underline">
-            Installation
-          </span>
-          <span className="text-xs text-muted-fg mt-1">
-            Install via CLI or copy components directly
-          </span>
-        </Link>
-
-        <Link
-          href="/docs/usage"
-          className="flex flex-col p-6 bg-background hover:bg-accent/30 transition-colors group"
-        >
-          <span className="text-xs text-muted-fg uppercase tracking-widest mb-2">
-            02
-          </span>
-          <span className="text-sm font-medium text-foreground group-hover:underline">
-            Usage
-          </span>
-          <span className="text-xs text-muted-fg mt-1">
-            Import components and start building
-          </span>
-        </Link>
-
-        <Link
-          href="/docs/components/button"
-          className="flex flex-col p-6 bg-background hover:bg-accent/30 transition-colors group"
-        >
-          <span className="text-xs text-muted-fg uppercase tracking-widest mb-2">
-            03
-          </span>
-          <span className="text-sm font-medium text-foreground group-hover:underline">
-            Components
-          </span>
-          <span className="text-xs text-muted-fg mt-1">
-            Browse 32 components across core and AI
-          </span>
-        </Link>
-
-        <Link
-          href="/docs/themes"
-          className="flex flex-col p-6 bg-background hover:bg-accent/30 transition-colors group"
-        >
-          <span className="text-xs text-muted-fg uppercase tracking-widest mb-2">
-            04
-          </span>
-          <span className="text-sm font-medium text-foreground group-hover:underline">
-            Themes
-          </span>
-          <span className="text-xs text-muted-fg mt-1">
-            7 themes including terminal, brutal, and grain
-          </span>
-        </Link>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-16">
+        {CARDS.map((c) => (
+          <Link
+            key={c.href}
+            href={c.href}
+            className="group rounded-xl border border-border bg-surface p-6 hover:border-foreground/20 hover:bg-muted/50 transition-colors"
+          >
+            <span className="text-xs font-medium text-accent tracking-wider">{c.n}</span>
+            <span className="mt-3 block text-base font-semibold text-foreground">{c.title}</span>
+            <span className="mt-1.5 block text-sm text-muted-fg leading-relaxed">{c.body}</span>
+          </Link>
+        ))}
       </div>
 
-      <div className="border border-border p-6 bg-surface">
-        <h2 className="text-sm font-medium text-foreground mb-3">
-          Quick start
-        </h2>
-        <div className="font-mono text-xs text-muted-fg space-y-1">
-          <p>
-            <span className="text-foreground">$</span> npx skeehn init
-          </p>
-          <p>
-            <span className="text-foreground">$</span> npx skeehn add button
-            card chat-bubble
-          </p>
-          <p className="text-muted-fg/50 pt-2">
-            # Components are copied to your project. You own the source.
-          </p>
+      <div className="rounded-xl border border-border bg-surface overflow-hidden">
+        <div className="px-6 pt-5 pb-3 border-b border-border">
+          <h2 className="text-sm font-semibold text-foreground">Quick start</h2>
+        </div>
+        <div className="px-6 py-5 font-mono text-sm space-y-2">
+          <p className="text-foreground"><span className="text-muted-fg select-none mr-2">$</span>npx skeehn init</p>
+          <p className="text-foreground"><span className="text-muted-fg select-none mr-2">$</span>npx skeehn add button card chat-bubble</p>
+          <p className="text-muted-fg/70 pt-1.5 text-xs"># Components are copied into your project. You own the source.</p>
         </div>
       </div>
     </div>

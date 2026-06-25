@@ -53,14 +53,7 @@ export default function AIChatPage() {
 
   return (
     <div
-      className="flex flex-col h-[calc(100vh-3.5rem)]"
-      style={{
-        fontFamily: 'var(--sk-font-mono)',
-        width: '100vw',
-        maxWidth: '100vw',
-        marginLeft: 'calc(-50vw + 50%)',
-        position: 'relative',
-      }}
+      className="flex flex-col h-[calc(100vh-3.5rem)] w-full relative"
     >
       {/* ── Header ── */}
       <div className="flex items-center justify-between px-8 py-4 border-b border-border bg-surface/50 shrink-0">

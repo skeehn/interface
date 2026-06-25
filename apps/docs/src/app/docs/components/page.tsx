@@ -9,22 +9,22 @@ export const metadata = {
 const CATEGORY_ORDER = ['core', 'ai', 'layout', 'dataviz', 'motion'];
 
 const CATEGORY_COLORS: Record<string, string> = {
-  core: 'text-blue-400 border-blue-400/30',
-  ai: 'text-violet-400 border-violet-400/30',
+  core: 'text-muted-fg border-border',
+  ai: 'text-accent border-accent/30 bg-accent/5',
   layout: 'text-muted-fg border-border',
-  dataviz: 'text-cyan-400 border-cyan-400/30',
-  motion: 'text-orange-400 border-orange-400/30',
+  dataviz: 'text-muted-fg border-border',
+  motion: 'text-muted-fg border-border',
 };
 
 export default function ComponentsIndexPage() {
   const grouped = getComponentsByCategory();
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-14">
       <div>
-        <h1 className="text-3xl font-mono font-bold tracking-tight mb-3">Components</h1>
-        <p className="text-muted-fg text-base leading-relaxed">
-          32 ASCII/dither components for AI interfaces. Every component ships as plain CSS with optional React wrappers.
+        <h1 className="docs-heading text-4xl text-foreground mb-4">Components</h1>
+        <p className="text-lg text-muted-fg leading-relaxed max-w-xl">
+          32 components for AI interfaces. Every one ships as plain CSS with an optional React wrapper.
         </p>
       </div>
 
@@ -34,9 +34,9 @@ export default function ComponentsIndexPage() {
 
         return (
           <section key={cat}>
-            <h2 className="text-lg font-mono font-bold mb-4 flex items-center gap-3">
+            <h2 className="text-sm font-semibold text-foreground mb-5 flex items-center gap-2.5 uppercase tracking-wide">
               {getCategoryLabel(cat)}
-              <span className="text-xs font-normal text-muted-fg font-mono">
+              <span className="text-xs font-normal text-muted-fg normal-case tracking-normal">
                 {components.length}
               </span>
             </h2>
@@ -46,19 +46,19 @@ export default function ComponentsIndexPage() {
                 <Link
                   key={c.name}
                   href={`/docs/components/${c.name}`}
-                  className="group border border-border bg-surface/30 p-6 hover:bg-muted/50 hover:border-border transition-all"
+                  className="group rounded-xl border border-border bg-surface p-5 hover:border-foreground/20 hover:bg-muted/50 transition-colors"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <span className="font-mono font-bold text-lg text-foreground group-hover:text-foreground transition-colors block">
+                      <span className="font-semibold text-base text-foreground block">
                         {c.name}
                       </span>
-                      <span className="text-sm text-muted-fg mt-2 block leading-relaxed">
+                      <span className="text-sm text-muted-fg mt-1.5 block leading-relaxed">
                         {c.description}
                       </span>
                     </div>
                     <span
-                      className={`px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider border shrink-0 mt-1 ${CATEGORY_COLORS[c.category] ?? 'text-muted-fg border-border'}`}
+                      className={`px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider border rounded-full shrink-0 mt-0.5 ${CATEGORY_COLORS[c.category] ?? 'text-muted-fg border-border'}`}
                     >
                       {getCategoryLabel(c.category)}
                     </span>

@@ -1,51 +1,56 @@
+/* Cascade layer order: skeehn engine/themes/components rank BELOW Tailwind's
+   utilities so Tailwind spacing/layout (px, mx-auto, gap…) wins over the
+   engine reset's `* { margin:0; padding:0 }`. */
+@layer theme, base, skeehn-base, skeehn-components, components, utilities;
+
 /* ═══ ENGINE CSS ═══ */
-@import "../../../../engine/reset.css";
-@import "../../../../engine/tokens.css";
-@import "../../../../engine/dither.css";
-@import "../../../../engine/animation.css";
+@import "../../../../engine/reset.css" layer(skeehn-base);
+@import "../../../../engine/tokens.css" layer(skeehn-base);
+@import "../../../../engine/dither.css" layer(skeehn-base);
+@import "../../../../engine/animation.css" layer(skeehn-base);
 
 /* ═══ THEME CSS ═══ */
-@import "../../../../themes/default.css";
-@import "../../../../themes/dark.css";
-@import "../../../../themes/terminal.css";
-@import "../../../../themes/brutal.css";
-@import "../../../../themes/print.css";
-@import "../../../../themes/grain.css";
-@import "../../../../themes/mardi-gras.css";
+@import "../../../../themes/default.css" layer(skeehn-base);
+@import "../../../../themes/dark.css" layer(skeehn-base);
+@import "../../../../themes/terminal.css" layer(skeehn-base);
+@import "../../../../themes/brutal.css" layer(skeehn-base);
+@import "../../../../themes/print.css" layer(skeehn-base);
+@import "../../../../themes/grain.css" layer(skeehn-base);
+@import "../../../../themes/mardi-gras.css" layer(skeehn-base);
 
 /* ═══ COMPONENT CSS ═══ */
-@import "../../../../components/button/button.css";
-@import "../../../../components/card/card.css";
-@import "../../../../components/input/input.css";
-@import "../../../../components/badge/badge.css";
-@import "../../../../components/alert/alert.css";
-@import "../../../../components/dialog/dialog.css";
-@import "../../../../components/tabs/tabs.css";
-@import "../../../../components/toggle/toggle.css";
-@import "../../../../components/progress/progress.css";
-@import "../../../../components/avatar/avatar.css";
-@import "../../../../components/tooltip/tooltip.css";
-@import "../../../../components/dropdown/dropdown.css";
-@import "../../../../components/table/table.css";
-@import "../../../../components/accordion/accordion.css";
-@import "../../../../components/chat-bubble/chat-bubble.css";
-@import "../../../../components/chat-input/chat-input.css";
-@import "../../../../components/reasoning-step/reasoning-step.css";
-@import "../../../../components/tool-card/tool-card.css";
-@import "../../../../components/citation-card/citation-card.css";
-@import "../../../../components/streaming-text/streaming-text.css";
-@import "../../../../components/terminal-panel/terminal-panel.css";
-@import "../../../../components/agent-status/agent-status.css";
-@import "../../../../components/layout/layout.css";
-@import "../../../../components/dataviz/dataviz.css";
-@import "../../../../components/motion/motion.css";
-@import "../../../../components/code-block/code-block.css";
-@import "../../../../components/typing-indicator/typing-indicator.css";
-@import "../../../../components/markdown/markdown.css";
-@import "../../../../components/voice-session/voice-session.css";
-@import "../../../../components/thinking-block/thinking-block.css";
-@import "../../../../components/prompt-suggestions/prompt-suggestions.css";
-@import "../../../../components/file-attachment/file-attachment.css";
+@import "../../../../components/button/button.css" layer(skeehn-components);
+@import "../../../../components/card/card.css" layer(skeehn-components);
+@import "../../../../components/input/input.css" layer(skeehn-components);
+@import "../../../../components/badge/badge.css" layer(skeehn-components);
+@import "../../../../components/alert/alert.css" layer(skeehn-components);
+@import "../../../../components/dialog/dialog.css" layer(skeehn-components);
+@import "../../../../components/tabs/tabs.css" layer(skeehn-components);
+@import "../../../../components/toggle/toggle.css" layer(skeehn-components);
+@import "../../../../components/progress/progress.css" layer(skeehn-components);
+@import "../../../../components/avatar/avatar.css" layer(skeehn-components);
+@import "../../../../components/tooltip/tooltip.css" layer(skeehn-components);
+@import "../../../../components/dropdown/dropdown.css" layer(skeehn-components);
+@import "../../../../components/table/table.css" layer(skeehn-components);
+@import "../../../../components/accordion/accordion.css" layer(skeehn-components);
+@import "../../../../components/chat-bubble/chat-bubble.css" layer(skeehn-components);
+@import "../../../../components/chat-input/chat-input.css" layer(skeehn-components);
+@import "../../../../components/reasoning-step/reasoning-step.css" layer(skeehn-components);
+@import "../../../../components/tool-card/tool-card.css" layer(skeehn-components);
+@import "../../../../components/citation-card/citation-card.css" layer(skeehn-components);
+@import "../../../../components/streaming-text/streaming-text.css" layer(skeehn-components);
+@import "../../../../components/terminal-panel/terminal-panel.css" layer(skeehn-components);
+@import "../../../../components/agent-status/agent-status.css" layer(skeehn-components);
+@import "../../../../components/layout/layout.css" layer(skeehn-components);
+@import "../../../../components/dataviz/dataviz.css" layer(skeehn-components);
+@import "../../../../components/motion/motion.css" layer(skeehn-components);
+@import "../../../../components/code-block/code-block.css" layer(skeehn-components);
+@import "../../../../components/typing-indicator/typing-indicator.css" layer(skeehn-components);
+@import "../../../../components/markdown/markdown.css" layer(skeehn-components);
+@import "../../../../components/voice-session/voice-session.css" layer(skeehn-components);
+@import "../../../../components/thinking-block/thinking-block.css" layer(skeehn-components);
+@import "../../../../components/prompt-suggestions/prompt-suggestions.css" layer(skeehn-components);
+@import "../../../../components/file-attachment/file-attachment.css" layer(skeehn-components);
 
 /* ═══ TAILWIND (must come after all CSS imports) ═══ */
 @import "tailwindcss";
@@ -130,7 +135,38 @@ html { scroll-behavior: smooth; }
   html { scroll-behavior: auto; }
 }
 
+/* ═══ CLEAN LIGHT GROUND — Linear/Vercel/Resend-grade docs chrome ═══ */
+[data-theme="light"] {
+  --sk-background:        0 0% 100%;
+  --sk-foreground:        220 18% 12%;
+  --sk-surface:           220 22% 98%;
+  --sk-primary:           220 18% 12%;
+  --sk-primary-fg:        0 0% 100%;
+  --sk-secondary:         220 16% 96%;
+  --sk-secondary-fg:      220 18% 12%;
+  --sk-muted:             220 16% 96%;
+  --sk-muted-foreground:  220 9% 46%;
+  --sk-accent:            172 66% 33%;
+  --sk-accent-foreground: 0 0% 100%;
+  --sk-border-color:      220 14% 91%;
+  --sk-ring:              172 66% 33%;
+  --sk-success:           142 64% 34%;
+  --sk-warning:           32 90% 44%;
+  --sk-info:              217 84% 52%;
+  --sk-destructive:       0 70% 50%;
+  --sk-radius: 8px; --sk-radius-sm: 6px; --sk-radius-md: 10px; --sk-radius-lg: 14px;
+  --sk-radius-panel: 12px; --sk-radius-control: 7px;
+  --sk-border-width: 1px;
+  --sk-panel-gradient: none;
+  --sk-panel-shadow: 0 1px 2px hsl(220 18% 12% / 0.05), 0 10px 28px hsl(220 18% 12% / 0.05);
+  --sk-dither-opacity: 0;
+}
+[data-theme="light"] body::after { display: none !important; }
+
+/* Sans by default — mono only where explicitly set (code) */
+body { font-family: var(--sk-font-sans); }
+
 /* ═══ DOCS UTILITY STYLES ═══ */
 .docs-section { margin-bottom: 4rem; }
-.docs-heading { font-family: var(--sk-font-mono); font-weight: 700; letter-spacing: -0.02em; }
-.docs-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2em; opacity: 0.4; }
+.docs-heading { font-family: var(--sk-font-sans); font-weight: 600; letter-spacing: -0.025em; }
+.docs-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.16em; color: hsl(var(--sk-muted-foreground)); }

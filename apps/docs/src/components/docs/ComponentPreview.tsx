@@ -370,34 +370,34 @@ $ npx skeehn add card
   ),
 };
 
-const PREVIEW_THEMES = ['default', 'dark', 'terminal', 'brutal', 'grain'] as const;
+const PREVIEW_THEMES = ['light', 'default', 'dark', 'terminal', 'brutal', 'grain'] as const;
 
 export function ComponentPreview({ slug }: { slug: string }) {
-  const [theme, setTheme] = useState<string>('default');
+  const [theme, setTheme] = useState<string>('light');
   const render = PREVIEWS[slug];
 
   if (!render) {
     return (
-      <div className="flex items-center justify-center py-16 text-muted-fg text-sm font-mono border-2 border-dashed border-foreground/30">
+      <div className="flex items-center justify-center py-16 text-muted-fg text-sm rounded-xl border border-dashed border-border">
         Preview not yet available for this component.
       </div>
     );
   }
 
   return (
-    <div className="border-2 border-foreground">
-      {/* Theme switcher — previews render in their OWN theme, not the brutal chrome */}
-      <div className="flex items-center gap-2 px-3 py-2 border-b-2 border-foreground bg-background flex-wrap">
-        <span className="text-[0.6rem] uppercase tracking-[0.2em] text-muted-fg font-mono mr-1">Theme</span>
+    <div className="rounded-xl border border-border overflow-hidden">
+      {/* Theme switcher — previews render in their OWN theme */}
+      <div className="flex items-center gap-1.5 px-3 py-2 border-b border-border bg-surface flex-wrap">
+        <span className="text-[0.7rem] uppercase tracking-[0.12em] text-muted-fg mr-1.5 font-medium">Theme</span>
         {PREVIEW_THEMES.map((t) => (
           <button
             key={t}
             type="button"
             onClick={() => setTheme(t)}
-            className={`text-[0.7rem] font-mono uppercase tracking-wide px-2 py-0.5 border transition-colors ${
+            className={`text-[0.72rem] capitalize px-2.5 py-1 rounded-md transition-colors ${
               theme === t
-                ? 'bg-accent text-accent-fg border-accent'
-                : 'border-foreground/30 text-muted-fg hover:text-foreground'
+                ? 'bg-foreground text-background'
+                : 'text-muted-fg hover:text-foreground hover:bg-muted'
             }`}
           >
             {t}
@@ -406,7 +406,7 @@ export function ComponentPreview({ slug }: { slug: string }) {
       </div>
       <div
         data-theme={theme}
-        className="p-8 flex items-center justify-center min-h-[8rem]"
+        className="p-8 flex items-center justify-center min-h-[10rem]"
         style={{ background: 'hsl(var(--sk-background))', color: 'hsl(var(--sk-foreground))' }}
       >
         <div className="w-full">{render()}</div>

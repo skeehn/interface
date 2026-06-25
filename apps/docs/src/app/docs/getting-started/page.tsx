@@ -84,13 +84,12 @@ const VANILLA_EXAMPLE = `<!-- No JavaScript required for basic components -->
 
 export default function GettingStartedPage() {
   return (
-    <div className="min-h-screen py-2" style={{ fontFamily: 'var(--sk-font-mono)' }}>
+    <div className="py-2">
       {/* Header */}
-      <h1 className="docs-heading text-3xl tracking-tight mb-3"
-        style={{ fontFamily: 'var(--sk-font-sans)' }}>
+      <h1 className="docs-heading text-4xl tracking-tight mb-3">
         Getting Started
       </h1>
-      <p className="text-sm text-muted-fg mb-16 max-w-lg">
+      <p className="text-lg text-muted-fg mb-16 max-w-lg leading-relaxed">
         Get skeehn running in your project in under 2 minutes.
       </p>
 
@@ -181,7 +180,7 @@ function Step({
       style={{
         paddingLeft: '4.5rem',
         paddingBottom: isLast ? 0 : '4rem',
-        borderLeft: isLast ? 'none' : '1px solid #333',
+        borderLeft: isLast ? 'none' : '1px solid hsl(var(--sk-border-color))',
         marginLeft: '1.25rem',
       }}
     >
@@ -193,13 +192,13 @@ function Step({
           top: '-4px',
           width: '2.5rem',
           height: '2.5rem',
-          border: '2px solid #555',
+          border: '1px solid hsl(var(--sk-border-color))',
           borderRadius: '50%',
-          background: '#111',
+          background: 'hsl(var(--sk-surface))',
           fontFamily: 'var(--sk-font-mono)',
-          fontSize: '1rem',
-          fontWeight: 800,
-          color: '#fff',
+          fontSize: '0.95rem',
+          fontWeight: 600,
+          color: 'hsl(var(--sk-foreground))',
         }}
       >
         {number}
@@ -207,10 +206,7 @@ function Step({
 
       <h2
         className="docs-heading text-xl mb-4"
-        style={{
-          fontFamily: 'var(--sk-font-sans)',
-          marginTop: '0',
-        }}
+        style={{ marginTop: '0' }}
       >
         {title}
       </h2>
@@ -278,7 +274,7 @@ function TabButton({
           : 'bg-muted/50 text-muted-fg border-border hover:text-foreground'
       }`}
       style={{
-        borderBottom: active ? '1px solid #111' : '1px solid #333',
+        borderBottom: active ? '1px solid hsl(var(--sk-background))' : '1px solid hsl(var(--sk-border-color))',
         marginBottom: '-1px',
       }}
     >
@@ -299,7 +295,7 @@ function CodeBlock({ code, connected }: { code: string; connected?: boolean }) {
   return (
     <div className="relative">
       <pre
-        className={`bg-background border border-border p-5 overflow-auto font-mono text-xs leading-relaxed text-foreground ${
+        className={`bg-surface border border-border rounded-lg p-5 overflow-auto font-mono text-xs leading-relaxed text-foreground ${
           connected ? 'rounded-tl-none' : ''
         }`}
       >
@@ -307,9 +303,9 @@ function CodeBlock({ code, connected }: { code: string; connected?: boolean }) {
       </pre>
       <button
         onClick={copy}
-        className={`absolute top-3 right-3 px-2 py-0.5 text-[10px] font-mono border cursor-pointer transition-colors ${
+        className={`absolute top-3 right-3 px-2 py-0.5 text-[10px] font-mono border rounded cursor-pointer transition-colors ${
           copied
-            ? 'border-green-800 text-green-400 bg-green-900/20'
+            ? 'border-accent/40 text-accent bg-accent/10'
             : 'border-border text-muted-fg hover:text-foreground bg-background'
         }`}
       >

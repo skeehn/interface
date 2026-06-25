@@ -106,14 +106,7 @@ export default function ThemesPage() {
 
   return (
     <div
-      className="min-h-screen"
-      style={{
-        fontFamily: 'var(--sk-font-mono)',
-        width: '100vw',
-        maxWidth: '100vw',
-        marginLeft: 'calc(-50vw + 50%)',
-        position: 'relative',
-      }}
+      className="min-h-screen w-full relative"
     >
       {/* Header */}
       <div className="px-8 py-8 border-b border-border">
@@ -181,10 +174,10 @@ function ThemeCard({
       onClick={onSelect}
       className={`relative cursor-pointer transition-all overflow-hidden group ${
         isActive
-          ? 'ring-2 ring-white ring-offset-2 ring-offset-black'
-          : 'hover:translate-y-[-2px]'
+          ? 'ring-2 ring-accent ring-offset-2 ring-offset-background'
+          : 'hover:-translate-y-0.5'
       }`}
-      style={{ border: '1px solid #333' }}
+      style={{ border: '1px solid hsl(var(--sk-border-color))', borderRadius: '12px' }}
     >
       {/* Accent stripe at top */}
       <div className="h-1" style={{ background: theme.accent }} />
@@ -277,7 +270,7 @@ function ThemeCard({
       </div>
 
       {/* Description footer */}
-      <div className="px-5 py-4 border-t" style={{ borderColor: '#333', background: '#111' }}>
+      <div className="px-5 py-4 border-t" style={{ borderColor: 'hsl(var(--sk-border-color))', background: 'hsl(var(--sk-surface))' }}>
         <p className="text-sm leading-relaxed text-foreground mb-2"
           style={{ fontFamily: 'var(--sk-font-sans)' }}>
           {theme.description}

@@ -54,20 +54,20 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      data-theme="default"
+      data-theme="light"
       className={`${geistSans.variable} ${geistMono.variable}`}
       suppressHydrationWarning
     >
       <head>
-        {/* Theme init — docs dogfood the Editorial·Mono skin by default; localStorage overrides */}
+        {/* Clean light docs chrome; localStorage can still override the theme */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('sk-theme');document.documentElement.setAttribute('data-theme',t||'default')}catch(e){}})()`,
+            __html: `(function(){try{var t=localStorage.getItem('sk-theme');document.documentElement.setAttribute('data-theme',t||'light')}catch(e){}})()`,
           }}
         />
-        <meta name="color-scheme" content="dark" />
+        <meta name="color-scheme" content="light" />
       </head>
-      <body className="min-h-dvh bg-background text-foreground font-mono antialiased">
+      <body className="min-h-dvh bg-background text-foreground font-sans antialiased">
         {children}
       </body>
     </html>

@@ -455,14 +455,7 @@ export default function EnginePage() {
 
   return (
     <div
-      className="min-h-screen"
-      style={{
-        fontFamily: 'var(--sk-font-mono)',
-        width: '100vw',
-        maxWidth: '100vw',
-        marginLeft: 'calc(-50vw + 50%)',
-        position: 'relative',
-      }}
+      className="min-h-screen w-full relative"
     >
       {/* Header */}
       <div className="border-b border-border px-8 py-6">
@@ -522,7 +515,7 @@ export default function EnginePage() {
               onClick={toggleWebcam}
               className={`w-full py-3 px-4 text-xs font-bold tracking-widest uppercase border transition-colors cursor-pointer ${
                 webcamActive
-                  ? 'bg-red-900/50 border-red-700 text-red-300 hover:bg-red-900/70'
+                  ? 'bg-[hsl(var(--sk-destructive)/0.1)] border-[hsl(var(--sk-destructive)/0.4)] text-[hsl(var(--sk-destructive))] hover:bg-[hsl(var(--sk-destructive)/0.2)]'
                   : 'bg-muted border-border text-foreground hover:bg-muted hover:border-border'
               }`}
               style={{ fontFamily: 'var(--sk-font-mono)' }}
@@ -569,7 +562,7 @@ export default function EnginePage() {
                     onClick={() => setBayerSize(s)}
                     className={`flex-1 py-1.5 text-xs font-mono border transition-colors cursor-pointer ${
                       bayerSize === s
-                        ? 'bg-white text-black border-white'
+                        ? 'bg-foreground text-background border-foreground'
                         : 'bg-transparent text-muted-fg border-border hover:border-accent'
                     }`}
                   >
@@ -612,7 +605,7 @@ export default function EnginePage() {
               max={200}
               value={resolution}
               onChange={(e) => setResolution(Number(e.target.value))}
-              className="w-full mt-3 accent-white"
+              className="w-full mt-3 accent-[hsl(var(--sk-accent))]"
             />
             <div className="flex justify-between text-[10px] text-muted-fg mt-1">
               <span>40</span>
@@ -631,7 +624,7 @@ export default function EnginePage() {
               max={128}
               value={contrast}
               onChange={(e) => setContrast(Number(e.target.value))}
-              className="w-full mt-3 accent-white"
+              className="w-full mt-3 accent-[hsl(var(--sk-accent))]"
             />
             <div className="flex justify-between text-[10px] text-muted-fg mt-1">
               <span>-128</span>
@@ -670,7 +663,7 @@ export default function EnginePage() {
               disabled={!output}
               className={`px-3 py-1 text-[11px] font-mono border transition-colors cursor-pointer ${
                 copied
-                  ? 'border-green-800 bg-green-900/30 text-green-400'
+                  ? 'border-accent/40 bg-accent/10 text-accent'
                   : output
                     ? 'border-border text-muted-fg hover:text-foreground hover:border-accent'
                     : 'border-border text-muted-fg cursor-default'
@@ -744,10 +737,10 @@ function SidebarRadio({
     >
       <span
         className={`w-3 h-3 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
-          checked ? 'border-white' : 'border-border'
+          checked ? 'border-accent' : 'border-border'
         }`}
       >
-        {checked && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
+        {checked && <span className="w-1.5 h-1.5 rounded-full bg-accent" />}
       </span>
       <input
         type="radio"
@@ -783,7 +776,7 @@ function SidebarToggle({
         }}
         className={`w-9 h-5 rounded-full border-2 relative transition-colors cursor-pointer ${
           checked
-            ? 'bg-white border-white'
+            ? 'bg-accent border-accent'
             : 'bg-transparent border-border hover:border-accent'
         }`}
       >

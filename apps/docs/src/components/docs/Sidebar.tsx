@@ -119,7 +119,7 @@ export function Sidebar() {
     <nav className="flex flex-col gap-8 py-6 px-4" aria-label="Documentation">
       {NAV_GROUPS.map((group) => (
         <div key={group.title}>
-          <h4 className="text-[0.65rem] uppercase tracking-[0.2em] text-accent px-3 mb-2 font-mono font-bold">
+          <h4 className="text-[0.7rem] uppercase tracking-[0.12em] text-muted-fg px-3 mb-2 font-semibold">
             {group.title}
           </h4>
           <ul className="flex flex-col gap-0.5">
@@ -130,10 +130,10 @@ export function Sidebar() {
                   <Link
                     href={item.href}
                     onClick={closeMobile}
-                    className={`block px-3 py-1.5 text-sm font-mono transition-colors border-l-2 ${
+                    className={`block px-3 py-1.5 text-[0.86rem] rounded-md transition-colors ${
                       isActive
-                        ? "text-foreground font-bold bg-secondary border-accent"
-                        : "text-muted-fg hover:text-foreground hover:bg-secondary border-transparent"
+                        ? "text-foreground font-medium bg-muted"
+                        : "text-muted-fg hover:text-foreground hover:bg-muted/60"
                     }`}
                   >
                     {item.title}
@@ -191,7 +191,7 @@ export function Sidebar() {
 
       {/* Sidebar -- desktop: static, mobile: slide-in */}
       <aside
-        className={`fixed top-14 bottom-0 left-0 z-40 w-64 bg-background border-r-2 border-foreground overflow-y-auto transition-transform duration-200 lg:translate-x-0 ${
+        className={`fixed top-14 bottom-0 left-0 z-40 w-64 bg-background border-r border-border overflow-y-auto transition-transform duration-200 lg:translate-x-0 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         } lg:sticky lg:top-14 lg:h-[calc(100dvh-3.5rem)]`}
       >

@@ -10,6 +10,7 @@
 @import "../../../../engine/animation.css" layer(skeehn-base);
 
 /* ═══ THEME CSS ═══ */
+@import "../../../../themes/light.css" layer(skeehn-base);
 @import "../../../../themes/default.css" layer(skeehn-base);
 @import "../../../../themes/dark.css" layer(skeehn-base);
 @import "../../../../themes/terminal.css" layer(skeehn-base);
@@ -71,51 +72,17 @@
   --color-accent-fg: hsl(var(--sk-accent-foreground));
 }
 
-/* ═══ DARK MODE ═══ */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-  }
-}
-[data-theme="dark"] {
-  color-scheme: dark;
-}
-
-/* ═══ CRT SCANLINE OVERLAY — DARK MODE ═══ */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: repeating-linear-gradient(
-      to bottom,
-      transparent 0px,
-      transparent 2px,
-      rgba(0,0,0,0.03) 2px,
-      rgba(0,0,0,0.03) 4px
-    );
-    pointer-events: none;
-    z-index: 9999;
-  }
-}
-[data-theme="dark"] body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: repeating-linear-gradient(
-    to bottom,
-    transparent 0px,
-    transparent 2px,
-    rgba(0,0,0,0.03) 2px,
-    rgba(0,0,0,0.03) 4px
-  );
-  pointer-events: none;
-  z-index: 9999;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  body::after { display: none !important; }
-}
+/* ═══ COLOR SCHEME — explicit per theme (no auto-dark, no global CRT scanline).
+   The neutral Light/Dark defaults stay clean; expressive textures (Terminal
+   scanlines, Editorial grain) live in their own flagship theme files. ═══ */
+[data-theme="dark"],
+[data-theme="default"],
+[data-theme="brutal"],
+[data-theme="terminal"],
+[data-theme="mardi-gras"] { color-scheme: dark; }
+[data-theme="light"],
+[data-theme="grain"],
+[data-theme="print"] { color-scheme: light; }
 
 /* ═══ SCROLLBAR ═══ */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -135,35 +102,7 @@ html { scroll-behavior: smooth; }
   html { scroll-behavior: auto; }
 }
 
-/* ═══ CLEAN LIGHT GROUND — Linear/Vercel/Resend-grade docs chrome ═══ */
-[data-theme="light"] {
-  --sk-background:        0 0% 100%;
-  --sk-foreground:        220 18% 12%;
-  --sk-surface:           220 22% 98%;
-  --sk-primary:           220 18% 12%;
-  --sk-primary-fg:        0 0% 100%;
-  --sk-secondary:         220 16% 96%;
-  --sk-secondary-fg:      220 18% 12%;
-  --sk-muted:             220 16% 96%;
-  --sk-muted-foreground:  220 9% 46%;
-  --sk-accent:            172 66% 33%;
-  --sk-accent-foreground: 0 0% 100%;
-  --sk-border-color:      220 14% 91%;
-  --sk-ring:              172 66% 33%;
-  --sk-success:           142 64% 34%;
-  --sk-warning:           32 90% 44%;
-  --sk-info:              217 84% 52%;
-  --sk-destructive:       0 70% 50%;
-  --sk-radius: 8px; --sk-radius-sm: 6px; --sk-radius-md: 10px; --sk-radius-lg: 14px;
-  --sk-radius-panel: 12px; --sk-radius-control: 7px;
-  --sk-border-width: 1px;
-  --sk-panel-gradient: none;
-  --sk-panel-shadow: 0 1px 2px hsl(220 18% 12% / 0.05), 0 10px 28px hsl(220 18% 12% / 0.05);
-  --sk-dither-opacity: 0;
-  /* On a white ground the default 50% Bayer reads as a harsh checker — use a sparse pattern. */
-  --sk-dither-pattern: var(--sk-dither-b2);
-}
-[data-theme="light"] body::after { display: none !important; }
+/* The neutral Light/Dark default themes now live in themes/light.css + themes/dark.css. */
 
 /* Sans by default — mono only where explicitly set (code) */
 body { font-family: var(--sk-font-sans); }

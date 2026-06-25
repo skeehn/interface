@@ -17,32 +17,44 @@ interface ThemeInfo {
 }
 
 const THEMES: ThemeInfo[] = [
+  // ── Neutral default (Light + Dark) ──
   {
-    name: 'default',
-    label: 'Default',
+    name: 'light',
+    label: 'Light',
     description:
-      'Clean light theme with subtle dither textures. The starting point for most projects.',
-    signature: 'Bayer dither overlays, neutral palette, balanced contrast',
-    accent: '#888',
-    bgPreview: '#f8f8f8',
-    fgPreview: '#111',
+      'The clean, neutral default — what ships out of the box. Restrained greys, one tasteful teal accent, soft rounding, no dither.',
+    signature: 'Neutral palette, hairline borders, no dither',
+    accent: '#1c8a7c',
+    bgPreview: '#ffffff',
+    fgPreview: '#1a1f29',
   },
   {
     name: 'dark',
     label: 'Dark',
     description:
-      'Deep dark mode with CRT scanline overlay and phosphor-green accents.',
-    signature: 'Scanline pseudo-element, reduced opacity dithering, dark surfaces',
-    accent: '#4ade80',
-    bgPreview: '#0a0a0a',
-    fgPreview: '#e0e0e0',
+      'The neutral default in dark mode. Cool greys, the same teal accent — clean and quiet, no glow or scanlines.',
+    signature: 'Neutral cool-dark, hairline borders, no dither',
+    accent: '#34c9b6',
+    bgPreview: '#11141a',
+    fgPreview: '#eef1f5',
+  },
+  // ── Flagship themes (opt-in personalities) ──
+  {
+    name: 'default',
+    label: 'Editorial',
+    description:
+      'The signature flagship: warm near-black, refined teal, tasteful Bayer dither. Premium and opinionated.',
+    signature: 'Warm dark, dual-font sans/mono, committed dither',
+    accent: '#5ec8b4',
+    bgPreview: '#0f0f12',
+    fgPreview: '#e9e7e3',
   },
   {
     name: 'terminal',
     label: 'Terminal',
     description:
-      'Full green-on-black terminal aesthetic. Every element looks like it belongs in a VT100.',
-    signature: 'Monospace everything, green phosphor colors, blinking cursor accents',
+      'Full green-on-black CRT. Every element looks like it belongs in a VT220 — scanlines and all.',
+    signature: 'Monospace everything, green phosphor, scanline overlay',
     accent: '#22c55e',
     bgPreview: '#000',
     fgPreview: '#22c55e',
@@ -51,18 +63,18 @@ const THEMES: ThemeInfo[] = [
     name: 'brutal',
     label: 'Brutal',
     description:
-      'High contrast black and white with thick borders and aggressive typography.',
-    signature: 'No border-radius, heavy borders, stark black/white, offset shadows',
-    accent: '#fff',
-    bgPreview: '#000',
+      'Loud and high-contrast: hard 2px borders, gold accent, aggressive type, offset shadows.',
+    signature: 'No border-radius, heavy borders, gold on black',
+    accent: '#ffd23f',
+    bgPreview: '#0a0a0a',
     fgPreview: '#fff',
   },
   {
     name: 'print',
     label: 'Print',
     description:
-      'Newspaper-inspired with halftone dot patterns and serif typography vibes.',
-    signature: 'Halftone dither pattern, warm paper background, ink-black text',
+      'Newsprint-inspired: halftone dot patterns on warm paper, ink-black text. Optimized for print.',
+    signature: 'Halftone dither, warm paper background, ink-black text',
     accent: '#b8860b',
     bgPreview: '#f5f0e8',
     fgPreview: '#1a1a1a',
@@ -71,18 +83,18 @@ const THEMES: ThemeInfo[] = [
     name: 'grain',
     label: 'Grain',
     description:
-      'Film grain overlay with muted, desaturated tones. Analog photography feel.',
-    signature: 'Noise texture overlay, desaturated palette, soft contrast',
-    accent: '#a0a0a0',
-    bgPreview: '#1a1a18',
-    fgPreview: '#b0b0a8',
+      'Analog film: warm cream paper, desaturated tones, a fine grain overlay. Soft and tactile.',
+    signature: 'Noise texture, warm desaturated palette, soft contrast',
+    accent: '#9a8b73',
+    bgPreview: '#ece5d8',
+    fgPreview: '#33302a',
   },
   {
     name: 'mardi-gras',
     label: 'Mardi Gras',
     description:
       'Vibrant purple, gold, and green inspired by New Orleans carnival culture.',
-    signature: 'Rich jewel tones, gold accents, festive energy, NOLA spirit',
+    signature: 'Rich jewel tones, gold accents, festive energy',
     accent: '#fbbf24',
     bgPreview: '#1a0a2e',
     fgPreview: '#fbbf24',
@@ -94,7 +106,7 @@ const THEMES: ThemeInfo[] = [
    ═══════════════════════════════════════════════════════════════ */
 
 export default function ThemesPage() {
-  const [activeTheme, setActiveTheme] = useState('default');
+  const [activeTheme, setActiveTheme] = useState('light');
 
   // Apply theme to document root
   useEffect(() => {
@@ -115,8 +127,10 @@ export default function ThemesPage() {
           Theme Gallery
         </h1>
         <p className="text-sm text-muted-fg max-w-lg">
-          7 themes, each with a distinct personality. Click any card to apply it
-          site-wide and see the entire page transform.
+          A clean, neutral <strong className="text-foreground font-medium">Light</strong> and{' '}
+          <strong className="text-foreground font-medium">Dark</strong> default — plus six opt-in
+          flagship themes, each a distinct personality. Click any card to apply it site-wide and
+          watch the whole page transform.
         </p>
         <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 border border-border bg-surface">
           <span className="text-[10px] uppercase tracking-widest text-muted-fg">Active</span>

@@ -1,61 +1,45 @@
 /*
- * skeehn — Dark Theme: Midnight Glow
+ * skeehn — Dark (neutral default · dark mode)
  *
- * Deep dark mode with subtle text glow on primary elements.
- * Signature: phosphorescent text-shadow on interactive elements.
+ * The clean dark counterpart to Light: neutral cool greys, the same tasteful
+ * teal accent, soft rounding, hairline borders, NO dither or glow. This is the
+ * default dark mode. Expressive dark looks (Editorial, Terminal, Brutal,
+ * Mardi Gras) are opt-in flagship themes.
+ *
+ * One core, many skins: this file only remaps the --sk-* token contract.
  */
 [data-theme="dark"] {
-  /* ═══ COLORS ═══ */
-  --sk-background:         0 0% 6%;
-  --sk-foreground:         0 0% 97%;
-  --sk-surface:            0 0% 9%;
-  --sk-primary:            0 0% 97%;
-  --sk-primary-fg:         0 0% 6%;
-  --sk-secondary:          0 0% 14%;
-  --sk-secondary-fg:       0 0% 97%;
-  --sk-muted:              0 0% 14%;
-  --sk-muted-foreground:   0 0% 55%;
-  --sk-accent:             0 0% 14%;
-  --sk-accent-foreground:  0 0% 97%;
-  --sk-border-color:       0 0% 18%;
-  --sk-ring:               0 0% 97%;
-  --sk-success:            142 72% 45%;
-  --sk-warning:            38 92% 55%;
-  --sk-info:               217 91% 65%;
-  --sk-destructive:        0 84% 60%;
+  /* ═══ COLORS (neutral cool dark) ═══ */
+  --sk-background:        222 16% 8%;
+  --sk-foreground:        210 16% 96%;
+  --sk-surface:           222 14% 11%;
+  --sk-primary:           210 16% 96%;
+  --sk-primary-fg:        222 16% 8%;
+  --sk-secondary:         222 12% 16%;
+  --sk-secondary-fg:      210 16% 96%;
+  --sk-muted:             222 12% 15%;
+  --sk-muted-foreground:  220 9% 62%;
+  --sk-accent:            172 58% 45%;   /* teal, brightened for dark ground */
+  --sk-accent-foreground: 222 40% 9%;
+  --sk-border-color:      220 12% 20%;
+  --sk-ring:              172 58% 45%;
+  --sk-success:           150 55% 50%;
+  --sk-warning:           38 90% 58%;
+  --sk-info:              199 70% 60%;
+  --sk-destructive:       0 72% 60%;
 
-  /* ═══ DITHER ═══ */
-  --sk-dither-pattern:     var(--sk-dither-bayer);
-  --sk-dither-opacity:     0.06;
+  /* ═══ RADIUS: soft, modern (matches Light) ═══ */
+  --sk-radius: 8px; --sk-radius-sm: 6px; --sk-radius-md: 10px; --sk-radius-lg: 14px;
+  --sk-radius-panel: 12px; --sk-radius-control: 7px;
 
-  /* ═══ ELEVATION — soft depth + phosphor-tinted hover ═══ */
-  --sk-panel-shadow:       var(--sk-shadow-md);
-  --sk-elevation-hover:    0 0 16px hsl(0 0% 100% / 0.08), var(--sk-shadow-lg);
-}
+  /* ═══ BORDERS + ELEVATION ═══ */
+  --sk-border-width: 1px;
+  --sk-panel-gradient: none;
+  --sk-panel-shadow: 0 1px 2px hsl(0 0% 0% / 0.4), 0 12px 32px hsl(0 0% 0% / 0.35);
 
-/* Signature: Glow on interactive elements */
-[data-theme="dark"] .sk-btn:hover,
-[data-theme="dark"] a:hover {
-  text-shadow: 0 0 8px hsl(0 0% 100% / 0.3);
-}
+  /* ═══ DITHER: off by default ═══ */
+  --sk-dither-pattern: var(--sk-dither-b2);
+  --sk-dither-opacity: 0;
 
-[data-theme="dark"] .sk-btn[data-variant="dither"]:hover {
-  text-shadow: 0 0 12px hsl(0 0% 100% / 0.4);
-  box-shadow: 0 0 16px hsl(0 0% 100% / 0.06);
-}
-
-/* Subtle vignette on body */
-[data-theme="dark"] body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(ellipse at center, transparent 50%, hsl(0 0% 0% / 0.3) 100%);
-  pointer-events: none;
-  z-index: 9999;
-}
-
-@media print {
-  [data-theme="dark"] body::after { display: none; }
-  [data-theme="dark"] .sk-btn:hover,
-  [data-theme="dark"] a:hover { text-shadow: none; }
+  color-scheme: dark;
 }

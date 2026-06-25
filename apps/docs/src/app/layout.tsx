@@ -15,11 +15,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://ui.skeehn.com"),
   title: {
-    default: "skeehn — ASCII Native AI Components",
+    default: "skeehn — Customizable UI for AI products",
     template: "%s | skeehn",
   },
   description:
-    "The open-source React component library for AI products — chat, streaming, reasoning, tool calls, agents. Copy the components in, theme them to your brand, own every line. 32 components, 7 themes, zero dependencies.",
+    "The open-source React component library for AI products — chat, streaming, reasoning, tool calls, agents. Copy the components in, theme them to your brand, own every line. 32 components, 8 themes, zero dependencies.",
   keywords: [
     "AI components",
     "ASCII",
@@ -33,17 +33,17 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "skeehn" }],
   openGraph: {
-    title: "skeehn — ASCII Native AI Components",
+    title: "skeehn — Customizable UI for AI products & agents",
     description:
-      "32 components. 7 themes. Zero dependencies. Every surface a canvas for ASCII texture.",
+      "The ownable, themeable UI foundation for AI products — chat, voice, agents, and sites. 32 components, 8 themes, zero dependencies.",
     type: "website",
     siteName: "skeehn",
   },
   twitter: {
     card: "summary_large_image",
-    title: "skeehn — ASCII Native AI Components",
+    title: "skeehn — Customizable UI for AI products & agents",
     description:
-      "32 components. 7 themes. Zero dependencies. Every surface a canvas for ASCII texture.",
+      "The ownable, themeable UI foundation for AI products — chat, voice, agents, and sites. 32 components, 8 themes, zero dependencies.",
   },
 };
 

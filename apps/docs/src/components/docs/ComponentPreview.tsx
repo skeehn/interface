@@ -422,7 +422,7 @@ $ npx skeehn add card
   ),
 };
 
-const PREVIEW_THEMES = ['light', 'default', 'dark', 'terminal', 'brutal', 'grain'] as const;
+const PREVIEW_THEMES = ['light', 'dark', 'default', 'terminal', 'brutal', 'grain', 'print', 'mardi-gras'] as const;
 
 export function ComponentPreview({ slug }: { slug: string }) {
   const [theme, setTheme] = useState<string>('light');

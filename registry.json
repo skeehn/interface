@@ -1,10 +1,10 @@
 {
   "name": "skeehn",
   "version": "0.4.0",
-  "description": "ASCII as native rendering. The dither UI system.",
+  "description": "The customizable UI foundation for AI products and agents. Neutral by default, expressive when you want it.",
   "homepage": "https://skeehn.dev",
   "license": "MIT",
-  "themes": ["default", "dark", "brutal", "terminal", "print", "grain", "mardi-gras"],
+  "themes": ["light", "dark", "default", "brutal", "terminal", "print", "grain", "mardi-gras"],
   "components": [
     { "name": "button", "description": "Interactive button with ASCII dither", "files": ["button.css"], "category": "core" },
     { "name": "card", "description": "Elevated container with dither surface", "files": ["card.css"], "category": "core" },

@@ -1,0 +1,46 @@
+/*
+ * skeehn — Light (neutral default)
+ *
+ * The clean, shadcn-grade default ground: restrained neutrals + one tasteful
+ * teal accent, soft rounding, hairline borders, NO dither. This is what ships
+ * by default. The expressive looks — Editorial, Terminal, Brutal, Grain,
+ * Print, Mardi Gras — are opt-in flagship themes layered on the same tokens.
+ *
+ * One core, many skins: this file only remaps the --sk-* token contract.
+ */
+[data-theme="light"] {
+  /* ═══ COLORS (neutral, cool grey) ═══ */
+  --sk-background:        0 0% 100%;
+  --sk-foreground:        220 18% 12%;
+  --sk-surface:           220 22% 98%;
+  --sk-primary:           220 18% 12%;
+  --sk-primary-fg:        0 0% 100%;
+  --sk-secondary:         220 16% 96%;
+  --sk-secondary-fg:      220 18% 12%;
+  --sk-muted:             220 16% 96%;
+  --sk-muted-foreground:  220 9% 46%;
+  --sk-accent:            172 66% 33%;   /* restrained teal — the one spot of identity */
+  --sk-accent-foreground: 0 0% 100%;
+  --sk-border-color:      220 14% 91%;
+  --sk-ring:              172 66% 33%;
+  --sk-success:           142 64% 34%;
+  --sk-warning:           32 90% 44%;
+  --sk-info:              217 84% 52%;
+  --sk-destructive:       0 70% 50%;
+
+  /* ═══ RADIUS: soft, modern ═══ */
+  --sk-radius: 8px; --sk-radius-sm: 6px; --sk-radius-md: 10px; --sk-radius-lg: 14px;
+  --sk-radius-panel: 12px; --sk-radius-control: 7px;
+
+  /* ═══ BORDERS + ELEVATION: hairline + soft lift ═══ */
+  --sk-border-width: 1px;
+  --sk-panel-gradient: none;
+  --sk-panel-shadow: 0 1px 2px hsl(220 18% 12% / 0.05), 0 10px 28px hsl(220 18% 12% / 0.05);
+
+  /* ═══ DITHER: off by default (sparse pattern only if a component opts in) ═══ */
+  --sk-dither-pattern: var(--sk-dither-b2);
+  --sk-dither-opacity: 0;
+
+  color-scheme: light;
+}
+[data-theme="light"] body::after { display: none !important; }

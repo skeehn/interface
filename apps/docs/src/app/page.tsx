@@ -141,7 +141,7 @@ export default function HomePage() {
         <div className="max-w-2xl mb-12">
           <p className="docs-label mb-3">Make it yours</p>
           <h2 className="font-semibold tracking-[-0.02em] text-foreground" style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.4rem)" }}>One component, every aesthetic</h2>
-          <p className="mt-3 text-muted-fg leading-relaxed">Seven themes ship in the box — from clean Editorial to green-phosphor Terminal to Brutalist — powered by a real-time ASCII dither engine. Or define your own. The same chat component, three ways:</p>
+          <p className="mt-3 text-muted-fg leading-relaxed">A clean, neutral default ships in the box — then eight themes let you go as far as you want, from Editorial to green-phosphor Terminal to Brutalist, all powered by a real-time ASCII dither engine. Or define your own. The same chat component, three ways:</p>
         </div>
         <div className="grid md:grid-cols-3 gap-5">
           {THEMES.map((t) => (

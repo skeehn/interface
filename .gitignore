@@ -10,3 +10,8 @@ dist/
 *.tgz
 .vercel
 .gstack/
+
+# oath (local-dev package manager) — keep its lockfile/store out of the
+# bun-based CI; see CONTRIBUTING.md
+oath-lock.json
+.oath/

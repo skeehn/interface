@@ -53,6 +53,7 @@
 @import "../../../../components/prompt-suggestions/prompt-suggestions.css" layer(skeehn-components);
 @import "../../../../components/file-attachment/file-attachment.css" layer(skeehn-components);
 @import "../../../../components/ai/ai.css" layer(skeehn-components);
+@import "../../../../components/blocks/blocks.css" layer(skeehn-components);
 
 /* ═══ TAILWIND (must come after all CSS imports) ═══ */
 @import "tailwindcss";

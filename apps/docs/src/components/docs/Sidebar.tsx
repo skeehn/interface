@@ -22,6 +22,7 @@ const NAV_GROUPS: NavGroup[] = [
       { title: "Quick Start", href: "/docs/getting-started" },
       { title: "Installation", href: "/docs/installation" },
       { title: "Usage", href: "/docs/usage" },
+      { title: "AI SDK (drop-in)", href: "/docs/ai-sdk" },
       { title: "CLI", href: "/docs/cli" },
     ],
   },

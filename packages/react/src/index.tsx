@@ -90,6 +90,19 @@ export type { PromptSuggestionsProps, PromptSuggestionsVariant, PromptSuggestion
 export { FileAttachment, FileAttachments } from './components/FileAttachment';
 export type { FileAttachmentProps, FileAttachmentState, FileAttachmentsProps } from './components/FileAttachment';
 
+// AI chat primitives (compose with @skeehn/react/ai or use standalone)
+export { ScrollToBottomButton } from './components/ScrollToBottom';
+export type { ScrollToBottomButtonProps } from './components/ScrollToBottom';
+
+export { MessageActions } from './components/MessageActions';
+export type { MessageActionsProps } from './components/MessageActions';
+
+export { Sources } from './components/Sources';
+export type { SourcesProps, SourceItem } from './components/Sources';
+
+export { ModelPicker } from './components/ModelPicker';
+export type { ModelPickerProps, ModelOption } from './components/ModelPicker';
+
 // Layout bundle
 export { Container, Grid, GridCell, Stack, StackDivider, Panel, Divider, Skeleton } from './components/Layout';
 export type {

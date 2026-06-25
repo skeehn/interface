@@ -1,8 +1,8 @@
 import { defineConfig } from 'tsdown';
 
 export default defineConfig({
-  // Three public entry points → ".", "./hooks", "./gl"
-  entry: ['src/index.tsx', 'src/hooks/index.ts', 'src/gl/index.ts'],
+  // Public entry points → ".", "./hooks", "./gl", "./ai"
+  entry: ['src/index.tsx', 'src/hooks/index.ts', 'src/gl/index.ts', 'src/ai/index.ts'],
   format: ['esm', 'cjs'],
   // Emit .d.ts / .d.cts type declarations.
   dts: true,

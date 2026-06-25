@@ -20,6 +20,10 @@
       "import": { "types": "./dist/gl/index.d.ts", "default": "./dist/gl/index.js" },
       "require": { "types": "./dist/gl/index.d.cts", "default": "./dist/gl/index.cjs" }
     },
+    "./ai": {
+      "import": { "types": "./dist/ai/index.d.ts", "default": "./dist/ai/index.js" },
+      "require": { "types": "./dist/ai/index.d.cts", "default": "./dist/ai/index.cjs" }
+    },
     "./package.json": "./package.json"
   },
   "files": ["dist/"],
@@ -27,7 +31,8 @@
   "typesVersions": {
     "*": {
       "hooks": ["./dist/hooks/index.d.ts"],
-      "gl": ["./dist/gl/index.d.ts"]
+      "gl": ["./dist/gl/index.d.ts"],
+      "ai": ["./dist/ai/index.d.ts"]
     }
   },
   "peerDependencies": {

@@ -1,0 +1,200 @@
+/*
+ * skeehn — AI SDK layer + chat primitives
+ *
+ * Styles for @skeehn/react/ai (Conversation, Message, part renderers) and the
+ * composed primitives (ScrollToBottom, MessageActions, Sources, ModelPicker).
+ * Token-driven → themes with every skeehn theme.
+ */
+
+/* ═══ Conversation ═══ */
+.sk-ai-conversation {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+.sk-ai-conversation__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-space-4);
+  padding: var(--sk-space-4);
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sk-ai-conversation__scroll { scroll-behavior: auto; }
+}
+.sk-ai-conversation__jump {
+  position: absolute;
+  bottom: var(--sk-space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+/* ═══ Message + parts ═══ */
+.sk-ai-message {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-space-3);
+}
+.sk-ai-message[data-role="user"] { align-items: stretch; }
+.sk-ai-part { min-width: 0; }
+.sk-ai-step { margin: var(--sk-space-1) 0; opacity: 0.6; }
+
+/* Tool input/output blocks inside a ToolCard */
+.sk-ai-tool-io {
+  font-family: var(--sk-font-mono);
+  font-size: var(--sk-font-size-xs);
+  line-height: var(--sk-line-height);
+  color: hsl(var(--sk-foreground));
+  background: hsl(var(--sk-muted));
+  border: var(--sk-border);
+  border-radius: var(--sk-radius-sm);
+  padding: var(--sk-space-2) var(--sk-space-3);
+  margin: var(--sk-space-1) 0 0;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.sk-ai-tool-io[data-io="output"] { background: hsl(var(--sk-surface)); }
+.sk-ai-tool-error {
+  font-family: var(--sk-font-mono);
+  font-size: var(--sk-font-size-xs);
+  color: hsl(var(--sk-destructive));
+  margin-top: var(--sk-space-1);
+}
+
+/* Inline generated/uploaded image */
+.sk-ai-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: var(--sk-border);
+  border-radius: var(--sk-radius-md);
+}
+
+/* ═══ Scroll-to-bottom button ═══ */
+.sk-scroll-to-bottom {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  font-family: var(--sk-font-mono);
+  font-size: var(--sk-font-size-base);
+  color: hsl(var(--sk-foreground));
+  background: hsl(var(--sk-surface));
+  border: var(--sk-border);
+  border-radius: var(--sk-radius-full);
+  box-shadow: var(--sk-panel-shadow);
+  cursor: pointer;
+  transition: background var(--sk-transition), border-color var(--sk-transition),
+    transform var(--sk-transition);
+}
+.sk-scroll-to-bottom:hover {
+  background: hsl(var(--sk-secondary));
+  border-color: hsl(var(--sk-foreground) / 0.3);
+  transform: translateY(var(--sk-lift-y));
+}
+.sk-scroll-to-bottom:focus-visible {
+  outline: var(--sk-focus-ring);
+  outline-offset: var(--sk-focus-ring-offset);
+}
+
+/* ═══ Message actions ═══ */
+.sk-msg-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sk-space-1);
+}
+.sk-msg-actions__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  font-family: var(--sk-font-mono);
+  font-size: var(--sk-font-size-sm);
+  color: hsl(var(--sk-muted-foreground));
+  background: transparent;
+  border: var(--sk-border);
+  border-radius: var(--sk-radius-control);
+  cursor: pointer;
+  transition: color var(--sk-transition), background var(--sk-transition),
+    border-color var(--sk-transition);
+}
+.sk-msg-actions__btn:hover {
+  color: hsl(var(--sk-foreground));
+  background: hsl(var(--sk-secondary));
+  border-color: hsl(var(--sk-foreground) / 0.25);
+}
+.sk-msg-actions__btn:focus-visible {
+  outline: var(--sk-focus-ring);
+  outline-offset: var(--sk-focus-ring-offset);
+}
+
+/* ═══ Sources (collapsible) ═══ */
+.sk-sources {
+  border: var(--sk-border);
+  border-radius: var(--sk-radius-md);
+  background: hsl(var(--sk-surface));
+  overflow: hidden;
+}
+.sk-sources__summary {
+  display: flex;
+  align-items: center;
+  gap: var(--sk-space-2);
+  padding: var(--sk-space-2) var(--sk-space-3);
+  font-family: var(--sk-font-mono);
+  font-size: var(--sk-font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--sk-letter-spacing-wide);
+  color: hsl(var(--sk-muted-foreground));
+  cursor: pointer;
+  user-select: none;
+}
+.sk-sources__summary:focus-visible {
+  outline: var(--sk-focus-ring);
+  outline-offset: calc(-1 * var(--sk-focus-ring-width));
+}
+.sk-sources__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.35em;
+  font-size: var(--sk-font-size-xs);
+  color: hsl(var(--sk-accent-foreground));
+  background: hsl(var(--sk-accent));
+  border-radius: var(--sk-radius-full);
+}
+.sk-sources__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-space-2);
+  padding: var(--sk-space-3);
+  border-top: var(--sk-border);
+}
+
+/* ═══ Model picker ═══ */
+.sk-model-picker {
+  font-family: var(--sk-font-mono);
+  font-size: var(--sk-font-size-sm);
+  color: hsl(var(--sk-foreground));
+  background: hsl(var(--sk-surface));
+  border: var(--sk-border);
+  border-radius: var(--sk-radius-control);
+  padding: var(--sk-space-1) var(--sk-space-2);
+  cursor: pointer;
+  transition: border-color var(--sk-transition);
+}
+.sk-model-picker:hover { border-color: hsl(var(--sk-foreground) / 0.3); }
+.sk-model-picker:focus-visible {
+  outline: var(--sk-focus-ring);
+  outline-offset: var(--sk-focus-ring-offset);
+}

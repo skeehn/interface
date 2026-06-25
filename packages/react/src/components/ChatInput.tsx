@@ -20,21 +20,27 @@ export interface ChatInputProps extends Omit<React.HTMLAttributes<HTMLDivElement
   value?: string;
   /** Called when the textarea value changes. */
   onValueChange?: (value: string) => void;
-  /** Called when the user submits (Enter without Shift). */
+  /** Called when the user submits (Enter without Shift, or the send button). */
   onSubmit?: (value: string) => void;
+  /** Render a built-in mic button; called when it is toggled. */
+  onMicToggle?: () => void;
+  /** Show the built-in send button (only renders when `onSubmit` is set). Defaults to true. */
+  showSend?: boolean;
+  /** Soft character limit — shows a live count that turns destructive when exceeded. */
+  maxLength?: number;
   /** Hint text displayed below the input. */
   hint?: string;
   /** Whether the textarea is disabled. */
   disabled?: boolean;
   /** Additional CSS class names. */
   className?: string;
-  /** Extra action elements (e.g. mic button) rendered in the actions area. */
+  /** Extra action elements rendered before the send button. */
   actions?: React.ReactNode;
 }
 
 /**
- * AI prompt input with auto-resize textarea and action buttons.
- * Handles Enter-to-submit and Shift+Enter for newlines.
+ * AI prompt input with auto-resize textarea, built-in send/mic buttons, and an
+ * optional character count. Handles Enter-to-submit and Shift+Enter for newlines.
  */
 export const ChatInput = React.forwardRef<HTMLDivElement, ChatInputProps>(
   (
@@ -45,6 +51,9 @@ export const ChatInput = React.forwardRef<HTMLDivElement, ChatInputProps>(
       value,
       onValueChange,
       onSubmit,
+      onMicToggle,
+      showSend = true,
+      maxLength,
       hint,
       disabled,
       actions,
@@ -55,6 +64,10 @@ export const ChatInput = React.forwardRef<HTMLDivElement, ChatInputProps>(
   ) => {
     const [internal, setInternal] = React.useState('');
     const text = value ?? internal;
+    const recording = state === 'recording';
+    const locked = disabled || state === 'streaming';
+    const canSend = text.trim().length > 0 && !locked;
+    const overLimit = maxLength !== undefined && text.length > maxLength;
 
     const handleChange = React.useCallback(
       (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -65,15 +78,20 @@ export const ChatInput = React.forwardRef<HTMLDivElement, ChatInputProps>(
       [value, onValueChange],
     );
 
+    const submit = React.useCallback(() => {
+      if (!text.trim() || locked) return;
+      onSubmit?.(text);
+      if (value === undefined) setInternal('');
+    }, [text, locked, onSubmit, value]);
+
     const handleKeyDown = React.useCallback(
       (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        if (e.key === 'Enter' && !e.shiftKey && onSubmit) {
+        if (e.key === 'Enter' && !e.shiftKey) {
           e.preventDefault();
-          onSubmit(text);
-          if (value === undefined) setInternal('');
+          submit();
         }
       },
-      [text, onSubmit, value],
+      [submit],
     );
 
     return (
@@ -92,12 +110,49 @@ export const ChatInput = React.forwardRef<HTMLDivElement, ChatInputProps>(
             value={text}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
-            disabled={disabled || state === 'streaming'}
+            disabled={locked}
             rows={1}
           />
-          {actions && <div className="sk-chat-input__actions">{actions}</div>}
+          <div className="sk-chat-input__actions">
+            {onMicToggle && (
+              <button
+                type="button"
+                className="sk-chat-input__mic"
+                data-mic-state={recording ? 'recording' : undefined}
+                aria-label={recording ? 'Stop recording' : 'Start voice input'}
+                aria-pressed={recording}
+                onClick={onMicToggle}
+              >
+                {'◎'}
+              </button>
+            )}
+            {actions}
+            {showSend && onSubmit && (
+              <button
+                type="button"
+                className="sk-chat-input__send"
+                aria-label="Send message"
+                disabled={!canSend}
+                onClick={submit}
+              >
+                {'↑'}
+              </button>
+            )}
+          </div>
         </div>
-        {hint && <div className="sk-chat-input__hint">{hint}</div>}
+        {(hint || maxLength !== undefined) && (
+          <div className="sk-chat-input__footer">
+            {hint && <span className="sk-chat-input__hint">{hint}</span>}
+            {maxLength !== undefined && (
+              <span
+                className="sk-chat-input__char-count"
+                data-over-limit={overLimit ? '' : undefined}
+              >
+                {text.length}/{maxLength}
+              </span>
+            )}
+          </div>
+        )}
       </div>
     );
   },

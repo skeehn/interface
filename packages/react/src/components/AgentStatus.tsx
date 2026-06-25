@@ -31,6 +31,8 @@ export const AgentStatus = React.forwardRef<HTMLDivElement, AgentStatusProps>(
         ref={ref}
         className={`sk-agent-status${className ? ` ${className}` : ''}`}
         data-status={status}
+        role="status"
+        aria-live="polite"
         {...rest}
       >
         <span className="sk-agent-status__dot" />

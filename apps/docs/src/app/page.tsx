@@ -94,7 +94,7 @@ export default function HomePage() {
                 <ChatBubble role="assistant">
                   Replace the inner <code>find()</code> with a pre-built <code>Map</code> so each node is visited once:
                 </ChatBubble>
-                <CodeBlock language="ts" code={`const index = new Map(nodes.map(n => [n.id, n]));\nfor (const n of nodes) link(n, index.get(n.parent));`} />
+                <div data-theme="default"><CodeBlock language="ts" code={`const index = new Map(nodes.map(n => [n.id, n]));\nfor (const n of nodes) link(n, index.get(n.parent));`} /></div>
                 <ToolCard name="search_codebase" status="success">3 matches in src/parse/*.ts — applied to parseTree.ts:42</ToolCard>
               </div>
             </CardBody>
@@ -172,7 +172,7 @@ export default function HomePage() {
       <section className="max-w-3xl mx-auto px-6 py-28 text-center">
         <h2 className="font-semibold tracking-[-0.025em] text-foreground" style={{ fontSize: "clamp(1.9rem, 4vw, 3rem)" }}>Ship an AI interface in minutes</h2>
         <p className="mt-4 text-lg text-muted-fg max-w-lg mx-auto leading-relaxed">Import the component, wire the hook, done. Or copy the source into your repo with one command.</p>
-        <div className="mt-10 text-left"><CodeBlock language="tsx" code={HERO_CODE} lineNumbers /></div>
+        <div className="mt-10 text-left" data-theme="default"><CodeBlock language="tsx" code={HERO_CODE} lineNumbers /></div>
         <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
           <Link href="/docs/getting-started"><Button variant="solid" size="lg">Read the docs</Button></Link>
           <Link href="/docs/ai-chat"><Button variant="outline" size="lg">Live chat demo</Button></Link>

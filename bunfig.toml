@@ -1,0 +1,5 @@
+# Root test config — preload registers a happy-dom DOM + jest-dom matchers so
+# the React component tests under packages/react work when `bun test` runs from
+# the repo root (the existing structural tests ignore the DOM harmlessly).
+[test]
+preload = ["./packages/react/test/setup.ts"]

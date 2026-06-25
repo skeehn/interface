@@ -25,6 +25,8 @@ export const ChatBubble = React.forwardRef<HTMLDivElement, ChatBubbleProps>(
       className={`sk-chat-bubble${className ? ` ${className}` : ''}`}
       data-role={role}
       data-streaming={streaming ? 'true' : undefined}
+      aria-live={streaming ? 'polite' : undefined}
+      aria-busy={streaming ? true : undefined}
       {...rest}
     >
       <div className="sk-chat-bubble__content">{children}</div>

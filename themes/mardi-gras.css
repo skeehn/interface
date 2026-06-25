@@ -33,6 +33,10 @@
   /* ═══ DITHER ═══ */
   --sk-dither-pattern:     var(--sk-dither-crosshatch);
   --sk-dither-opacity:     0.08;
+
+  /* ═══ ELEVATION — depth + gold-tinted hover ═══ */
+  --sk-panel-shadow:       var(--sk-shadow-md);
+  --sk-elevation-hover:    0 0 16px hsl(45 96% 52% / 0.12), var(--sk-shadow-lg);
 }
 
 /* Signature: Gold sparkle dither on primary buttons */

@@ -23,7 +23,7 @@
 /* Micro-interactions */
 .sk-tabs__trigger:hover { color: hsl(var(--sk-foreground)); transform: translateY(-1px); }
 .sk-tabs__trigger:active { transform: translateY(1px); }
-.sk-tabs__trigger:focus-visible { outline: 2px solid hsl(var(--sk-ring)); outline-offset: 2px; }
+.sk-tabs__trigger:focus-visible { outline: var(--sk-focus-ring); outline-offset: var(--sk-focus-ring-offset); }
 
 /* Pixel variant */
 .sk-tabs[data-variant="pixel"] .sk-tabs__list { background: hsl(var(--sk-background)); border: 2px solid hsl(var(--sk-foreground)); box-shadow: 3px 3px 0 hsl(var(--sk-foreground)); }

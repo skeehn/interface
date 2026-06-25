@@ -31,6 +31,10 @@
 
   /* ═══ TYPOGRAPHY: Force monospace ═══ */
   --sk-font-sans:          var(--sk-font-mono);
+
+  /* ═══ ELEVATION — flat CRT resting, phosphor glow on hover ═══ */
+  --sk-panel-shadow:       none;
+  --sk-elevation-hover:    0 0 12px hsl(140 100% 50% / 0.15);
 }
 
 /* Signature: Phosphor text glow */

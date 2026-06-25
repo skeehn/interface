@@ -14,7 +14,7 @@
   --sk-secondary:         0 0% 96%;
   --sk-secondary-fg:      0 0% 8%;
   --sk-muted:             0 0% 96%;
-  --sk-muted-foreground:  0 0% 46%;
+  --sk-muted-foreground:  0 0% 42%;
   --sk-accent:            0 0% 94%;
   --sk-accent-foreground: 0 0% 8%;
   --sk-destructive:       0 84% 60%;
@@ -113,7 +113,18 @@
   --sk-radius-panel:   var(--sk-radius);
   --sk-radius-control: var(--sk-radius);
   --sk-panel-gradient: none;
-  --sk-panel-shadow:   var(--sk-shadow-sm);
+
+  /* Elevation scale — themes opt in; base stays minimal */
+  --sk-elevation-0:     none;
+  --sk-elevation-1:     var(--sk-shadow-sm);
+  --sk-elevation-2:     var(--sk-shadow-md);
+  --sk-elevation-3:     var(--sk-shadow-lg);
+  --sk-elevation-hover: 0 16px 36px hsl(0 0% 0% / 0.22), inset 0 1px 0 hsl(0 0% 100% / 0.10);
+  --sk-panel-shadow:    var(--sk-elevation-1);
+
+  /* Tokenized hover-lift — single source for translateY lifts */
+  --sk-lift-y:    -1px;
+  --sk-lift-y-lg: -2px;
 
   /* ═══ Z-INDEX ═══ */
   --sk-z-dropdown: 50;

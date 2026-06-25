@@ -54,9 +54,10 @@ export const CodeBlock = React.forwardRef<HTMLDivElement, CodeBlockProps>(
             </span>
           </div>
           <button
-            className="sk-code-block__copy"
+            className={`sk-code-block__copy${copied ? ' sk-done-pulse' : ''}`}
             type="button"
             aria-label={copied ? 'Copied to clipboard' : 'Copy code'}
+            aria-live="polite"
             data-copied={copied ? 'true' : undefined}
             onClick={handleCopy}
           >

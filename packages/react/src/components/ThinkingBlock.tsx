@@ -66,6 +66,7 @@ export const ThinkingBlock = React.forwardRef<HTMLDivElement, ThinkingBlockProps
         className={`sk-thinking-block${className ? ` ${className}` : ''}`}
         data-state={state}
         data-expanded={isExpanded ? 'true' : 'false'}
+        aria-busy={state === 'thinking' ? true : undefined}
         {...rest}
       >
         <button className="sk-thinking-block__header" onClick={toggle} aria-expanded={isExpanded}>

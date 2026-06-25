@@ -27,12 +27,15 @@ import {
   TerminalPanel,
   FileAttachment,
   FileAttachments,
+  ChatInput, VoiceSession,
+  DialogContent, DialogHeader, DialogBody, DialogFooter,
+  Table, TableHead, TableBody, TableRow, TableCell, TableHeaderCell,
   Container, Grid, GridCell, Stack, Divider, Skeleton,
   AsciiChart, Sparkline, Meter, Heatmap,
   DitherPulse, Glitch, AsciiRain,
 } from '@skeehn/react';
 
-const PREVIEWS: Record<string, () => React.ReactNode> = {
+export const PREVIEWS: Record<string, () => React.ReactNode> = {
   button: () => (
     <div className="flex gap-3 flex-wrap items-center">
       <Button variant="solid">Solid</Button>
@@ -311,9 +314,9 @@ $ npx skeehn add card
   ),
 
   'voice-session': () => (
-    <p className="text-muted-fg text-sm italic">
-      Voice session requires microphone access. See the component docs for integration details.
-    </p>
+    <div className="w-full max-w-md">
+      <VoiceSession status="listening" onMute={() => {}} onEnd={() => {}} />
+    </div>
   ),
 
   markdown: () => (
@@ -367,6 +370,46 @@ $ npx skeehn add card
         <span className="text-lg font-mono">GLITCH</span>
       </Glitch>
     </div>
+  ),
+
+  dialog: () => (
+    <DialogContent style={{ maxWidth: '24rem' }}>
+      <DialogHeader title="Delete file?" onClose={() => {}} />
+      <DialogBody>This action cannot be undone. The file will be permanently removed from your project.</DialogBody>
+      <DialogFooter>
+        <Button variant="ghost" size="sm">Cancel</Button>
+        <Button variant="solid" size="sm">Delete</Button>
+      </DialogFooter>
+    </DialogContent>
+  ),
+
+  'chat-input': () => (
+    <div className="w-full max-w-lg">
+      <ChatInput
+        placeholder="Message skeehn…"
+        onSubmit={() => {}}
+        onMicToggle={() => {}}
+        maxLength={2000}
+        hint="Enter to send · Shift+Enter for newline"
+      />
+    </div>
+  ),
+
+  table: () => (
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableHeaderCell>Tool</TableHeaderCell>
+          <TableHeaderCell>Status</TableHeaderCell>
+          <TableHeaderCell>Duration</TableHeaderCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        <TableRow><TableCell>search_docs</TableCell><TableCell>success</TableCell><TableCell>0.4s</TableCell></TableRow>
+        <TableRow><TableCell>execute_code</TableCell><TableCell>error</TableCell><TableCell>1.2s</TableCell></TableRow>
+        <TableRow><TableCell>fetch_url</TableCell><TableCell>success</TableCell><TableCell>0.8s</TableCell></TableRow>
+      </TableBody>
+    </Table>
   ),
 };
 

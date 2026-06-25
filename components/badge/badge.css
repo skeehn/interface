@@ -25,7 +25,7 @@
   position: relative;
   overflow: hidden;
 }
-.sk-badge:focus-visible { outline: var(--sk-focus-ring); outline-offset: 2px; }
+.sk-badge:focus-visible { outline: var(--sk-focus-ring); outline-offset: var(--sk-focus-ring-offset); }
 
 /* Solid */
 .sk-badge[data-variant="solid"] { background: hsl(var(--sk-secondary)); }

@@ -17,7 +17,7 @@
   margin-bottom: var(--sk-space-4);
   border-radius: var(--sk-radius-md);
   font-family: var(--sk-font-sans);            /* prose, not mono */
-  font-size: 0.9rem;                            /* ~14.5px — readable */
+  font-size: var(--sk-font-size-base);          /* readable prose */
   line-height: var(--sk-line-height-relaxed);
   position: relative;
   transition: border-color var(--sk-transition);

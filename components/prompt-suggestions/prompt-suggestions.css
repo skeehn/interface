@@ -65,6 +65,14 @@
 /* Keyboard focus */
 .sk-prompt-suggestion[data-focused] { border-color: hsl(var(--sk-accent)); background: hsl(var(--sk-secondary)); }
 
+/* Keyboard hint footer */
+.sk-prompt-suggestions__hint {
+  font-family: var(--sk-font-mono); font-size: var(--sk-font-size-xs);
+  color: hsl(var(--sk-muted-foreground) / 0.7);
+  letter-spacing: var(--sk-letter-spacing-wide); text-align: center;
+  margin-top: var(--sk-space-1);
+}
+
 /* Loading & skeleton */
 .sk-prompt-suggestions[data-loading] .sk-prompt-suggestion { pointer-events: none; opacity: 0.5; }
 .sk-prompt-suggestions[data-skeleton] .sk-prompt-suggestion {

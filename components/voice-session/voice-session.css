@@ -9,6 +9,12 @@
  */
 
 .sk-voice-session {
+  /* Waveform geometry — token-rooted so bars stay consistent with the scale.
+     --sk-voice-bar-rest/peak are the heights the CSS animation oscillates between. */
+  --sk-voice-bar-width: var(--sk-space-1);
+  --sk-voice-bar-gap: calc(var(--sk-space-1) / 2);
+  --sk-voice-bar-rest: 18%;
+  --sk-voice-bar-peak: 100%;
   font-family: var(--sk-font-mono); font-size: var(--sk-font-size-sm); line-height: var(--sk-line-height);
   color: hsl(var(--sk-foreground)); background: hsl(var(--sk-surface));
   border: var(--sk-border); border-radius: var(--sk-radius-md);
@@ -24,9 +30,36 @@
 .sk-voice-session__clock { font-family: var(--sk-font-mono); font-size: var(--sk-font-size-xs); color: hsl(var(--sk-muted-foreground)); letter-spacing: var(--sk-letter-spacing-xwide); font-variant-numeric: tabular-nums; }
 
 /* Waveform — denser bars */
-.sk-voice-session__waveform { display: flex; align-items: center; gap: 2px; height: 2.25rem; }
-.sk-voice-session__waveform-bar { width: 3px; min-height: 2px; background: hsl(var(--sk-accent)); border-radius: 999px; transition: height 0.1s ease; }
+.sk-voice-session__waveform { display: flex; align-items: center; gap: var(--sk-voice-bar-gap); height: var(--sk-size-avatar-md); }
+.sk-voice-session__waveform-bar {
+  width: var(--sk-voice-bar-width);
+  height: var(--sk-voice-bar-rest);
+  min-height: var(--sk-voice-bar-width);
+  background: hsl(var(--sk-accent));
+  border-radius: var(--sk-radius-full);
+  transition: height var(--sk-transition-fast);
+  transform-origin: center;
+}
 .sk-voice-session[data-status="speaking"] .sk-voice-session__waveform-bar { background: hsl(var(--sk-success)); }
+
+/* CSS-only animated waveform — bars oscillate while listening/speaking, no JS required.
+   Staggered per-bar delays give the classic rolling waveform read. */
+@keyframes sk-voice-bar {
+  0%, 100% { height: var(--sk-voice-bar-rest); }
+  50%      { height: var(--sk-voice-bar-peak); }
+}
+.sk-voice-session[data-status="listening"] .sk-voice-session__waveform-bar,
+.sk-voice-session[data-status="speaking"]  .sk-voice-session__waveform-bar {
+  animation: sk-voice-bar 0.9s ease-in-out infinite;
+}
+.sk-voice-session__waveform-bar:nth-child(1) { animation-delay: 0s; }
+.sk-voice-session__waveform-bar:nth-child(2) { animation-delay: 0.12s; }
+.sk-voice-session__waveform-bar:nth-child(3) { animation-delay: 0.24s; }
+.sk-voice-session__waveform-bar:nth-child(4) { animation-delay: 0.36s; }
+.sk-voice-session__waveform-bar:nth-child(5) { animation-delay: 0.30s; }
+.sk-voice-session__waveform-bar:nth-child(6) { animation-delay: 0.18s; }
+.sk-voice-session__waveform-bar:nth-child(7) { animation-delay: 0.42s; }
+.sk-voice-session__waveform-bar:nth-child(8) { animation-delay: 0.06s; }
 
 /* Transcript */
 .sk-voice-session__transcript { display: flex; flex-direction: column; gap: var(--sk-space-2); max-height: 12rem; overflow-y: auto; }
@@ -40,6 +73,23 @@
 .sk-voice-session__turn[data-role="assistant"] { border-left-color: hsl(var(--sk-muted-foreground) / 0.4); background: hsl(var(--sk-muted) / 0.4); }
 
 .sk-voice-session__controls { display: flex; gap: var(--sk-space-2); align-items: center; }
+
+/* Built-in controls (mute/end). Inherit btn styling when .sk-btn is present;
+   these rules keep standalone controls coherent and accessible on their own. */
+.sk-voice-session__control {
+  font: inherit;
+  letter-spacing: var(--sk-letter-spacing-wide);
+  padding: var(--sk-space-1) var(--sk-space-3);
+  color: hsl(var(--sk-foreground));
+  background: transparent;
+  border: var(--sk-border);
+  border-radius: var(--sk-radius-control);
+  cursor: pointer;
+  transition: color var(--sk-transition), background var(--sk-transition), border-color var(--sk-transition);
+}
+.sk-voice-session__control:hover { background: hsl(var(--sk-secondary)); border-color: hsl(var(--sk-foreground) / 0.3); }
+.sk-voice-session__control[data-action="end"] { color: hsl(var(--sk-destructive)); }
+.sk-voice-session__control:focus-visible { outline: var(--sk-focus-ring); outline-offset: var(--sk-focus-ring-offset); }
 
 /* Loading & skeleton */
 .sk-voice-session[data-loading] { pointer-events: none; opacity: 0.6; }
@@ -55,12 +105,18 @@
 .sk-voice-session[data-skeleton] .sk-voice-session__turn { visibility: hidden; }
 
 @media print {
-  .sk-voice-session { border: 1px solid hsl(var(--sk-foreground)); }
-  .sk-voice-session__waveform, .sk-voice-session__controls, .sk-voice-session__clock { display: none; }
+  .sk-voice-session { border: var(--sk-border-width) solid hsl(var(--sk-foreground)); }
+  .sk-voice-session__controls, .sk-voice-session__clock { display: none; }
+  /* Waveform prints as a frozen, static-height snapshot (no animation). */
+  .sk-voice-session[data-status="listening"] .sk-voice-session__waveform-bar,
+  .sk-voice-session[data-status="speaking"]  .sk-voice-session__waveform-bar { animation: none; height: var(--sk-voice-bar-rest); }
   .sk-voice-session[data-skeleton] { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
+  /* Hold bars at a static height instead of oscillating. */
   .sk-voice-session__waveform-bar { transition: none; }
+  .sk-voice-session[data-status="listening"] .sk-voice-session__waveform-bar,
+  .sk-voice-session[data-status="speaking"]  .sk-voice-session__waveform-bar { animation: none; height: var(--sk-voice-bar-rest); }
   .sk-voice-session[data-skeleton] .sk-voice-session__waveform,
   .sk-voice-session[data-skeleton] .sk-voice-session__transcript,
   .sk-voice-session[data-skeleton] .sk-voice-session__clock { animation: none; background: hsl(var(--sk-muted)); }

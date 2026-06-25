@@ -60,8 +60,8 @@
   overflow-y: auto;
   padding: var(--sk-space-2) var(--sk-space-1);
   font-family: var(--sk-font-sans);
-  font-size: 0.9rem;
-  line-height: 1.5;
+  font-size: var(--sk-font-size-base);
+  line-height: var(--sk-line-height);
   color: hsl(var(--sk-foreground));
   field-sizing: content;
 }
@@ -74,13 +74,41 @@
   align-items: flex-end;
 }
 
-/* Mic / action buttons */
-.sk-chat-input__mic {
-  font-size: 1rem;
+/* Action buttons — mic + send */
+.sk-chat-input__mic,
+.sk-chat-input__send {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  border: var(--sk-border);
+  border-radius: var(--sk-radius-control);
+  background: transparent;
+  color: hsl(var(--sk-muted-foreground));
+  font-size: var(--sk-font-size-lg);
   line-height: 1;
-  transition: color var(--sk-transition), transform var(--sk-transition);
+  cursor: pointer;
+  transition: color var(--sk-transition), background var(--sk-transition),
+    border-color var(--sk-transition), transform var(--sk-transition);
 }
-.sk-chat-input__mic[data-mic-state="recording"] { color: hsl(var(--sk-destructive)); }
+.sk-chat-input__mic:hover { color: hsl(var(--sk-foreground)); border-color: hsl(var(--sk-foreground) / 0.3); }
+.sk-chat-input__mic[data-mic-state="recording"] { color: hsl(var(--sk-destructive)); border-color: hsl(var(--sk-destructive) / 0.5); }
+.sk-chat-input__send { background: hsl(var(--sk-primary)); color: hsl(var(--sk-primary-fg)); border-color: hsl(var(--sk-primary)); }
+.sk-chat-input__send:hover:not(:disabled) { transform: translateY(var(--sk-lift-y)); }
+.sk-chat-input__send:disabled { opacity: 0.4; cursor: not-allowed; }
+.sk-chat-input__mic:focus-visible,
+.sk-chat-input__send:focus-visible { outline: var(--sk-focus-ring); outline-offset: var(--sk-focus-ring-offset); }
+
+/* Footer — hint + char count on one row */
+.sk-chat-input__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sk-space-2);
+  margin-top: var(--sk-space-2);
+}
 
 /* Hint — readable mono chrome */
 .sk-chat-input__hint {
@@ -91,6 +119,8 @@
   text-align: center;
   letter-spacing: var(--sk-letter-spacing-wide);
 }
+.sk-chat-input__footer .sk-chat-input__hint { margin-top: 0; text-align: left; }
+.sk-chat-input__footer .sk-chat-input__char-count { padding-right: 0; }
 .sk-chat-input__hint--recording { color: hsl(var(--sk-destructive)); }
 
 /* Streaming — locked field, accent-tint border */
@@ -185,7 +215,8 @@
 @media print { .sk-chat-input { display: none; } }
 
 @media (prefers-reduced-motion: reduce) {
-  .sk-chat-input__wrapper { transition: none; }
+  .sk-chat-input__wrapper, .sk-chat-input__send, .sk-chat-input__mic { transition: none; }
+  .sk-chat-input__send:hover:not(:disabled) { transform: none; }
   .sk-chat-input[data-state="recording"] .sk-chat-input__wrapper::after { animation: none; }
   .sk-chat-input[data-loading] .sk-chat-input__wrapper::after { animation: none; }
   .sk-chat-input[data-skeleton] .sk-chat-input__wrapper { animation: none; background: hsl(var(--sk-muted)); }

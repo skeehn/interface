@@ -43,8 +43,15 @@
     "build": "tsdown"
   },
   "devDependencies": {
+    "@happy-dom/global-registrator": "^15",
+    "@testing-library/dom": "^10",
+    "@testing-library/jest-dom": "^6",
+    "@testing-library/react": "^16",
+    "@testing-library/user-event": "^14",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "react": "^19",
+    "react-dom": "^19",
     "tsdown": "^0.22.3"
   },
   "keywords": ["skeehn", "react", "ai", "components", "dither", "ascii", "webgl"],

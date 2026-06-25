@@ -28,6 +28,10 @@
   /* ═══ DITHER ═══ */
   --sk-dither-pattern:     var(--sk-dither-dots);
   --sk-dither-opacity:     0.06;
+
+  /* ═══ ELEVATION — newsprint stays flat ═══ */
+  --sk-panel-shadow:       none;
+  --sk-elevation-hover:    none;
 }
 
 /* Signature: Halftone dot texture overlay */

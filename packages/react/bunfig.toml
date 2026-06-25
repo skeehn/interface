@@ -1,0 +1,3 @@
+# Lets `cd packages/react && bun test` work standalone (same preload as root).
+[test]
+preload = ["./test/setup.ts"]

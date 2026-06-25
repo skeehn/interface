@@ -19,7 +19,7 @@
 .sk-toggle__label { font-size: var(--sk-font-size-sm); color: hsl(var(--sk-foreground)); letter-spacing: 0.02em; }
 
 /* Micro-interactions */
-.sk-toggle__input:focus-visible + .sk-toggle__thumb { outline: 2px solid hsl(var(--sk-ring)); outline-offset: 2px; box-shadow: 0 0 0 4px hsl(var(--sk-ring) / 0.12); }
+.sk-toggle__input:focus-visible + .sk-toggle__thumb { outline: var(--sk-focus-ring); outline-offset: var(--sk-focus-ring-offset); box-shadow: 0 0 0 4px hsl(var(--sk-ring) / 0.12); }
 .sk-toggle:hover .sk-toggle__thumb { border-color: hsl(var(--sk-foreground) / 0.3); }
 
 /* Pixel variant */

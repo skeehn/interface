@@ -10,7 +10,7 @@
 
 .sk-markdown {
   font-family: var(--sk-font-sans);
-  font-size: 0.9rem;
+  font-size: var(--sk-font-size-base);
   line-height: var(--sk-line-height-relaxed);
   color: hsl(var(--sk-foreground));
   word-wrap: break-word;
@@ -87,7 +87,7 @@
 .sk-markdown pre code {
   font-family: var(--sk-font-mono);
   font-size: var(--sk-font-size-sm);
-  line-height: 1.7;
+  line-height: var(--sk-line-height-relaxed);
   background: none;
   border: none;
   padding: 0;
@@ -95,6 +95,19 @@
   position: relative;
   z-index: 1;
 }
+
+/* Syntax-highlight token contract.
+   A highlighter (or markdown.js) may emit <span class="sk-md-tok-*"> inside a
+   fenced code block; each class maps to one semantic token so highlighting
+   tracks the active theme. Unhighlighted code stays foreground (rule above).
+   These are scoped to .sk-markdown so they apply whether the code lives in a
+   bare <pre> (React wrapper) or inside .sk-code-block (markdown.js render). */
+.sk-markdown .sk-md-tok-keyword     { color: hsl(var(--sk-accent)); }
+.sk-markdown .sk-md-tok-string      { color: hsl(var(--sk-success)); }
+.sk-markdown .sk-md-tok-number      { color: hsl(var(--sk-info)); }
+.sk-markdown .sk-md-tok-comment     { color: hsl(var(--sk-muted-foreground)); font-style: italic; }
+.sk-markdown .sk-md-tok-function    { color: hsl(var(--sk-foreground)); font-weight: 600; }
+.sk-markdown .sk-md-tok-punctuation { color: hsl(var(--sk-muted-foreground)); }
 
 /* Lists */
 .sk-markdown ul, .sk-markdown ol { margin: 0 0 1em; padding-left: var(--sk-space-6); }
@@ -112,7 +125,9 @@
 
 .sk-markdown hr { margin: 1.6em 0; border: none; border-top: var(--sk-border); }
 
-/* Tables — readable */
+/* Tables — readable. Wrap scrolls wide tables instead of overflowing the container. */
+.sk-markdown__table-wrap { overflow-x: auto; margin: 1em 0; }
+.sk-markdown__table-wrap > table { margin: 0; }
 .sk-markdown table { width: 100%; margin: 1em 0; border-collapse: collapse; font-size: var(--sk-font-size-sm); }
 .sk-markdown th, .sk-markdown td {
   padding: var(--sk-space-2) var(--sk-space-3);
@@ -129,7 +144,23 @@
   color: hsl(var(--sk-muted-foreground));
 }
 
-.sk-markdown img { max-width: 100%; border-radius: var(--sk-radius-md); border: var(--sk-border); }
+/* Figures & images */
+.sk-markdown img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--sk-radius-md);
+  border: var(--sk-border);
+}
+.sk-markdown figure { margin: 1.6em 0; }
+.sk-markdown figure img { margin: 0 auto; }
+.sk-markdown figcaption {
+  margin-top: var(--sk-space-2);
+  font-size: var(--sk-font-size-sm);
+  line-height: var(--sk-line-height-relaxed);
+  color: hsl(var(--sk-muted-foreground));
+  text-align: center;
+}
 
 /* Loading */
 .sk-markdown[data-loading] { position: relative; opacity: 0.6; }

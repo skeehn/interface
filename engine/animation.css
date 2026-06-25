@@ -420,6 +420,26 @@
 .sk-pop-out { animation: sk-pop-out var(--sk-anim-fast)   var(--sk-ease-sharp)  both; }
 .sk-scale-up { animation: sk-scale-up var(--sk-anim-normal) var(--sk-ease-spring) both; }
 
+/* Done / success feedback — copy-confirmed, tool/agent/thinking done states */
+@keyframes sk-done-pulse {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+@keyframes sk-success-flash {
+  0%   { box-shadow: 0 0 0 0 hsl(var(--sk-success) / 0.5); }
+  100% { box-shadow: 0 0 0 6px hsl(var(--sk-success) / 0); }
+}
+.sk-done-pulse    { animation: sk-done-pulse    var(--sk-anim-fast)   var(--sk-ease-spring) both; }
+.sk-success-flash { animation: sk-success-flash var(--sk-anim-normal) var(--sk-ease-sharp)  both; }
+
+/* Tokenized hover-lift — opt-in for surfaces that don't special-case the lift */
+.sk-lift { transition: transform var(--sk-transition), box-shadow var(--sk-transition-slow); }
+.sk-lift:hover:not(:disabled) { transform: translateY(var(--sk-lift-y)); box-shadow: var(--sk-elevation-hover); }
+@media (prefers-reduced-motion: reduce) {
+  .sk-lift:hover:not(:disabled) { transform: none; }
+}
+
 /* ============================================================
    PRINT — disable all animations
    ============================================================ */

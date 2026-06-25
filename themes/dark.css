@@ -27,6 +27,10 @@
   /* ═══ DITHER ═══ */
   --sk-dither-pattern:     var(--sk-dither-bayer);
   --sk-dither-opacity:     0.06;
+
+  /* ═══ ELEVATION — soft depth + phosphor-tinted hover ═══ */
+  --sk-panel-shadow:       var(--sk-shadow-md);
+  --sk-elevation-hover:    0 0 16px hsl(0 0% 100% / 0.08), var(--sk-shadow-lg);
 }
 
 /* Signature: Glow on interactive elements */

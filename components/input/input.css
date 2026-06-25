@@ -23,6 +23,7 @@
 .sk-input::placeholder { color: hsl(var(--sk-muted-foreground)); }
 .sk-input:hover { border-color: hsl(var(--sk-foreground) / 0.3); }
 .sk-input:focus { outline: none; border-color: hsl(var(--sk-ring)); box-shadow: 0 0 0 3px hsl(var(--sk-ring) / 0.18); }
+.sk-input:focus-visible { outline: var(--sk-focus-ring); outline-offset: var(--sk-focus-ring-offset); }
 .sk-input:disabled { opacity: 0.4; pointer-events: none; cursor: not-allowed; }
 
 /* Sizes */

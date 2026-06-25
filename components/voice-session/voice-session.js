@@ -9,13 +9,11 @@ class SkVoiceSession extends HTMLElement {
 
   connectedCallback() {
     this._initClock();
-    this._initWaveform();
     this._bindControls();
   }
 
   disconnectedCallback() {
     if (this._clockTimer) clearInterval(this._clockTimer);
-    if (this._waveformTimer) clearInterval(this._waveformTimer);
   }
 
   attributeChangedCallback(name, _old, value) {
@@ -45,27 +43,9 @@ class SkVoiceSession extends HTMLElement {
     this._clockTimer = setInterval(update, 1000);
   }
 
-  _initWaveform() {
-    const waveform = this.querySelector(".sk-voice-session__waveform");
-    if (!waveform) return;
-
-    const bars = waveform.querySelectorAll(".sk-voice-session__waveform-bar");
-    const status = this.dataset.status || "idle";
-
-    const animate = () => {
-      const isActive = status === "listening" || status === "speaking";
-      bars.forEach((bar) => {
-        const h = isActive ? Math.random() * 100 : 10;
-        bar.style.height = `${h}%`;
-      });
-    };
-
-    this._waveformTimer = setInterval(animate, 120);
-  }
-
   _onStatusChange(status) {
-    if (this._waveformTimer) clearInterval(this._waveformTimer);
-    this._initWaveform();
+    // Waveform animation is CSS-only (driven by [data-status] + @keyframes sk-voice-bar),
+    // so status changes need no imperative bar updates here — just notify listeners.
     this.dispatchEvent(new CustomEvent("voice:statuschange", { detail: { status }, bubbles: true }));
   }
 

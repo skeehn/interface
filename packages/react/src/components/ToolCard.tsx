@@ -38,7 +38,9 @@ export const ToolCard = React.forwardRef<HTMLDivElement, ToolCardProps>(
       >
         <div className="sk-tool-card__header">
           <span className="sk-tool-card__name">{name}</span>
-          <span className="sk-tool-card__status">{statusLabel ?? defaultLabels[status]}</span>
+          <span className="sk-tool-card__status" role="status" aria-live="polite">
+            {statusLabel ?? defaultLabels[status]}
+          </span>
         </div>
         <div className="sk-tool-card__body">{children}</div>
       </div>

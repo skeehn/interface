@@ -13,6 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://ui.skeehn.com"),
   title: {
     default: "skeehn — ASCII Native AI Components",
     template: "%s | skeehn",

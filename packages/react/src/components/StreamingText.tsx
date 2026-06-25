@@ -41,6 +41,8 @@ export const StreamingText = React.forwardRef<HTMLDivElement, StreamingTextProps
         className={`sk-streaming-text${className ? ` ${className}` : ''}`}
         data-caret={resolvedCaret}
         data-effect={effect}
+        aria-live="polite"
+        aria-busy={resolvedCaret ? true : undefined}
         {...rest}
       >
         {children}

@@ -9,10 +9,11 @@
     "dev": "cd apps/docs && bun run dev",
     "docs": "cd apps/docs && bun run dev",
     "test": "bun test",
-    "build": "bun run build:core && bun run build:react",
+    "build": "bun run build:core && bun run build:react && bun run build:mcp && bun run build:wc",
     "build:core": "cd packages/core && bun run build",
     "build:react": "cd packages/react && bun run build",
-    "build:all": "bun run build && bun run packages/mcp-server/package.json#build"
+    "build:mcp": "cd packages/mcp-server && bun run build",
+    "build:wc": "cd packages/wc && bun run build"
   },
   "devDependencies": {
     "@types/bun": "latest",

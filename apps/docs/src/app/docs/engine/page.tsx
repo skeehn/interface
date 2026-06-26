@@ -27,7 +27,7 @@ const BAYER8 = [
   [63, 31, 55, 23, 61, 29, 53, 21],
 ];
 
-type Algorithm = 'bayer' | 'floyd-steinberg' | 'atkinson';
+type Algorithm = 'bayer' | 'floyd-steinberg' | 'atkinson' | 'sierra';
 type Palette = 'blocks' | 'dots' | 'binary' | 'shades' | 'minimal';
 type BayerSize = 2 | 4 | 8;
 
@@ -174,6 +174,32 @@ function ditherImage(
             buf[(y + 1) * targetWidth + x + 1] += err * (1 / 16);
         }
 
+        const [r, g, b] = colors[i];
+        row.push({ char: chars[charIdx], r, g, b });
+      }
+      output.push(row);
+    }
+  } else if (algorithm === 'sierra') {
+    // Sierra-3 error diffusion — weights match @skeehn/core's DitherEngine.
+    const buf = Float32Array.from(lum);
+    const spread: [number, number, number][] = [
+      [1, 0, 5 / 32], [2, 0, 3 / 32],
+      [-2, 1, 2 / 32], [-1, 1, 4 / 32], [0, 1, 5 / 32], [1, 1, 4 / 32], [2, 1, 2 / 32],
+      [-1, 2, 2 / 32], [0, 2, 3 / 32], [1, 2, 2 / 32],
+    ];
+    for (let y = 0; y < targetHeight; y++) {
+      const row: ColorChar[] = [];
+      for (let x = 0; x < targetWidth; x++) {
+        const i = y * targetWidth + x;
+        const old = buf[i];
+        const charIdx = Math.round((clamp(old, 0, 255) / 255) * (chars.length - 1));
+        const newVal = (charIdx / (chars.length - 1)) * 255;
+        const err = old - newVal;
+        for (const [dx, dy, wgt] of spread) {
+          const nx = x + dx;
+          const ny = y + dy;
+          if (nx >= 0 && nx < targetWidth && ny < targetHeight) buf[ny * targetWidth + nx] += err * wgt;
+        }
         const [r, g, b] = colors[i];
         row.push({ char: chars[charIdx], r, g, b });
       }
@@ -530,7 +556,7 @@ export default function EnginePage() {
           <section>
             <SidebarLabel>Algorithm</SidebarLabel>
             <div className="space-y-1.5 mt-3">
-              {(['bayer', 'floyd-steinberg', 'atkinson'] as Algorithm[]).map(
+              {(['bayer', 'floyd-steinberg', 'atkinson', 'sierra'] as Algorithm[]).map(
                 (alg) => (
                   <SidebarRadio
                     key={alg}
@@ -543,7 +569,9 @@ export default function EnginePage() {
                         ? 'Bayer (ordered)'
                         : alg === 'floyd-steinberg'
                           ? 'Floyd-Steinberg'
-                          : 'Atkinson'
+                          : alg === 'atkinson'
+                            ? 'Atkinson'
+                            : 'Sierra'
                     }
                   />
                 )

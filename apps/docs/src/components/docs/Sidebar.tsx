@@ -25,6 +25,7 @@ const NAV_GROUPS: NavGroup[] = [
       { title: "AI SDK (drop-in)", href: "/docs/ai-sdk" },
       { title: "Blocks", href: "/docs/blocks" },
       { title: "Use with AI agents", href: "/docs/agents" },
+      { title: "Use anywhere (frameworks)", href: "/docs/frameworks" },
       { title: "CLI", href: "/docs/cli" },
     ],
   },

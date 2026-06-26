@@ -5,9 +5,11 @@
   "type": "module",
   "main": "./dist/index.js",
   "bin": {
-    "skeehn-mcp": "./dist/cli.js"
+    "skeehn-mcp": "dist/cli.js"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },
@@ -16,7 +18,17 @@
     "start": "node ./dist/cli.js",
     "test": "bun test"
   },
-  "keywords": ["skeehn", "mcp", "model-context-protocol", "ai", "agents", "ui", "components", "claude-code", "cursor"],
+  "keywords": [
+    "skeehn",
+    "mcp",
+    "model-context-protocol",
+    "ai",
+    "agents",
+    "ui",
+    "components",
+    "claude-code",
+    "cursor"
+  ],
   "license": "MIT",
   "engines": {
     "node": ">=18"

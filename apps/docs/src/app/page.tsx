@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import DitherCanvas from "@/components/DitherCanvas";
 import {
   Button,
   Card,
   CardBody,
   Badge,
   ChatBubble,
+  ChatInput,
   CodeBlock,
   ToolCard,
   ThinkingBlock,
@@ -54,74 +54,80 @@ export function Chat() {
 export default function HomePage() {
   return (
     <div className="bg-background text-foreground">
-      {/* ── NAV (dark editorial, persistent) ── */}
-      <nav data-theme="default" className="sticky top-0 z-50 border-b backdrop-blur-md"
-        style={{ background: "hsl(var(--sk-background) / 0.82)", borderColor: "hsl(var(--sk-border-color))", color: "hsl(var(--sk-foreground))" }}>
+      {/* ── NAV (solid, light) ── */}
+      <nav className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur-md">
         <div className="max-w-6xl mx-auto flex items-center justify-between px-6 h-16">
-          <Link href="/" className="font-semibold tracking-tight text-[0.95rem] flex items-center gap-2" style={{ color: "hsl(var(--sk-foreground))" }}>
-            <span style={{ color: "hsl(var(--sk-accent))" }}>▚</span> skeehn
+          <Link href="/" className="font-semibold tracking-tight text-[0.95rem] flex items-center gap-2">
+            <span className="text-accent">▚</span> skeehn
           </Link>
-          <div className="flex items-center gap-7 text-sm" style={{ color: "hsl(var(--sk-muted-foreground))" }}>
-            <Link href="/docs" className="hover:opacity-100 opacity-80 transition-opacity">Docs</Link>
-            <Link href="/docs/components" className="hover:opacity-100 opacity-80 transition-opacity">Components</Link>
-            <Link href="/docs/themes" className="hover:opacity-100 opacity-80 transition-opacity hidden sm:inline">Themes</Link>
-            <a href="https://github.com/skeehn/skeehn" target="_blank" rel="noopener noreferrer" className="hover:opacity-100 opacity-80 transition-opacity">GitHub</a>
+          <div className="flex items-center gap-7 text-sm text-muted-fg">
+            <Link href="/docs" className="hover:text-foreground transition-colors">Docs</Link>
+            <Link href="/docs/components" className="hover:text-foreground transition-colors">Components</Link>
+            <Link href="/docs/themes" className="hover:text-foreground transition-colors hidden sm:inline">Themes</Link>
+            <a href="https://github.com/skeehn/skeehn" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">GitHub</a>
           </div>
         </div>
       </nav>
 
-      {/* ── HERO (dark, live ASCII dither) ── */}
-      <section data-theme="default" className="relative isolate overflow-hidden"
-        style={{ background: "hsl(var(--sk-background))", color: "hsl(var(--sk-foreground))" }}>
-        {/* the actual engine, running */}
-        <div className="absolute inset-0 opacity-[0.55]" aria-hidden="true"><DitherCanvas /></div>
-        {/* legibility scrim — fade the dither toward the bg at the edges + bottom */}
-        <div className="absolute inset-0 pointer-events-none" aria-hidden="true"
-          style={{ background: "radial-gradient(95% 70% at 50% 24%, transparent 0%, hsl(var(--sk-background) / 0.55) 55%, hsl(var(--sk-background)) 92%)" }} />
-
-        <div className="relative max-w-4xl mx-auto px-6 pt-28 pb-14 text-center">
+      {/* ── HERO (clean light, real-component demo as the star) ── */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-x-0 top-0 h-[560px] pointer-events-none" aria-hidden="true"
+          style={{ background: "radial-gradient(60% 90% at 50% -10%, hsl(var(--sk-accent) / 0.08), transparent 70%)" }} />
+        <div className="relative max-w-3xl mx-auto px-6 pt-28 pb-12 text-center">
           <Link href="https://www.npmjs.com/org/skeehn" target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-[0.8rem] rounded-full pl-2 pr-3 py-1 mb-8 transition-colors"
-            style={{ color: "hsl(var(--sk-muted-foreground))", border: "1px solid hsl(var(--sk-border-color))", background: "hsl(var(--sk-surface) / 0.6)" }}>
-            <span className="font-medium rounded-full px-2 py-0.5 text-[0.72rem]" style={{ color: "hsl(var(--sk-accent))", background: "hsl(var(--sk-accent) / 0.12)" }}>v1.1</span>
+            className="inline-flex items-center gap-2 text-[0.8rem] text-muted-fg border border-border rounded-full pl-2 pr-3 py-1 mb-8 hover:border-foreground/20 transition-colors">
+            <span className="text-accent font-medium bg-accent/10 rounded-full px-2 py-0.5 text-[0.72rem]">v1.1</span>
             Live on npm &amp; the shadcn registry →
           </Link>
-          <h1 className="font-semibold tracking-[-0.03em] leading-[1.04] text-balance mx-auto max-w-3xl"
-            style={{ fontSize: "clamp(2.4rem, 5.4vw, 4rem)", color: "hsl(var(--sk-foreground))" }}>
-            Build an AI interface that looks like <span style={{ color: "hsl(var(--sk-accent))" }}>yours</span>, not theirs.
+          <h1 className="font-semibold tracking-[-0.035em] leading-[1.04] text-foreground text-balance mx-auto max-w-3xl"
+            style={{ fontSize: "clamp(2.5rem, 5.6vw, 4.25rem)" }}>
+            Build an AI interface that looks like <span className="text-accent">yours</span>, not theirs.
           </h1>
-          <p className="mt-6 text-lg leading-relaxed max-w-2xl mx-auto text-balance" style={{ color: "hsl(var(--sk-muted-foreground))" }}>
+          <p className="mt-6 text-lg text-muted-fg leading-relaxed max-w-2xl mx-auto text-balance">
             The open-source React component library for AI products — chat, streaming, reasoning, tool
             calls, agents. Copy the components into your app, theme them to your brand, own every line.
-            Zero runtime dependencies, eight themes, a real ASCII dither engine.
+            Zero runtime dependencies.
           </p>
           <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
             <Link href="/docs/getting-started"><Button variant="solid" size="lg">Get started</Button></Link>
             <Link href="/docs/ai-chat"><Button variant="outline" size="lg">See the live demo</Button></Link>
           </div>
-          <div className="mt-6 inline-flex items-center gap-2 text-sm font-mono" style={{ color: "hsl(var(--sk-muted-foreground))" }}>
+          <div className="mt-6 inline-flex items-center gap-2 text-sm text-muted-fg font-mono">
             <span className="opacity-50">$</span> npm i @skeehn/react
           </div>
         </div>
 
-        {/* product shot — a real AI conversation, floating on the dark ground */}
-        <div className="relative max-w-2xl mx-auto px-6 pb-28">
-          <Card style={{ boxShadow: "0 24px 80px hsl(0 0% 0% / 0.55)" }}>
-            <CardBody>
-              <div className="flex flex-col gap-3">
-                <ChatBubble role="user">Refactor <code>parseTree</code> to O(n) and explain the tradeoff.</ChatBubble>
-                <ThinkingBlock state="done" label="Thought for 3.2s" meta="412 tok" defaultExpanded={false}>
-                  Nested find() in the loop is O(n²). Hoist the lookup into a Map → one O(n) pass, +O(n) memory.
-                </ThinkingBlock>
-                <ChatBubble role="assistant">
-                  Replace the inner <code>find()</code> with a pre-built <code>Map</code> so each node is visited once:
-                </ChatBubble>
-                <CodeBlock language="ts" code={`const index = new Map(nodes.map(n => [n.id, n]));\nfor (const n of nodes) link(n, index.get(n.parent));`} />
-                <ToolCard name="search_codebase" status="success">3 matches in src/parse/*.ts — applied to parseTree.ts:42</ToolCard>
-              </div>
-            </CardBody>
-          </Card>
-          <p className="mt-4 text-center text-xs" style={{ color: "hsl(var(--sk-muted-foreground))" }}>A real exchange — chat, reasoning, code and a tool call, all skeehn components, in the Editorial theme.</p>
+        {/* hero demo — a real chat, framed as an app window */}
+        <div className="relative max-w-2xl mx-auto px-6 pb-24">
+          <div className="absolute -inset-x-6 -top-6 -bottom-6 pointer-events-none" aria-hidden="true"
+            style={{ background: "radial-gradient(50% 50% at 50% 42%, hsl(var(--sk-accent) / 0.08), transparent 72%)" }} />
+          <div className="relative rounded-2xl border border-border bg-background overflow-hidden"
+            style={{ boxShadow: "0 1px 1px hsl(220 18% 12% / 0.04), 0 24px 60px -20px hsl(220 18% 12% / 0.22)" }}>
+            <div className="flex items-center gap-2 px-4 h-11 border-b border-border bg-surface">
+              <span className="flex items-center gap-1.5" aria-hidden="true">
+                <span className="w-2.5 h-2.5 rounded-full" style={{ background: "hsl(var(--sk-border-color))" }} />
+                <span className="w-2.5 h-2.5 rounded-full" style={{ background: "hsl(var(--sk-border-color))" }} />
+                <span className="w-2.5 h-2.5 rounded-full" style={{ background: "hsl(var(--sk-border-color))" }} />
+              </span>
+              <span className="text-xs text-muted-fg font-mono ml-1">chat.tsx · skeehn</span>
+              <Badge variant="outline" className="ml-auto text-[0.65rem]">Editorial theme</Badge>
+            </div>
+            <div className="p-5 flex flex-col gap-3">
+              <ChatBubble role="user">Refactor <code>parseTree</code> to O(n) and explain the tradeoff.</ChatBubble>
+              <ThinkingBlock state="done" label="Thought for 3.2s" meta="412 tok" defaultExpanded={false}>
+                Nested find() in the loop is O(n²). Hoist the lookup into a Map → one O(n) pass, +O(n) memory.
+              </ThinkingBlock>
+              <ChatBubble role="assistant">
+                Replace the inner <code>find()</code> with a pre-built <code>Map</code> so each node is visited once:
+              </ChatBubble>
+              <div data-theme="default"><CodeBlock language="ts" code={`const index = new Map(nodes.map(n => [n.id, n]));\nfor (const n of nodes) link(n, index.get(n.parent));`} /></div>
+              <ToolCard name="search_codebase" status="success">3 matches in src/parse/*.ts — applied to parseTree.ts:42</ToolCard>
+            </div>
+            <div className="px-5 pb-5">
+              <ChatInput placeholder="Message skeehn…" disabled />
+            </div>
+          </div>
+          <p className="mt-4 text-center text-xs text-muted-fg">A real exchange — chat, reasoning, code, a tool call and an input, all skeehn components.</p>
         </div>
       </section>
 
@@ -148,8 +154,8 @@ export default function HomePage() {
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-10">
           {CAPABILITIES.map((c) => (
-            <div key={c.title} className="relative pl-4 border-l-2" style={{ borderColor: "hsl(var(--sk-accent) / 0.4)" }}>
-              <h3 className="font-semibold text-foreground mb-1.5">{c.title}</h3>
+            <div key={c.title}>
+              <h3 className="font-semibold text-foreground mb-1.5 flex items-center gap-2"><span className="text-accent font-mono text-xs">▚</span>{c.title}</h3>
               <p className="text-[0.95rem] text-muted-fg leading-relaxed">{c.body}</p>
             </div>
           ))}
@@ -162,7 +168,7 @@ export default function HomePage() {
           <div className="max-w-2xl mb-12">
             <p className="docs-label mb-3">Make it yours</p>
             <h2 className="font-semibold tracking-[-0.02em] text-foreground" style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.4rem)" }}>One component, every aesthetic</h2>
-            <p className="mt-3 text-muted-fg leading-relaxed">A clean, neutral default ships in the box — then eight themes take you as far as you want, from Editorial to green-phosphor Terminal to Brutalist, all driven by one token contract and a real-time ASCII dither engine. The same chat, three ways:</p>
+            <p className="mt-3 text-muted-fg leading-relaxed">A clean, neutral default ships in the box — then eight themes take you as far as you want, from Editorial to green-phosphor Terminal to Brutalist, all driven by one token contract. The same chat, three ways:</p>
           </div>
           <div className="grid md:grid-cols-3 gap-5">
             {THEMES.map((t) => (
@@ -229,35 +235,30 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── INSTALL / CTA (dark, dithered bookend) ── */}
-      <section data-theme="default" className="relative isolate overflow-hidden" style={{ background: "hsl(var(--sk-background))", color: "hsl(var(--sk-foreground))" }}>
-        <div className="absolute inset-0 opacity-[0.4]" aria-hidden="true"><DitherCanvas /></div>
-        <div className="absolute inset-0 pointer-events-none" aria-hidden="true"
-          style={{ background: "radial-gradient(90% 80% at 50% 40%, transparent, hsl(var(--sk-background) / 0.7) 60%, hsl(var(--sk-background)) 95%)" }} />
-        <div className="relative max-w-3xl mx-auto px-6 py-28 text-center">
-          <h2 className="font-semibold tracking-[-0.025em]" style={{ fontSize: "clamp(1.9rem, 4vw, 3rem)", color: "hsl(var(--sk-foreground))" }}>Ship your AI interface this afternoon</h2>
-          <p className="mt-4 text-lg max-w-lg mx-auto leading-relaxed" style={{ color: "hsl(var(--sk-muted-foreground))" }}>Wire the <code className="sk-code-inline">useChat</code> hook to your endpoint, drop in <code className="sk-code-inline">ChatBubble</code>, and you have a streaming chat UI. Then theme it.</p>
-          <div className="mt-10 text-left"><CodeBlock language="tsx" code={HERO_CODE} lineNumbers /></div>
-          <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-            <Link href="/docs/getting-started"><Button variant="solid" size="lg">Read the docs</Button></Link>
-            <Link href="/docs/components"><Button variant="outline" size="lg">Browse components</Button></Link>
-          </div>
-          <div className="mt-7 flex items-center justify-center gap-2">
-            <Badge color="success">0 dependencies</Badge>
-            <Badge variant="outline">MIT</Badge>
-            <Badge variant="outline">React 18+</Badge>
-          </div>
+      {/* ── INSTALL / CTA (clean light) ── */}
+      <section className="max-w-3xl mx-auto px-6 py-28 text-center">
+        <h2 className="font-semibold tracking-[-0.025em] text-foreground" style={{ fontSize: "clamp(1.9rem, 4vw, 3rem)" }}>Ship your AI interface this afternoon</h2>
+        <p className="mt-4 text-lg text-muted-fg max-w-lg mx-auto leading-relaxed">Wire the <code className="sk-code-inline">useChat</code> hook to your endpoint, drop in <code className="sk-code-inline">ChatBubble</code>, and you have a streaming chat UI. Then theme it.</p>
+        <div className="mt-10 text-left" data-theme="default"><CodeBlock language="tsx" code={HERO_CODE} lineNumbers /></div>
+        <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+          <Link href="/docs/getting-started"><Button variant="solid" size="lg">Read the docs</Button></Link>
+          <Link href="/docs/components"><Button variant="outline" size="lg">Browse components</Button></Link>
+        </div>
+        <div className="mt-7 flex items-center justify-center gap-2">
+          <Badge color="success">0 dependencies</Badge>
+          <Badge variant="outline">MIT</Badge>
+          <Badge variant="outline">React 18+</Badge>
         </div>
       </section>
 
-      {/* ── FOOTER (dark) ── */}
-      <footer data-theme="default" style={{ background: "hsl(var(--sk-background))", color: "hsl(var(--sk-muted-foreground))" }}>
-        <div className="max-w-6xl mx-auto px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
-          <p>Built by <span className="font-medium" style={{ color: "hsl(var(--sk-foreground))" }}>skeehn</span> · MIT License · Open source</p>
+      {/* ── FOOTER ── */}
+      <footer className="border-t border-border">
+        <div className="max-w-6xl mx-auto px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-fg">
+          <p>Built by <span className="text-foreground font-medium">skeehn</span> · MIT License · Open source</p>
           <div className="flex items-center gap-6">
-            <a href="https://github.com/skeehn/skeehn" target="_blank" rel="noopener noreferrer" className="opacity-80 hover:opacity-100 transition-opacity">GitHub</a>
-            <a href="https://www.npmjs.com/org/skeehn" target="_blank" rel="noopener noreferrer" className="opacity-80 hover:opacity-100 transition-opacity">npm</a>
-            <Link href="/docs" className="opacity-80 hover:opacity-100 transition-opacity">Docs</Link>
+            <a href="https://github.com/skeehn/skeehn" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">GitHub</a>
+            <a href="https://www.npmjs.com/org/skeehn" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">npm</a>
+            <Link href="/docs" className="hover:text-foreground transition-colors">Docs</Link>
           </div>
         </div>
       </footer>

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import DitherCanvas from "@/components/DitherCanvas";
 import {
   Button,
   Card,
@@ -18,7 +19,6 @@ const THEMES = [
   { id: "terminal", label: "Terminal" },
 ] as const;
 
-// The AI-interface surface skeehn covers — so you don't build it from scratch.
 const CAPABILITIES = [
   { title: "Chat & messages", body: "Bubbles for user, assistant, tool and system roles — grouped, timestamped, with hover actions." },
   { title: "Streaming", body: "Token-paced streaming text with a real caret and sticky auto-scroll — not cheap per-token flicker." },
@@ -28,10 +28,9 @@ const CAPABILITIES = [
   { title: "Agents & voice", body: "Agent status, typing indicators, voice sessions with a live waveform, and prompt suggestions." },
 ] as const;
 
-// Why pick skeehn over the generic kit.
 const WHY = [
   { title: "You own the code", body: "Copy components into your repo with the CLI or shadcn registry — or just npm i. No black box, no lock-in, edit anything." },
-  { title: "Theme it to your brand", body: "One token contract, seven built-in skins, or your own. Flip one data-attribute and the whole UI reskins — no rewrites." },
+  { title: "Theme it to your brand", body: "One token contract, eight built-in skins, or your own. Flip one data-attribute and the whole UI reskins — no rewrites." },
   { title: "Built for AI, not bolted on", body: "15 components shaped for real AI UX — streaming, reasoning, tools, agents — on top of the 14 core primitives you'd build anyway." },
   { title: "Zero runtime dependencies", body: "Plain CSS with an optional React wrapper. Works with any framework, with server components, even without JavaScript." },
 ] as const;
@@ -55,50 +54,59 @@ export function Chat() {
 export default function HomePage() {
   return (
     <div className="bg-background text-foreground">
-      {/* ── NAV ── */}
-      <nav className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
+      {/* ── NAV (dark editorial, persistent) ── */}
+      <nav data-theme="default" className="sticky top-0 z-50 border-b backdrop-blur-md"
+        style={{ background: "hsl(var(--sk-background) / 0.82)", borderColor: "hsl(var(--sk-border-color))", color: "hsl(var(--sk-foreground))" }}>
         <div className="max-w-6xl mx-auto flex items-center justify-between px-6 h-16">
-          <Link href="/" className="font-semibold tracking-tight text-[0.95rem] flex items-center gap-2">
-            <span className="text-accent">▚</span> skeehn
+          <Link href="/" className="font-semibold tracking-tight text-[0.95rem] flex items-center gap-2" style={{ color: "hsl(var(--sk-foreground))" }}>
+            <span style={{ color: "hsl(var(--sk-accent))" }}>▚</span> skeehn
           </Link>
-          <div className="flex items-center gap-7 text-sm text-muted-fg">
-            <Link href="/docs" className="hover:text-foreground transition-colors">Docs</Link>
-            <Link href="/docs/components" className="hover:text-foreground transition-colors">Components</Link>
-            <Link href="/docs/themes" className="hover:text-foreground transition-colors hidden sm:inline">Themes</Link>
-            <a href="https://github.com/skeehn/skeehn" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">GitHub</a>
+          <div className="flex items-center gap-7 text-sm" style={{ color: "hsl(var(--sk-muted-foreground))" }}>
+            <Link href="/docs" className="hover:opacity-100 opacity-80 transition-opacity">Docs</Link>
+            <Link href="/docs/components" className="hover:opacity-100 opacity-80 transition-opacity">Components</Link>
+            <Link href="/docs/themes" className="hover:opacity-100 opacity-80 transition-opacity hidden sm:inline">Themes</Link>
+            <a href="https://github.com/skeehn/skeehn" target="_blank" rel="noopener noreferrer" className="hover:opacity-100 opacity-80 transition-opacity">GitHub</a>
           </div>
         </div>
       </nav>
 
-      {/* ── HERO ── */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-x-0 top-0 h-[480px] pointer-events-none" aria-hidden="true"
-          style={{ background: "radial-gradient(60% 100% at 50% 0%, hsl(var(--sk-accent) / 0.07), transparent 70%)" }} />
-        <div className="relative max-w-4xl mx-auto px-6 pt-28 pb-16 text-center">
-          <Link href="https://github.com/skeehn/skeehn" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-[0.8rem] text-muted-fg border border-border rounded-full pl-2 pr-3 py-1 mb-8 hover:border-foreground/20 transition-colors">
-            <span className="text-accent font-medium bg-accent/10 rounded-full px-2 py-0.5 text-[0.72rem]">Open source</span>
-            MIT-licensed · on npm &amp; the shadcn registry →
+      {/* ── HERO (dark, live ASCII dither) ── */}
+      <section data-theme="default" className="relative isolate overflow-hidden"
+        style={{ background: "hsl(var(--sk-background))", color: "hsl(var(--sk-foreground))" }}>
+        {/* the actual engine, running */}
+        <div className="absolute inset-0 opacity-[0.55]" aria-hidden="true"><DitherCanvas /></div>
+        {/* legibility scrim — fade the dither toward the bg at the edges + bottom */}
+        <div className="absolute inset-0 pointer-events-none" aria-hidden="true"
+          style={{ background: "radial-gradient(95% 70% at 50% 24%, transparent 0%, hsl(var(--sk-background) / 0.55) 55%, hsl(var(--sk-background)) 92%)" }} />
+
+        <div className="relative max-w-4xl mx-auto px-6 pt-28 pb-14 text-center">
+          <Link href="https://www.npmjs.com/org/skeehn" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-[0.8rem] rounded-full pl-2 pr-3 py-1 mb-8 transition-colors"
+            style={{ color: "hsl(var(--sk-muted-foreground))", border: "1px solid hsl(var(--sk-border-color))", background: "hsl(var(--sk-surface) / 0.6)" }}>
+            <span className="font-medium rounded-full px-2 py-0.5 text-[0.72rem]" style={{ color: "hsl(var(--sk-accent))", background: "hsl(var(--sk-accent) / 0.12)" }}>v1.1</span>
+            Live on npm &amp; the shadcn registry →
           </Link>
-          <h1 className="font-semibold tracking-[-0.03em] leading-[1.06] text-foreground text-balance mx-auto max-w-3xl" style={{ fontSize: "clamp(2.2rem, 5vw, 3.6rem)" }}>
-            Build an AI interface that looks like yours, not theirs.
+          <h1 className="font-semibold tracking-[-0.03em] leading-[1.04] text-balance mx-auto max-w-3xl"
+            style={{ fontSize: "clamp(2.4rem, 5.4vw, 4rem)", color: "hsl(var(--sk-foreground))" }}>
+            Build an AI interface that looks like <span style={{ color: "hsl(var(--sk-accent))" }}>yours</span>, not theirs.
           </h1>
-          <p className="mt-6 text-lg text-muted-fg leading-relaxed max-w-2xl mx-auto text-balance">
-            skeehn is the open-source React component library for AI products — chat, streaming, reasoning,
-            tool calls, agents. Copy the components into your app, theme them to your brand, and own every
-            line. Zero runtime dependencies.
+          <p className="mt-6 text-lg leading-relaxed max-w-2xl mx-auto text-balance" style={{ color: "hsl(var(--sk-muted-foreground))" }}>
+            The open-source React component library for AI products — chat, streaming, reasoning, tool
+            calls, agents. Copy the components into your app, theme them to your brand, own every line.
+            Zero runtime dependencies, eight themes, a real ASCII dither engine.
           </p>
           <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
             <Link href="/docs/getting-started"><Button variant="solid" size="lg">Get started</Button></Link>
             <Link href="/docs/ai-chat"><Button variant="outline" size="lg">See the live demo</Button></Link>
           </div>
-          <div className="mt-6 inline-flex items-center gap-2 text-sm text-muted-fg font-mono">
-            <span className="opacity-50">$</span> npx skeehn add chat-bubble
+          <div className="mt-6 inline-flex items-center gap-2 text-sm font-mono" style={{ color: "hsl(var(--sk-muted-foreground))" }}>
+            <span className="opacity-50">$</span> npm i @skeehn/react
           </div>
         </div>
 
-        {/* product shot — a real AI conversation built from skeehn components */}
-        <div className="relative max-w-2xl mx-auto px-6 pb-24">
-          <Card>
+        {/* product shot — a real AI conversation, floating on the dark ground */}
+        <div className="relative max-w-2xl mx-auto px-6 pb-28">
+          <Card style={{ boxShadow: "0 24px 80px hsl(0 0% 0% / 0.55)" }}>
             <CardBody>
               <div className="flex flex-col gap-3">
                 <ChatBubble role="user">Refactor <code>parseTree</code> to O(n) and explain the tradeoff.</ChatBubble>
@@ -108,12 +116,12 @@ export default function HomePage() {
                 <ChatBubble role="assistant">
                   Replace the inner <code>find()</code> with a pre-built <code>Map</code> so each node is visited once:
                 </ChatBubble>
-                <div data-theme="default"><CodeBlock language="ts" code={`const index = new Map(nodes.map(n => [n.id, n]));\nfor (const n of nodes) link(n, index.get(n.parent));`} /></div>
+                <CodeBlock language="ts" code={`const index = new Map(nodes.map(n => [n.id, n]));\nfor (const n of nodes) link(n, index.get(n.parent));`} />
                 <ToolCard name="search_codebase" status="success">3 matches in src/parse/*.ts — applied to parseTree.ts:42</ToolCard>
               </div>
             </CardBody>
           </Card>
-          <p className="mt-4 text-center text-xs text-muted-fg">A real exchange — chat, reasoning, code and a tool call, all skeehn components.</p>
+          <p className="mt-4 text-center text-xs" style={{ color: "hsl(var(--sk-muted-foreground))" }}>A real exchange — chat, reasoning, code and a tool call, all skeehn components, in the Editorial theme.</p>
         </div>
       </section>
 
@@ -132,98 +140,104 @@ export default function HomePage() {
       </section>
 
       {/* ── CAPABILITIES ── */}
-      <section className="bg-surface border-y border-border">
-        <div className="max-w-6xl mx-auto px-6 py-24">
-          <div className="max-w-2xl mb-14">
-            <p className="docs-label mb-3">What you get</p>
-            <h2 className="font-semibold tracking-[-0.02em] text-foreground" style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.4rem)" }}>Everything an AI product needs</h2>
-            <p className="mt-3 text-muted-fg leading-relaxed">Stop rebuilding the same chat surface for every project. skeehn ships the full AI-interface layer — polished, accessible, and tested.</p>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-10">
-            {CAPABILITIES.map((c) => (
-              <div key={c.title}>
-                <h3 className="font-semibold text-foreground mb-1.5">{c.title}</h3>
-                <p className="text-[0.95rem] text-muted-fg leading-relaxed">{c.body}</p>
-              </div>
-            ))}
-          </div>
+      <section className="max-w-6xl mx-auto px-6 py-24">
+        <div className="max-w-2xl mb-14">
+          <p className="docs-label mb-3">What you get</p>
+          <h2 className="font-semibold tracking-[-0.02em] text-foreground" style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.4rem)" }}>Everything an AI product needs</h2>
+          <p className="mt-3 text-muted-fg leading-relaxed">Stop rebuilding the same chat surface for every project. skeehn ships the full AI-interface layer — polished, accessible, and tested.</p>
+        </div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-10">
+          {CAPABILITIES.map((c) => (
+            <div key={c.title} className="relative pl-4 border-l-2" style={{ borderColor: "hsl(var(--sk-accent) / 0.4)" }}>
+              <h3 className="font-semibold text-foreground mb-1.5">{c.title}</h3>
+              <p className="text-[0.95rem] text-muted-fg leading-relaxed">{c.body}</p>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* ── THEMES STRIP ── */}
-      <section className="max-w-6xl mx-auto px-6 py-24">
-        <div className="max-w-2xl mb-12">
-          <p className="docs-label mb-3">Make it yours</p>
-          <h2 className="font-semibold tracking-[-0.02em] text-foreground" style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.4rem)" }}>One component, every aesthetic</h2>
-          <p className="mt-3 text-muted-fg leading-relaxed">A clean, neutral default ships in the box — then eight themes let you go as far as you want, from Editorial to green-phosphor Terminal to Brutalist, all powered by a real-time ASCII dither engine. Or define your own. The same chat component, three ways:</p>
-        </div>
-        <div className="grid md:grid-cols-3 gap-5">
-          {THEMES.map((t) => (
-            <div key={t.id} data-theme={t.id} className="rounded-xl overflow-hidden border" style={{ background: "hsl(var(--sk-background))", color: "hsl(var(--sk-foreground))", borderColor: "hsl(var(--sk-border-color))" }}>
-              <div className="flex items-center justify-between px-4 py-2.5 border-b" style={{ borderColor: "hsl(var(--sk-border-color))" }}>
-                <span className="text-xs font-mono uppercase tracking-wider" style={{ color: "hsl(var(--sk-muted-foreground))" }}>{t.label}</span>
-                <span className="w-2 h-2 rounded-full" style={{ background: "hsl(var(--sk-accent))" }} />
+      <section className="bg-surface border-y border-border">
+        <div className="max-w-6xl mx-auto px-6 py-24">
+          <div className="max-w-2xl mb-12">
+            <p className="docs-label mb-3">Make it yours</p>
+            <h2 className="font-semibold tracking-[-0.02em] text-foreground" style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.4rem)" }}>One component, every aesthetic</h2>
+            <p className="mt-3 text-muted-fg leading-relaxed">A clean, neutral default ships in the box — then eight themes take you as far as you want, from Editorial to green-phosphor Terminal to Brutalist, all driven by one token contract and a real-time ASCII dither engine. The same chat, three ways:</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-5">
+            {THEMES.map((t) => (
+              <div key={t.id} data-theme={t.id} className="rounded-xl overflow-hidden border" style={{ background: "hsl(var(--sk-background))", color: "hsl(var(--sk-foreground))", borderColor: "hsl(var(--sk-border-color))" }}>
+                <div className="flex items-center justify-between px-4 py-2.5 border-b" style={{ borderColor: "hsl(var(--sk-border-color))" }}>
+                  <span className="text-xs font-mono uppercase tracking-wider" style={{ color: "hsl(var(--sk-muted-foreground))" }}>{t.label}</span>
+                  <span className="w-2 h-2 rounded-full" style={{ background: "hsl(var(--sk-accent))" }} />
+                </div>
+                <div className="p-4 flex flex-col gap-2.5">
+                  <ChatBubble role="user">How does dithering work?</ChatBubble>
+                  <ChatBubble role="assistant">It thresholds pixels against a Bayer matrix to fake more shades.</ChatBubble>
+                  <div className="pt-1"><Button variant="solid" size="sm">Send</Button></div>
+                </div>
               </div>
-              <div className="p-4 flex flex-col gap-2.5">
-                <ChatBubble role="user">How does dithering work?</ChatBubble>
-                <ChatBubble role="assistant">It thresholds pixels against a Bayer matrix to fake more shades.</ChatBubble>
-                <div className="pt-1"><Button variant="solid" size="sm">Send</Button></div>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
+          <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2">
+            <Link href="/docs/themes" className="text-sm text-accent hover:underline">Browse all eight themes →</Link>
+            <Link href="/docs/theme-generator" className="text-sm text-accent hover:underline">Generate one from your brand color →</Link>
+          </div>
         </div>
-        <div className="mt-6"><Link href="/docs/themes" className="text-sm text-accent hover:underline">Browse all seven themes →</Link></div>
       </section>
 
       {/* ── WHY ── */}
+      <section className="max-w-6xl mx-auto px-6 py-24">
+        <div className="max-w-2xl mb-14">
+          <p className="docs-label mb-3">Why skeehn</p>
+          <h2 className="font-semibold tracking-[-0.02em] text-foreground" style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.4rem)" }}>A library, not a lock-in</h2>
+          <p className="mt-3 text-muted-fg leading-relaxed">Most AI kits hand you a black box that looks like everyone else&rsquo;s. skeehn hands you the source.</p>
+        </div>
+        <div className="grid sm:grid-cols-2 gap-x-12 gap-y-12">
+          {WHY.map((f) => (
+            <div key={f.title}>
+              <div className="w-9 h-9 rounded-lg bg-accent/10 text-accent flex items-center justify-center mb-4 font-mono text-sm">▚</div>
+              <h3 className="font-semibold text-foreground mb-2">{f.title}</h3>
+              <p className="text-[0.95rem] text-muted-fg leading-relaxed">{f.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── CATALOG ── */}
       <section className="bg-surface border-y border-border">
         <div className="max-w-6xl mx-auto px-6 py-24">
-          <div className="max-w-2xl mb-14">
-            <p className="docs-label mb-3">Why skeehn</p>
-            <h2 className="font-semibold tracking-[-0.02em] text-foreground" style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.4rem)" }}>A library, not a lock-in</h2>
-            <p className="mt-3 text-muted-fg leading-relaxed">Most AI kits hand you a black box that looks like everyone else&rsquo;s. skeehn hands you the source.</p>
+          <div className="max-w-2xl mb-12">
+            <p className="docs-label mb-3">The catalog</p>
+            <h2 className="font-semibold tracking-[-0.02em] text-foreground" style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.4rem)" }}>32 components, one install</h2>
+            <p className="mt-3 text-muted-fg leading-relaxed">14 core · 15 AI · 3 layout, viz &amp; motion bundles. Each ships as plain CSS with an optional React wrapper — add one or add them all.</p>
           </div>
-          <div className="grid sm:grid-cols-2 gap-x-12 gap-y-12">
-            {WHY.map((f) => (
-              <div key={f.title}>
-                <div className="w-9 h-9 rounded-lg bg-accent/10 text-accent flex items-center justify-center mb-4 font-mono text-sm">▚</div>
-                <h3 className="font-semibold text-foreground mb-2">{f.title}</h3>
-                <p className="text-[0.95rem] text-muted-fg leading-relaxed">{f.body}</p>
+          <div className="space-y-9">
+            {GROUPS.map((g) => (
+              <div key={g.label}>
+                <p className="text-xs uppercase tracking-[0.16em] text-muted-fg mb-3">{g.label}</p>
+                <div className="flex flex-wrap gap-2">
+                  {g.items.map(([name, slug]) => (
+                    <Link key={slug} href={`/docs/components/${slug}`} className="text-sm bg-background border border-border rounded-lg px-3 py-1.5 text-muted-fg hover:text-foreground hover:border-foreground/20 transition-colors">
+                      {name}
+                    </Link>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── CATALOG ── */}
-      <section className="max-w-6xl mx-auto px-6 py-24">
-        <div className="max-w-2xl mb-12">
-          <p className="docs-label mb-3">The catalog</p>
-          <h2 className="font-semibold tracking-[-0.02em] text-foreground" style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.4rem)" }}>32 components, one install</h2>
-          <p className="mt-3 text-muted-fg leading-relaxed">14 core · 15 AI · 3 layout, viz &amp; motion bundles. Each ships as plain CSS with an optional React wrapper — add one or add them all.</p>
-        </div>
-        <div className="space-y-9">
-          {GROUPS.map((g) => (
-            <div key={g.label}>
-              <p className="text-xs uppercase tracking-[0.16em] text-muted-fg mb-3">{g.label}</p>
-              <div className="flex flex-wrap gap-2">
-                {g.items.map(([name, slug]) => (
-                  <Link key={slug} href={`/docs/components/${slug}`} className="text-sm bg-surface border border-border rounded-lg px-3 py-1.5 text-muted-fg hover:text-foreground hover:border-foreground/20 transition-colors">
-                    {name}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── INSTALL / CTA ── */}
-      <section className="bg-surface border-t border-border">
-        <div className="max-w-3xl mx-auto px-6 py-28 text-center">
-          <h2 className="font-semibold tracking-[-0.025em] text-foreground" style={{ fontSize: "clamp(1.9rem, 4vw, 3rem)" }}>Ship your AI interface this afternoon</h2>
-          <p className="mt-4 text-lg text-muted-fg max-w-lg mx-auto leading-relaxed">Wire the <code className="sk-code-inline">useChat</code> hook to your endpoint, drop in <code className="sk-code-inline">ChatBubble</code>, and you have a streaming chat UI. Then theme it.</p>
-          <div className="mt-10 text-left" data-theme="default"><CodeBlock language="tsx" code={HERO_CODE} lineNumbers /></div>
+      {/* ── INSTALL / CTA (dark, dithered bookend) ── */}
+      <section data-theme="default" className="relative isolate overflow-hidden" style={{ background: "hsl(var(--sk-background))", color: "hsl(var(--sk-foreground))" }}>
+        <div className="absolute inset-0 opacity-[0.4]" aria-hidden="true"><DitherCanvas /></div>
+        <div className="absolute inset-0 pointer-events-none" aria-hidden="true"
+          style={{ background: "radial-gradient(90% 80% at 50% 40%, transparent, hsl(var(--sk-background) / 0.7) 60%, hsl(var(--sk-background)) 95%)" }} />
+        <div className="relative max-w-3xl mx-auto px-6 py-28 text-center">
+          <h2 className="font-semibold tracking-[-0.025em]" style={{ fontSize: "clamp(1.9rem, 4vw, 3rem)", color: "hsl(var(--sk-foreground))" }}>Ship your AI interface this afternoon</h2>
+          <p className="mt-4 text-lg max-w-lg mx-auto leading-relaxed" style={{ color: "hsl(var(--sk-muted-foreground))" }}>Wire the <code className="sk-code-inline">useChat</code> hook to your endpoint, drop in <code className="sk-code-inline">ChatBubble</code>, and you have a streaming chat UI. Then theme it.</p>
+          <div className="mt-10 text-left"><CodeBlock language="tsx" code={HERO_CODE} lineNumbers /></div>
           <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
             <Link href="/docs/getting-started"><Button variant="solid" size="lg">Read the docs</Button></Link>
             <Link href="/docs/components"><Button variant="outline" size="lg">Browse components</Button></Link>
@@ -236,14 +250,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── FOOTER ── */}
-      <footer className="border-t border-border">
-        <div className="max-w-6xl mx-auto px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-fg">
-          <p>Built by <span className="text-foreground font-medium">skeehn</span> · MIT License · Open source</p>
+      {/* ── FOOTER (dark) ── */}
+      <footer data-theme="default" style={{ background: "hsl(var(--sk-background))", color: "hsl(var(--sk-muted-foreground))" }}>
+        <div className="max-w-6xl mx-auto px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
+          <p>Built by <span className="font-medium" style={{ color: "hsl(var(--sk-foreground))" }}>skeehn</span> · MIT License · Open source</p>
           <div className="flex items-center gap-6">
-            <a href="https://github.com/skeehn/skeehn" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">GitHub</a>
-            <a href="https://www.npmjs.com/org/skeehn" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">npm</a>
-            <Link href="/docs" className="hover:text-foreground transition-colors">Docs</Link>
+            <a href="https://github.com/skeehn/skeehn" target="_blank" rel="noopener noreferrer" className="opacity-80 hover:opacity-100 transition-opacity">GitHub</a>
+            <a href="https://www.npmjs.com/org/skeehn" target="_blank" rel="noopener noreferrer" className="opacity-80 hover:opacity-100 transition-opacity">npm</a>
+            <Link href="/docs" className="opacity-80 hover:opacity-100 transition-opacity">Docs</Link>
           </div>
         </div>
       </footer>

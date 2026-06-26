@@ -81,23 +81,12 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { title: "Overview", href: "/docs/themes" },
       { title: "Brand Generator", href: "/docs/theme-generator" },
-      { title: "Default", href: "/docs/themes/default" },
-      { title: "Dark", href: "/docs/themes/dark" },
-      { title: "Terminal", href: "/docs/themes/terminal" },
-      { title: "Brutal", href: "/docs/themes/brutal" },
-      { title: "Grain", href: "/docs/themes/grain" },
-      { title: "Print", href: "/docs/themes/print" },
-      { title: "Mardi Gras", href: "/docs/themes/mardi-gras" },
     ],
   },
   {
     title: "Engine",
     items: [
-      { title: "Playground", href: "/docs/engine" },
-      { title: "Dither Patterns", href: "/docs/engine/dither" },
-      { title: "Animations", href: "/docs/engine/animation" },
-      { title: "Tokens", href: "/docs/engine/tokens" },
-      { title: "Canvas API", href: "/docs/engine/canvas" },
+      { title: "ASCII Engine", href: "/docs/engine" },
     ],
   },
   {

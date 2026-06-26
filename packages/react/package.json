@@ -9,29 +9,61 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "import": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
-      "require": { "types": "./dist/index.d.cts", "default": "./dist/index.cjs" }
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./hooks": {
-      "import": { "types": "./dist/hooks/index.d.ts", "default": "./dist/hooks/index.js" },
-      "require": { "types": "./dist/hooks/index.d.cts", "default": "./dist/hooks/index.cjs" }
+      "import": {
+        "types": "./dist/hooks/index.d.ts",
+        "default": "./dist/hooks/index.js"
+      },
+      "require": {
+        "types": "./dist/hooks/index.d.cts",
+        "default": "./dist/hooks/index.cjs"
+      }
     },
     "./gl": {
-      "import": { "types": "./dist/gl/index.d.ts", "default": "./dist/gl/index.js" },
-      "require": { "types": "./dist/gl/index.d.cts", "default": "./dist/gl/index.cjs" }
+      "import": {
+        "types": "./dist/gl/index.d.ts",
+        "default": "./dist/gl/index.js"
+      },
+      "require": {
+        "types": "./dist/gl/index.d.cts",
+        "default": "./dist/gl/index.cjs"
+      }
     },
     "./ai": {
-      "import": { "types": "./dist/ai/index.d.ts", "default": "./dist/ai/index.js" },
-      "require": { "types": "./dist/ai/index.d.cts", "default": "./dist/ai/index.cjs" }
+      "import": {
+        "types": "./dist/ai/index.d.ts",
+        "default": "./dist/ai/index.js"
+      },
+      "require": {
+        "types": "./dist/ai/index.d.cts",
+        "default": "./dist/ai/index.cjs"
+      }
     },
     "./blocks": {
-      "import": { "types": "./dist/blocks/index.d.ts", "default": "./dist/blocks/index.js" },
-      "require": { "types": "./dist/blocks/index.d.cts", "default": "./dist/blocks/index.cjs" }
+      "import": {
+        "types": "./dist/blocks/index.d.ts",
+        "default": "./dist/blocks/index.js"
+      },
+      "require": {
+        "types": "./dist/blocks/index.d.cts",
+        "default": "./dist/blocks/index.cjs"
+      }
     },
     "./package.json": "./package.json"
   },
   "files": ["dist/"],
-  "engines": { "node": ">=18" },
+  "engines": {
+    "node": ">=18"
+  },
   "typesVersions": {
     "*": {
       "hooks": ["./dist/hooks/index.d.ts"],
@@ -45,9 +77,15 @@
     "react-dom": ">=18"
   },
   "peerDependenciesMeta": {
-    "@react-three/fiber": { "optional": true },
-    "@react-three/postprocessing": { "optional": true },
-    "three": { "optional": true }
+    "@react-three/fiber": {
+      "optional": true
+    },
+    "@react-three/postprocessing": {
+      "optional": true
+    },
+    "three": {
+      "optional": true
+    }
   },
   "scripts": {
     "build": "tsdown"
@@ -60,6 +98,7 @@
     "@testing-library/user-event": "^14",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "axe-core": "^4.12.1",
     "react": "^19",
     "react-dom": "^19",
     "tsdown": "^0.22.3"

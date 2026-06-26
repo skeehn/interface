@@ -20,6 +20,9 @@ jobs:
       - name: Install dependencies
         run: bun install
 
+      - name: Build packages (validates the build + enables size budgets)
+        run: bun run build
+
       - name: Run tests
         run: bun test
 

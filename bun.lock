@@ -57,6 +57,7 @@
         "@testing-library/user-event": "^14",
         "@types/react": "^19",
         "@types/react-dom": "^19",
+        "axe-core": "^4.12.1",
         "react": "^19",
         "react-dom": "^19",
         "tsdown": "^0.22.3",

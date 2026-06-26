@@ -1,7 +1,7 @@
 {
   "name": "skeehn-monorepo",
   "private": true,
-  "workspaces": ["packages/*", "apps/*"],
+  "workspaces": ["packages/*", "apps/*", "examples/*"],
   "bin": {
     "skeehn": "./cli/index.ts"
   },

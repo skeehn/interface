@@ -65,3 +65,16 @@ jobs:
         run: npm publish --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Build + verify @skeehn/wc
+        working-directory: packages/wc
+        run: |
+          bun run build
+          bunx publint
+          test -f dist/index.mjs && test -f dist/index.cjs
+
+      - name: Publish @skeehn/wc
+        working-directory: packages/wc
+        run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

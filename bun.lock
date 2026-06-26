@@ -87,6 +87,13 @@
         "react-dom": ">=18",
       },
     },
+    "packages/wc": {
+      "name": "@skeehn/wc",
+      "version": "1.1.0",
+      "devDependencies": {
+        "tsdown": "^0.22.3",
+      },
+    },
   },
   "trustedDependencies": [
     "sharp",
@@ -316,6 +323,8 @@
     "@skeehn/mcp-server": ["@skeehn/mcp-server@workspace:packages/mcp-server"],
 
     "@skeehn/react": ["@skeehn/react@workspace:packages/react"],
+
+    "@skeehn/wc": ["@skeehn/wc@workspace:packages/wc"],
 
     "@stablelib/base64": ["@stablelib/base64@1.0.1", "", {}, "sha512-1bnPQqSxSuc3Ii6MhBysoWCg58j97aUjuCSZrGSmDxNqtytIi0k8utUenAwTZN4V5mXXYGsVUI9zeBqy+jBOSQ=="],
 

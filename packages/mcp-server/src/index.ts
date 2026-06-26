@@ -20,8 +20,9 @@ const execFile = promisify(execFileCallback);
 
 // ─── Input Allowlist Validators ──────────────────────────────────────────────
 
+const THEMES = ["light", "dark", "default", "brutal", "terminal", "print", "grain", "mardi-gras"] as const;
 const VALID_COMPONENT_SLUG = /^[a-z][a-z0-9-]{0,48}$/;
-const VALID_THEME = new Set(["default", "brutal", "terminal", "print", "grain"]);
+const VALID_THEME = new Set<string>(THEMES);
 const VALID_PATH = /^[-a-zA-Z0-9._/~]{1,256}$/;
 
 function assertSafeComponentName(name: string): void {
@@ -40,8 +41,8 @@ function assertSafePath(p: string): void {
 
 const server = new McpServer({
   name: "skeehn",
-  version: "0.3.0",
-  description: "ASCII-native UI framework with texture-based rendering. Provides component schemas, themes, and tools for building AI-native interfaces.",
+  version: "1.0.0",
+  description: "The customizable UI foundation for AI products & agents. Component schemas, 8 themes, an AI SDK v5 render layer, composable blocks, and tools to install + generate skeehn UI.",
 });
 
 // ─── RESOURCES (Read-only data for AI agents) ───────────────────────────────
@@ -197,7 +198,7 @@ server.tool(
   "Generate complete skeehn UI code from a natural language description",
   {
     description: z.string().describe("Description of the UI to generate (e.g., 'AI chat interface with streaming and tool cards')"),
-    theme: z.enum(["default", "brutal", "terminal", "print", "grain"]).default("default").describe("Theme preset"),
+    theme: z.enum(THEMES).default("default").describe("Theme preset"),
     components: z.array(z.string()).optional().describe("Specific components to include"),
   },
   async ({ description, theme, components }) => {
@@ -215,7 +216,7 @@ server.tool(
   "swap_theme",
   "Change the skeehn theme in a project",
   {
-    theme: z.enum(["default", "brutal", "terminal", "print", "grain"]).describe("Theme preset name"),
+    theme: z.enum(THEMES).describe("Theme preset name"),
     target: z.string().default(".").describe("Project directory"),
   },
   async ({ theme, target }) => {
@@ -302,7 +303,7 @@ server.tool(
   "Initialize skeehn in a project with theme and components",
   {
     path: z.string().default(".").describe("Project directory"),
-    theme: z.enum(["default", "brutal", "terminal", "print", "grain"]).default("default").describe("Initial theme"),
+    theme: z.enum(THEMES).default("default").describe("Initial theme"),
     components: z.array(z.string()).default(["all"]).describe("Components to install"),
   },
   async ({ path, theme, components }) => {
@@ -334,7 +335,7 @@ server.prompt(
   "build_chat_interface",
   "Build a complete AI chat interface with skeehn components",
   {
-    theme: z.enum(["default", "brutal", "terminal", "print", "grain"]).default("terminal"),
+    theme: z.enum(THEMES).default("terminal"),
     features: z.array(z.enum(["streaming", "tool-cards", "reasoning", "citations", "terminal"])).default(["streaming", "tool-cards"]),
   },
   ({ theme, features }) => ({
@@ -366,7 +367,7 @@ server.prompt(
   "build_agent_dashboard",
   "Build an agent dashboard with tool cards and reasoning traces",
   {
-    theme: z.enum(["default", "brutal", "terminal", "print", "grain"]).default("default"),
+    theme: z.enum(THEMES).default("default"),
   },
   ({ theme }) => ({
     messages: [{
@@ -396,7 +397,7 @@ server.prompt(
   "Convert an existing UI to skeehn components and theme",
   {
     description: z.string().describe("Description of the existing UI to convert"),
-    theme: z.enum(["default", "brutal", "terminal", "print", "grain"]).default("default"),
+    theme: z.enum(THEMES).default("default"),
   },
   ({ description, theme }) => ({
     messages: [{
@@ -538,7 +539,6 @@ export async function main() {
   console.error("skeehn MCP server running on stdio");
 }
 
-main().catch((error: Error) => {
-  console.error("Fatal error:", error);
-  process.exit(1);
-});
+// This module exports `main()` as a library; it does NOT self-invoke (that would
+// double-connect the transport when the executable imports it). The `skeehn-mcp`
+// bin (src/cli.ts → dist/cli.js) is the single entry point that calls main().

@@ -53,3 +53,15 @@ jobs:
         run: npm publish --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Build + verify @skeehn/mcp-server (emits both index.js + the cli.js bin)
+        working-directory: packages/mcp-server
+        run: |
+          bun run build
+          test -f dist/cli.js && test -f dist/index.js
+
+      - name: Publish @skeehn/mcp-server
+        working-directory: packages/mcp-server
+        run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

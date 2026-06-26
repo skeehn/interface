@@ -1,6 +1,6 @@
 {
   "name": "@skeehn/core",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "ASCII-native dither UI engine — CSS + JS. Zero dependencies.",
   "type": "module",
   "main": "./dist/index.cjs",

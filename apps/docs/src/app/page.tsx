@@ -12,6 +12,7 @@ import {
   ToolCard,
   ThinkingBlock,
 } from "@skeehn/react";
+import { Reveal } from "@/components/Reveal";
 
 const THEMES = [
   { id: "default", label: "Editorial" },
@@ -71,9 +72,11 @@ export default function HomePage() {
 
       {/* ── HERO (clean light, real-component demo as the star) ── */}
       <section className="relative overflow-hidden">
+        <div className="absolute inset-x-0 top-0 h-[640px] pointer-events-none sk-dotgrid" aria-hidden="true"
+          style={{ maskImage: "radial-gradient(72% 80% at 50% 0%, #000 22%, transparent 72%)", WebkitMaskImage: "radial-gradient(72% 80% at 50% 0%, #000 22%, transparent 72%)" }} />
         <div className="absolute inset-x-0 top-0 h-[560px] pointer-events-none" aria-hidden="true"
           style={{ background: "radial-gradient(60% 90% at 50% -10%, hsl(var(--sk-accent) / 0.08), transparent 70%)" }} />
-        <div className="relative max-w-3xl mx-auto px-6 pt-28 pb-12 text-center">
+        <div className="relative max-w-3xl mx-auto px-6 pt-28 pb-12 text-center sk-rise">
           <Link href="https://www.npmjs.com/org/skeehn" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-[0.8rem] text-muted-fg border border-border rounded-full pl-2 pr-3 py-1 mb-8 hover:border-foreground/20 transition-colors">
             <span className="text-accent font-medium bg-accent/10 rounded-full px-2 py-0.5 text-[0.72rem]">v1.1</span>
@@ -98,7 +101,7 @@ export default function HomePage() {
         </div>
 
         {/* hero demo — a real chat, framed as an app window */}
-        <div className="relative max-w-2xl mx-auto px-6 pb-24">
+        <div className="relative max-w-2xl mx-auto px-6 pb-24 sk-rise" style={{ animationDelay: "160ms" }}>
           <div className="absolute -inset-x-6 -top-6 -bottom-6 pointer-events-none" aria-hidden="true"
             style={{ background: "radial-gradient(50% 50% at 50% 42%, hsl(var(--sk-accent) / 0.08), transparent 72%)" }} />
           <div className="relative rounded-2xl border border-border bg-background overflow-hidden"
@@ -152,14 +155,14 @@ export default function HomePage() {
           <h2 className="font-semibold tracking-[-0.02em] text-foreground" style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.4rem)" }}>Everything an AI product needs</h2>
           <p className="mt-3 text-muted-fg leading-relaxed">Stop rebuilding the same chat surface for every project. skeehn ships the full AI-interface layer — polished, accessible, and tested.</p>
         </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-10">
+        <Reveal className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-10">
           {CAPABILITIES.map((c) => (
             <div key={c.title}>
               <h3 className="font-semibold text-foreground mb-1.5 flex items-center gap-2"><span className="text-accent font-mono text-xs">▚</span>{c.title}</h3>
               <p className="text-[0.95rem] text-muted-fg leading-relaxed">{c.body}</p>
             </div>
           ))}
-        </div>
+        </Reveal>
       </section>
 
       {/* ── THEMES STRIP ── */}
@@ -199,7 +202,7 @@ export default function HomePage() {
           <h2 className="font-semibold tracking-[-0.02em] text-foreground" style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.4rem)" }}>A library, not a lock-in</h2>
           <p className="mt-3 text-muted-fg leading-relaxed">Most AI kits hand you a black box that looks like everyone else&rsquo;s. skeehn hands you the source.</p>
         </div>
-        <div className="grid sm:grid-cols-2 gap-x-12 gap-y-12">
+        <Reveal className="grid sm:grid-cols-2 gap-x-12 gap-y-12">
           {WHY.map((f) => (
             <div key={f.title}>
               <div className="w-9 h-9 rounded-lg bg-accent/10 text-accent flex items-center justify-center mb-4 font-mono text-sm">▚</div>
@@ -207,7 +210,7 @@ export default function HomePage() {
               <p className="text-[0.95rem] text-muted-fg leading-relaxed">{f.body}</p>
             </div>
           ))}
-        </div>
+        </Reveal>
       </section>
 
       {/* ── CATALOG ── */}

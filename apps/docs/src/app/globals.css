@@ -124,3 +124,30 @@ body { font-family: var(--sk-font-sans); }
   border-radius: var(--sk-radius-sm, 5px);
   padding: 0.1em 0.35em;
 }
+
+/* ═══ MOTION — entrance + scroll reveal (reduced-motion safe) ═══ */
+@keyframes sk-fade-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes sk-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sk-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+/* Hero entrance — animates on load; stagger via inline animation-delay */
+.sk-rise { opacity: 0; animation: sk-fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* Scroll reveal — hidden until <Reveal> flips data-shown when it enters view */
+.sk-reveal { opacity: 0; }
+.sk-reveal[data-shown="true"] { animation: sk-fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* Subtle premium dot-grid (NOT the dither) — tasteful hero/section texture */
+.sk-dotgrid {
+  background-image: radial-gradient(hsl(var(--sk-foreground) / 0.05) 1px, transparent 1.4px);
+  background-size: 22px 22px;
+  background-position: center top;
+}
+
+/* Animated gradient underline for inline links */
+.sk-link-underline { background-image: linear-gradient(currentColor, currentColor); background-size: 0% 1px; background-repeat: no-repeat; background-position: 0 100%; transition: background-size 0.25s ease; }
+.sk-link-underline:hover { background-size: 100% 1px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-rise, .sk-reveal, .sk-reveal[data-shown="true"] { animation: none !important; opacity: 1 !important; transform: none !important; }
+}

@@ -116,7 +116,7 @@ function themeBlock(selector: string, tokens: TokenMap, radius: number, scheme: 
     radiusBlock(radius),
     `  --sk-border-width: 1px;`,
     `  --sk-dither-pattern: var(--sk-dither-b2);`,
-    `  --sk-dither-opacity: 0;`,
+    `  --sk-dither-opacity: 0.06;`,
     `  color-scheme: ${scheme};`,
     `}`,
   ].join('\n');
@@ -144,6 +144,6 @@ export function toStyleVars(tokens: TokenMap, radius: number): Record<string, st
   out['--sk-radius-lg'] = `${r + 6}px`;
   out['--sk-radius-panel'] = `${r + 4}px`;
   out['--sk-radius-control'] = `${Math.max(0, r - 1)}px`;
-  out['--sk-dither-opacity'] = '0';
+  out['--sk-dither-opacity'] = '0.06';
   return out;
 }

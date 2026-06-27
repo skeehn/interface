@@ -1,51 +1,231 @@
-/* skeehn — DitherPulse */
-.sk-dither-pulse { position: relative; overflow: hidden; }
-.sk-dither-pulse::before { content: ""; position: absolute; inset: 0; background-image: var(--sk-dither-pattern); background-repeat: repeat; pointer-events: none; border-radius: inherit; }
-.sk-dither-pulse[data-effect="pulse"]::before { animation: sk-dither-pulse 2s ease-in-out infinite; }
-.sk-dither-pulse[data-effect="morph"]::before { animation: sk-dither-morph 1.5s steps(4) infinite; }
-.sk-dither-pulse[data-effect="scan"]::before { animation: sk-dither-scan 0.1s linear infinite; }
-.sk-dither-pulse[data-effect="flow"]::before { animation: sk-flow 3s linear infinite; }
-@keyframes sk-flow { 0% { background-position: 0 0; } 100% { background-position: 100% 100%; } }
+/* skeehn — Motion Component CSS
+   All keyframes that aren't in animation.css are defined here.
+   ================================================================ */
 
-/* skeehn — AsciiRain */
-.sk-ascii-rain { position: relative; overflow: hidden; font-family: var(--sk-font-mono); font-size: 0.75rem; line-height: 1; color: hsl(var(--sk-primary) / 0.6); white-space: pre; }
-.sk-ascii-rain__column { position: absolute; top: -100%; animation: sk-rain-fall linear infinite; }
-@keyframes sk-rain-fall { 0% { transform: translateY(-100%); } 100% { transform: translateY(200vh); } }
-.sk-ascii-rain[data-density="sparse"] .sk-ascii-rain__column { opacity: 0.3; }
-.sk-ascii-rain[data-density="normal"] .sk-ascii-rain__column { opacity: 0.6; }
-.sk-ascii-rain[data-density="dense"] .sk-ascii-rain__column { opacity: 1; }
+/* ================================================================
+   MISSING KEYFRAMES (referenced by data-effect — must live here)
+   ================================================================ */
 
-/* skeehn — Glitch */
-.sk-glitch { position: relative; }
-.sk-glitch[data-active="true"] { animation: sk-glitch 0.3s steps(2) infinite; }
-.sk-glitch[data-active="true"]::before { content: attr(data-text); position: absolute; inset: 0; color: hsl(var(--sk-destructive)); clip-path: inset(0 0 60% 0); animation: sk-glitch-clip 0.3s steps(2) infinite; }
-.sk-glitch[data-active="true"]::after { content: attr(data-text); position: absolute; inset: 0; color: hsl(var(--sk-info)); clip-path: inset(60% 0 0 0); animation: sk-glitch-clip 0.3s steps(2) reverse infinite; }
-@keyframes sk-glitch { 0% { transform: translate(0); } 20% { transform: translate(-2px, 2px); } 40% { transform: translate(2px, -2px); } 60% { transform: translate(-1px, -1px); } 80% { transform: translate(1px, 1px); } 100% { transform: translate(0); } }
-@keyframes sk-glitch-clip { 0% { clip-path: inset(0 0 80% 0); } 50% { clip-path: inset(20% 0 40% 0); } 100% { clip-path: inset(60% 0 0 0); } }
-.sk-glitch[data-intensity="severe"] { animation-duration: 0.1s; }
-.sk-glitch[data-intensity="subtle"] { animation-duration: 0.5s; opacity: 0.8; }
+@keyframes sk-dither-pulse {
+  0%, 100% { opacity: var(--sk-dither-opacity, 0.12); }
+  50%       { opacity: calc(var(--sk-dither-opacity, 0.12) * 3); }
+}
 
-/* skeehn — TextureMask */
-.sk-texture-mask { position: relative; overflow: hidden; }
-.sk-texture-mask__reveal { position: absolute; inset: 0; background-image: var(--sk-dither-pattern); background-repeat: repeat; opacity: 0; pointer-events: none; transition: opacity var(--sk-transition); border-radius: inherit; }
-.sk-texture-mask[data-trigger="hover"]:hover .sk-texture-mask__reveal { opacity: var(--sk-dither-opacity); }
-.sk-texture-mask[data-trigger="focus"]:focus-within .sk-texture-mask__reveal { opacity: var(--sk-dither-opacity); }
-.sk-texture-mask[data-trigger="active"]:active .sk-texture-mask__reveal { opacity: var(--sk-dither-opacity); }
-.sk-texture-mask[data-direction="fade"] .sk-texture-mask__reveal { mask-image: linear-gradient(to right, transparent, black); -webkit-mask-image: linear-gradient(to right, transparent, black); }
-.sk-texture-mask[data-direction="wipe"] .sk-texture-mask__reveal { mask-image: linear-gradient(to right, black 0%, transparent 100%); -webkit-mask-image: linear-gradient(to right, black 0%, transparent 100%); animation: sk-wipe 2s ease-in-out infinite; }
-@keyframes sk-wipe { 0%, 100% { mask-size: 0% 100%; -webkit-mask-size: 0% 100%; } 50% { mask-size: 100% 100%; -webkit-mask-size: 100% 100%; } }
-.sk-texture-mask[data-direction="dissolve"] .sk-texture-mask__reveal { animation: sk-dissolve 2s ease-in-out infinite; }
-@keyframes sk-dissolve { 0%, 100% { opacity: 0; } 50% { opacity: var(--sk-dither-opacity); } }
+@keyframes sk-dither-scan {
+  from { background-position: 0 0; }
+  to   { background-position: 0 16px; }
+}
 
-/* Accessibility */
+@keyframes sk-dither-morph {
+  0%   { background-image: var(--sk-dither-b1); opacity: 0.08; }
+  20%  { background-image: var(--sk-dither-b4); opacity: 0.15; }
+  40%  { background-image: var(--sk-dither-b8); opacity: 0.20; }
+  60%  { background-image: var(--sk-dither-b4); opacity: 0.15; }
+  80%  { background-image: var(--sk-dither-b2); opacity: 0.10; }
+  100% { background-image: var(--sk-dither-b1); opacity: 0.08; }
+}
+
+@keyframes sk-flow {
+  0%   { background-position: 0 0; }
+  100% { background-position: 32px 32px; }
+}
+
+@keyframes sk-rain-fall {
+  from { transform: translateY(-100%); }
+  to   { transform: translateY(200%); }
+}
+
+@keyframes sk-glitch-shift {
+  0%, 100% { transform: translate(0); }
+  20%       { transform: translate(-3px,  2px); }
+  40%       { transform: translate( 3px, -1px); }
+  60%       { transform: translate(-1px, -2px); }
+  80%       { transform: translate( 2px,  1px); }
+}
+
+@keyframes sk-glitch-clip-a {
+  0%   { clip-path: inset(0 0 85% 0); }
+  33%  { clip-path: inset(15% 0 55% 0); }
+  66%  { clip-path: inset(55% 0 15% 0); }
+  100% { clip-path: inset(0 0 85% 0); }
+}
+
+@keyframes sk-glitch-clip-b {
+  0%   { clip-path: inset(75% 0 0 0); }
+  33%  { clip-path: inset(40% 0 25% 0); }
+  66%  { clip-path: inset(10% 0 65% 0); }
+  100% { clip-path: inset(75% 0 0 0); }
+}
+
+@keyframes sk-wipe {
+  0%, 100% { -webkit-mask-size: 0%   100%; mask-size: 0%   100%; }
+  50%       { -webkit-mask-size: 100% 100%; mask-size: 100% 100%; }
+}
+
+@keyframes sk-dissolve {
+  0%, 100% { opacity: 0; }
+  50%       { opacity: var(--sk-dither-opacity, 0.12); }
+}
+
+/* ================================================================
+   DITHER PULSE — overlay that breathes, morphs, scans, or flows
+   ================================================================ */
+
+.sk-dither-pulse {
+  position: relative;
+  overflow: hidden;
+}
+.sk-dither-pulse::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image: var(--sk-dither-pattern, var(--sk-dither-b6));
+  background-repeat: repeat;
+  background-size: 16px 16px;
+  opacity: var(--sk-dither-opacity, 0.12);
+  pointer-events: none;
+  border-radius: inherit;
+  mix-blend-mode: overlay;
+}
+
+.sk-dither-pulse[data-effect="pulse"]::before {
+  animation: sk-dither-pulse 2.4s ease-in-out infinite;
+}
+.sk-dither-pulse[data-effect="morph"]::before {
+  animation: sk-dither-morph 2s steps(5) infinite;
+}
+.sk-dither-pulse[data-effect="scan"]::before {
+  background-size: 16px 16px;
+  animation: sk-dither-scan 0.08s linear infinite;
+}
+.sk-dither-pulse[data-effect="flow"]::before {
+  background-size: 16px 16px;
+  animation: sk-flow 2s linear infinite;
+}
+
+/* ================================================================
+   ASCII RAIN — falling character columns
+   Requires JS to inject .sk-ascii-rain__column > .sk-ascii-rain__char
+   ================================================================ */
+
+.sk-ascii-rain {
+  position: relative;
+  overflow: hidden;
+  font-family: var(--sk-font-mono);
+  font-size: 0.75rem;
+  line-height: 1.2;
+  color: hsl(var(--sk-primary));
+  user-select: none;
+}
+
+.sk-ascii-rain__column {
+  position: absolute;
+  top: -100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  animation: sk-rain-fall linear infinite;
+  will-change: transform;
+}
+
+.sk-ascii-rain__char {
+  display: block;
+  text-align: center;
+  width: 1ch;
+  opacity: 0.85;
+  transition: opacity 0.4s;
+}
+.sk-ascii-rain__char:first-child {
+  opacity: 1;
+  color: hsl(var(--sk-foreground));
+  text-shadow: 0 0 6px hsl(var(--sk-primary) / 0.8);
+}
+
+.sk-ascii-rain[data-density="sparse"] .sk-ascii-rain__column  { opacity: 0.25; animation-duration: 4s; }
+.sk-ascii-rain[data-density="normal"] .sk-ascii-rain__column  { opacity: 0.55; animation-duration: 2.5s; }
+.sk-ascii-rain[data-density="dense"]  .sk-ascii-rain__column  { opacity: 0.85; animation-duration: 1.6s; }
+
+/* ================================================================
+   GLITCH — chromatic aberration displacement
+   Requires data-text attr mirroring the element's text content
+   ================================================================ */
+
+.sk-glitch {
+  position: relative;
+  display: inline-block;
+}
+.sk-glitch[data-active="true"] {
+  animation: sk-glitch-shift 0.25s steps(3) infinite;
+}
+.sk-glitch[data-active="true"]::before {
+  content: attr(data-text);
+  position: absolute; inset: 0;
+  color: hsl(var(--sk-destructive) / 0.75);
+  animation: sk-glitch-clip-a 0.25s steps(3) infinite;
+  overflow: hidden;
+}
+.sk-glitch[data-active="true"]::after {
+  content: attr(data-text);
+  position: absolute; inset: 0;
+  color: hsl(var(--sk-info) / 0.75);
+  animation: sk-glitch-clip-b 0.25s steps(3) reverse infinite;
+  overflow: hidden;
+}
+
+.sk-glitch[data-intensity="severe"] { animation-duration: 0.08s; }
+.sk-glitch[data-intensity="severe"]::before,
+.sk-glitch[data-intensity="severe"]::after  { animation-duration: 0.08s; }
+.sk-glitch[data-intensity="subtle"]  { animation-duration: 0.6s; opacity: 0.9; }
+.sk-glitch[data-intensity="subtle"]::before,
+.sk-glitch[data-intensity="subtle"]::after  { animation-duration: 0.6s; opacity: 0.6; }
+
+/* ================================================================
+   TEXTURE MASK — reveal dither on hover/focus/active
+   ================================================================ */
+
+.sk-texture-mask {
+  position: relative;
+  overflow: hidden;
+}
+.sk-texture-mask__reveal {
+  position: absolute; inset: 0;
+  background-image: var(--sk-dither-pattern, var(--sk-dither-b6));
+  background-repeat: repeat;
+  background-size: 16px 16px;
+  opacity: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  mix-blend-mode: overlay;
+  transition: opacity var(--sk-transition-slow, 180ms ease);
+}
+.sk-texture-mask[data-trigger="hover"]:hover       .sk-texture-mask__reveal { opacity: var(--sk-dither-opacity, 0.12); }
+.sk-texture-mask[data-trigger="focus"]:focus-within .sk-texture-mask__reveal { opacity: var(--sk-dither-opacity, 0.12); }
+.sk-texture-mask[data-trigger="active"]:active      .sk-texture-mask__reveal { opacity: var(--sk-dither-opacity, 0.12); }
+
+.sk-texture-mask[data-direction="fade"] .sk-texture-mask__reveal {
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 40%);
+          mask-image: linear-gradient(to right, transparent 0%, black 40%);
+}
+.sk-texture-mask[data-direction="wipe"] .sk-texture-mask__reveal {
+  -webkit-mask-image: linear-gradient(to right, black 0%, transparent 100%);
+          mask-image: linear-gradient(to right, black 0%, transparent 100%);
+  -webkit-mask-size: 0% 100%;
+          mask-size: 0% 100%;
+  animation: sk-wipe 2.5s ease-in-out infinite;
+}
+.sk-texture-mask[data-direction="dissolve"] .sk-texture-mask__reveal {
+  animation: sk-dissolve 2.5s ease-in-out infinite;
+}
+
+/* ================================================================
+   ACCESSIBILITY
+   ================================================================ */
+
 @media (prefers-reduced-motion: reduce) {
-  .sk-dither-pulse::before,
+  .sk-dither-pulse[data-effect]::before,
   .sk-ascii-rain__column,
   .sk-glitch[data-active="true"],
   .sk-glitch[data-active="true"]::before,
   .sk-glitch[data-active="true"]::after,
-  .sk-texture-mask[data-direction="wipe"] .sk-texture-mask__reveal,
-  .sk-texture-mask[data-direction="dissolve"] .sk-texture-mask__reveal {
-    animation: none !important;
-  }
+  .sk-texture-mask__reveal { animation: none !important; }
+  .sk-texture-mask__reveal { transition: none; }
 }

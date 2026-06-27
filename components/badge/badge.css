@@ -11,7 +11,7 @@
 .sk-badge {
   display: inline-flex;
   align-items: center;
-  /* slightly more substantial than before: taller line-height, snugger h-padding */
+  gap: 0.25em;
   padding: var(--sk-space-1) var(--sk-space-2);
   font-family: var(--sk-font-mono);
   font-size: var(--sk-font-size-xs);
@@ -20,15 +20,18 @@
   letter-spacing: var(--sk-letter-spacing-wide);
   text-transform: uppercase;
   border-radius: var(--sk-radius);
-  border: 1px solid transparent;
+  border: 1px solid hsl(var(--sk-border-color));
+  /* default: visible secondary bg */
+  background: hsl(var(--sk-secondary));
+  color: hsl(var(--sk-secondary-fg));
   white-space: nowrap;
   position: relative;
   overflow: hidden;
 }
 .sk-badge:focus-visible { outline: var(--sk-focus-ring); outline-offset: var(--sk-focus-ring-offset); }
 
-/* Solid */
-.sk-badge[data-variant="solid"] { background: hsl(var(--sk-secondary)); }
+/* Solid — primary color, inverted text */
+.sk-badge[data-variant="solid"] { background: hsl(var(--sk-primary)); color: hsl(var(--sk-background)); border-color: transparent; }
 
 /* Dither — badge face gets --sk-dither-b6 at 15% opacity via ::before */
 .sk-badge[data-variant="dither"] {
@@ -50,8 +53,8 @@
 /* Outline */
 .sk-badge[data-variant="outline"] { background: transparent; border-color: hsl(var(--sk-border-color)); }
 
-/* Ghost */
-.sk-badge[data-variant="ghost"] { background: hsl(var(--sk-accent)); }
+/* Ghost — accent bg, foreground text, visible border */
+.sk-badge[data-variant="ghost"] { background: hsl(var(--sk-accent)); color: hsl(var(--sk-accent-foreground)); border-color: hsl(var(--sk-border-color)); }
 
 /* Inverted */
 .sk-badge[data-variant="inverted"] { background: hsl(var(--sk-foreground)); color: hsl(var(--sk-background)); }

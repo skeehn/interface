@@ -2,100 +2,149 @@
  * skeehn — Terminal Theme: Green Phosphor CRT
  *
  * Authentic VT220 / Apple II feel with phosphor glow,
- * CRT scanlines, and flicker. Full retro immersion.
- * Signature: scanline overlay + phosphor text glow + cursor blink.
+ * CRT scanlines via CSS (not the dither-scanlines pattern),
+ * and true screen-burn. Monospace everything.
+ * Signature: CSS scanline grid + phosphor text glow + vignette.
  */
 [data-theme="terminal"] {
-  /* ═══ COLORS ═══ */
-  --sk-background:         140 100% 2%;
-  --sk-foreground:         140 100% 80%;
-  --sk-surface:            140 80% 4%;
-  --sk-primary:            140 100% 70%;
-  --sk-primary-fg:         140 100% 2%;
-  --sk-secondary:          140 60% 6%;
-  --sk-secondary-fg:       140 100% 80%;
-  --sk-muted:              140 50% 6%;
-  --sk-muted-foreground:   140 60% 45%;
-  --sk-accent:             140 80% 12%;
-  --sk-accent-foreground:  140 100% 80%;
-  --sk-border-color:       140 50% 18%;
-  --sk-ring:               140 100% 70%;
-  --sk-success:            140 100% 60%;
-  --sk-warning:            50 100% 60%;
-  --sk-info:               180 100% 60%;
-  --sk-destructive:        0 100% 60%;
+  /* ═══ PHOSPHOR GREEN PALETTE ═══ */
+  --sk-background:         128 100% 2.5%;
+  --sk-foreground:         128 68% 72%;
+  --sk-surface:            128 80% 4%;
+  --sk-primary:            128 90% 60%;
+  --sk-primary-fg:         128 100% 2%;
+  --sk-secondary:          128 50% 7%;
+  --sk-secondary-fg:       128 68% 72%;
+  --sk-muted:              128 40% 6%;
+  --sk-muted-foreground:   128 45% 38%;
+  --sk-accent:             128 80% 10%;
+  --sk-accent-foreground:  128 68% 72%;
+  --sk-border-color:       128 55% 16%;
+  --sk-ring:               128 90% 60%;
+  --sk-success:            128 90% 55%;
+  --sk-warning:            50  90% 58%;
+  --sk-info:               180 80% 55%;
+  --sk-destructive:        0   80% 58%;
 
-  /* ═══ DITHER ═══ */
-  --sk-dither-pattern:     var(--sk-dither-scanlines);
-  --sk-dither-opacity:     0.15;
+  /* ═══ DITHER — use subtle Bayer, NOT scanlines as texture ═══ */
+  --sk-dither-pattern:     var(--sk-dither-b2);
+  --sk-dither-opacity:     0.06;
 
-  /* ═══ TYPOGRAPHY: Force monospace ═══ */
+  /* ═══ TYPOGRAPHY: force monospace throughout ═══ */
   --sk-font-sans:          var(--sk-font-mono);
 
-  /* ═══ ELEVATION — flat CRT resting, phosphor glow on hover ═══ */
+  /* ═══ ELEVATION — flat resting, phosphor glow on hover ═══ */
+  --sk-shadow-sm:          none;
+  --sk-shadow-md:          none;
+  --sk-shadow-lg:          none;
   --sk-panel-shadow:       none;
-  --sk-elevation-hover:    0 0 12px hsl(140 100% 50% / 0.15);
+  --sk-elevation-hover:    0 0 20px hsl(128 90% 50% / 0.2), inset 0 0 20px hsl(128 90% 50% / 0.04);
 }
 
-/* Signature: Phosphor text glow */
-[data-theme="terminal"] * {
-  text-shadow: 0 0 4px hsl(140 100% 70% / 0.3);
+/* ── Phosphor text glow — text & label elements only ── */
+[data-theme="terminal"] p,
+[data-theme="terminal"] span,
+[data-theme="terminal"] a,
+[data-theme="terminal"] h1,
+[data-theme="terminal"] h2,
+[data-theme="terminal"] h3,
+[data-theme="terminal"] h4,
+[data-theme="terminal"] h5,
+[data-theme="terminal"] h6,
+[data-theme="terminal"] li,
+[data-theme="terminal"] td,
+[data-theme="terminal"] th,
+[data-theme="terminal"] label,
+[data-theme="terminal"] code,
+[data-theme="terminal"] pre {
+  text-shadow: 0 0 6px hsl(128 90% 60% / 0.35);
 }
 
-/* CRT scanline overlay */
+/* ── CRT scanline overlay — CSS, not SVG ── */
 [data-theme="terminal"] body::before {
   content: "";
   position: fixed;
   inset: 0;
-  background-image: var(--sk-dither-scanlines);
-  background-size: 100% 4px;
-  opacity: 0.08;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent          0px,
+    transparent          2px,
+    hsl(0 0% 0% / 0.14)  2px,
+    hsl(0 0% 0% / 0.14)  4px
+  );
   pointer-events: none;
   z-index: 9999;
+  animation: sk-crt-flicker 6s steps(3) infinite;
 }
 
-/* CRT vignette + subtle curvature illusion */
+/* ── CRT vignette + barrel distortion illusion ── */
 [data-theme="terminal"] body::after {
   content: "";
   position: fixed;
   inset: 0;
-  background: radial-gradient(ellipse at center, transparent 40%, hsl(0 0% 0% / 0.5) 100%);
+  background:
+    radial-gradient(ellipse 90% 80% at 50% 50%, transparent 55%, hsl(0 0% 0% / 0.55) 100%),
+    radial-gradient(ellipse 100% 40% at 50% 0%,   hsl(128 80% 4% / 0.3) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 40% at 50% 100%, hsl(128 80% 4% / 0.3) 0%, transparent 60%);
   pointer-events: none;
   z-index: 9998;
 }
 
-/* Enhanced glow on interactive elements */
-[data-theme="terminal"] .sk-btn {
-  text-shadow: 0 0 6px hsl(140 100% 70% / 0.5);
-  border-color: hsl(140 100% 40% / 0.4);
-}
-[data-theme="terminal"] .sk-btn:hover {
-  text-shadow: 0 0 10px hsl(140 100% 70% / 0.7);
-  box-shadow: 0 0 12px hsl(140 100% 50% / 0.15);
-}
-
-/* Input cursor glow */
-[data-theme="terminal"] input:focus,
-[data-theme="terminal"] textarea:focus {
-  text-shadow: 0 0 4px hsl(140 100% 70% / 0.4);
-  box-shadow: inset 0 0 8px hsl(140 100% 50% / 0.08);
-}
-
-/* Subtle CRT flicker (very mild, only if motion OK) */
+/* ── Screen phosphor persistence bloom ── */
 @keyframes sk-crt-flicker {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.98; }
+  0%, 85%, 100% { opacity: 1; }
+  86%           { opacity: 0.93; }
+  87%           { opacity: 1; }
+  91%           { opacity: 0.96; }
+  92%           { opacity: 1; }
 }
-[data-theme="terminal"] body::before {
-  animation: sk-crt-flicker 4s steps(2) infinite;
+
+/* ── Boosted glow on interactive elements ── */
+[data-theme="terminal"] .sk-btn {
+  border-color: hsl(128 80% 35% / 0.5);
+}
+[data-theme="terminal"] .sk-btn:hover:not(:disabled) {
+  text-shadow: 0 0 12px hsl(128 90% 60% / 0.8);
+  box-shadow: 0 0 16px hsl(128 90% 50% / 0.18), inset 0 0 8px hsl(128 90% 50% / 0.04);
+}
+
+/* ── Input focus phosphor ── */
+[data-theme="terminal"] .sk-input:focus {
+  box-shadow: 0 0 0 2px hsl(128 90% 50% / 0.15), inset 0 0 10px hsl(128 90% 50% / 0.05);
+}
+
+/* ── Cursor blink on all text inputs ── */
+[data-theme="terminal"] input,
+[data-theme="terminal"] textarea {
+  caret-color: hsl(128 90% 70%);
+  animation: sk-cursor-bloom 1s steps(2) infinite;
+}
+
+@keyframes sk-cursor-bloom {
+  0%, 100% { caret-color: hsl(128 90% 70%); }
+  50%       { caret-color: hsl(128 90% 90%); }
+}
+
+/* ── Card border glow ── */
+[data-theme="terminal"] .sk-card {
+  border-color: hsl(128 60% 18% / 0.8);
+}
+[data-theme="terminal"] .sk-card:hover {
+  border-color: hsl(128 80% 30% / 0.6);
 }
 
 @media (prefers-reduced-motion: reduce) {
   [data-theme="terminal"] body::before { animation: none; }
-  [data-theme="terminal"] * { text-shadow: none; }
+  [data-theme="terminal"] *,
+  [data-theme="terminal"] p,
+  [data-theme="terminal"] span { text-shadow: none; }
+  [data-theme="terminal"] input,
+  [data-theme="terminal"] textarea { animation: none; }
 }
+
 @media print {
   [data-theme="terminal"] body::before,
   [data-theme="terminal"] body::after { display: none; }
-  [data-theme="terminal"] * { text-shadow: none; color: black; }
+  [data-theme="terminal"] *,
+  [data-theme="terminal"] p { text-shadow: none; color: black; }
 }

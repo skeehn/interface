@@ -1,35 +1,419 @@
-/* skeehn — AsciiChart (bar chart rendered in ASCII) */
-.sk-ascii-chart { font-family: var(--sk-font-mono); font-size: var(--sk-font-size-xs); line-height: 1; color: hsl(var(--sk-foreground)); }
-.sk-ascii-chart__row { display: flex; align-items: flex-end; gap: 0; }
-.sk-ascii-chart__bar { display: flex; flex-direction: column-reverse; width: 1ch; }
-.sk-ascii-chart__bar-cell { width: 1ch; height: 1ch; text-align: center; line-height: 1; }
-.sk-ascii-chart__bar-cell--filled { background: hsl(var(--sk-primary)); color: hsl(var(--sk-background)); }
-.sk-ascii-chart__bar-cell--dither { background: hsl(var(--sk-primary)); color: hsl(var(--sk-background)); position: relative; }
-.sk-ascii-chart__bar-cell--dither::before { content: "░"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; }
-.sk-ascii-chart__label { margin-top: var(--sk-space-1); display: flex; gap: 0; }
-.sk-ascii-chart__label-cell { width: 1ch; text-align: center; font-size: 0.5rem; color: hsl(var(--sk-muted-foreground)); }
+/**
+ * skeehn — DataViz Component
+ *
+ * ASCII-native data visualization: bar charts, sparklines, meters,
+ * heatmaps, line charts, and area fills. All use monospace + dither.
+ *
+ * @components  sk-ascii-chart | sk-sparkline | sk-meter | sk-heatmap |
+ *              sk-line-chart  | sk-stat      | sk-gauge
+ */
 
-/* skeehn — Sparkline */
-.sk-sparkline { display: inline-flex; align-items: flex-end; gap: 1px; height: 1.5rem; vertical-align: middle; }
-.sk-sparkline__bar { width: 2px; background: hsl(var(--sk-primary)); border-radius: 1px; transition: height var(--sk-transition-fast); }
-.sk-sparkline__bar--dither { position: relative; }
-.sk-sparkline__bar--dither::before { content: ""; position: absolute; inset: 0; background-image: var(--sk-dither-pattern); background-repeat: repeat; opacity: var(--sk-dither-opacity); border-radius: inherit; }
+/* ═══════════════════════════════════════════════════════════
+   BAR CHART — vertical bars in ASCII character blocks
+   ═══════════════════════════════════════════════════════════ */
 
-/* skeehn — Meter */
-.sk-meter { display: flex; align-items: center; gap: var(--sk-space-2); font-family: var(--sk-font-mono); font-size: var(--sk-font-size-xs); }
-.sk-meter__track { flex: 1; height: 0.5rem; background: hsl(var(--sk-muted)); border-radius: var(--sk-radius); overflow: hidden; border: var(--sk-border); position: relative; }
-.sk-meter__fill { height: 100%; background: hsl(var(--sk-primary)); border-radius: var(--sk-radius); transition: width var(--sk-transition-slow); }
-.sk-meter__fill--dither { position: relative; }
-.sk-meter__fill--dither::before { content: ""; position: absolute; inset: 0; background-image: var(--sk-dither-pattern); background-repeat: repeat; opacity: var(--sk-dither-opacity); mix-blend-mode: overlay; }
-.sk-meter__label { color: hsl(var(--sk-muted-foreground)); min-width: 2.5rem; text-align: right; }
+.sk-ascii-chart {
+  font-family: var(--sk-font-mono);
+  font-size: var(--sk-font-size-xs);
+  line-height: 1;
+  color: hsl(var(--sk-foreground));
+  display: inline-block;
+}
 
-/* skeehn — Heatmap */
-.sk-heatmap { display: grid; gap: 1px; font-family: var(--sk-font-mono); }
-.sk-heatmap__cell { width: 1ch; height: 1ch; text-align: center; line-height: 1; font-size: 0.5rem; }
-.sk-heatmap__cell--0 { background: hsl(var(--sk-muted)); color: transparent; }
-.sk-heatmap__cell--1 { background: hsl(var(--sk-muted)); color: hsl(var(--sk-muted-foreground) / 0.3); }
-.sk-heatmap__cell--2 { background: hsl(var(--sk-muted)); color: hsl(var(--sk-muted-foreground) / 0.5); }
-.sk-heatmap__cell--3 { background: hsl(var(--sk-muted)); color: hsl(var(--sk-muted-foreground) / 0.7); }
-.sk-heatmap__cell--4 { background: hsl(var(--sk-primary)); color: hsl(var(--sk-background)); }
-.sk-heatmap__cell--dither { position: relative; }
-.sk-heatmap__cell--dither::before { content: "░"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0.3; }
+.sk-ascii-chart__grid {
+  display: flex;
+  align-items: flex-end;
+  gap: 1px;
+  border-bottom: 1px solid hsl(var(--sk-border-color));
+  padding-bottom: 2px;
+  position: relative;
+}
+
+/* Y-axis tick marks */
+.sk-ascii-chart__grid::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  top: 0; bottom: 0;
+  border-left: 1px solid hsl(var(--sk-border-color));
+}
+
+.sk-ascii-chart__bar {
+  display: flex;
+  flex-direction: column-reverse;
+  width: 1.5ch;
+  gap: 0;
+  position: relative;
+}
+
+.sk-ascii-chart__bar-cell {
+  width: 1.5ch;
+  height: 1em;
+  text-align: center;
+  line-height: 1;
+  background: hsl(var(--sk-primary));
+  color: hsl(var(--sk-background));
+  font-size: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sk-ascii-chart__bar-cell--filled {
+  background: hsl(var(--sk-primary));
+}
+
+.sk-ascii-chart__bar-cell--dither {
+  background: hsl(var(--sk-primary));
+  position: relative;
+  overflow: hidden;
+}
+.sk-ascii-chart__bar-cell--dither::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image: var(--sk-dither-b4);
+  background-repeat: repeat;
+  opacity: 0.25;
+  mix-blend-mode: overlay;
+}
+
+/* Top cap gets a brighter shade */
+.sk-ascii-chart__bar .sk-ascii-chart__bar-cell:last-child {
+  background: hsl(var(--sk-primary) / 0.85);
+  position: relative;
+}
+
+.sk-ascii-chart__bar:hover .sk-ascii-chart__bar-cell {
+  background: hsl(var(--sk-ring));
+  filter: brightness(1.1);
+}
+
+.sk-ascii-chart__axis {
+  display: flex;
+  gap: 1px;
+  margin-top: var(--sk-space-1);
+}
+
+.sk-ascii-chart__label {
+  width: 1.5ch;
+  text-align: center;
+  font-size: 0.5rem;
+  color: hsl(var(--sk-muted-foreground));
+  overflow: hidden;
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
+.sk-ascii-chart__value {
+  font-size: 0.5rem;
+  color: hsl(var(--sk-muted-foreground));
+  text-align: center;
+  padding-top: 1px;
+  width: 1.5ch;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SPARKLINE — inline mini bar series
+   ═══════════════════════════════════════════════════════════ */
+
+.sk-sparkline {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 1.5px;
+  height: 2rem;
+  vertical-align: middle;
+}
+
+.sk-sparkline__bar {
+  flex-shrink: 0;
+  width: 3px;
+  min-height: 2px;
+  background: hsl(var(--sk-primary) / 0.6);
+  border-radius: 1px;
+  transition: background-color var(--sk-transition-fast), height var(--sk-transition-slow);
+  position: relative;
+}
+
+.sk-sparkline__bar--peak {
+  background: hsl(var(--sk-primary));
+}
+.sk-sparkline__bar--trough {
+  background: hsl(var(--sk-destructive) / 0.5);
+}
+
+.sk-sparkline:hover .sk-sparkline__bar {
+  background: hsl(var(--sk-primary) / 0.4);
+}
+.sk-sparkline:hover .sk-sparkline__bar--peak {
+  background: hsl(var(--sk-primary));
+}
+
+.sk-sparkline__bar--dither {
+  position: relative;
+  overflow: hidden;
+}
+.sk-sparkline__bar--dither::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image: var(--sk-dither-pattern);
+  background-repeat: repeat;
+  opacity: var(--sk-dither-opacity);
+  border-radius: inherit;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   METER — progress bar with dither fill
+   ═══════════════════════════════════════════════════════════ */
+
+.sk-meter {
+  display: flex;
+  align-items: center;
+  gap: var(--sk-space-2);
+  font-family: var(--sk-font-mono);
+  font-size: var(--sk-font-size-xs);
+}
+
+.sk-meter__track {
+  flex: 1;
+  height: 0.5rem;
+  background: hsl(var(--sk-muted));
+  border-radius: var(--sk-radius);
+  overflow: hidden;
+  border: var(--sk-border);
+  position: relative;
+}
+
+.sk-meter__fill {
+  height: 100%;
+  background: hsl(var(--sk-primary));
+  border-radius: var(--sk-radius);
+  transition: width var(--sk-transition-slow);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Dither overlay on fill */
+.sk-meter__fill::after {
+  content: "";
+  position: absolute; inset: 0;
+  background-image: var(--sk-dither-b4);
+  background-repeat: repeat;
+  opacity: 0.18;
+  mix-blend-mode: overlay;
+}
+
+.sk-meter__fill--dither {
+  position: relative;
+}
+.sk-meter__fill--dither::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image: var(--sk-dither-pattern);
+  background-repeat: repeat;
+  opacity: var(--sk-dither-opacity);
+  mix-blend-mode: overlay;
+}
+
+.sk-meter__label {
+  color: hsl(var(--sk-muted-foreground));
+  min-width: 2.8rem;
+  text-align: right;
+  letter-spacing: 0.02em;
+}
+
+/* Danger zone coloring */
+.sk-meter[data-danger] .sk-meter__fill { background: hsl(var(--sk-destructive)); }
+.sk-meter[data-warn]   .sk-meter__fill { background: hsl(var(--sk-warning)); }
+.sk-meter[data-ok]     .sk-meter__fill { background: hsl(var(--sk-success)); }
+
+/* ═══════════════════════════════════════════════════════════
+   HEATMAP — activity grid (GitHub contribution style)
+   ═══════════════════════════════════════════════════════════ */
+
+.sk-heatmap {
+  display: grid;
+  gap: 2px;
+  font-family: var(--sk-font-mono);
+}
+
+.sk-heatmap__cell {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  font-size: 0;
+  position: relative;
+  transition: transform var(--sk-transition-fast), filter var(--sk-transition-fast);
+}
+
+.sk-heatmap__cell:hover {
+  transform: scale(1.25);
+  z-index: 1;
+  filter: brightness(1.15);
+}
+
+/* 5 distinct levels — graduated from muted to primary */
+.sk-heatmap__cell--0 { background: hsl(var(--sk-muted)); }
+.sk-heatmap__cell--1 { background: hsl(var(--sk-primary) / 0.18); }
+.sk-heatmap__cell--2 { background: hsl(var(--sk-primary) / 0.38); }
+.sk-heatmap__cell--3 { background: hsl(var(--sk-primary) / 0.62); }
+.sk-heatmap__cell--4 { background: hsl(var(--sk-primary)); }
+
+/* Dither texture on partially-filled cells */
+.sk-heatmap__cell--1,
+.sk-heatmap__cell--2,
+.sk-heatmap__cell--3 {
+  overflow: hidden;
+}
+.sk-heatmap__cell--1::before { content: ""; position: absolute; inset: 0; background-image: var(--sk-dither-b2); background-repeat: repeat; opacity: 0.3; }
+.sk-heatmap__cell--2::before { content: ""; position: absolute; inset: 0; background-image: var(--sk-dither-b4); background-repeat: repeat; opacity: 0.25; }
+.sk-heatmap__cell--3::before { content: ""; position: absolute; inset: 0; background-image: var(--sk-dither-b8); background-repeat: repeat; opacity: 0.18; }
+
+/* ═══════════════════════════════════════════════════════════
+   LINE CHART — polyline-style ASCII line using border-top
+   ═══════════════════════════════════════════════════════════ */
+
+.sk-line-chart {
+  position: relative;
+  width: 100%;
+  border-bottom: 1px solid hsl(var(--sk-border-color));
+  border-left: 1px solid hsl(var(--sk-border-color));
+  font-family: var(--sk-font-mono);
+  overflow: hidden;
+}
+
+.sk-line-chart__area {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    to bottom,
+    hsl(var(--sk-primary) / 0.12) 0%,
+    transparent 100%
+  );
+}
+
+.sk-line-chart__area--dither {
+  background-image: var(--sk-dither-b2);
+  background-repeat: repeat;
+  opacity: 0.15;
+  mix-blend-mode: overlay;
+}
+
+/* SVG line chart shell — JS populates the <polyline> */
+.sk-line-chart svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.sk-line-chart polyline {
+  fill: none;
+  stroke: hsl(var(--sk-primary));
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.sk-line-chart path.sk-area {
+  fill: hsl(var(--sk-primary) / 0.1);
+  stroke: none;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   STAT — big number + label + trend
+   ═══════════════════════════════════════════════════════════ */
+
+.sk-stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sk-space-1);
+  font-family: var(--sk-font-mono);
+}
+
+.sk-stat__value {
+  font-size: var(--sk-font-size-4xl);
+  font-weight: var(--sk-font-weight-thin);
+  line-height: 1;
+  color: hsl(var(--sk-foreground));
+  letter-spacing: -0.02em;
+}
+
+.sk-stat__label {
+  font-size: var(--sk-font-size-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: hsl(var(--sk-muted-foreground));
+}
+
+.sk-stat__trend {
+  font-size: var(--sk-font-size-xs);
+  letter-spacing: 0.04em;
+}
+.sk-stat__trend--up   { color: hsl(var(--sk-success)); }
+.sk-stat__trend--down { color: hsl(var(--sk-destructive)); }
+.sk-stat__trend--flat { color: hsl(var(--sk-muted-foreground)); }
+
+/* ═══════════════════════════════════════════════════════════
+   GAUGE — radial-ish ASCII progress ring
+   ═══════════════════════════════════════════════════════════ */
+
+.sk-gauge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sk-space-1);
+  font-family: var(--sk-font-mono);
+  position: relative;
+}
+
+.sk-gauge svg {
+  overflow: visible;
+}
+
+.sk-gauge__track {
+  fill: none;
+  stroke: hsl(var(--sk-muted));
+  stroke-width: 3;
+}
+
+.sk-gauge__fill {
+  fill: none;
+  stroke: hsl(var(--sk-primary));
+  stroke-width: 3;
+  stroke-linecap: butt;
+  transition: stroke-dashoffset var(--sk-anim-slow, 600ms) var(--sk-ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
+}
+
+.sk-gauge__value {
+  font-size: var(--sk-font-size-sm);
+  color: hsl(var(--sk-foreground));
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-family: var(--sk-font-mono);
+}
+
+.sk-gauge__label {
+  font-size: var(--sk-font-size-xs);
+  color: hsl(var(--sk-muted-foreground));
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ACCESSIBILITY + PRINT
+   ═══════════════════════════════════════════════════════════ */
+
+@media print {
+  .sk-heatmap__cell--1,
+  .sk-heatmap__cell--2,
+  .sk-heatmap__cell--3,
+  .sk-heatmap__cell--4 { background: hsl(var(--sk-foreground)); }
+  .sk-heatmap__cell--0 { background: transparent; border: 1px solid currentColor; }
+  .sk-sparkline__bar { background: hsl(var(--sk-foreground)); }
+  .sk-meter__fill { background: hsl(var(--sk-foreground)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-sparkline__bar { transition: none; }
+  .sk-meter__fill    { transition: none; }
+  .sk-gauge__fill    { transition: none; }
+  .sk-ascii-chart__bar:hover .sk-ascii-chart__bar-cell { filter: none; }
+  .sk-heatmap__cell:hover { transform: none; filter: none; }
+}

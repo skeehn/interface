@@ -53,6 +53,14 @@ interface AsciiResult {
   colorLines: Array<Array<{ char: string; r: number; g: number; b: number }>> | null;
 }
 
+// 4×4 Bayer matrix (row-major, normalized to [0,1))
+const BAYER4: number[][] = [
+  [0 / 16, 8 / 16, 2 / 16, 10 / 16],
+  [12 / 16, 4 / 16, 14 / 16, 6 / 16],
+  [3 / 16, 11 / 16, 1 / 16, 9 / 16],
+  [15 / 16, 7 / 16, 13 / 16, 5 / 16],
+];
+
 function imageToAscii(
   img: HTMLImageElement,
   algorithm: AsciiImageAlgorithm,
@@ -70,17 +78,122 @@ function imageToAscii(
   const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
   ctx.drawImage(img, 0, 0);
 
-  // Compute cell dimensions preserving aspect ratio
-  const charAspect = 0.45; // terminal chars ~2x taller than wide
+  // Compute cell dimensions preserving terminal character aspect ratio
+  const charAspect = 0.45; // terminal chars are ~2.2× taller than wide
   const cellW = Math.max(1, Math.floor(naturalW / cols));
   const cellH = Math.max(1, Math.round(cellW / charAspect));
   const rows = Math.floor(naturalH / cellH);
   const actualCols = Math.floor(naturalW / cellW);
 
-  // Read full image data once
   const fullData = ctx.getImageData(0, 0, naturalW, naturalH);
   const d = fullData.data;
+  const n = palette.length;
 
+  // ── Pass 1: collect per-cell luminance + color ──────────────────────────
+  // lum is a flat Float32Array(rows × actualCols) holding normalized [0,1] values
+  const lum = new Float32Array(rows * actualCols);
+  const cellColor = color
+    ? new Array<{ r: number; g: number; b: number }>(rows * actualCols)
+    : null;
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < actualCols; c++) {
+      const px = c * cellW;
+      const py = r * cellH;
+      const cw = Math.min(cellW, naturalW - px);
+      const ch = Math.min(cellH, naturalH - py);
+      const idx = r * actualCols + c;
+
+      if (cw <= 0 || ch <= 0) {
+        lum[idx] = 0;
+        if (cellColor) cellColor[idx] = { r: 0, g: 0, b: 0 };
+        continue;
+      }
+
+      let lumSum = 0, rSum = 0, gSum = 0, bSum = 0, count = 0;
+      for (let dy = 0; dy < ch; dy++) {
+        for (let dx = 0; dx < cw; dx++) {
+          const i = ((py + dy) * naturalW + (px + dx)) * 4;
+          const pr = d[i], pg = d[i + 1], pb = d[i + 2];
+          lumSum += 0.2126 * pr + 0.7152 * pg + 0.0722 * pb;
+          rSum += pr; gSum += pg; bSum += pb;
+          count++;
+        }
+      }
+
+      const avg = lumSum / count / 255;
+      lum[idx] = invert ? 1 - avg : avg;
+      if (cellColor) {
+        cellColor[idx] = {
+          r: Math.round(rSum / count),
+          g: Math.round(gSum / count),
+          b: Math.round(bSum / count),
+        };
+      }
+    }
+  }
+
+  // ── Pass 2: apply dithering algorithm to the cell luminance grid ─────────
+  if (algorithm === 'floyd') {
+    // Floyd-Steinberg error diffusion across the character grid
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < actualCols; c++) {
+        const idx = r * actualCols + c;
+        const oldV = Math.max(0, Math.min(1, lum[idx]));
+        const qi = Math.round(oldV * (n - 1));
+        const newV = qi / (n - 1);
+        lum[idx] = newV;
+        const err = oldV - newV;
+
+        const spread = (ri: number, ci: number, frac: number) => {
+          if (ri >= 0 && ri < rows && ci >= 0 && ci < actualCols) {
+            const di = ri * actualCols + ci;
+            lum[di] = Math.max(0, Math.min(1, lum[di] + err * frac));
+          }
+        };
+        spread(r,     c + 1, 7 / 16);
+        spread(r + 1, c - 1, 3 / 16);
+        spread(r + 1, c,     5 / 16);
+        spread(r + 1, c + 1, 1 / 16);
+      }
+    }
+  } else if (algorithm === 'atkinson') {
+    // Atkinson dithering — propagates only 6/8 of the error (sharper tonal edges)
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < actualCols; c++) {
+        const idx = r * actualCols + c;
+        const oldV = Math.max(0, Math.min(1, lum[idx]));
+        const qi = Math.round(oldV * (n - 1));
+        const newV = qi / (n - 1);
+        lum[idx] = newV;
+        const e = (oldV - newV) / 8;
+
+        const set = (ri: number, ci: number) => {
+          if (ri >= 0 && ri < rows && ci >= 0 && ci < actualCols) {
+            const di = ri * actualCols + ci;
+            lum[di] = Math.max(0, Math.min(1, lum[di] + e));
+          }
+        };
+        set(r, c + 1); set(r, c + 2);
+        set(r + 1, c - 1); set(r + 1, c); set(r + 1, c + 1);
+        set(r + 2, c);
+      }
+    }
+  } else {
+    // Bayer ordered dithering — threshold via 4×4 matrix (regular halftone pattern)
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < actualCols; c++) {
+        const idx = r * actualCols + c;
+        const oldV = Math.max(0, Math.min(1, lum[idx]));
+        // Scale the Bayer threshold so it spans one palette-level interval
+        const threshold = (BAYER4[r % 4][c % 4] - 0.5) / (n - 1);
+        const qi = Math.min(n - 1, Math.max(0, Math.round(oldV * (n - 1) + threshold)));
+        lum[idx] = qi / (n - 1);
+      }
+    }
+  }
+
+  // ── Pass 3: map quantized grid to palette characters ─────────────────────
   const lines: string[] = [];
   const colorLines: Array<Array<{ char: string; r: number; g: number; b: number }>> | null = color
     ? []
@@ -91,51 +204,15 @@ function imageToAscii(
     const colorRow: Array<{ char: string; r: number; g: number; b: number }> = [];
 
     for (let c = 0; c < actualCols; c++) {
-      const px = c * cellW;
-      const py = r * cellH;
-      const w = Math.min(cellW, naturalW - px);
-      const h = Math.min(cellH, naturalH - py);
-
-      if (w <= 0 || h <= 0) {
-        line += ' ';
-        if (color) colorRow.push({ char: ' ', r: 0, g: 0, b: 0 });
-        continue;
-      }
-
-      // Average luminance + color over the cell
-      let lumSum = 0;
-      let rSum = 0;
-      let gSum = 0;
-      let bSum = 0;
-      let count = 0;
-
-      for (let dy = 0; dy < h; dy++) {
-        for (let dx = 0; dx < w; dx++) {
-          const i = ((py + dy) * naturalW + (px + dx)) * 4;
-          const pr = d[i];
-          const pg = d[i + 1];
-          const pb = d[i + 2];
-          lumSum += 0.2126 * pr + 0.7152 * pg + 0.0722 * pb;
-          rSum += pr;
-          gSum += pg;
-          bSum += pb;
-          count++;
-        }
-      }
-
-      const avg = lumSum / count / 255;
-      const v = invert ? 1 - avg : avg;
-      const charIdx = Math.min(palette.length - 1, Math.round(v * (palette.length - 1)));
+      const idx = r * actualCols + c;
+      const v = Math.max(0, Math.min(1, lum[idx]));
+      const charIdx = Math.min(n - 1, Math.round(v * (n - 1)));
       const ch = palette[charIdx];
-
       line += ch;
-      if (color) {
-        colorRow.push({
-          char: ch,
-          r: Math.round(rSum / count),
-          g: Math.round(gSum / count),
-          b: Math.round(bSum / count),
-        });
+
+      if (colorLines && cellColor) {
+        const cc = cellColor[idx];
+        colorRow.push({ char: ch, r: cc.r, g: cc.g, b: cc.b });
       }
     }
 

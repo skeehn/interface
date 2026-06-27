@@ -53,6 +53,7 @@
   color: hsl(var(--sk-foreground));
   background: hsl(var(--sk-muted));
   border: var(--sk-border);
+  border-left: 3px solid hsl(var(--sk-border-color));
   border-radius: var(--sk-radius-sm);
   padding: var(--sk-space-2) var(--sk-space-3);
   margin: var(--sk-space-1) 0 0;
@@ -60,11 +61,20 @@
   white-space: pre-wrap;
   word-break: break-word;
 }
-.sk-ai-tool-io[data-io="output"] { background: hsl(var(--sk-surface)); }
+/* Output gets accent left bar + slightly differentiated bg */
+.sk-ai-tool-io[data-io="output"] {
+  background: hsl(var(--sk-surface));
+  border-left-color: hsl(var(--sk-accent) / 0.5);
+  color: hsl(var(--sk-muted-foreground));
+}
 .sk-ai-tool-error {
   font-family: var(--sk-font-mono);
   font-size: var(--sk-font-size-xs);
   color: hsl(var(--sk-destructive));
+  border-left: 3px solid hsl(var(--sk-destructive) / 0.5);
+  background: hsl(var(--sk-destructive) / 0.06);
+  border-radius: var(--sk-radius-sm);
+  padding: var(--sk-space-1) var(--sk-space-2);
   margin-top: var(--sk-space-1);
 }
 

@@ -50,8 +50,11 @@
 .sk-card[data-interactive="true"]:hover,
 .sk-card[data-interactive="true"]:focus-within {
   transform: translateY(var(--sk-lift-y-lg));
-  border-color: hsl(var(--sk-foreground) / 0.25);
-  box-shadow: var(--sk-elevation-hover);
+  border-color: hsl(var(--sk-foreground) / 0.2);
+  box-shadow:
+    0 12px 40px hsl(var(--sk-foreground) / 0.10),
+    0 4px 12px hsl(var(--sk-foreground) / 0.06),
+    var(--sk-elevation-hover);
 }
 .sk-card[data-interactive="true"]:focus-visible {
   outline: var(--sk-focus-ring);
@@ -157,10 +160,10 @@
   inset: 0;
   background-image:
     var(--sk-dither-pattern),
-    radial-gradient(circle at 10% 0%, hsl(var(--sk-foreground) / 0.05), transparent 36%);
-  background-size: 32px 32px, auto;
-  opacity: 0.1;
-  mix-blend-mode: multiply;
+    radial-gradient(circle at 10% 0%, hsl(var(--sk-foreground) / 0.06), transparent 36%);
+  background-size: 16px 16px, auto;
+  opacity: 0.12;
+  mix-blend-mode: overlay;
   pointer-events: none;
   z-index: 0;
 }
@@ -171,13 +174,19 @@
 }
 
 .sk-card[data-variant="ghost"] {
-  background: hsl(var(--sk-accent));
-  border-color: transparent;
+  background: hsl(var(--sk-accent) / 0.08);
+  border-color: hsl(var(--sk-accent) / 0.2);
   box-shadow: none;
 }
 
 .sk-card[data-variant="ghost"]::before {
-  opacity: 0.45;
+  opacity: 0.55;
+}
+
+.sk-card[data-variant="ghost"]:hover,
+.sk-card[data-variant="ghost"]:focus-within {
+  border-color: hsl(var(--sk-accent) / 0.4);
+  background: hsl(var(--sk-accent) / 0.12);
 }
 
 .sk-card[data-variant="inverted"] {

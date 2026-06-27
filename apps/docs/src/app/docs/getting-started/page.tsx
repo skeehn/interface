@@ -152,7 +152,7 @@ export default function GettingStartedPage() {
         <div className="space-y-3">
           <NextLink href="/docs/engine" label="Engine Playground" description="See the ASCII dithering engine in action" />
           <NextLink href="/docs/ai-chat" label="AI Chat Demo" description="Full chat interface with streaming and tool calls" />
-          <NextLink href="/docs/themes" label="Theme Gallery" description="Preview all 7 themes with live switching" />
+          <NextLink href="/docs/themes" label="Theme Gallery" description="Preview all 8 themes with live switching" />
         </div>
       </div>
     </div>

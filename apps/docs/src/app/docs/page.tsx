@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Reveal } from "@/components/Reveal";
 
 export const metadata: Metadata = {
   title: "Documentation",
@@ -11,7 +12,7 @@ const CARDS = [
   { href: "/docs/getting-started", n: "01", title: "Getting started", body: "Install via CLI or copy components directly into your project." },
   { href: "/docs/usage", n: "02", title: "Usage", body: "Import components, wire the hooks, and start building." },
   { href: "/docs/components", n: "03", title: "Components", body: "Browse 32 components across core, AI, layout and viz." },
-  { href: "/docs/themes", n: "04", title: "Themes", body: "Seven built-in skins — editorial, terminal, brutal and more." },
+  { href: "/docs/themes", n: "04", title: "Themes", body: "Eight built-in skins — editorial, terminal, brutal and more." },
 ];
 
 export default function DocsPage() {
@@ -21,22 +22,22 @@ export default function DocsPage() {
       <p className="text-lg text-muted-fg leading-relaxed max-w-xl mb-14">
         skeehn is the open-source component library for building AI interfaces — chat, streaming,
         reasoning, tool calls, agents. Copy components into your project, theme them to your brand,
-        and own every line. 32 components, 7 themes, zero runtime dependencies.
+        and own every line. 32 components, 8 themes, zero runtime dependencies.
       </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-16">
+      <Reveal className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-16">
         {CARDS.map((c) => (
           <Link
             key={c.href}
             href={c.href}
-            className="group rounded-xl border border-border bg-surface p-6 hover:border-foreground/20 hover:bg-muted/50 transition-colors"
+            className="group rounded-xl border border-border bg-surface p-6 transition-all hover:border-foreground/20 hover:bg-muted/50 hover:-translate-y-0.5"
           >
             <span className="text-xs font-medium text-accent tracking-wider">{c.n}</span>
             <span className="mt-3 block text-base font-semibold text-foreground">{c.title}</span>
             <span className="mt-1.5 block text-sm text-muted-fg leading-relaxed">{c.body}</span>
           </Link>
         ))}
-      </div>
+      </Reveal>
 
       <div className="rounded-xl border border-border bg-surface overflow-hidden">
         <div className="px-6 pt-5 pb-3 border-b border-border">

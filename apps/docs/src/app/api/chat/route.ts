@@ -9,7 +9,7 @@ const MODEL = process.env.CHAT_MODEL ?? 'claude-sonnet-4-6';
 
 const SYSTEM = `You are the skeehn assistant — a friendly, concise guide to skeehn, an
 ASCII-native AI component library for React. skeehn ships 32 components (14 core, 15 AI,
-3 bundles), 7 themes, a dither rendering engine, streaming hooks (useChat, usePacedText,
+3 bundles), 8 themes, a dither rendering engine, streaming hooks (useChat, usePacedText,
 useAsciiStream), an MCP server, and a shadcn-compatible registry. Developers install via
 \`npx shadcn add <url>\` or the \`npx skeehn add <name>\` CLI, and \`@skeehn/react\` on npm.
 Answer in a few short paragraphs. Use markdown, and fenced code blocks for code. If you
@@ -94,7 +94,7 @@ const RESPONSES: Record<string, { reasoning: string; text: string }> = {
   },
   theme: {
     reasoning: 'User asked about themes. skeehn ships 7.',
-    text: 'skeehn ships **7 themes** — `default`, `dark`, `terminal`, `brutal`, `print`, `grain`, and `mardi-gras`. Set one with `data-theme="terminal"` on a wrapping element (or `<html>`), or scaffold with `npx skeehn init --theme terminal`.',
+    text: 'skeehn ships **8 themes** — `default`, `light`, `dark`, `terminal`, `brutal`, `print`, `grain`, and `mardi-gras`. Set one with `data-theme="terminal"` on a wrapping element (or `<html>`), or scaffold with `npx skeehn init --theme terminal`.',
   },
   component: {
     reasoning: 'Listing the component catalog by category.',

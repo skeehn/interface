@@ -171,7 +171,7 @@ export default function HomePage() {
           <div className="max-w-2xl mb-12">
             <p className="docs-label mb-3">Make it yours</p>
             <h2 className="font-semibold tracking-[-0.02em] text-foreground" style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.4rem)" }}>One component, every aesthetic</h2>
-            <p className="mt-3 text-muted-fg leading-relaxed">A clean, neutral default ships in the box — then eight themes take you as far as you want, from Editorial to green-phosphor Terminal to Brutalist, all driven by one token contract. The same chat, three ways:</p>
+            <p className="mt-3 text-muted-fg leading-relaxed">A clean, neutral default ships in the box — then seven more skins take you as far as you want, from green-phosphor Terminal to Brutalist to soft-grain Print, all driven by one token contract. The same chat, three ways:</p>
           </div>
           <div className="grid md:grid-cols-3 gap-5">
             {THEMES.map((t) => (

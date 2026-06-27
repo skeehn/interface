@@ -6,7 +6,7 @@
 
 <p align="center">
   Build AI interfaces that mean it.<br />
-  32 components. 7 themes. Zero dependencies. Every surface a canvas for dither texture.
+  32 components. 8 themes. Zero dependencies. Every surface a canvas for dither texture.
 </p>
 
 <p align="center">

@@ -14,14 +14,22 @@
   font-family: var(--sk-font-mono); font-size: var(--sk-font-size-sm); font-weight: 500;
   letter-spacing: 0.01em; line-height: 1; border: var(--sk-border); border-radius: var(--sk-radius);
   background: transparent; cursor: pointer; user-select: none;
-  transition: all var(--sk-transition); white-space: nowrap; position: relative; overflow: hidden;
+  transition:
+    background-color var(--sk-transition),
+    color            var(--sk-transition),
+    border-color     var(--sk-transition),
+    box-shadow       var(--sk-transition),
+    opacity          var(--sk-transition),
+    transform        var(--sk-transition-fast);
+  white-space: nowrap; position: relative; overflow: hidden;
 }
 .sk-btn:focus-visible { outline: var(--sk-focus-ring); outline-offset: var(--sk-focus-ring-offset); }
 
-/* Chunky pixel press — universal active state */
+/* Chunky pixel press — universal active state, spring-returns via transition-fast on transform */
 .sk-btn:active:not(:disabled) {
   box-shadow: inset 0 2px 0 hsl(var(--sk-foreground) / 0.15);
   transform: translateY(1px);
+  transition-duration: 40ms;
 }
 
 .sk-btn:disabled { opacity: 0.4; pointer-events: none; cursor: not-allowed; }
@@ -33,7 +41,10 @@
 
 /* Solid */
 .sk-btn[data-variant="solid"] { background: hsl(var(--sk-primary)); color: hsl(var(--sk-background)); border-color: transparent; }
-.sk-btn[data-variant="solid"]:hover:not(:disabled) { opacity: 0.85; }
+.sk-btn[data-variant="solid"]:hover:not(:disabled) {
+  opacity: 0.9;
+  box-shadow: 0 4px 14px hsl(var(--sk-primary) / 0.2), 0 1px 4px hsl(var(--sk-primary) / 0.1);
+}
 
 /* Dither — denser pattern on hover, scanline texture on active */
 .sk-btn[data-variant="dither"] {
@@ -67,11 +78,15 @@
 
 /* Outline */
 .sk-btn[data-variant="outline"] { background: transparent; color: hsl(var(--sk-foreground)); border-color: hsl(var(--sk-border-color)); }
-.sk-btn[data-variant="outline"]:hover:not(:disabled) { background: hsl(var(--sk-accent)); border-color: hsl(var(--sk-foreground)); }
+.sk-btn[data-variant="outline"]:hover:not(:disabled) {
+  background: hsl(var(--sk-accent));
+  border-color: hsl(var(--sk-foreground));
+  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.06);
+}
 
 /* Ghost */
 .sk-btn[data-variant="ghost"] { background: transparent; color: hsl(var(--sk-foreground)); border-color: transparent; }
-.sk-btn[data-variant="ghost"]:hover:not(:disabled) { background: hsl(var(--sk-accent)); }
+.sk-btn[data-variant="ghost"]:hover:not(:disabled) { background: hsl(var(--sk-accent)); border-color: hsl(var(--sk-border-color)); }
 
 /* Inverted */
 .sk-btn[data-variant="inverted"] { background: hsl(var(--sk-background)); color: hsl(var(--sk-foreground)); border: 2px solid hsl(var(--sk-foreground)); }

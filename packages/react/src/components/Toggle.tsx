@@ -2,6 +2,8 @@
 
 import React from 'react';
 
+export type ToggleVariant = 'default' | 'pixel' | 'retro' | 'ascii';
+
 /** Props for the {@link Toggle} component. */
 export interface ToggleProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
   /** Whether the toggle is on (controlled). */
@@ -12,6 +14,8 @@ export interface ToggleProps extends Omit<React.InputHTMLAttributes<HTMLInputEle
   onCheckedChange?: (checked: boolean) => void;
   /** Label text displayed next to the toggle. */
   label?: string;
+  /** Visual variant. */
+  variant?: ToggleVariant;
   /** Additional CSS class names on the outer wrapper. */
   className?: string;
 }
@@ -21,7 +25,7 @@ export interface ToggleProps extends Omit<React.InputHTMLAttributes<HTMLInputEle
  * Renders a `<label>` wrapping a hidden checkbox and a styled thumb.
  */
 export const Toggle = React.forwardRef<HTMLInputElement, ToggleProps>(
-  ({ checked, defaultChecked, onCheckedChange, label, className, onChange, ...rest }, ref) => {
+  ({ checked, defaultChecked, onCheckedChange, label, variant, className, onChange, ...rest }, ref) => {
     const handleChange = React.useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
         onCheckedChange?.(e.target.checked);
@@ -31,7 +35,10 @@ export const Toggle = React.forwardRef<HTMLInputElement, ToggleProps>(
     );
 
     return (
-      <label className={`sk-toggle${className ? ` ${className}` : ''}`}>
+      <label
+        className={`sk-toggle${className ? ` ${className}` : ''}`}
+        data-variant={variant !== 'default' ? variant : undefined}
+      >
         <input
           ref={ref}
           type="checkbox"

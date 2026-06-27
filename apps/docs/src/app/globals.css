@@ -111,7 +111,7 @@ body { font-family: var(--sk-font-sans); }
 
 /* ═══ DOCS UTILITY STYLES ═══ */
 .docs-section { margin-bottom: 4rem; }
-.docs-heading { font-family: var(--sk-font-sans); font-weight: 600; letter-spacing: -0.025em; }
+.docs-heading { font-family: var(--font-display); font-weight: 400; letter-spacing: -0.01em; }
 .docs-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.16em; color: hsl(var(--sk-muted-foreground)); }
 
 /* Inline code chip (in prose) */
@@ -151,3 +151,81 @@ body { font-family: var(--sk-font-sans); }
 @media (prefers-reduced-motion: reduce) {
   .sk-rise, .sk-reveal, .sk-reveal[data-shown="true"] { animation: none !important; opacity: 1 !important; transform: none !important; }
 }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   SITE DESIGN LANGUAGE — "TECHNICAL EDITORIAL"
+   A computing-press aesthetic: warm paper stock, warm-black ink, a high-contrast
+   editorial serif paired with refined mono, hairline rules, crop-marks and a
+   fine halftone. Scoped to this SITE only — the published @skeehn library CSS
+   (engine/, themes/, components/) is left completely untouched.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --font-display: var(--font-instrument), Georgia, "Times New Roman", serif;
+  /* Re-point the site's skeehn fonts to the editorial type system */
+  --sk-font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --sk-font-mono: var(--font-plex-mono), ui-monospace, "SF Mono", monospace;
+}
+
+/* Retune the base LIGHT theme to warm paper + ink. Unlayered ⇒ overrides the
+   layered themes/light.css. Other themes (dark, terminal, brutal…) untouched. */
+[data-theme="light"] {
+  --sk-background: 42 32% 95%;
+  --sk-surface: 44 42% 98%;
+  --sk-foreground: 28 13% 11%;
+  --sk-muted: 40 22% 90%;
+  --sk-muted-foreground: 30 7% 37%;
+  --sk-border-color: 34 17% 82%;
+  --sk-primary: 28 13% 11%;
+  --sk-primary-fg: 42 32% 96%;
+  --sk-accent: 167 86% 24%;
+  --sk-accent-foreground: 44 42% 98%;
+  --sk-ring: 167 86% 24%;
+}
+
+::selection { background: hsl(var(--sk-accent) / 0.20); color: hsl(var(--sk-foreground)); }
+
+/* ── Typographic instruments ── */
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.015em;
+}
+.display em { font-style: italic; }
+.font-display { font-family: var(--font-display); font-weight: 400; }
+.eyebrow {
+  font-family: var(--sk-font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: hsl(var(--sk-muted-foreground));
+}
+.spec { font-family: var(--sk-font-mono); letter-spacing: 0.01em; }
+.tnum { font-variant-numeric: tabular-nums; }
+
+/* ── Hairline rules (a technical-sheet grid) ── */
+.rule-t { border-top: 1px solid hsl(var(--sk-border-color)); }
+.rule-b { border-bottom: 1px solid hsl(var(--sk-border-color)); }
+.rule-l { border-left: 1px solid hsl(var(--sk-border-color)); }
+.rule-r { border-right: 1px solid hsl(var(--sk-border-color)); }
+.rule-ink { border-color: hsl(var(--sk-foreground)) !important; }
+
+/* ── Crop-mark figure frame (place .crop spans inside a position:relative box) ── */
+.crop { position: absolute; width: 9px; height: 9px; z-index: 3; pointer-events: none; color: hsl(var(--sk-foreground)); }
+.crop-tl { top: -1px; left: -1px; border-top: 1.5px solid currentColor; border-left: 1.5px solid currentColor; }
+.crop-tr { top: -1px; right: -1px; border-top: 1.5px solid currentColor; border-right: 1.5px solid currentColor; }
+.crop-bl { bottom: -1px; left: -1px; border-bottom: 1.5px solid currentColor; border-left: 1.5px solid currentColor; }
+.crop-br { bottom: -1px; right: -1px; border-bottom: 1.5px solid currentColor; border-right: 1.5px solid currentColor; }
+
+/* ── Texture fields ── */
+.paper-grain { background-image: radial-gradient(hsl(28 22% 12% / 0.025) 0.5px, transparent 0.6px); background-size: 5px 5px; }
+.halftone { background-image: radial-gradient(hsl(var(--sk-foreground) / 0.5) 0.7px, transparent 0.8px); background-size: 6px 6px; }
+
+/* ── Editorial inline link ── */
+.elink { color: hsl(var(--sk-accent)); text-decoration: none; box-shadow: inset 0 -1px 0 hsl(var(--sk-accent) / 0.35); transition: box-shadow 0.18s ease; }
+.elink:hover { box-shadow: inset 0 -2px 0 hsl(var(--sk-accent) / 0.95); }
+
+/* ── Marquee-free "ticker" rule character ── */
+.tick::before { content: "▚"; color: hsl(var(--sk-accent)); margin-right: 0.5ch; }

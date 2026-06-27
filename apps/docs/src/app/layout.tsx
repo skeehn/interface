@@ -1,15 +1,30 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Instrument_Serif, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Display — a high-contrast editorial serif for big headlines.
+const display = Instrument_Serif({
+  weight: "400",
+  style: ["normal", "italic"],
   subsets: ["latin"],
+  variable: "--font-instrument",
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+// Technical — refined monospace for nav, labels, captions, code, spec text.
+const mono = IBM_Plex_Mono({
+  weight: ["400", "500", "600"],
   subsets: ["latin"],
+  variable: "--font-plex-mono",
+  display: "swap",
+});
+
+// Body — IBM Plex Sans, for running prose. Cohesive with the mono.
+const sans = IBM_Plex_Sans({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
+  variable: "--font-plex-sans",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -56,7 +71,7 @@ export default function RootLayout({
     <html
       lang="en"
       data-theme="light"
-      className={`${geistSans.variable} ${geistMono.variable}`}
+      className={`${display.variable} ${mono.variable} ${sans.variable}`}
       suppressHydrationWarning
     >
       <head>

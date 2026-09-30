@@ -21,10 +21,13 @@ export type { ConversationProps } from './Conversation';
 export { Message } from './Message';
 export type { MessageProps } from './Message';
 
-export { renderPart, renderParts } from './renderParts';
+export { renderPart, renderParts, messageText } from './renderParts';
 
 export { ScrollToBottomButton } from '../components/ScrollToBottom';
 export type { ScrollToBottomButtonProps } from '../components/ScrollToBottom';
+
+export { ToolApproval, ToolApprovalProvider, useToolApproval } from '../components/ToolApproval';
+export type { ToolApprovalProps } from '../components/ToolApproval';
 
 export type {
   UIMessage,

@@ -14,12 +14,16 @@ import type { ReactNode } from 'react';
 /** Streaming lifecycle for text/reasoning parts. */
 export type UIPartState = 'streaming' | 'done';
 
-/** Tool-call lifecycle (AI SDK v5). */
+/** Tool-call lifecycle (AI SDK v5 + skeehn approval states). */
 export type ToolPartState =
   | 'input-streaming'
   | 'input-available'
   | 'output-available'
-  | 'output-error';
+  | 'output-error'
+  /** skeehn extension: execution halted pending a human decision. */
+  | 'awaiting-approval'
+  | 'approval-approved'
+  | 'approval-denied';
 
 export interface TextUIPart {
   type: 'text';

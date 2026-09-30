@@ -60,6 +60,9 @@ export type { AgentStatusProps, AgentStatusValue } from './components/AgentStatu
 export { ToolCard } from './components/ToolCard';
 export type { ToolCardProps, ToolCardStatus } from './components/ToolCard';
 
+export { ToolApproval, ToolApprovalProvider, useToolApproval } from './components/ToolApproval';
+export type { ToolApprovalProps } from './components/ToolApproval';
+
 export { CitationCard } from './components/CitationCard';
 export type { CitationCardProps, CitationCardVariant } from './components/CitationCard';
 

@@ -21,9 +21,11 @@ import { FileAttachment } from '../components/FileAttachment';
 import { Divider } from '../components/Layout';
 import type {
   RenderPartsOptions,
-  ToolPartState,
+  TextUIPart,
+  UIMessage,
   UIMessagePart,
   PartContext,
+  ToolPartState,
 } from './types';
 
 /** AI SDK tool state → skeehn ToolCard status. */
@@ -185,4 +187,12 @@ export function renderParts(
     const node = renderPart(part, i, options);
     return node == null ? null : <div key={i} className="sk-ai-part" data-part={part.type}>{node}</div>;
   });
+}
+
+/** Flatten a message's text/reasoning parts to one plain-text string. */
+export function messageText(message: UIMessage): string {
+  return message.parts
+    .filter((p): p is TextUIPart => p.type === 'text')
+    .map((p) => p.text)
+    .join('');
 }

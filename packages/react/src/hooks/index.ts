@@ -15,10 +15,11 @@
  * ```
  */
 
-export { useChat } from './useChat';
+export { useChat, parseSSE, MessageAccumulator } from './useChat';
 export type {
-  Message,
-  ToolInvocation,
+  ChatStatus,
+  ToolDelta,
+  StreamEvent,
   UseChatOptions,
   UseChatReturn,
 } from './useChat';

@@ -35,7 +35,10 @@ npx skeehn init --theme light            # default neutral theme
 - `@skeehn/react` — all components + the chat primitives (MessageActions, Sources, ModelPicker…)
 - `@skeehn/react/ai` — AI SDK v5 drop-in: `Conversation`, `Message`, `renderParts`
 - `@skeehn/react/blocks` — whole-interface blocks: `ChatConsole`, `AgentConsole`, `VoiceConsole`, `HeroSection`
-- `@skeehn/react/hooks` — `useChat`, `useCompletion`, `usePacedText`, `useStickyScroll`, `useAsciiStream`
+- `@skeehn/react/hooks` — `useChat` (parts-based: `messages: UIMessage[]`, `status`,
+  `submitApproval(toolCallId, approved)` for human-in-the-loop tools; `parseSSE` +
+  `MessageAccumulator` exported for custom transports), plus `useCompletion`,
+  `usePacedText`, `useStickyScroll`, `useAsciiStream`.
 - `@skeehn/core` — CSS + the dither engine (`DitherEngine`, `CanvasRenderer`); `@skeehn/core/styles.css` is batteries-included
 
 ## AI SDK v5 drop-in (`@skeehn/react/ai`)

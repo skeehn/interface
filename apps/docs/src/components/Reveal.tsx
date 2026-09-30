@@ -20,6 +20,7 @@ export function Reveal({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [shown, setShown] = useState(false);
+  const [armed, setArmed] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
@@ -38,6 +39,7 @@ export function Reveal({
       { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
     );
     io.observe(el);
+    setArmed(true);
     return () => io.disconnect();
   }, []);
 
@@ -46,6 +48,7 @@ export function Reveal({
       ref={ref as never}
       className={`sk-reveal ${className}`}
       data-shown={shown}
+      data-armed={armed}
       style={{ animationDelay: `${delay}ms` }}
     >
       {children}

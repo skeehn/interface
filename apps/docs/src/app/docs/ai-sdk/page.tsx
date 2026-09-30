@@ -46,6 +46,7 @@ const MAPPING: [string, string][] = [
   ["text", "ChatBubble (Markdown for assistant prose)"],
   ["reasoning", "ThinkingBlock"],
   ["tool-* / dynamic-tool", "ToolCard (input · output · error)"],
+  ["tool · awaiting-approval", "ToolApproval — human-in-the-loop gate"],
   ["source-url / source-document", "CitationCard"],
   ["file (image/*)", "<img> · otherwise FileAttachment"],
   ["step-start", "Divider between steps"],

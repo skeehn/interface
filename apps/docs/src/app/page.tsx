@@ -104,7 +104,7 @@ export default function HomePage() {
       <div className="rule-b bg-surface">
         <div className="max-w-6xl mx-auto px-6 h-9 flex items-center gap-x-5 overflow-hidden whitespace-nowrap spec text-[0.7rem] text-muted-fg">
           <span className="text-accent">●</span>
-          <span className="text-foreground">v1.1.0</span><span className="text-border">/</span>
+          <span className="text-foreground">v2.0.0</span><span className="text-border">/</span>
           <span>32 COMPONENTS</span><span className="text-border">/</span>
           <span>8 THEMES</span><span className="text-border">/</span>
           <span>0 RUNTIME DEPS</span><span className="text-border">/</span>

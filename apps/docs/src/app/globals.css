@@ -133,8 +133,9 @@ body { font-family: var(--sk-font-sans); }
 /* Hero entrance — animates on load; stagger via inline animation-delay */
 .sk-rise { opacity: 0; animation: sk-fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
 
-/* Scroll reveal — hidden until <Reveal> flips data-shown when it enters view */
-.sk-reveal { opacity: 0; }
+/* Scroll reveal — content stays visible until JS arms the hidden state;
+   no-JS, print, and IO-less environments render every section (never blank). */
+.sk-reveal[data-armed="true"]:not([data-shown="true"]) { opacity: 0; }
 .sk-reveal[data-shown="true"] { animation: sk-fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
 
 /* Subtle premium dot-grid (NOT the dither) — tasteful hero/section texture */
@@ -150,6 +151,10 @@ body { font-family: var(--sk-font-sans); }
 
 @media (prefers-reduced-motion: reduce) {
   .sk-rise, .sk-reveal, .sk-reveal[data-shown="true"] { animation: none !important; opacity: 1 !important; transform: none !important; }
+}
+
+@media print {
+  .sk-reveal { opacity: 1 !important; }
 }
 
 /* ════════════════════════════════════════════════════════════════════════════

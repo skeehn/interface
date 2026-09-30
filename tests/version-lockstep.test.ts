@@ -29,3 +29,9 @@ describe("package version lockstep", () => {
     expect(cli).toContain(`VERSION = "${version}"`);
   });
 });
+
+test("docs hero status pill matches the package version", () => {
+  const page = readFileSync(join(ROOT, "apps/docs/src/app/page.tsx"), "utf-8");
+  const version = JSON.parse(readFileSync(join(ROOT, "packages/react/package.json"), "utf-8")).version as string;
+  expect(page).toContain(`v${version}`);
+});

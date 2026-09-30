@@ -5,6 +5,8 @@
     "moduleResolution": "bundler",
     "types": ["bun-types"],
     "strict": true,
+    "jsx": "react-jsx",
+    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -21,13 +23,16 @@
     "engine/**/*.ts",
     "cli/**/*.ts",
     "packages/**/*.ts",
-    "apps/**/*.ts",
     "tests/**/*.ts"
   ],
   "exclude": [
     "node_modules",
     "**/node_modules",
     "dist",
-    "**/dist"
+    "**/dist",
+    "apps",
+    "packages/react",
+    "**/__tests__",
+    "packages/react/test"
   ]
 }

@@ -8,6 +8,10 @@
 export { DitherBackground } from './DitherBackground';
 export type { DitherBackgroundProps, DitherAlgorithm } from './DitherBackground';
 
+export { detectGLTier, GLFrameMonitor, downgradeTier, resolveInitialTier } from './policy';
+export type { GLTier, GLTierSignals } from './policy';
+export { TIER_FPS_CAP, TIER_PIXEL_SCALE } from './policy';
+
 export { AsciiImage } from './AsciiImage';
 export type { AsciiImageProps, AsciiImageAlgorithm, AsciiImagePalette } from './AsciiImage';
 

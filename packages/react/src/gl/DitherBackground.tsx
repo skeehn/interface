@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useRef, useEffect, useCallback, useState } from 'react';
+import { TIER_FPS_CAP, TIER_PIXEL_SCALE, type GLTier } from './policy';
+import { GLFrameMonitor, downgradeTier, resolveInitialTier } from './policy';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -218,12 +220,15 @@ export const DitherBackground = React.forwardRef<HTMLDivElement, DitherBackgroun
   ) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const wrapperRef = useRef<HTMLDivElement>(null);
-    const frameRef = useRef<number>(0);
     const colorsRef = useRef<{
       a: [number, number, number];
       b: [number, number, number];
     } | null>(null);
     const [reducedMotion, setReducedMotion] = useState(false);
+    const [tier, setTier] = useState<GLTier | null>(null);
+    const fpsCapRef = useRef(TIER_FPS_CAP.A);
+    const scaleRef = useRef(TIER_PIXEL_SCALE.A);
+    const monitorRef = useRef<GLFrameMonitor | null>(null);
 
     // SSR guard
     if (typeof window === 'undefined') {
@@ -238,14 +243,20 @@ export const DitherBackground = React.forwardRef<HTMLDivElement, DitherBackgroun
       );
     }
 
-    // Detect reduced-motion preference
+    // Tier + reduced-motion detection (one deterministic probe per mount)
     useEffect(() => {
-      const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-      setReducedMotion(mq.matches);
-      const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
-      mq.addEventListener('change', handler);
-      return () => mq.removeEventListener('change', handler);
+      const { tier: initial, signals } = resolveInitialTier(document, navigator);
+      setReducedMotion(signals.reducedMotion);
+      setTier(initial);
     }, []);
+
+    // Keep pacing + resolution refs in sync with the live tier
+    useEffect(() => {
+      if (!tier) return;
+      fpsCapRef.current = TIER_FPS_CAP[tier];
+      scaleRef.current = TIER_PIXEL_SCALE[tier];
+      monitorRef.current = tier === 'A' ? new GLFrameMonitor() : null;
+    }, [tier]);
 
     // Parse colors once (or when they change)
     const parseColors = useCallback(() => {
@@ -273,10 +284,10 @@ export const DitherBackground = React.forwardRef<HTMLDivElement, DitherBackgroun
         const { clientWidth: w, clientHeight: h } = wrapper;
         if (w === 0 || h === 0) return;
 
-        // Use a reduced resolution for performance — 1px per 2 CSS pixels
-        const scale = 0.5;
-        const pw = Math.floor(w * scale);
-        const ph = Math.floor(h * scale);
+        // Tier-scaled resolution — B renders quarter res, A half res
+        const scale = scaleRef.current;
+        const pw = Math.max(1, Math.floor(w * scale));
+        const ph = Math.max(1, Math.floor(h * scale));
 
         if (canvas.width !== pw || canvas.height !== ph) {
           canvas.width = pw;
@@ -331,29 +342,63 @@ export const DitherBackground = React.forwardRef<HTMLDivElement, DitherBackgroun
       [algorithm, matrix, intensity, animate, speed, reducedMotion],
     );
 
-    // Animation loop
+    // Animation loop — tier-paced, visibility-gated, runtime-downgraded
     useEffect(() => {
       let running = true;
+      let raf = 0;
+      let lastRenderAt = 0;
 
       const tick = (time: number) => {
         if (!running) return;
-        renderFrame(time);
-        if (animate && !reducedMotion) {
-          frameRef.current = requestAnimationFrame(tick);
+        const interval = 1000 / fpsCapRef.current;
+        if (time - lastRenderAt >= interval) {
+          const start = performance.now();
+          renderFrame(time);
+          const duration = performance.now() - start;
+          // Sustained slow frames downgrade A → B → C (loop stops at C)
+          if (animate && !reducedMotion && monitorRef.current && fpsCapRef.current <= 60) {
+            const { overloaded } = monitorRef.current.record(duration);
+            if (overloaded) {
+              monitorRef.current = null;
+              setTier((cur) => downgradeTier(cur ?? 'A'));
+            }
+          }
+          lastRenderAt = time;
         }
+        if (animate && !reducedMotion) raf = requestAnimationFrame(tick);
       };
 
-      // Always render at least one frame
-      requestAnimationFrame((time) => {
-        renderFrame(time);
-        if (animate && !reducedMotion && running) {
-          frameRef.current = requestAnimationFrame(tick);
+      const startLoop = () => {
+        if (!running || !animate || reducedMotion) return;
+        lastRenderAt = 0;
+        if (raf) cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(tick);
+      };
+
+      // Always render at least one static frame (LCP element for tier C)
+      raf = requestAnimationFrame(tick);
+
+      const onVisibility = () => {
+        if (document.hidden) {
+          if (raf) cancelAnimationFrame(raf);
+        } else {
+          startLoop();
         }
-      });
+      };
+      document.addEventListener('visibilitychange', onVisibility);
+
+      // Reduce-motion preference can change mid-session
+      const mq = typeof window !== 'undefined' ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+      const onMotionChange = () => {
+        setReducedMotion(mq?.matches ?? false);
+      };
+      mq?.addEventListener('change', onMotionChange);
 
       return () => {
         running = false;
-        if (frameRef.current) cancelAnimationFrame(frameRef.current);
+        if (raf) cancelAnimationFrame(raf);
+        document.removeEventListener('visibilitychange', onVisibility);
+        mq?.removeEventListener('change', onMotionChange);
       };
     }, [renderFrame, animate, reducedMotion]);
 
@@ -372,6 +417,18 @@ export const DitherBackground = React.forwardRef<HTMLDivElement, DitherBackgroun
       return () => ro.disconnect();
     }, [renderFrame, animate, reducedMotion]);
 
+    // Tier C ⇒ pure-CSS texture, zero canvas and zero loop. Simplified style
+    // carries the brand gradient through CSS vars instead of canvas parsing.
+    const cssOnly = tier === 'C';
+    const fallbackStyle: React.CSSProperties = {
+      ...(cssOnly
+        ? {
+            ['--sk-gl-color-a' as string]: colorA,
+            ['--sk-gl-color-b' as string]: colorB,
+          }
+        : {}),
+    };
+
     return (
       <div
         ref={(node) => {
@@ -380,24 +437,29 @@ export const DitherBackground = React.forwardRef<HTMLDivElement, DitherBackgroun
           else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
         }}
         className={className}
+        data-tier={cssOnly ? 'c' : undefined}
         style={{
           position: 'relative',
           overflow: 'hidden',
           ...style,
         }}
       >
-        <canvas
-          ref={canvasRef}
-          aria-hidden="true"
-          style={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            imageRendering: 'pixelated',
-            pointerEvents: 'none',
-          }}
-        />
+        {cssOnly ? (
+          <div className="sk-gl-fallback" data-tier="c" aria-hidden="true" style={fallbackStyle} />
+        ) : (
+          <canvas
+            ref={canvasRef}
+            aria-hidden="true"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              imageRendering: 'pixelated',
+              pointerEvents: 'none',
+            }}
+          />
+        )}
         {children && (
           <div style={{ position: 'relative', zIndex: 1 }}>{children}</div>
         )}

@@ -599,3 +599,26 @@
     display: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   GL FALLBACK — static gradient for tier C (reduced-motion,
+   no WebGL, slow client). Pure CSS: zero canvas, zero loop.
+   ═══════════════════════════════════════════════════════════ */
+
+.sk-gl-fallback {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    var(--sk-dither-light),
+    linear-gradient(135deg, var(--sk-gl-color-a, hsl(270 30% 8%)), var(--sk-gl-color-b, hsl(45 96% 52%)));
+  background-size: 16px 16px, cover;
+  background-repeat: repeat, no-repeat;
+}
+
+.sk-gl-fallback[data-tier="c"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 40%, hsl(var(--sk-background) / 0.06) 100%);
+}

@@ -180,6 +180,7 @@ export const AsciiVideo = React.forwardRef<HTMLPreElement, AsciiVideoProps>(
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
     const frameRef = useRef<number>(0);
+    const visibilityPausedRef = useRef(false);
     const streamRef = useRef<MediaStream | null>(null);
     const [text, setText] = useState('');
     const [colorLines, setColorLines] = useState<ColorChar[][] | null>(null);
@@ -290,6 +291,19 @@ export const AsciiVideo = React.forwardRef<HTMLPreElement, AsciiVideoProps>(
 
       const tick = (now: number) => {
         if (!running) return;
+
+        if (document.hidden) {
+          // Tab hidden: pause sampling, resume rAF only (loop exits by visibility gate)
+          const v = getVideo();
+          if (v && !v.paused) v.pause();
+          visibilityPausedRef.current = true;
+          frameRef.current = requestAnimationFrame(tick);
+          return;
+        }
+        if (visibilityPausedRef.current) {
+          visibilityPausedRef.current = false;
+          lastTime = now;
+        }
 
         if (now - lastTime >= interval) {
           lastTime = now;

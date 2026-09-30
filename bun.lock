@@ -1,5 +1,6 @@
 {
   "lockfileVersion": 1,
+  "configVersion": 0,
   "workspaces": {
     "": {
       "name": "skeehn-monorepo",
@@ -83,9 +84,17 @@
         "tsdown": "^0.22.3",
       },
       "peerDependencies": {
+        "@react-three/fiber": "*",
+        "@react-three/postprocessing": "*",
         "react": ">=18",
         "react-dom": ">=18",
+        "three": "*",
       },
+      "optionalPeers": [
+        "@react-three/fiber",
+        "@react-three/postprocessing",
+        "three",
+      ],
     },
     "packages/wc": {
       "name": "@skeehn/wc",

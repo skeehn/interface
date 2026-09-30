@@ -2,13 +2,19 @@
 
 This file tells AI coding agents (Claude, Cursor, Copilot, Gemini, etc.) how to install, configure, and use skeehn components.
 
+## v2 Project Policy (read first)
+
+- **Identity**: neutral `light` / `dark` defaults (shadcn-like restraint). ASCII dither, WebGL/WebGPU texture, and themed textures (terminal, brutal, grain…) are **opt-in flagship layers**, never the default.
+- **Single source of truth**: `components/<name>/*.{css,html,js}` and `engine/*.css` are the canonical style + usage contract. `@skeehn/react` wrappers and the registry are consumers, not free-standing definitions. Enforced by `tests/parity.test.ts` — never invent a class in a wrapper that no canonical file defines.
+- **Theme contract**: all themes express through `--sk-*` CSS custom properties; generated brand themes default to `--sk-dither-opacity: 0` (opt into texture explicitly).
+
 ## Quick Start for Agents
 
 When a user asks to "set up skeehn" or "add skeehn to my project":
 
 1. Check if skeehn engine files exist: look for `engine/tokens.css` or `styles/tokens.css`
 2. If not installed, copy engine + theme files from this repo to the user's project
-3. Pick a theme based on user intent (`default` | `dark` | `terminal` | `brutal` | `print` | `grain` | `mardi-gras`)
+3. Pick a theme based on user intent (`light` | `dark` | `default` | `terminal` | `brutal` | `print` | `grain` | `mardi-gras`)
 4. Add requested components from `components/{name}/` (or via `npx skeehn add <name>`)
 
 ## Installing via CLI (preferred)
@@ -177,7 +183,7 @@ function applyTheme(theme) {
   document.getElementById('theme-link').href = `themes/${theme}.css`;
 }
 
-// Available: default | dark | terminal | brutal | print | grain | mardi-gras
+// Available: light | dark | default | terminal | brutal | print | grain | mardi-gras
 applyTheme('dark');
 ```
 

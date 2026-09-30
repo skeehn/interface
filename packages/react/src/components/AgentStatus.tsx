@@ -35,8 +35,8 @@ export const AgentStatus = React.forwardRef<HTMLDivElement, AgentStatusProps>(
         aria-live="polite"
         {...rest}
       >
-        <span className="sk-agent-status__dot" />
-        <span className="sk-agent-status__label">{label ?? defaultLabels[status]}</span>
+        <span className="sk-agent-status__indicator" />
+        <span className="sk-agent-status__text">{label ?? defaultLabels[status]}</span>
       </div>
     );
   },

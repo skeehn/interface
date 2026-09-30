@@ -6,7 +6,7 @@
 
 <p align="center">
   Build AI interfaces that mean it.<br />
-  32 components. 8 themes. Zero dependencies. Every surface a canvas for dither texture.
+  32 components. 8 themes. Zero dependencies. Neutral by default — ASCII dither + WebGL texture as an opt-in flagship layer.
 </p>
 
 <p align="center">
@@ -17,7 +17,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.0.0-blue" alt="Version">
+  <img src="https://img.shields.io/badge/version-2.0.0-blue" alt="Version">
   <img src="https://img.shields.io/badge/license-MIT-green" alt="License">
   <img src="https://img.shields.io/badge/components-32-orange" alt="Components">
   <img src="https://img.shields.io/badge/dependencies-0-brightgreen" alt="Zero Dependencies">
@@ -95,12 +95,14 @@ import { DitherBackground, AsciiImage, AsciiVideo } from '@skeehn/react/gl';
 <AsciiVideo src="webcam" resolution={80} fps={30} />
 ```
 
-### 7 Themes
+### 8 Themes
+
+Neutral `light` / `dark` defaults, plus 6 flagships:
 
 | Theme | Signature |
 |-------|-----------|
-| `default` | Swiss minimal, paper grain texture |
-| `dark` | Phosphor text glow, vignette |
+| `light` / `dark` | Neutral shadcn-like default — no texture |
+| `default` | Editorial, paper grain texture |
 | `terminal` | CRT scanlines, green phosphor glow |
 | `brutal` | 2px borders, hard pixel shadows |
 | `print` | Halftone dots, warm newsprint |

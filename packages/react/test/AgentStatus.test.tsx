@@ -21,18 +21,18 @@ describe("AgentStatus", () => {
 
   test("renders a dot element", () => {
     const { root } = renderC(<AgentStatus status="idle" />);
-    expect(root.querySelector(".sk-agent-status__dot")).not.toBeNull();
+    expect(root.querySelector(".sk-agent-status__indicator")).not.toBeNull();
   });
 
   test.each(STATUSES)("status=%s sets data-status and default label", (s) => {
     const { root } = renderC(<AgentStatus status={s} />);
     expect(root).toHaveAttribute("data-status", s);
-    expect(root.querySelector(".sk-agent-status__label")).toHaveTextContent(s);
+    expect(root.querySelector(".sk-agent-status__text")).toHaveTextContent(s);
   });
 
   test("label overrides the default status text", () => {
     const { root } = renderC(<AgentStatus status="acting" label="Running tools" />);
-    expect(root.querySelector(".sk-agent-status__label")).toHaveTextContent("Running tools");
+    expect(root.querySelector(".sk-agent-status__text")).toHaveTextContent("Running tools");
   });
 
   test("merges custom className while keeping base class", () => {

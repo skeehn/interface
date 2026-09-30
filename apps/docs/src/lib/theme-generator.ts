@@ -108,7 +108,7 @@ function radiusBlock(radius: number): string {
   ].join('\n');
 }
 
-function themeBlock(selector: string, tokens: TokenMap, radius: number, scheme: 'light' | 'dark'): string {
+function themeBlock(selector: string, tokens: TokenMap, radius: number, scheme: 'light' | 'dark', ditherOpacity: number): string {
   const lines = Object.entries(tokens).map(([k, v]) => `  --sk-${k}: ${v};`);
   return [
     `[data-theme="${selector}"] {`,
@@ -116,25 +116,26 @@ function themeBlock(selector: string, tokens: TokenMap, radius: number, scheme: 
     radiusBlock(radius),
     `  --sk-border-width: 1px;`,
     `  --sk-dither-pattern: var(--sk-dither-b2);`,
-    `  --sk-dither-opacity: 0.06;`,
+    `  --sk-dither-opacity: ${ditherOpacity};`,
     `  color-scheme: ${scheme};`,
     `}`,
   ].join('\n');
 }
 
 /** Serialize a derived theme to CSS: `[data-theme="<name>"]` (light) + `<name>-dark`. */
-export function toCss(name: string, theme: DerivedTheme): string {
+export function toCss(name: string, theme: DerivedTheme, options?: { ditherOpacity?: number }): string {
+  const ditherOpacity = options?.ditherOpacity ?? 0;
   return [
     `/* skeehn theme "${name}" — generated from a brand color. Drop into your global CSS. */`,
-    themeBlock(name, theme.light, theme.radius, 'light'),
+    themeBlock(name, theme.light, theme.radius, 'light', ditherOpacity),
     '',
-    themeBlock(`${name}-dark`, theme.dark, theme.radius, 'dark'),
+    themeBlock(`${name}-dark`, theme.dark, theme.radius, 'dark', ditherOpacity),
     '',
   ].join('\n');
 }
 
 /** Inline `style` props for one token map — used to preview a theme on a wrapper element. */
-export function toStyleVars(tokens: TokenMap, radius: number): Record<string, string> {
+export function toStyleVars(tokens: TokenMap, radius: number, options?: { ditherOpacity?: number }): Record<string, string> {
   const r = Math.max(0, radius);
   const out: Record<string, string> = {};
   for (const [k, v] of Object.entries(tokens)) out[`--sk-${k}`] = v;
@@ -144,6 +145,6 @@ export function toStyleVars(tokens: TokenMap, radius: number): Record<string, st
   out['--sk-radius-lg'] = `${r + 6}px`;
   out['--sk-radius-panel'] = `${r + 4}px`;
   out['--sk-radius-control'] = `${Math.max(0, r - 1)}px`;
-  out['--sk-dither-opacity'] = '0.06';
+  out['--sk-dither-opacity'] = `${options?.ditherOpacity ?? 0}`;
   return out;
 }

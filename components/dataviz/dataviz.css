@@ -94,7 +94,20 @@
   margin-top: var(--sk-space-1);
 }
 
+/* Bars row container */
+.sk-ascii-chart__row {
+  display: flex;
+  align-items: flex-end;
+  gap: 1px;
+}
+
+/* Bottom labels strip: container of one cell per bar */
 .sk-ascii-chart__label {
+  display: flex;
+  gap: 1px;
+}
+
+.sk-ascii-chart__label-cell {
   width: 1.5ch;
   text-align: center;
   font-size: 0.5rem;

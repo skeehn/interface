@@ -144,3 +144,47 @@
   max-width: 64rem;
   margin: var(--sk-space-12) auto 0;
 }
+
+/* Error banner: rod + retry/stop actions, dismissible via consumer */
+.sk-chat-console__error,
+.sk-agent-console__error {
+  display: flex;
+  align-items: center;
+  gap: var(--sk-space-3);
+  padding: var(--sk-space-2) var(--sk-space-4);
+  border-top: var(--sk-border);
+  background: hsl(var(--sk-destructive) / 0.06);
+  color: hsl(var(--sk-destructive));
+  font-size: var(--sk-font-size-sm);
+}
+
+.sk-chat-console__error-text,
+.sk-agent-console__error-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sk-chat-console__error-actions,
+.sk-agent-console__error-actions {
+  display: flex;
+  gap: var(--sk-space-2);
+  flex-shrink: 0;
+}
+
+/* Status caption under the header (e.g. "streaming · 3 tools used") */
+.sk-chat-console__status,
+.sk-agent-console__status {
+  padding: 0 var(--sk-space-6);
+  font-family: var(--sk-font-mono);
+  font-size: var(--sk-font-size-xs);
+  letter-spacing: var(--sk-letter-spacing-wide);
+  color: hsl(var(--sk-muted-foreground));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-chat-console__error,
+  .sk-agent-console__error { animation: none; }
+}

@@ -20,6 +20,7 @@
 import * as React from 'react';
 import { Conversation } from '../ai/Conversation';
 import type { DataUIPart, PartContext, SkeehnPartOverrides, UIMessage } from '../ai/types';
+import { Button } from '../components/Button';
 import { ChatInput } from '../components/ChatInput';
 import { ModelPicker, type ModelOption } from '../components/ModelPicker';
 import { PromptSuggestions, type PromptSuggestionItem } from '../components/PromptSuggestions';
@@ -35,6 +36,16 @@ export interface ChatConsoleProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   placeholder?: string;
   /** While streaming: input shows the streaming state and disables send. */
   busy?: boolean;
+  /** Status caption under the header (e.g. "thinking", "streaming", "3 tools used"). */
+  statusLabel?: string;
+  /** Rendered when `error` is set; pairs with `onRetry`. */
+  error?: string | null;
+  /** Re-run the failed turn. */
+  onRetry?: () => void;
+  /** Dismiss the error banner. */
+  onDismissError?: () => void;
+  /** Abort the in-flight stream (renders a stop control while `busy`). */
+  onStop?: () => void;
   /** Show a model picker in the header. */
   models?: ReadonlyArray<ModelOption | string>;
   /** Selected model id. */
@@ -59,6 +70,11 @@ export const ChatConsole = React.forwardRef<HTMLDivElement, ChatConsoleProps>(fu
     title = 'Chat',
     placeholder = 'Message…',
     busy,
+    statusLabel,
+    error,
+    onRetry,
+    onDismissError,
+    onStop,
     models,
     model,
     onModelChange,
@@ -93,6 +109,10 @@ export const ChatConsole = React.forwardRef<HTMLDivElement, ChatConsoleProps>(fu
         )}
       </header>
 
+      {statusLabel && (
+        <div className="sk-chat-console__status" role="status">{statusLabel}</div>
+      )}
+
       <div className="sk-chat-console__body">
         {empty && suggestions && suggestions.length > 0 ? (
           <div className="sk-chat-console__empty">
@@ -111,6 +131,24 @@ export const ChatConsole = React.forwardRef<HTMLDivElement, ChatConsoleProps>(fu
         )}
       </div>
 
+      {error && (
+        <div className="sk-chat-console__error" role="alert">
+          <span className="sk-chat-console__error-text">{error}</span>
+          <div className="sk-chat-console__error-actions">
+            {onRetry && (
+              <Button data-variant="outline" data-size="sm" onClick={onRetry}>
+                Retry
+              </Button>
+            )}
+            {onDismissError && (
+              <Button data-variant="ghost" data-size="sm" onClick={onDismissError}>
+                Dismiss
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
+
       <footer className="sk-chat-console__footer">
         <ChatInput
           value={input}
@@ -120,6 +158,13 @@ export const ChatConsole = React.forwardRef<HTMLDivElement, ChatConsoleProps>(fu
           state={busy ? 'streaming' : undefined}
           disabled={busy}
         />
+        {onStop && busy && (
+          <div className="sk-chat-console__error-actions" style={{ paddingTop: 'var(--sk-space-2)' }}>
+            <Button data-variant="outline" data-size="sm" onClick={onStop}>
+              ■ Stop
+            </Button>
+          </div>
+        )}
       </footer>
     </div>
   );

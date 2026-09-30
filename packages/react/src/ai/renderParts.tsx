@@ -16,6 +16,7 @@ import { ChatBubble } from '../components/ChatBubble';
 import { Markdown } from '../components/Markdown';
 import { ThinkingBlock } from '../components/ThinkingBlock';
 import { ToolCard, type ToolCardStatus } from '../components/ToolCard';
+import { ToolApproval } from '../components/ToolApproval';
 import { CitationCard } from '../components/CitationCard';
 import { FileAttachment } from '../components/FileAttachment';
 import { Divider } from '../components/Layout';
@@ -110,6 +111,7 @@ export function renderPart(
     const p = part as {
       type: string;
       toolName?: string;
+      toolCallId?: string;
       state?: ToolPartState;
       input?: unknown;
       output?: unknown;
@@ -118,6 +120,18 @@ export function renderPart(
     if (components?.tool) return components.tool(p as never, ctx);
     const name = type === 'dynamic-tool' ? p.toolName ?? 'tool' : type.slice('tool-'.length);
     const status = toolStatus(p.state);
+    // Human-in-the-loop: server-flagged or stopped-for-approval calls resolve
+    // via ToolApproval (reads ToolApprovalProvider context), not a run card.
+    if (p.state === 'awaiting-approval' || p.state === 'approval-approved' || p.state === 'approval-denied') {
+      return (
+        <ToolApproval
+          toolCallId={p.toolCallId ?? name}
+          toolName={name}
+          input={p.input}
+          state={p.state}
+        />
+      );
+    }
     return (
       <ToolCard name={name} status={status}>
         {p.input != null && (

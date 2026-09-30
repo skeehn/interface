@@ -11,6 +11,7 @@ import * as React from 'react';
 import { Conversation } from '../ai/Conversation';
 import type { SkeehnPartOverrides, UIMessage } from '../ai/types';
 import { AgentStatus, type AgentStatusValue } from '../components/AgentStatus';
+import { Button } from '../components/Button';
 import { ChatInput } from '../components/ChatInput';
 
 export interface AgentConsoleProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onSubmit'> {
@@ -26,6 +27,14 @@ export interface AgentConsoleProps extends Omit<React.HTMLAttributes<HTMLDivElem
   onSend?: (text: string) => void;
   /** Disable the follow-up input (e.g. while the agent is acting). */
   busy?: boolean;
+  /** Status caption under the header (e.g. "step 3 / tool stream"). */
+  statusLabel?: string;
+  /** Rendered when `error` is set; pairs with `onRetry`. */
+  error?: string | null;
+  /** Re-run the failed turn. */
+  onRetry?: () => void;
+  /** Dismiss the error banner. */
+  onDismissError?: () => void;
   /** Per-part render overrides, forwarded to <Conversation>. */
   components?: SkeehnPartOverrides;
   /** Transform text/reasoning (e.g. a markdown renderer). */
@@ -34,7 +43,7 @@ export interface AgentConsoleProps extends Omit<React.HTMLAttributes<HTMLDivElem
 
 /** A console for monitoring an agent run: status · task · reasoning/tool stream. */
 export const AgentConsole = React.forwardRef<HTMLDivElement, AgentConsoleProps>(function AgentConsole(
-  { status, messages, title = 'Agent', task, onSend, busy, components, renderMarkdown, className, ...rest },
+  { status, messages, title = 'Agent', task, onSend, busy, statusLabel, error, onRetry, onDismissError, components, renderMarkdown, className, ...rest },
   ref,
 ) {
   const [input, setInput] = React.useState('');
@@ -55,10 +64,31 @@ export const AgentConsole = React.forwardRef<HTMLDivElement, AgentConsoleProps>(
         <AgentStatus status={status} />
       </header>
       {task && <div className="sk-agent-console__task">{task}</div>}
+      {statusLabel && (
+        <div className="sk-agent-console__status" role="status">{statusLabel}</div>
+      )}
 
       <div className="sk-agent-console__body">
         <Conversation messages={messages} components={components} renderMarkdown={renderMarkdown} />
       </div>
+
+      {error && (
+        <div className="sk-agent-console__error" role="alert">
+          <span className="sk-agent-console__error-text">{error}</span>
+          <div className="sk-agent-console__error-actions">
+            {onRetry && (
+              <Button data-variant="outline" data-size="sm" onClick={onRetry}>
+                Retry
+              </Button>
+            )}
+            {onDismissError && (
+              <Button data-variant="ghost" data-size="sm" onClick={onDismissError}>
+                Dismiss
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
 
       {onSend && (
         <footer className="sk-agent-console__footer">

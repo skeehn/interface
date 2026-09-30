@@ -30,12 +30,12 @@ export function Chat() {
 }`;
 
 const NATIVE = `"use client";
-import { useChat } from "@skeehn/react/hooks"; // zero-dep, no AI SDK required
-import { ChatBubble } from "@skeehn/react";
+import { useChat } from "@skeehn/react/hooks"; // zero-dep, parts-based
+import { Conversation } from "@skeehn/react/ai";
 
 export function Chat() {
-  const { messages } = useChat({ api: "/api/chat" });
-  return messages.map((m) => <ChatBubble key={m.id} role={m.role}>{m.content}</ChatBubble>);
+  const { messages, sendMessage, status, submitApproval } = useChat({ api: "/api/chat" });
+  return <Conversation messages={messages} />; // text · reasoning · tools · sources
 }`;
 
 const BLOCK = `import { ChatConsole } from "@skeehn/react/blocks";

@@ -42,14 +42,15 @@ const GROUPS = [
   { label: "Layout · Viz · Motion", items: [["Layout","layout"],["Data Viz","dataviz"],["Motion","motion"]] },
 ] as const;
 
-const HERO_CODE = `import { ChatBubble } from '@skeehn/react';
+const HERO_CODE = `import { ChatConsole } from '@skeehn/react/blocks';
 import { useChat } from '@skeehn/react/hooks';
+import '@skeehn/core/styles.css';
 
 export function Chat() {
-  const { messages } = useChat();
-  return messages.map((m) => (
-    <ChatBubble key={m.id} role={m.role}>{m.content}</ChatBubble>
-  ));
+  const { messages, sendMessage, onStop } = useChat();
+  return (
+    <ChatConsole messages={messages} onSend={sendMessage} onStop={onStop} />
+  );
 }`;
 
 /* ── primitives ─────────────────────────────────────────────────────────── */

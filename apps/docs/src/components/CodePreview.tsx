@@ -2,22 +2,14 @@
 
 import { useState, useCallback } from "react";
 
-const CODE = `import { ChatBubble, useChat } from '@skeehn/react';
+const CODE = `import { ChatConsole, useChat } from '@skeehn/react';
 
 export function Chat() {
-  const { messages, input, setInput, append } = useChat({
+  const { messages, sendMessage } = useChat({
     api: '/api/chat',
   });
 
-  return (
-    <div>
-      {messages.map(m => (
-        <ChatBubble key={m.id} role={m.role}>
-          {m.content}
-        </ChatBubble>
-      ))}
-    </div>
-  );
+  return <ChatConsole messages={messages} onSend={(t) => sendMessage(t)} />;
 }`;
 
 /*

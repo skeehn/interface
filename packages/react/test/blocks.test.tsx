@@ -3,6 +3,8 @@ import { ChatConsole } from "../src/blocks/ChatConsole";
 import { AgentConsole } from "../src/blocks/AgentConsole";
 import { VoiceConsole } from "../src/blocks/VoiceConsole";
 import { HeroSection } from "../src/blocks/HeroSection";
+import { Message } from "../src/ai/Message";
+import { ToolApprovalProvider } from "../src/components/ToolApproval";
 import type { UIMessage } from "../src/ai/types";
 import { renderC } from "./harness";
 
@@ -92,5 +94,65 @@ describe("HeroSection", () => {
   test("align=center by default", () => {
     const { root } = renderC(<HeroSection title="x" />);
     expect(root.getAttribute("data-align")).toBe("center");
+  });
+});
+
+describe("ChatConsole v2 features", () => {
+  test("error banner renders with retry + dismiss actions", async () => {
+    const onRetry = mock(() => {});
+    const onDismiss = mock(() => {});
+    const { container, user } = renderC(
+      <ChatConsole messages={MSGS} onSend={() => {}} error="429 rate limited" onRetry={onRetry} onDismissError={onDismiss} />,
+    );
+    expect(container.querySelector(".sk-chat-console__error")).not.toBeNull();
+    expect(container.querySelector(".sk-chat-console__error-text")).toHaveTextContent("429 rate limited");
+    await user.click([...container.querySelectorAll(".sk-chat-console__error button")].find(b => b.textContent === "Retry")!);
+    expect(onRetry).toHaveBeenCalled();
+    await user.click([...container.querySelectorAll(".sk-chat-console__error button")].find(b => b.textContent === "Dismiss")!);
+    expect(onDismiss).toHaveBeenCalled();
+  });
+
+  test("no error banner by default", () => {
+    const { container } = renderC(<ChatConsole messages={MSGS} onSend={() => {}} />);
+    expect(container.querySelector(".sk-chat-console__error")).toBeNull();
+  });
+
+  test("stop control only while busy + onStop", () => {
+    const { container, rerender } = renderC(<ChatConsole messages={MSGS} onSend={() => {}} busy onStop={() => {}} />);
+    expect(container.textContent).toContain("Stop");
+    rerender(<ChatConsole messages={MSGS} onSend={() => {}} busy />);
+    expect(container.textContent).not.toContain("Stop");
+  });
+
+  test("statusLabel renders a status caption", () => {
+    const { container } = renderC(<ChatConsole messages={MSGS} onSend={() => {}} statusLabel="streaming · 2 tools" />);
+    expect(container.querySelector(".sk-chat-console__status")).toHaveTextContent("streaming · 2 tools");
+  });
+});
+
+describe("AgentConsole v2 features", () => {
+  test("status label + task + error banner", () => {
+    const { container } = renderC(
+      <AgentConsole status="acting" messages={MSGS} statusLabel="step 3" task="Ship it" error="tool crashed" onRetry={() => {}} />,
+    );
+    expect(container.querySelector(".sk-agent-console__status")).toHaveTextContent("step 3");
+    expect(container.querySelector(".sk-agent-console__error")).not.toBeNull();
+    expect(container.textContent).toContain("tool crashed");
+  });
+});
+
+describe("renderParts approval routing", () => {
+  test("awaiting-approval tool part renders ToolApproval instead of ToolCard", () => {
+    const { container } = renderC(
+      <ToolApprovalProvider value={{ submitApproval: () => {} }}>
+        <Message message={{
+          role: "assistant",
+          parts: [{ type: "tool-delete_file", toolCallId: "t1", state: "awaiting-approval", input: { path: "x" } }],
+        } as UIMessage} />
+      </ToolApprovalProvider>,
+    );
+    expect(container.querySelector(".sk-tool-approval")).not.toBeNull();
+    expect(container.textContent).toContain("delete_file");
+    expect(container.querySelectorAll("button:disabled") ?? []);
   });
 });

@@ -68,6 +68,7 @@ export const ToolApproval = React.forwardRef<HTMLDivElement, ToolApprovalProps>(
   ) => {
     const ctx = React.useContext(ToolApprovalContext);
     const pending = state === 'awaiting-approval';
+    const resolvable = Boolean(ctx || (onApprove && onDeny));
     const statusText = pending ? 'waiting for your approval' : state === 'approval-approved' ? 'approved' : 'denied';
 
     const approve = async () => {
@@ -109,10 +110,22 @@ export const ToolApproval = React.forwardRef<HTMLDivElement, ToolApprovalProps>(
         {pending ? (
           <div className="sk-tool-approval__body">
             <div className="sk-tool-approval__actions">
-              <Button data-variant="ghost" data-size="sm" onClick={() => void deny()}>
+              <Button
+                data-variant="ghost"
+                data-size="sm"
+                onClick={() => resolvable && void deny()}
+                disabled={!resolvable}
+                {...(!resolvable ? { title: 'Wrap in ToolApprovalProvider to resolve' as const } : {})}
+              >
                 Deny
               </Button>
-              <Button data-variant="solid" data-size="sm" onClick={() => void approve()}>
+              <Button
+                data-variant="solid"
+                data-size="sm"
+                onClick={() => resolvable && void approve()}
+                disabled={!resolvable}
+                {...(!resolvable ? { title: 'Wrap in ToolApprovalProvider to resolve' as const } : {})}
+              >
                 Approve
               </Button>
             </div>

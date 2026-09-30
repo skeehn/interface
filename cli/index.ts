@@ -16,7 +16,7 @@ import { existsSync, mkdirSync, copyFileSync, readFileSync, writeFileSync, readd
 import { resolve, join, dirname, basename, extname } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const VERSION = "1.0.0";
+const VERSION = "2.0.0";
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const ENGINE = join(ROOT, "engine");
 const THEMES = join(ROOT, "themes");

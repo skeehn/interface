@@ -24,6 +24,8 @@ npm i @skeehn/core                       # framework-agnostic CSS + dither engin
 npx shadcn@latest add https://ui.skeehn.com/r/button.json
 npx shadcn@latest add https://ui.skeehn.com/r/chat-bubble.json
 # every component: https://ui.skeehn.com/r/<name>.json · engine: /r/skeehn-engine.json
+# version-pinned (tag/branch/sha):
+# https://raw.githubusercontent.com/skeehn/interface/<ref>/apps/docs/public/r/button.json
 
 # Or the skeehn CLI (fetches inline content from the live registry)
 npx skeehn add chat-bubble

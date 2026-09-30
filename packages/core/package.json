@@ -1,16 +1,24 @@
 {
   "name": "@skeehn/core",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "ASCII-native dither UI engine — CSS + JS. Zero dependencies.",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "sideEffects": ["**/*.css"],
+  "sideEffects": [
+    "**/*.css"
+  ],
   "exports": {
     ".": {
-      "import": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
-      "require": { "types": "./dist/index.d.cts", "default": "./dist/index.cjs" }
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./styles.css": "./dist/styles.css",
     "./css": "./dist/skeehn.css",
@@ -23,8 +31,12 @@
     "./registry": "./dist/registry.json",
     "./package.json": "./package.json"
   },
-  "files": ["dist/"],
-  "engines": { "node": ">=18" },
+  "files": [
+    "dist/"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "build": "tsdown && bun run build.ts"
   },

@@ -1,6 +1,6 @@
 {
   "name": "@skeehn/react",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "React 19 components, hooks, AI SDK v5 layer, blocks, and WebGL effects for skeehn",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -60,16 +60,26 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist/"],
+  "files": [
+    "dist/"
+  ],
   "engines": {
     "node": ">=18"
   },
   "typesVersions": {
     "*": {
-      "hooks": ["./dist/hooks/index.d.ts"],
-      "gl": ["./dist/gl/index.d.ts"],
-      "ai": ["./dist/ai/index.d.ts"],
-      "blocks": ["./dist/blocks/index.d.ts"]
+      "hooks": [
+        "./dist/hooks/index.d.ts"
+      ],
+      "gl": [
+        "./dist/gl/index.d.ts"
+      ],
+      "ai": [
+        "./dist/ai/index.d.ts"
+      ],
+      "blocks": [
+        "./dist/blocks/index.d.ts"
+      ]
     }
   },
   "peerDependencies": {
@@ -103,6 +113,14 @@
     "react-dom": "^19",
     "tsdown": "^0.22.3"
   },
-  "keywords": ["skeehn", "react", "ai", "components", "dither", "ascii", "webgl"],
+  "keywords": [
+    "skeehn",
+    "react",
+    "ai",
+    "components",
+    "dither",
+    "ascii",
+    "webgl"
+  ],
   "license": "MIT"
 }

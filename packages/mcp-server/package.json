@@ -1,6 +1,6 @@
 {
   "name": "@skeehn/mcp-server",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "MCP server for skeehn — component schemas, 8 themes, and tools for AI coding agents (Claude Code, Cursor, v0)",
   "type": "module",
   "main": "./dist/index.js",

@@ -34,6 +34,21 @@ npx skeehn doctor
 bun run dev
 ```
 
+### Install from the registry (you own the code)
+
+```bash
+# shadcn-compatible registry — every component, inline content, works anywhere
+npx shadcn@latest add https://ui.skeehn.com/r/button.json
+
+# Version-pinned: point at any git ref (tag, branch, or commit SHA)
+npx shadcn@latest add https://raw.githubusercontent.com/skeehn/interface/v2.0.0/apps/docs/public/r/button.json
+
+# Engine + all components
+npx shadcn@latest add https://ui.skeehn.com/r/skeehn-engine.json
+```
+
+Releases are automated: bump `packages/*/package.json` (lockstep — enforced by test), tag `vX.Y.Z`, and CI builds → tests → type-checks → verifies tag/package match → publishes `@skeehn/*` with npm provenance → creates the GitHub release with notes.
+
 Then import the package bundle and typed React primitives:
 
 ```tsx

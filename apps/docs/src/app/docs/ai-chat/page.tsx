@@ -1,6 +1,7 @@
 'use client';
 
 import { useChat, usePacedText, useStickyScroll } from '@skeehn/react/hooks';
+import { messageText } from '@skeehn/react/ai';
 import {
   AgentStatus,
   ChatBubble,
@@ -36,7 +37,7 @@ export default function AIChatPage() {
 
   // Smooth, steady-cadence reveal of the in-flight assistant message — decoupled
   // from bursty network chunks. (Hook must be called unconditionally.)
-  const paced = usePacedText(streaming ? last?.content ?? '' : '', { enabled: streaming });
+  const paced = usePacedText(streaming && last ? messageText(last) : '', { enabled: streaming });
 
   // Follow new content while pinned to the bottom; break on manual scroll-up.
   const scrollKey = streaming ? `${messages.length}:${paced.text.length}` : String(messages.length);
@@ -82,24 +83,26 @@ export default function AIChatPage() {
           <div className="max-w-3xl mx-auto px-6 py-6 flex flex-col gap-4" role="log" aria-live="polite">
             {messages.map((msg) => {
               const isStreamingMsg = streaming && msg.id === last?.id;
+              const reasoning = msg.parts.find((p) => p.type === 'reasoning');
+              const reasoningText = reasoning && 'text' in reasoning ? reasoning.text : '';
 
               if (msg.role === 'user') {
                 return (
                   <div key={msg.id} className="flex justify-end">
-                    <ChatBubble role="user">{msg.content}</ChatBubble>
+                    <ChatBubble role="user">{messageText(msg)}</ChatBubble>
                   </div>
                 );
               }
 
               return (
                 <div key={msg.id} className="flex flex-col items-start gap-2 max-w-[85%]">
-                  {msg.reasoning && (
+                  {reasoningText && (
                     <ThinkingBlock
                       className="w-full"
                       state={isStreamingMsg ? 'thinking' : 'done'}
                       label={isStreamingMsg ? 'Thinking…' : 'Thought process'}
                     >
-                      <MessageContent content={msg.reasoning} />
+                      <MessageContent content={reasoningText} />
                     </ThinkingBlock>
                   )}
                   <ChatBubble role="assistant" streaming={isStreamingMsg}>
@@ -108,7 +111,7 @@ export default function AIChatPage() {
                         <MessageContent content={paced.text} />
                       </StreamingText>
                     ) : (
-                      <MessageContent content={msg.content} />
+                      <MessageContent content={messageText(msg)} />
                     )}
                   </ChatBubble>
                 </div>

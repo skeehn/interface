@@ -43,5 +43,10 @@
   "license": "MIT",
   "devDependencies": {
     "tsdown": "^0.22.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skeehn/interface.git",
+    "directory": "packages/wc"
   }
 }

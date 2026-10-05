@@ -1,7 +1,11 @@
 {
   "name": "skeehn-monorepo",
   "private": true,
-  "workspaces": ["packages/*", "apps/*", "examples/*"],
+  "workspaces": [
+    "packages/*",
+    "apps/*",
+    "examples/*"
+  ],
   "bin": {
     "skeehn": "./cli/index.ts"
   },
@@ -18,5 +22,9 @@
   "devDependencies": {
     "@types/bun": "latest",
     "tsdown": "^0.22.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skeehn/interface.git"
   }
 }
